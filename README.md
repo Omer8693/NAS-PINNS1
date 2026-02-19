@@ -68,28 +68,30 @@ NAS-PINNS1/
 ### Core Components
 
 #### 1. `naspinn.py`
-- `BurgerPINN`: Neural network class with tanh activation
+- `ResidualBurgerPINN`: PINN class with optional residual connections and tanh activation
 - `generate_data()`: Creates training data (collocation, boundary, initial points)
 - `pde_loss()`: Computes PDE residual using automatic differentiation
-- `train_pinn()`: Trains model using Adam optimizer (2000 epochs, lr=5e-4)
-- `compute_l2_error()`: Evaluates relative L2 error
+- `train_pinn()`: Trains model using Adam optimizer (default 1200 epochs, lr=3e-4)
+- Training progress is printed every 100 epochs in terminal
+- `compute_mean_l2_error()`: Evaluates time-averaged relative L2 error
 - Visualization functions for heatmaps, snapshots, comparisons
 
 #### 2. `nsga2_search.py`
 - Multi-objective optimization (minimize L2 error + parameters)
-- Population: 20, Generations: 10
-- Crossover rate: 0.8, Mutation rate: 0.01
-- Search space: 2-8 layers, 20-80 neurons/layer
+- Population: 10, Generations: 5 (fast mode)
+- Search space: 4-8 hidden layers, 48-256 neurons/layer
+- Also optimizes learning rate, residual toggle, and PDE loss weight factor
 
 #### 3. `nsga3_search.py`
 - Many-objective optimization (L2 error + parameters + training time)
-- Population: 50, Generations: 10
+- Population: 10, Generations: 5 (fast mode)
 - Reference directions for Pareto front
 - Additional learning rate optimization
 
 #### 4. `bayes_opt_search.py`
 - Gaussian Process-based optimization
-- 20 iterations, 5 initial random points
+- Default: 10 iterations, 2 initial random points
+- In `run_all.py` fast preset: 8 iterations, 2 initial random points
 - Optimizes: layers, neurons, learning rate
 
 ---

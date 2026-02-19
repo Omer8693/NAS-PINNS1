@@ -78,6 +78,7 @@ def save_stage_outputs(stage, method, nu, model, loss_history, mean_l2_error, ar
 def main():
     viscosities = [0.01, 0.04, 0.07]
     methods = ['nsga2', 'nsga3', 'bayes']
+    method_labels = {'nsga2': 'NSGA-II', 'nsga3': 'NSGA-III', 'bayes': 'Bayesian'}
     all_results = []
     
     print("\n" + "="*100)
@@ -174,7 +175,7 @@ def main():
                 )
                 
                 nu_results.append({
-                    'method': method.upper(),
+                    'method': method_labels[method],
                     'stage': 'adam_lbfgs',
                     'nu': nu,
                     'architecture': str(arch),

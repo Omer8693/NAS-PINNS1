@@ -30,8 +30,21 @@ def load_all_results():
     if not all_data:
         print("❌ No results found!")
         return None
-    
-    return pd.concat(all_data, ignore_index=True)
+
+    df = pd.concat(all_data, ignore_index=True)
+
+    # Normalize method names across stages/files
+    method_map = {
+        'NSGA2': 'NSGA-II',
+        'NSGA-II': 'NSGA-II',
+        'NSGA3': 'NSGA-III',
+        'NSGA-III': 'NSGA-III',
+        'BAYES': 'Bayesian',
+        'Bayesian': 'Bayesian'
+    }
+    df['method'] = df['method'].astype(str).str.strip().map(method_map).fillna(df['method'])
+
+    return df
 
 
 # ════════════════════════════════════════════════════════════════════════════════

@@ -52,18 +52,34 @@ NAS-PINNS1/
 ├── nsga2_search.py         # NSGA-II optimization
 ├── nsga3_search.py         # NSGA-III optimization
 ├── bayes_opt_search.py     # Bayesian optimization
+├── lbfgs_refine.py         # Stage 2 refinement (Adam + L-BFGS)
+├── pso_refine.py           # Stage 3 refinement (Adam + PSO)
+├── final_comparison.py     # Final stage comparison and plots
 ├── run_all.py              # Main execution script
 ├── README.md               # This file
 │
 └── results/                # Generated results
-    ├── nu_0.01/
-    │   ├── nsga2/
-    │   ├── nsga3/
-    │   └── bayesian/
-    ├── nu_0.04/
-    ├── nu_0.07/
-    └── comparison.csv
+     ├── adam/               # Stage 1 outputs
+     ├── adam_lbfgs/         # Stage 2 outputs
+     ├── adam_pso/           # Stage 3 outputs
+     ├── visualizations/     # Final comparison plots
+     └── MASTER_COMPARISON.csv
 ```
+
+## 🔄 Workflow (Current Logic)
+
+The project runs sequentially in this order:
+
+1. **Stage 1 – Adam NAS Search**
+    - Finds best architectures with NSGA-II, NSGA-III, Bayesian Optimization.
+2. **Stage 2 – L-BFGS Refinement**
+    - Re-trains Stage 1 best architectures using Adam + L-BFGS.
+3. **Stage 3 – PSO Refinement**
+    - Optimizes training hyperparameters (learning rate, λ_PDE factor) with PSO.
+4. **Final Comparison**
+    - Compares all stages and methods, creates summary tables and plots.
+
+You can run the full pipeline from `run_all.py` (it triggers Stage 1 → Stage 2 → Stage 3 → Final Comparison in sequence).
 
 ### Core Components
 
@@ -93,6 +109,21 @@ NAS-PINNS1/
 - Default: 10 iterations, 2 initial random points
 - In `run_all.py` fast preset: 8 iterations, 2 initial random points
 - Optimizes: layers, neurons, learning rate
+
+#### 5. `lbfgs_refine.py`
+- Loads best Stage 1 architectures from `results/adam/...`
+- Refines each model with Adam + L-BFGS
+- Saves outputs to `results/adam_lbfgs/...`
+
+#### 6. `pso_refine.py`
+- Loads best Stage 1 architectures from `results/adam/...`
+- Uses PSO to optimize `(learning_rate, lambda_pde_factor)`
+- Retrains and saves outputs to `results/adam_pso/...`
+
+#### 7. `final_comparison.py`
+- Loads all stage summaries (`adam`, `adam_lbfgs`, `adam_pso`)
+- Produces consolidated metrics and visual comparisons
+- Writes `results/MASTER_COMPARISON.csv` and plots under `results/visualizations/`
 
 ---
 

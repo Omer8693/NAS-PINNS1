@@ -28,16 +28,17 @@ class BurgersNASProblem3(ElementwiseProblem):
     Objectives: minimize (mean L2 error, parameter count, training time)
     """
     def __init__(self, nu):
+        self.max_hidden_layers = 8
         # Decision variables:
-        # [0]: n_layers (4-10)
+        # [0]: n_layers (4-8)
         # [1-8]: neurons per layer (48-256)
         # [9]: learning rate (1e-4 to 8e-3)
         # [10]: use_residual (0 or 1)
         # [11]: lambda_pde_factor (60-140)
         
-        n_var = 1 + 8 + 1 + 1 + 1
+        n_var = 1 + self.max_hidden_layers + 1 + 1 + 1
         xl = np.array([4] + [48]*8 + [1e-4] + [0] + [60.0])
-        xu = np.array([10] + [256]*8 + [8e-3] + [1] + [140.0])
+        xu = np.array([self.max_hidden_layers] + [256]*8 + [8e-3] + [1] + [140.0])
         
         super().__init__(n_var=n_var, n_obj=3, xl=xl, xu=xu)
         self.nu = nu
@@ -47,7 +48,7 @@ class BurgersNASProblem3(ElementwiseProblem):
         self.eval_count += 1
         
         # Parse decision variables
-        n_layers = int(round(x[0]))
+        n_layers = int(np.clip(round(x[0]), 4, self.max_hidden_layers))
         neurons = [int(round(x[i])) for i in range(1, 1 + n_layers)]
         lr = float(x[-3])
         use_residual = bool(round(x[-2]))
@@ -154,7 +155,7 @@ class NSGA3Callback:
 # Main NSGA-III Run Function
 # ════════════════════════════════════════════════════════════════════════════════
 
-def run_nsga3(nu, pop=24, ngen=12):
+def run_nsga3(nu, pop=10, ngen=5):
     """
     Run NSGA-III for NAS-PINN architecture search
     
@@ -167,7 +168,7 @@ def run_nsga3(nu, pop=24, ngen=12):
         dict: best solution found
         pymoo result object
     """
-    ref_dirs = get_reference_directions("das-dennis", 3, n_partitions=5)
+    ref_dirs = get_reference_directions("das-dennis", 3, n_partitions=2)
     
     print("\n" + "="*90)
     print("🔍 METHOD: NSGA-III (Many-Objective Genetic Algorithm)")
@@ -218,7 +219,8 @@ def run_nsga3(nu, pop=24, ngen=12):
     
     # Extract best solution (by mean L2 error)
     best_idx = np.argmin(res.F[:, 0])
-    n_layers = int(round(res.X[best_idx][0]))
+    max_hidden_layers = 8
+    n_layers = int(np.clip(round(res.X[best_idx][0]), 4, max_hidden_layers))
     neurons = [int(round(res.X[best_idx][i])) for i in range(1, 1 + n_layers)]
     lr = float(res.X[best_idx][-3])
     use_residual = bool(round(res.X[best_idx][-2]))
@@ -265,6 +267,6 @@ if __name__ == "__main__":
         print(f"  NSGA-III NAS-PINN Search – ν = {nu}")
         print(f"{'#'*90}\n")
         
-        best_result, pymoo_result = run_nsga3(nu, pop=24, ngen=12)
+        best_result, pymoo_result = run_nsga3(nu, pop=10, ngen=5)
         
         print(f"✅ Search completed. Best architecture: {best_result['architecture']}")

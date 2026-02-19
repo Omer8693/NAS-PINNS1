@@ -134,7 +134,7 @@ class BayesianNASOptimizer:
 # Main Bayesian Run Function
 # ════════════════════════════════════════════════════════════════════════════════
 
-def run_bayes(nu, n_iter=15, init_points=3):
+def run_bayes(nu, n_iter=10, init_points=2):
     """
     Run Bayesian Optimization for NAS-PINN
     
@@ -271,7 +271,7 @@ if __name__ == "__main__":
         print(f"  Bayesian Optimization NAS-PINN Search – ν = {nu}")
         print(f"{'#'*90}\n")
         
-        best_result, optimizer = run_bayes(nu, n_iter=15, init_points=3)
+        best_result, optimizer = run_bayes(nu, n_iter=10, init_points=2)
         
         print(f"✅ Search completed. Best architecture: {best_result['architecture']}")
 

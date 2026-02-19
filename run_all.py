@@ -4,6 +4,8 @@ import torch
 import pandas as pd
 import numpy as np
 import traceback
+import subprocess
+import sys
 from tqdm import tqdm
 
 from nsga2_search import run_nsga2
@@ -86,6 +88,10 @@ def save_stage_outputs(stage, method, nu, model, loss_history, mean_l2_error, ar
 
 def main():
     viscosities = [0.01, 0.04, 0.07]
+    nsga_pop = 10
+    nsga_gen = 5
+    bayes_iter = 8
+    bayes_init = 2
     all_results = []
     
     print("="*100)
@@ -117,7 +123,7 @@ def main():
         
         try:
             print("🔍 Running NSGA-II search...\n")
-            best_nsga2, _ = run_nsga2(nu, pop=10, ngen=5)
+            best_nsga2, _ = run_nsga2(nu, pop=nsga_pop, ngen=nsga_gen)
             
             arch = best_nsga2['architecture']
             print(f"\n✅ NSGA-II search completed")
@@ -166,7 +172,7 @@ def main():
         
         try:
             print("🔍 Running NSGA-III search...\n")
-            best_nsga3, _ = run_nsga3(nu, pop=20, ngen=5)
+            best_nsga3, _ = run_nsga3(nu, pop=nsga_pop, ngen=nsga_gen)
             
             arch = best_nsga3['architecture']
             print(f"\n✅ NSGA-III search completed")
@@ -214,7 +220,7 @@ def main():
         
         try:
             print("🔍 Running Bayesian Optimization...\n")
-            best_bayes, _ = run_bayes(nu, n_iter=10, init_points=3)
+            best_bayes, _ = run_bayes(nu, n_iter=bayes_iter, init_points=bayes_init)
             
             arch = best_bayes['architecture']
             print(f"\n✅ Bayesian search completed")
@@ -281,5 +287,38 @@ def main():
         print(f"{'='*100}\n")
 
 
-if __name__ == "__main__":
+def run_full_pipeline():
+    print("\n" + "="*100)
+    print(" 🚀 RUNNING FULL PIPELINE")
+    print("  1) Stage 1: Adam NAS Search")
+    print("  2) Stage 2: Adam + L-BFGS Refinement")
+    print("  3) Stage 3: Adam + PSO Refinement")
+    print("  4) Final Comparison")
+    print("="*100 + "\n")
+
+    # Stage 1
     main()
+
+    # Stage 2, 3, Final Comparison
+    follow_up_scripts = [
+        "lbfgs_refine.py",
+        "pso_refine.py",
+        "final_comparison.py"
+    ]
+
+    for script in follow_up_scripts:
+        print(f"\n▶ Running {script} ...")
+        result = subprocess.run([sys.executable, script])
+        if result.returncode != 0:
+            print(f"❌ {script} failed with exit code {result.returncode}")
+            print("⛔ Pipeline stopped.")
+            return
+        print(f"✅ {script} completed")
+
+    print("\n" + "="*100)
+    print("✅ FULL PIPELINE COMPLETED SUCCESSFULLY")
+    print("="*100 + "\n")
+
+
+if __name__ == "__main__":
+    run_full_pipeline()

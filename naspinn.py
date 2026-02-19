@@ -126,7 +126,8 @@ def train_pinn(model, nu, data,
                lambda_ic=5.0,
                patience=100,
                verbose=True,
-               use_lbfgs=False):
+               use_lbfgs=False,
+               lbfgs_steps=200):
     """
     Train with Adam + learning rate scheduler + early stopping
     """
@@ -153,6 +154,9 @@ def train_pinn(model, nu, data,
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
         optimizer.step()
+
+        if verbose and (epoch + 1) % 100 == 0:
+            print(f"[Adam] Epoch {epoch + 1}/{epochs} - Loss: {loss_val:.4e}")
         
         history.append(loss_val)
         
@@ -168,6 +172,39 @@ def train_pinn(model, nu, data,
             break
         
         scheduler.step(loss_val)
+
+    if use_lbfgs:
+        lbfgs = torch.optim.LBFGS(
+            model.parameters(),
+            lr=1.0,
+            max_iter=lbfgs_steps,
+            tolerance_grad=1e-9,
+            tolerance_change=1e-11,
+            history_size=100,
+            line_search_fn='strong_wolfe'
+        )
+
+        if verbose:
+            print(f"[L-BFGS] Starting refinement for up to {lbfgs_steps} steps...")
+
+        lbfgs_state = {'step': 0}
+
+        def closure():
+            lbfgs.zero_grad()
+            loss_lbfgs = total_loss(model, data, nu, lambda_pde, lambda_bc, lambda_ic)
+            loss_lbfgs.backward()
+            lbfgs_state['step'] += 1
+            if verbose and lbfgs_state['step'] % 20 == 0:
+                print(f"[L-BFGS] Step {lbfgs_state['step']}/{lbfgs_steps} - Loss: {loss_lbfgs.item():.4e}")
+            return loss_lbfgs
+
+        lbfgs.step(closure)
+
+        final_lbfgs_loss = total_loss(model, data, nu, lambda_pde, lambda_bc, lambda_ic).item()
+        history.append(final_lbfgs_loss)
+
+        if verbose:
+            print(f"[L-BFGS] Finished - Final Loss: {final_lbfgs_loss:.4e}")
 
     return model, history
 
@@ -196,7 +233,7 @@ def compute_mean_l2_error(model, nu, nt=100, nx=300):
     return np.mean(errors), np.std(errors)
 
 
-def nas_search(num_generations=12, population_size=24, verbose=True):
+def nas_search(num_generations=5, population_size=10, verbose=True):
     """
     Simple population-based architecture search inspired by NAS-PINN ideas
     - Wider search space
@@ -408,6 +445,6 @@ def set_seed(seed=42):
 
 if __name__ == "__main__":
     start_time = time.time()
-    best, all_pop = nas_search(num_generations=12, population_size=24)
+    best, all_pop = nas_search(num_generations=5, population_size=10)
     elapsed = time.time() - start_time
     print(f"\nTotal runtime: {elapsed/60:.1f} minutes  ({elapsed:.0f} seconds)")

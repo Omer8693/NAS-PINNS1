@@ -1,0 +1,76 @@
+[START] 2026-02-22T18:20:26.002588
+COMMAND: /usr/bin/python NAS_PINNs_burgers_nsga3.py --multi-nu --nu-list 0.01,0.04,0.07
+
+
+==========================================================================================
+NSGA-III NAS-PINN Search
+==========================================================================================
+  Viscosity: nu=0.010000 | pop=10 | gen=5 | eval_epochs=400
+  Objective: min (relative L2, params)
+==========================================================================================
+
+WARNING: pop_size=10 is less than number of reference directions=13.
+NSGA-III generation:   0%|          | 0/5 [00:00<?, ?gen/s]NSGA-III generation:  20%|██        | 1/5 [00:35<02:23, 35.82s/gen]NSGA-III generation:  40%|████      | 2/5 [01:06<01:38, 32.72s/gen]NSGA-III generation:  60%|██████    | 3/5 [01:37<01:03, 31.80s/gen]NSGA-III generation:  80%|████████  | 4/5 [02:08<00:31, 31.71s/gen]NSGA-III generation: 100%|██████████| 5/5 [02:39<00:00, 31.54s/gen]NSGA-III generation: 100%|██████████| 5/5 [02:39<00:00, 31.98s/gen]
+  Gen  1/5 -> best relL2=2.77e-01, params=58,221
+  Gen  2/5 -> best relL2=2.43e-01, params=59,253
+  Gen  3/5 -> best relL2=2.43e-01, params=59,253
+  Gen  4/5 -> best relL2=2.43e-01, params=59,253
+  Gen  5/5 -> best relL2=2.41e-01, params=42,769
+[    0] PDE: 1.8998e-04  IC: 5.3067e-01  BC: 4.0049e-02
+[ 2000] PDE: 1.3564e-02  IC: 2.8458e-03  BC: 5.7477e-03
+[ 4000] PDE: 7.0874e-04  IC: 7.3772e-07  BC: 2.1853e-07
+[ 6000] PDE: 1.8358e-03  IC: 2.3136e-05  BC: 2.4444e-05
+[ 8000] PDE: 1.9901e-03  IC: 6.3229e-05  BC: 4.9713e-05
+[10000] PDE: 2.7537e-04  IC: 8.5093e-06  BC: 1.0869e-06
+[12000] PDE: 4.6623e-04  IC: 3.3357e-06  BC: 1.5161e-05
+[14000] PDE: 2.5779e-04  IC: 7.5641e-06  BC: 5.5816e-06
+
+Discovered architecture (NSGA-III):
+  Layers: [2, 164, 107, 144, 47, 46, 1]
+  Activation: tanh | Residual: False
+Saved plot: results/burgers/nsga3/nu_0.010/burgers_heatmap.png
+Saved plot: results/burgers/nsga3/nu_0.010/burgers_time_slices.png
+Saved plot: results/burgers/nsga3/nu_0.010/burgers_exact_vs_pred_time_slices.png
+Relative L2 error (full grid): 7.5884e-02
+Saved plot: results/burgers/nsga3/nu_0.010/burgers_full_exact_vs_pred.png
+Run time: 338.15 s
+
+==========================================================================================
+NSGA-III NAS-PINN Search
+==========================================================================================
+  Viscosity: nu=0.040000 | pop=10 | gen=5 | eval_epochs=400
+  Objective: min (relative L2, params)
+==========================================================================================
+
+WARNING: pop_size=10 is less than number of reference directions=13.
+NSGA-III generation:   0%|          | 0/5 [00:00<?, ?gen/s]NSGA-III generation:  20%|██        | 1/5 [00:34<02:17, 34.33s/gen]NSGA-III generation:  40%|████      | 2/5 [01:08<01:42, 34.31s/gen]NSGA-III generation:  60%|██████    | 3/5 [01:43<01:09, 34.68s/gen]NSGA-III generation:  80%|████████  | 4/5 [02:17<00:34, 34.48s/gen]NSGA-III generation: 100%|██████████| 5/5 [02:51<00:00, 34.18s/gen]NSGA-III generation: 100%|██████████| 5/5 [02:51<00:00, 34.31s/gen]
+  Gen  1/5 -> best relL2=1.90e-01, params=109,547
+  Gen  2/5 -> best relL2=4.84e-02, params=98,225
+  Gen  3/5 -> best relL2=4.84e-02, params=98,225
+  Gen  4/5 -> best relL2=4.84e-02, params=98,225
+  Gen  5/5 -> best relL2=4.48e-02, params=35,794
+[    0] PDE: 4.3720e-06  IC: 5.7611e-01  BC: 3.0673e-02
+[ 2000] PDE: 3.8817e-03  IC: 2.0138e-06  BC: 1.3712e-06
+[ 4000] PDE: 3.0773e-03  IC: 1.0915e-05  BC: 2.3454e-06
+[ 6000] PDE: 7.2481e-04  IC: 2.4113e-05  BC: 3.1069e-05
+[ 8000] PDE: 7.6465e-04  IC: 8.1208e-05  BC: 1.5942e-04
+[10000] PDE: 7.6425e-04  IC: 2.3003e-05  BC: 4.0555e-05
+[12000] PDE: 4.9866e-04  IC: 1.2466e-05  BC: 6.3070e-06
+[14000] PDE: 1.9826e-04  IC: 9.1847e-06  BC: 1.1843e-05
+
+Discovered architecture (NSGA-III):
+  Layers: [2, 48, 79, 106, 128, 56, 41, 1]
+  Activation: tanh | Residual: True
+Saved plot: results/burgers/nsga3/nu_0.040/burgers_heatmap.png
+Exact/time-slice comparison is only generated for --nu=0.01. Saving heatmap + rel L2 for this run.
+Run time: 349.74 s
+
+==========================================================================================
+NSGA-III NAS-PINN Search
+==========================================================================================
+  Viscosity: nu=0.070000 | pop=10 | gen=5 | eval_epochs=400
+  Objective: min (relative L2, params)
+==========================================================================================
+
+WARNING: pop_size=10 is less than number of reference directions=13.
+NSGA-III generation:   0%|          | 0/5 [00:00<?, ?gen/s]NSGA-III generation:  20%|██        | 1/5 [00:32<02:11, 32.84s/gen]NSGA-III generation:  40%|████      | 2/5 [01:04<01:37, 32.36s/gen]NSGA-III generation:  60%|██████    | 3/5 [01:38<01:05, 32.83s/gen]

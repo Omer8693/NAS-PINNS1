@@ -73,4 +73,26 @@ NSGA-III NAS-PINN Search
 ==========================================================================================
 
 WARNING: pop_size=10 is less than number of reference directions=13.
-NSGA-III generation:   0%|          | 0/5 [00:00<?, ?gen/s]NSGA-III generation:  20%|██        | 1/5 [00:32<02:11, 32.84s/gen]NSGA-III generation:  40%|████      | 2/5 [01:04<01:37, 32.36s/gen]NSGA-III generation:  60%|██████    | 3/5 [01:38<01:05, 32.83s/gen]
+NSGA-III generation:   0%|          | 0/5 [00:00<?, ?gen/s]NSGA-III generation:  20%|██        | 1/5 [00:32<02:11, 32.84s/gen]NSGA-III generation:  40%|████      | 2/5 [01:04<01:37, 32.36s/gen]NSGA-III generation:  60%|██████    | 3/5 [01:38<01:05, 32.83s/gen]NSGA-III generation:  80%|████████  | 4/5 [02:11<00:33, 33.03s/gen]NSGA-III generation: 100%|██████████| 5/5 [02:42<00:00, 32.30s/gen]NSGA-III generation: 100%|██████████| 5/5 [02:42<00:00, 32.52s/gen]
+  Gen  1/5 -> best relL2=1.86e-02, params=56,273
+  Gen  2/5 -> best relL2=1.86e-02, params=56,273
+  Gen  3/5 -> best relL2=1.86e-02, params=56,273
+  Gen  4/5 -> best relL2=1.86e-02, params=56,273
+  Gen  5/5 -> best relL2=9.04e-03, params=28,660
+[    0] PDE: 3.9478e-04  IC: 5.0979e-01  BC: 5.0511e-02
+[ 2000] PDE: 1.3657e-03  IC: 4.2020e-06  BC: 4.7029e-06
+[ 4000] PDE: 8.2890e-04  IC: 1.9275e-05  BC: 4.3868e-05
+[ 6000] PDE: 2.8639e-04  IC: 8.8440e-05  BC: 1.9120e-04
+[ 8000] PDE: 2.0699e-04  IC: 2.8155e-05  BC: 1.7215e-05
+[10000] PDE: 9.2282e-05  IC: 8.4268e-08  BC: 1.7350e-08
+[12000] PDE: 1.5115e-04  IC: 4.4933e-06  BC: 7.6074e-06
+[14000] PDE: 1.8772e-04  IC: 3.8773e-06  BC: 3.9261e-06
+
+Discovered architecture (NSGA-III):
+  Layers: [2, 130, 159, 38, 34, 1]
+  Activation: tanh | Residual: True
+Saved plot: results/burgers/nsga3/nu_0.070/burgers_heatmap.png
+Exact/time-slice comparison is only generated for --nu=0.01. Saving heatmap + rel L2 for this run.
+Run time: 294.94 s
+Saved summary: results/burgers/nsga3/viscosity_comparison.csv
+Saved plot: results/burgers/nsga3/viscosity_comparison.png

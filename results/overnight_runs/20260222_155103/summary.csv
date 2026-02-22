@@ -1,0 +1,15 @@
+job,status,return_code,elapsed_sec,log
+burgers_naspinn_single,ok,0,875.69,results/overnight_runs/20260222_155103/burgers_naspinn_single.log
+burgers_nsga2_single,ok,0,346.69,results/overnight_runs/20260222_155103/burgers_nsga2_single.log
+burgers_nsga3_single,ok,0,319.72,results/overnight_runs/20260222_155103/burgers_nsga3_single.log
+burgers_bayesian_single,ok,0,253.14,results/overnight_runs/20260222_155103/burgers_bayesian_single.log
+poisson_naspinn_single,ok,0,488.27,results/overnight_runs/20260222_155103/poisson_naspinn_single.log
+poisson_nsga2_single,ok,0,1239.38,results/overnight_runs/20260222_155103/poisson_nsga2_single.log
+poisson_nsga3_single,ok,0,1705.93,results/overnight_runs/20260222_155103/poisson_nsga3_single.log
+poisson_bayesian_single,ok,0,256.06,results/overnight_runs/20260222_155103/poisson_bayesian_single.log
+burgers_naspinn_multi,ok,0,2401.65,results/overnight_runs/20260222_155103/burgers_naspinn_multi.log
+burgers_nsga2_multi,ok,0,1076.12,results/overnight_runs/20260222_155103/burgers_nsga2_multi.log
+burgers_nsga3_multi,ok,0,986.72,results/overnight_runs/20260222_155103/burgers_nsga3_multi.log
+burgers_bayesian_multi,ok,0,655.29,results/overnight_runs/20260222_155103/burgers_bayesian_multi.log
+poisson_naspinn_multi,failed,1,1448.49,results/overnight_runs/20260222_155103/poisson_naspinn_multi.log
+poisson_naspinn_multi,failed,1,1424.12,results/overnight_runs/20260222_155103/poisson_naspinn_multi.log

@@ -1,129 +1,226 @@
-# NAS-PINN: Neural Architecture Search for Physics-Informed Neural Networks
+# NAS-PINN: Neural Architecture Search for PINNs (Burgers + Poisson)
 
-## 🎯 Project Overview
+## Project Overview
 
-This repository implements **Neural Architecture Search (NAS)** for Physics-Informed Neural Networks (PINNs) applied to the **Burgers Equation** - a fundamental nonlinear PDE in fluid dynamics.
+This repository contains the **current active workflow** for NAS-based PINN training on:
 
-### Key Features
-- ✅ **3 NAS Methods**: NSGA-II, NSGA-III, Bayesian Optimization
-- ✅ **Automatic Architecture Discovery**: Optimizes network depth, width, and learning rate
-- ✅ **Multi-Regime Benchmark**: Tests across 3 viscosity values (ν = 0.01, 0.04, 0.07)
-- ✅ **Comprehensive Evaluation**: L2 error, MSE, RMSE, MAE, parameter count
-- ✅ **Rich Visualizations**: Heatmaps, snapshots, error distributions, loss curves
+- **Burgers equation**
+- **Poisson equation**
 
----
+Supported search/training methods:
 
-## 📐 Problem Formulation
+- **NAS-PINN** (`naspinn`)
+- **NSGA-II**
+- **NSGA-III**
+- **Bayesian Optimization**
 
-### Burgers Equation
-```
-∂u/∂t + u·∂u/∂x - (ν/π)·∂²u/∂x² = 0
-```
-
-**Domain:**
-- Spatial: x ∈ [-1, 1]
-- Temporal: t ∈ [0, 1]
-
-**Initial Condition:**
-```
-u(0, x) = -sin(πx)
-```
-
-**Boundary Conditions:**
-```
-u(t, -1) = 0
-u(t, +1) = 0
-```
-
-**Viscosity Values:**
-- ν = 0.01 → Highly advective (shock-like structures, most challenging)
-- ν = 0.04 → Moderate regime (balanced advection-diffusion)
-- ν = 0.07 → Diffusion-dominated (smooth solution, easier)
+The codebase is organized so that root scripts are lightweight entrypoints, while implementation lives under `optimizers/`.
 
 ---
 
-## 🏗️ Architecture
+## Current Repository Structure
 
-### File Structure
-```
+```text
 NAS-PINNS1/
-│
-├── naspinn.py              # Core PINN implementation
-├── nsga2_search.py         # NSGA-II optimization
-├── nsga3_search.py         # NSGA-III optimization
-├── bayes_opt_search.py     # Bayesian optimization
-├── lbfgs_refine.py         # Stage 2 refinement (Adam + L-BFGS)
-├── pso_refine.py           # Stage 3 refinement (Adam + PSO)
-├── final_comparison.py     # Final stage comparison and plots
-├── run_all.py              # Main execution script
-├── README.md               # This file
-│
-└── results/                # Generated results
-     ├── adam/               # Stage 1 outputs
-     ├── adam_lbfgs/         # Stage 2 outputs
-     ├── adam_pso/           # Stage 3 outputs
-     ├── visualizations/     # Final comparison plots
-     └── MASTER_COMPARISON.csv
+├── NAS_PINNs_burgers.py
+├── NAS_PINNs_burgers_nsga2.py
+├── NAS_PINNs_burgers_nsga3.py
+├── NAS_PINNs_burgers_bayesian.py
+├── NAS_PINNs_poisson.py
+├── NAS_PINNs_poisson_nsga2.py
+├── NAS_PINNs_poisson_nsga3.py
+├── NAS_PINNs_poisson_bayesian.py
+├── optimizers/
+│   ├── burgers/
+│   │   ├── naspinn.py
+│   │   ├── nsga2.py
+│   │   ├── nsga3.py
+│   │   ├── bayesian.py
+│   │   └── plots.py
+│   └── poisson/
+│       ├── common.py
+│       ├── naspinn.py
+│       ├── nsga2.py
+│       ├── nsga3.py
+│       ├── bayesian.py
+│       └── plots.py
+├── migrate_results.py
+├── RUN_GUIDE.md
+├── legacy_previous_work/
+└── results/
 ```
 
-## 🔄 Workflow (Current Logic)
+Notes:
 
-The project runs sequentially in this order:
-
-1. **Stage 1 – Adam NAS Search**
-    - Finds best architectures with NSGA-II, NSGA-III, Bayesian Optimization.
-2. **Stage 2 – L-BFGS Refinement**
-    - Re-trains Stage 1 best architectures using Adam + L-BFGS.
-3. **Stage 3 – PSO Refinement**
-    - Optimizes training hyperparameters (learning rate, λ_PDE factor) with PSO.
-4. **Final Comparison**
-    - Compares all stages and methods, creates summary tables and plots.
-
-You can run the full pipeline from `run_all.py` (it triggers Stage 1 → Stage 2 → Stage 3 → Final Comparison in sequence).
-
-### Core Components
-
-#### 1. `naspinn.py`
-- `ResidualBurgerPINN`: PINN class with optional residual connections and tanh activation
-- `generate_data()`: Creates training data (collocation, boundary, initial points)
-- `pde_loss()`: Computes PDE residual using automatic differentiation
-- `train_pinn()`: Trains model using Adam optimizer (default 1200 epochs, lr=3e-4)
-- Training progress is printed every 100 epochs in terminal
-- `compute_mean_l2_error()`: Evaluates time-averaged relative L2 error
-- Visualization functions for heatmaps, snapshots, comparisons
-
-#### 2. `nsga2_search.py`
-- Multi-objective optimization (minimize L2 error + parameters)
-- Population: 10, Generations: 5 (fast mode)
-- Search space: 4-8 hidden layers, 48-256 neurons/layer
-- Also optimizes learning rate, residual toggle, and PDE loss weight factor
-
-#### 3. `nsga3_search.py`
-- Many-objective optimization (L2 error + parameters + training time)
-- Population: 10, Generations: 5 (fast mode)
-- Reference directions for Pareto front
-- Additional learning rate optimization
-
-#### 4. `bayes_opt_search.py`
-- Gaussian Process-based optimization
-- Default: 10 iterations, 2 initial random points
-- In `run_all.py` fast preset: 8 iterations, 2 initial random points
-- Optimizes: layers, neurons, learning rate
-
-#### 5. `lbfgs_refine.py`
-- Loads best Stage 1 architectures from `results/adam/...`
-- Refines each model with Adam + L-BFGS
-- Saves outputs to `results/adam_lbfgs/...`
-
-#### 6. `pso_refine.py`
-- Loads best Stage 1 architectures from `results/adam/...`
-- Uses PSO to optimize `(learning_rate, lambda_pde_factor)`
-- Retrains and saves outputs to `results/adam_pso/...`
-
-#### 7. `final_comparison.py`
-- Loads all stage summaries (`adam`, `adam_lbfgs`, `adam_pso`)
-- Produces consolidated metrics and visual comparisons
-- Writes `results/MASTER_COMPARISON.csv` and plots under `results/visualizations/`
+- Plot code is centralized per domain in `optimizers/burgers/plots.py` and `optimizers/poisson/plots.py`.
+- This means style/color updates are made once and affect all methods automatically.
 
 ---
+
+## How to Run
+
+### Burgers (single run)
+
+- `python NAS_PINNs_burgers.py`
+- `python NAS_PINNs_burgers_nsga2.py`
+- `python NAS_PINNs_burgers_nsga3.py`
+- `python NAS_PINNs_burgers_bayesian.py`
+
+### Burgers (3 viscosity comparison)
+
+- `python NAS_PINNs_burgers.py --multi-nu`
+- `python NAS_PINNs_burgers_nsga2.py --multi-nu`
+- `python NAS_PINNs_burgers_nsga3.py --multi-nu`
+- `python NAS_PINNs_burgers_bayesian.py --multi-nu`
+
+Default viscosity list: `0.01,0.04,0.07` (override with `--nu-list`).
+
+Tested command example:
+
+- `python NAS_PINNs_burgers.py --multi-nu --nu-list 0.01,0.04,0.07`
+
+Important terminal note:
+
+- Do not paste markdown link syntax into terminal (for example `[NAS_PINNs_burgers.py](...)`).
+- Use plain command text only.
+
+### Poisson (single run)
+
+- `python NAS_PINNs_poisson.py`
+- `python NAS_PINNs_poisson_nsga2.py`
+- `python NAS_PINNs_poisson_nsga3.py`
+- `python NAS_PINNs_poisson_bayesian.py`
+
+### Poisson (3 seed comparison)
+
+- `python NAS_PINNs_poisson.py --multi-seed`
+- `python NAS_PINNs_poisson_nsga2.py --multi-seed`
+- `python NAS_PINNs_poisson_nsga3.py --multi-seed`
+- `python NAS_PINNs_poisson_bayesian.py --multi-seed`
+
+Default seed list: `42,43,44` (override with `--seed-list`).
+
+> Use `PINNs` in filenames (e.g. `NAS_PINNs_burgers.py`), not `PINNS`.
+
+---
+
+## Output Layout
+
+Results are written under:
+
+- `results/burgers/naspinn`
+- `results/burgers/nsga2`
+- `results/burgers/nsga3`
+- `results/burgers/bayesian`
+- `results/poisson/naspinn`
+- `results/poisson/nsga2`
+- `results/poisson/nsga3`
+- `results/poisson/bayesian`
+
+Typical outputs include:
+
+- prediction/exact/error plots
+- comparison CSV/PNG for multi-run mode
+    - `viscosity_comparison.csv/.png` (Burgers)
+    - `seed_comparison.csv/.png` (Poisson)
+- runtime log: `run_time.txt`
+
+Poisson methods also save loss-vs-epoch figures (loss curve PNG files).
+
+For Burgers `--multi-nu` runs:
+
+- `nu_0.010`, `nu_0.040`, `nu_0.070` subfolders are generated.
+- Exact `burgers_shock.mat` comparison plots are only valid for dataset viscosity (`0.01/pi`).
+- For different `nu` values, code skips that exact-comparison step and still saves learned-solution plots.
+
+---
+
+## Plot Styling (Current)
+
+- Plot logic is separated from training scripts to keep main files shorter.
+- Colormap is intentionally simplified to a cleaner palette via shared plot modules.
+- If you want a new style, edit only:
+    - `optimizers/burgers/plots.py`
+    - `optimizers/poisson/plots.py`
+
+---
+
+## PSO Extension (Standalone)
+
+A separate PSO-based comparison pipeline is added without changing core method scripts.
+
+Core PSO modules:
+
+- `optimizers/pso/fuzzy_pso.py` (PSO implementation with `w`, `c1`, `c2`, adaptive update)
+- `optimizers/pso/runner.py` (baseline + PSO search + best rerun + comparison export)
+
+Standalone entrypoints (one per method):
+
+- `NAS_PINNs_burgers_pso.py`
+- `NAS_PINNs_burgers_nsga2_pso.py`
+- `NAS_PINNs_burgers_nsga3_pso.py`
+- `NAS_PINNs_burgers_bayesian_pso.py`
+- `NAS_PINNs_poisson_pso.py`
+- `NAS_PINNs_poisson_nsga2_pso.py`
+- `NAS_PINNs_poisson_nsga3_pso.py`
+- `NAS_PINNs_poisson_bayesian_pso.py`
+
+PSO outputs are saved under `results/pso_compare/<target>/` including:
+
+- `baseline/`
+- `pso_evals/`
+- `pso_best/`
+- `pso_comparison.csv`
+- `best_params.json`
+
+---
+
+## Toplu Çalıştırma (Otomasyon)
+
+`run_overnight.py` dosyası ile tüm yöntemler ve parametre kombinasyonları otomatik olarak çalıştırılır.
+
+Temel komut:
+
+```bash
+python3 run_overnight.py
+```
+
+PSO hariç çalıştırmak için:
+
+```bash
+python3 run_overnight.py --no-pso
+```
+
+Hızlı test için:
+
+```bash
+python3 run_overnight.py --quick
+```
+
+Hata durumunda durması ve onarım için:
+
+```bash
+python3 run_overnight.py --stop-on-error
+```
+
+**YENİ:** Hata oluşursa, log dosyasının son 20 satırı otomatik olarak gösterilir. Onarım yaptıktan sonra Enter'a basarak script kaldığı yerden devam eder. Eğer tekrar deneme de başarısız olursa script durur.
+
+Özetle:
+
+- Hata olursa log satırları gösterilir
+- Onarım sonrası Enter ile devam edilir
+- Job tekrar denenir
+- Başarılı olursa devam, başarısızsa durur
+
+Çıktılar ve sonuçlar `results/` altında kaydedilir.
+
+---
+
+## Legacy Code
+
+Old pipeline files are archived in:
+
+- `legacy_previous_work/`
+
+They are kept for reference and are not part of the active workflow.
 

@@ -1,3 +1,3 @@
-[START] 2026-02-22T21:57:28.155466
+[START] 2026-02-22T22:15:46.960118
 COMMAND: /usr/bin/python3 NAS_PINNs_poisson.py --multi-seed --seed-list 42,43,44
 

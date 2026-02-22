@@ -6,8 +6,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 import argparse
 import os
+import time
 from scipy.io import loadmat  # referans çözüm için (opsiyonel)
 from scipy.integrate import solve_ivp
+from .plots import (
+    plot_burgers_exact_pred_error,
+    plot_burgers_full_exact_vs_pred,
+    plot_burgers_heatmap,
+    plot_burgers_time_slices,
+    plot_burgers_time_slices_with_exact,
+    should_use_exact_plots,
+)
 
 torch.manual_seed(42)
 np.random.seed(42)
@@ -343,6 +352,21 @@ def reference_solution_fd(nu_coef, x_vals_np, t_vals_np):
     return U
 
 
+def get_reference_solution(nu_coef, x_test, t_test):
+    x_np = x_test.detach().cpu().numpy()
+    t_np = t_test.detach().cpu().numpy()
+
+    if should_use_exact_plots(nu_coef) and os.path.exists('burgers_shock.mat'):
+        data = loadmat('burgers_shock.mat')
+        x_exact = data['x'].squeeze()
+        t_exact = data['t'].squeeze()
+        u_exact = np.real(data['usol'])
+        if len(x_exact) == len(x_np) and len(t_exact) == len(t_np):
+            return u_exact
+
+    return reference_solution_fd(nu_coef, x_np, t_np)
+
+
 def run_paper_protocol(args):
     nu_values = [float(v.strip()) for v in args.paper_nus.split(',') if v.strip()]
     train_points = sample_points_paper(train_nx=args.train_nx, train_nt=args.train_nt)
@@ -388,18 +412,15 @@ def run_paper_protocol(args):
             print(f"nu={nu_val:.3f} | run={run_id} | rel L2={rel_l2:.4e}")
 
             if run_id == args.repeats:
-                fig, axes = plt.subplots(1, 3, figsize=(16, 5), constrained_layout=True)
-                Xp, Tp = np.meshgrid(x_test_np, t_test_np, indexing='ij')
-                cs0 = axes[0].contourf(Xp, Tp, exact_u, levels=60, cmap='viridis')
-                axes[0].set_title(f'Exact (nu={nu_val:.3f})')
-                fig.colorbar(cs0, ax=axes[0])
-                cs1 = axes[1].contourf(Xp, Tp, pred_u, levels=60, cmap='viridis')
-                axes[1].set_title(f'Pred (nu={nu_val:.3f})')
-                fig.colorbar(cs1, ax=axes[1])
-                cs2 = axes[2].contourf(Xp, Tp, np.abs(pred_u - exact_u), levels=60, cmap='magma')
-                axes[2].set_title('|Pred-Exact|')
-                fig.colorbar(cs2, ax=axes[2])
-                finalize_plot(os.path.join(args.save_dir, f"paper_protocol_nu_{nu_val:.3f}.png"))
+                plot_burgers_exact_pred_error(
+                    x_test_np,
+                    t_test_np,
+                    exact_u,
+                    pred_u,
+                    os.path.join(args.save_dir, f"paper_protocol_nu_{nu_val:.3f}.png"),
+                    pred_title=f"Pred (nu={nu_val:.3f})",
+                    use_interactive=interactive_plots,
+                )
 
         mean_l2 = float(np.mean(run_errors))
         std_l2 = float(np.std(run_errors))
@@ -421,123 +442,48 @@ def run_paper_protocol(args):
 # Isı haritası (contourf) – makaledeki gibi
 # ────────────────────────────────────────────────
 def plot_heatmap(model, save_dir):
-    nx, nt = 200, 100
-    x_grid = torch.linspace(x_min, x_max, nx, device=device).unsqueeze(1)
-    t_grid = torch.linspace(t_min, t_max, nt, device=device).unsqueeze(1)
-    X, T = torch.meshgrid(x_grid.squeeze(), t_grid.squeeze(), indexing='ij')
-    XT = torch.cat([X.flatten().unsqueeze(1), T.flatten().unsqueeze(1)], dim=1)
-
-    with torch.no_grad():
-        U = model(XT).cpu().reshape(nx, nt)
-
-    plt.figure(figsize=(10, 6))
-    cs = plt.contourf(X.cpu().numpy(), T.cpu().numpy(), U.numpy(),
-                      levels=60, cmap='viridis')
-    plt.colorbar(cs, label='u(x,t)')
-    plt.xlabel('x')
-    plt.ylabel('t')
-    plt.title('Burgers solution learned with NAS-PINN (heatmap)')
-    plt.tight_layout()
-    finalize_plot(os.path.join(save_dir, "burgers_heatmap.png"))
+    plot_burgers_heatmap(
+        model,
+        device,
+        x_min,
+        x_max,
+        t_min,
+        t_max,
+        os.path.join(save_dir, "burgers_heatmap.png"),
+        use_interactive=interactive_plots,
+    )
 
 def plot_time_slices(model, save_dir, t_values=[0.0, 0.25, 0.5, 0.75, 1.0], nx=400):
-    x_line = torch.linspace(x_min, x_max, nx, device=device).unsqueeze(1)
-
-    plt.figure(figsize=(10, 6))
-    with torch.no_grad():
-        for t_val in t_values:
-            t_line = torch.full_like(x_line, float(t_val))
-            xt = torch.cat([x_line, t_line], dim=1)
-            u_line = model(xt).cpu().numpy().squeeze()
-            plt.plot(x_line.cpu().numpy().squeeze(), u_line, label=f't={t_val:.2f}')
-
-    plt.xlabel('x')
-    plt.ylabel('u(x,t)')
-    plt.title('Time slices of the learned Burgers solution')
-    plt.legend()
-    plt.grid(True, alpha=0.3)
-    plt.tight_layout()
-    finalize_plot(os.path.join(save_dir, "burgers_time_slices.png"))
+    plot_burgers_time_slices(
+        model,
+        device,
+        x_min,
+        x_max,
+        os.path.join(save_dir, "burgers_time_slices.png"),
+        t_values=t_values,
+        nx=nx,
+        use_interactive=interactive_plots,
+    )
 
 def plot_time_slices_with_exact(model, save_dir, mat_path='burgers_shock.mat', t_values=[0.0, 0.25, 0.5, 0.75, 1.0]):
-    try:
-        data = loadmat(mat_path)
-    except Exception as exc:
-        print(f"Could not load exact solution file '{mat_path}': {exc}")
-        return
-
-    x_exact = data['x'].squeeze()
-    t_exact = data['t'].squeeze()
-    u_exact = np.real(data['usol'])
-
-    x_tensor = torch.tensor(x_exact, dtype=torch.float32, device=device).unsqueeze(1)
-
-    plt.figure(figsize=(10, 6))
-    with torch.no_grad():
-        for t_val in t_values:
-            t_idx = int(np.argmin(np.abs(t_exact - t_val)))
-            t_match = float(t_exact[t_idx])
-
-            t_tensor = torch.full_like(x_tensor, t_match)
-            xt = torch.cat([x_tensor, t_tensor], dim=1)
-            u_pred = model(xt).cpu().numpy().squeeze()
-            u_ref = u_exact[:, t_idx].squeeze()
-
-            plt.plot(x_exact, u_ref, '--', linewidth=2, label=f'Exact t={t_match:.2f}')
-            plt.plot(x_exact, u_pred, '-', linewidth=2, label=f'Pred t={t_match:.2f}')
-
-    plt.xlabel('x')
-    plt.ylabel('u(x,t)')
-    plt.title('Exact vs Predicted time slices (Burgers)')
-    plt.legend(ncol=2)
-    plt.grid(True, alpha=0.3)
-    plt.tight_layout()
-    finalize_plot(os.path.join(save_dir, "burgers_exact_vs_pred_time_slices.png"))
+    plot_burgers_time_slices_with_exact(
+        model,
+        device,
+        os.path.join(save_dir, "burgers_exact_vs_pred_time_slices.png"),
+        mat_path=mat_path,
+        t_values=t_values,
+        use_interactive=interactive_plots,
+    )
 
 def plot_full_exact_vs_pred(model, save_dir, mat_path='burgers_shock.mat'):
-    try:
-        data = loadmat(mat_path)
-    except Exception as exc:
-        print(f"Could not load exact solution file '{mat_path}': {exc}")
-        return
-
-    x_exact = data['x'].squeeze()
-    t_exact = data['t'].squeeze()
-    u_exact = np.real(data['usol'])
-
-    Xg, Tg = np.meshgrid(x_exact, t_exact, indexing='ij')
-    xt_np = np.stack([Xg.ravel(), Tg.ravel()], axis=1)
-    xt = torch.tensor(xt_np, dtype=torch.float32, device=device)
-
-    with torch.no_grad():
-        u_pred = model(xt).cpu().numpy().reshape(len(x_exact), len(t_exact))
-
-    rel_l2 = np.linalg.norm(u_pred - u_exact) / np.linalg.norm(u_exact)
-    print(f"Relative L2 error (full grid): {rel_l2:.4e}")
-
-    abs_err = np.abs(u_pred - u_exact)
-
-    fig, axes = plt.subplots(1, 3, figsize=(16, 5), constrained_layout=True)
-
-    cs0 = axes[0].contourf(Xg, Tg, u_exact, levels=60, cmap='viridis')
-    axes[0].set_title('Exact (burgers_shock.mat)')
-    axes[0].set_xlabel('x')
-    axes[0].set_ylabel('t')
-    plt.colorbar(cs0, ax=axes[0])
-
-    cs1 = axes[1].contourf(Xg, Tg, u_pred, levels=60, cmap='viridis')
-    axes[1].set_title('Predicted (NAS-PINN)')
-    axes[1].set_xlabel('x')
-    axes[1].set_ylabel('t')
-    plt.colorbar(cs1, ax=axes[1])
-
-    cs2 = axes[2].contourf(Xg, Tg, abs_err, levels=60, cmap='magma')
-    axes[2].set_title('|Pred - Exact|')
-    axes[2].set_xlabel('x')
-    axes[2].set_ylabel('t')
-    plt.colorbar(cs2, ax=axes[2])
-
-    finalize_plot(os.path.join(save_dir, "burgers_full_exact_vs_pred.png"))
+    plot_burgers_full_exact_vs_pred(
+        model,
+        device,
+        os.path.join(save_dir, "burgers_full_exact_vs_pred.png"),
+        mat_path=mat_path,
+        pred_title="Predicted (NAS-PINN)",
+        use_interactive=interactive_plots,
+    )
 
 
 def print_discovered_architecture(model):
@@ -558,8 +504,10 @@ def parse_args():
     parser.add_argument("--plot-only", action="store_true", help="skip training and only run plots from checkpoint")
     parser.add_argument("--skip-lbfgs", action="store_true", help="skip L-BFGS refinement")
     parser.add_argument("--nu", type=float, default=nu, help="single-run viscosity coefficient")
+    parser.add_argument("--multi-nu", action="store_true", help="run three viscosity values and save comparison")
+    parser.add_argument("--nu-list", type=str, default="0.01,0.04,0.07", help="comma-separated viscosities for --multi-nu")
     parser.add_argument("--epochs", type=int, default=15000, help="number of Adam epochs")
-    parser.add_argument("--save-dir", type=str, default="results_plots1", help="directory to save plot images")
+    parser.add_argument("--save-dir", type=str, default="results/burgers/naspinn", help="directory to save plot images")
     parser.add_argument("--paper-protocol", action="store_true", help="run paper-style multi-viscosity protocol")
     parser.add_argument("--paper-nus", type=str, default="0.1,0.07,0.04", help="comma-separated nu values")
     parser.add_argument("--repeats", type=int, default=5, help="number of repeated runs per viscosity")
@@ -571,13 +519,11 @@ def parse_args():
     return parser.parse_args()
 
 
-def main():
-    args = parse_args()
+def run_single(args):
+    run_start = time.perf_counter()
     os.makedirs(args.save_dir, exist_ok=True)
-
-    if args.paper_protocol:
-        run_paper_protocol(args)
-        return
+    if not os.path.isabs(args.checkpoint):
+        args.checkpoint = os.path.join(args.save_dir, args.checkpoint)
 
     model = NAS_PINN(layers=4, base_neurons=128).to(device)
 
@@ -598,12 +544,73 @@ def main():
 
     print_discovered_architecture(model)
     plot_heatmap(model, args.save_dir)
+    # Tüm nu değerleri için karşılaştırmalı plotlar kaydedilsin
     plot_time_slices(model, args.save_dir)
-    if abs(args.nu - (0.01 / np.pi)) < 1e-12:
-        plot_time_slices_with_exact(model, args.save_dir)
-        plot_full_exact_vs_pred(model, args.save_dir, 'burgers_shock.mat')
-    else:
-        print("Skipping burgers_shock.mat exact comparison because --nu differs from dataset viscosity 0.01/pi")
+    plot_time_slices_with_exact(model, args.save_dir)
+    plot_full_exact_vs_pred(model, args.save_dir, 'burgers_shock.mat')
+
+    x_test = torch.linspace(x_min, x_max, args.test_nx, device=device)
+    t_test = torch.linspace(t_min, t_max, args.test_nt, device=device)
+    u_pred = predict_on_grid(model, x_test, t_test)
+    u_exact = get_reference_solution(args.nu, x_test, t_test)
+    rel_l2 = np.linalg.norm(u_pred - u_exact) / (np.linalg.norm(u_exact) + 1e-12)
+    with open(os.path.join(args.save_dir, "l2_error.txt"), "w", encoding="utf-8") as f:
+        f.write(f"nu,{args.nu:.6f}\nrel_l2,{rel_l2:.8e}\n")
+    run_time = time.perf_counter() - run_start
+    with open(os.path.join(args.save_dir, "run_time.txt"), "w", encoding="utf-8") as f:
+        f.write(f"run_time_seconds,{run_time:.6f}\n")
+    print(f"Run time: {run_time:.2f} s")
+    return float(rel_l2), float(run_time)
+
+
+def run_multi_nu(args):
+    nu_values = [float(v.strip()) for v in args.nu_list.split(",") if v.strip()]
+    summary = []
+    base_dir = args.save_dir
+    os.makedirs(base_dir, exist_ok=True)
+
+    for idx, nu_val in enumerate(nu_values):
+        args_local = argparse.Namespace(**vars(args))
+        args_local.nu = nu_val
+        args_local.seed = args.seed + idx
+        args_local.save_dir = os.path.join(base_dir, f"nu_{nu_val:.3f}")
+        args_local.checkpoint = "checkpoint_last.pth"
+        rel_l2, run_time = run_single(args_local)
+        summary.append((nu_val, rel_l2, run_time))
+
+    csv_path = os.path.join(base_dir, "viscosity_comparison.csv")
+    with open(csv_path, "w", encoding="utf-8") as f:
+        f.write("nu,rel_l2,run_time_seconds\n")
+        for nu_val, rel_l2, run_time in summary:
+            f.write(f"{nu_val:.6f},{rel_l2:.8e},{run_time:.6f}\n")
+    print(f"Saved summary: {csv_path}")
+
+    nus = [row[0] for row in summary]
+    errs = [row[1] for row in summary]
+    plt.figure(figsize=(7, 4))
+    plt.plot(nus, errs, marker="o", linewidth=2)
+    plt.yscale("log")
+    plt.xlabel("Viscosity (nu)")
+    plt.ylabel("Relative L2 Error")
+    plt.title("Burgers NAS-PINN: Viscosity Comparison")
+    plt.grid(True, alpha=0.3)
+    plt.tight_layout()
+    finalize_plot(os.path.join(base_dir, "viscosity_comparison.png"))
+
+
+def main():
+    args = parse_args()
+
+    if args.paper_protocol:
+        os.makedirs(args.save_dir, exist_ok=True)
+        run_paper_protocol(args)
+        return
+
+    if args.multi_nu:
+        run_multi_nu(args)
+        return
+
+    run_single(args)
 
 
 if __name__ == "__main__":

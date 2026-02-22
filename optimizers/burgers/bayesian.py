@@ -1,5 +1,6 @@
 import os
 import argparse
+import time
 import numpy as np
 import torch
 import torch.nn as nn
@@ -7,13 +8,18 @@ import torch.optim as optim
 import matplotlib.pyplot as plt
 from scipy.io import loadmat
 from scipy.integrate import solve_ivp
+from .plots import (
+    plot_burgers_exact_pred_error,
+    plot_burgers_heatmap,
+    plot_burgers_time_slices,
+    plot_burgers_time_slices_with_exact,
+    should_use_exact_plots,
+)
 
 try:
     from bayes_opt import BayesianOptimization
 except ImportError as exc:
-    raise ImportError(
-        "Missing dependency: bayes_opt. Install with 'pip install bayesian-optimization'."
-    ) from exc
+    raise ImportError("Missing dependency: bayes_opt. Install with 'pip install bayesian-optimization'.") from exc
 
 
 torch.manual_seed(42)
@@ -21,7 +27,6 @@ np.random.seed(42)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 interactive_plots = os.environ.get("DISPLAY") is not None
 
-# Same core parameters as NAS_PINNs.py
 x_min, x_max = -1.0, 1.0
 t_min, t_max = 0.0, 1.0
 N_col = 10000
@@ -86,20 +91,13 @@ def sample_points_paper(train_nx=250, train_nt=21):
 class BayesianNASPINN(nn.Module):
     def __init__(self, hidden_widths, hidden_acts):
         super().__init__()
-        self.hidden_widths = hidden_widths
-        self.hidden_acts = hidden_acts
-
         layers = []
         in_dim = 2
         for width, act_name in zip(hidden_widths, hidden_acts):
             layers.append(nn.Linear(in_dim, width))
-            if act_name == "sin":
-                layers.append(SinActivation())
-            else:
-                layers.append(nn.Tanh())
+            layers.append(SinActivation() if act_name == "sin" else nn.Tanh())
             in_dim = width
         layers.append(nn.Linear(in_dim, 1))
-
         self.net = nn.Sequential(*layers)
 
     def forward(self, xt):
@@ -203,7 +201,7 @@ def get_reference_solution(nu_coef, x_test, t_test):
     x_np = x_test.detach().cpu().numpy()
     t_np = t_test.detach().cpu().numpy()
 
-    if abs(nu_coef - (0.01 / np.pi)) < 1e-12 and os.path.exists("burgers_shock.mat"):
+    if should_use_exact_plots(nu_coef) and os.path.exists("burgers_shock.mat"):
         data = loadmat("burgers_shock.mat")
         x_exact = data["x"].squeeze()
         t_exact = data["t"].squeeze()
@@ -216,22 +214,14 @@ def get_reference_solution(nu_coef, x_test, t_test):
 
 def decode_architecture(params):
     n_layers = int(round(params["n_layers"]))
-    widths_all = [
-        int(round(params["n1"])),
-        int(round(params["n2"])),
-        int(round(params["n3"])),
-        int(round(params["n4"])),
-    ]
+    widths_all = [int(round(params["n1"])), int(round(params["n2"])), int(round(params["n3"])), int(round(params["n4"]))]
     acts_all = [
         "sin" if params["a1"] >= 0.5 else "tanh",
         "sin" if params["a2"] >= 0.5 else "tanh",
         "sin" if params["a3"] >= 0.5 else "tanh",
         "sin" if params["a4"] >= 0.5 else "tanh",
     ]
-    widths = widths_all[:n_layers]
-    acts = acts_all[:n_layers]
-    lr = float(params["lr"])
-    return widths, acts, lr
+    return widths_all[:n_layers], acts_all[:n_layers], float(params["lr"])
 
 
 def run_bayesian_search(nu_coef, train_points, x_test, t_test, args):
@@ -241,21 +231,23 @@ def run_bayesian_search(nu_coef, train_points, x_test, t_test, args):
     def objective(n_layers, n1, n2, n3, n4, a1, a2, a3, a4, lr):
         eval_counter["k"] += 1
         params = {
-            "n_layers": n_layers, "n1": n1, "n2": n2, "n3": n3, "n4": n4,
-            "a1": a1, "a2": a2, "a3": a3, "a4": a4, "lr": lr,
+            "n_layers": n_layers,
+            "n1": n1,
+            "n2": n2,
+            "n3": n3,
+            "n4": n4,
+            "a1": a1,
+            "a2": a2,
+            "a3": a3,
+            "a4": a4,
+            "lr": lr,
         }
         widths, acts, lr_decoded = decode_architecture(params)
 
         set_seed(args.seed + eval_counter["k"])
         model = BayesianNASPINN(widths, acts).to(device)
-        train_model(
-            model,
-            train_points,
-            nu_coef=nu_coef,
-            epochs=args.bo_epochs,
-            lr=lr_decoded,
-            skip_lbfgs=True,
-        )
+        train_model(model, train_points, nu_coef=nu_coef, epochs=args.bo_epochs, lr=lr_decoded, skip_lbfgs=True)
+
         pred_u = predict_on_grid(model, x_test, t_test)
         rel_l2 = np.linalg.norm(pred_u - exact_u) / (np.linalg.norm(exact_u) + 1e-12)
         print(f"BO eval {eval_counter['k']:02d} | widths={widths} acts={acts} lr={lr_decoded:.2e} | relL2={rel_l2:.4e}")
@@ -272,11 +264,10 @@ def run_bayesian_search(nu_coef, train_points, x_test, t_test, args):
     bo.maximize(init_points=args.bo_init_points, n_iter=args.bo_iters)
 
     best_widths, best_acts, best_lr = decode_architecture(bo.max["params"])
-    best_rel_l2 = -bo.max["target"]
-    return best_widths, best_acts, best_lr, best_rel_l2
+    return best_widths, best_acts, best_lr, -bo.max["target"]
 
 
-def plot_results(model, save_dir, nu_coef, x_test, t_test):
+def plot_results(model, save_dir, nu_coef, x_test, t_test, include_exact_plot=True):
     x_np = x_test.detach().cpu().numpy()
     t_np = t_test.detach().cpu().numpy()
     pred_u = predict_on_grid(model, x_test, t_test)
@@ -285,26 +276,22 @@ def plot_results(model, save_dir, nu_coef, x_test, t_test):
     rel_l2 = np.linalg.norm(pred_u - exact_u) / (np.linalg.norm(exact_u) + 1e-12)
     print(f"Final relative L2 error: {rel_l2:.4e}")
 
-    Xp, Tp = np.meshgrid(x_np, t_np, indexing="ij")
-    abs_err = np.abs(pred_u - exact_u)
-
-    fig, axes = plt.subplots(1, 3, figsize=(16, 5), constrained_layout=True)
-    cs0 = axes[0].contourf(Xp, Tp, exact_u, levels=60, cmap="viridis")
-    axes[0].set_title("Exact")
-    plt.colorbar(cs0, ax=axes[0])
-
-    cs1 = axes[1].contourf(Xp, Tp, pred_u, levels=60, cmap="viridis")
-    axes[1].set_title("Predicted (Bayes-NAS)")
-    plt.colorbar(cs1, ax=axes[1])
-
-    cs2 = axes[2].contourf(Xp, Tp, abs_err, levels=60, cmap="magma")
-    axes[2].set_title("|Pred-Exact|")
-    plt.colorbar(cs2, ax=axes[2])
-
-    finalize_plot(os.path.join(save_dir, "bayes_burgers_full_exact_vs_pred.png"))
+    if include_exact_plot:
+        plot_burgers_exact_pred_error(
+            x_np,
+            t_np,
+            exact_u,
+            pred_u,
+            os.path.join(save_dir, "bayes_burgers_full_exact_vs_pred.png"),
+            pred_title="Predicted (Bayes-NAS)",
+            use_interactive=interactive_plots,
+        )
+    return float(rel_l2)
 
 
 def run_single(args):
+    run_start = time.perf_counter()
+    os.makedirs(args.save_dir, exist_ok=True)
     set_seed(args.seed)
     train_points = sample_points()
     x_test = torch.linspace(x_min, x_max, args.test_nx, device=device)
@@ -318,16 +305,13 @@ def run_single(args):
     print(f"BO rel L2    : {bo_rel_l2:.4e}")
 
     best_model = BayesianNASPINN(best_widths, best_acts).to(device)
-    train_model(
-        best_model,
-        train_points,
-        nu_coef=args.nu,
-        epochs=args.epochs,
-        lr=best_lr,
-        skip_lbfgs=args.skip_lbfgs,
-    )
+    train_model(best_model, train_points, nu_coef=args.nu, epochs=args.epochs, lr=best_lr, skip_lbfgs=args.skip_lbfgs)
 
-    ckpt_path = os.path.join(args.save_dir, args.checkpoint)
+    ckpt_name = args.checkpoint
+    if not os.path.isabs(ckpt_name):
+        ckpt_path = os.path.join(args.save_dir, ckpt_name)
+    else:
+        ckpt_path = ckpt_name
     torch.save(
         {
             "model_state": best_model.state_dict(),
@@ -340,7 +324,80 @@ def run_single(args):
     )
     print(f"Saved checkpoint: {ckpt_path}")
 
-    plot_results(best_model, args.save_dir, args.nu, x_test, t_test)
+    plot_burgers_heatmap(
+        best_model,
+        device,
+        x_min,
+        x_max,
+        t_min,
+        t_max,
+        os.path.join(args.save_dir, "burgers_heatmap.png"),
+        use_interactive=interactive_plots,
+    )
+
+    use_exact = should_use_exact_plots(args.nu)
+    if use_exact:
+        plot_burgers_time_slices(
+            best_model,
+            device,
+            x_min,
+            x_max,
+            os.path.join(args.save_dir, "burgers_time_slices.png"),
+            use_interactive=interactive_plots,
+        )
+        plot_burgers_time_slices_with_exact(
+            best_model,
+            device,
+            os.path.join(args.save_dir, "burgers_exact_vs_pred_time_slices.png"),
+            mat_path="burgers_shock.mat",
+            use_interactive=interactive_plots,
+        )
+    else:
+        print("Exact/time-slice comparison is only generated for --nu=0.01. Saving heatmap + rel L2 for this run.")
+
+    rel_l2 = plot_results(best_model, args.save_dir, args.nu, x_test, t_test, include_exact_plot=use_exact)
+    with open(os.path.join(args.save_dir, "l2_error.txt"), "w", encoding="utf-8") as f:
+        f.write(f"nu,{args.nu:.6f}\nrel_l2,{rel_l2:.8e}\n")
+    run_time = time.perf_counter() - run_start
+    with open(os.path.join(args.save_dir, "run_time.txt"), "w", encoding="utf-8") as f:
+        f.write(f"run_time_seconds,{run_time:.6f}\n")
+    print(f"Run time: {run_time:.2f} s")
+    return float(rel_l2), float(run_time)
+
+
+def run_multi_nu(args):
+    nu_values = [float(v.strip()) for v in args.nu_list.split(",") if v.strip()]
+    summary = []
+    base_dir = args.save_dir
+    os.makedirs(base_dir, exist_ok=True)
+
+    for idx, nu_val in enumerate(nu_values):
+        args_local = argparse.Namespace(**vars(args))
+        args_local.nu = nu_val
+        args_local.seed = args.seed + idx
+        args_local.save_dir = os.path.join(base_dir, f"nu_{nu_val:.3f}")
+        args_local.checkpoint = "bayes_checkpoint_last.pth"
+        rel_l2, run_time = run_single(args_local)
+        summary.append((nu_val, rel_l2, run_time))
+
+    out_csv = os.path.join(base_dir, "viscosity_comparison.csv")
+    with open(out_csv, "w", encoding="utf-8") as f:
+        f.write("nu,rel_l2,run_time_seconds\n")
+        for nu_val, rel_l2, run_time in summary:
+            f.write(f"{nu_val:.6f},{rel_l2:.8e},{run_time:.6f}\n")
+    print(f"Saved summary: {out_csv}")
+
+    nus = [row[0] for row in summary]
+    errs = [row[1] for row in summary]
+    plt.figure(figsize=(7, 4))
+    plt.plot(nus, errs, marker="o", linewidth=2)
+    plt.yscale("log")
+    plt.xlabel("Viscosity (nu)")
+    plt.ylabel("Relative L2 Error")
+    plt.title("Burgers Bayesian: Viscosity Comparison")
+    plt.grid(True, alpha=0.3)
+    plt.tight_layout()
+    finalize_plot(os.path.join(base_dir, "viscosity_comparison.png"))
 
 
 def run_paper_protocol(args):
@@ -356,18 +413,10 @@ def run_paper_protocol(args):
             args_local = argparse.Namespace(**vars(args))
             args_local.seed = args.seed + run_id + int(1000 * nu_val)
 
-            best_widths, best_acts, best_lr, _ = run_bayesian_search(
-                nu_val, train_points, x_test, t_test, args_local
-            )
+            best_widths, best_acts, best_lr, _ = run_bayesian_search(nu_val, train_points, x_test, t_test, args_local)
             model = BayesianNASPINN(best_widths, best_acts).to(device)
-            train_model(
-                model,
-                train_points,
-                nu_coef=nu_val,
-                epochs=args.epochs,
-                lr=best_lr,
-                skip_lbfgs=args.skip_lbfgs,
-            )
+            train_model(model, train_points, nu_coef=nu_val, epochs=args.epochs, lr=best_lr, skip_lbfgs=args.skip_lbfgs)
+
             pred_u = predict_on_grid(model, x_test, t_test)
             exact_u = get_reference_solution(nu_val, x_test, t_test)
             rel_l2 = np.linalg.norm(pred_u - exact_u) / (np.linalg.norm(exact_u) + 1e-12)
@@ -381,35 +430,31 @@ def run_paper_protocol(args):
         f.write("nu,mean_rel_l2,std_rel_l2\n")
         for nu_val, mean_l2, std_l2 in rows:
             f.write(f"{nu_val:.6f},{mean_l2:.8e},{std_l2:.8e}\n")
-
-    print("\nPaper-style summary (Bayesian NAS)")
-    print("nu      mean_rel_L2      std_rel_L2")
-    for nu_val, mean_l2, std_l2 in rows:
-        print(f"{nu_val:<6.3f}  {mean_l2:.4e}    {std_l2:.4e}")
     print(f"Saved summary: {out_csv}")
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Burgers NAS-PINN with Bayesian Optimization")
     parser.add_argument("--nu", type=float, default=0.01 / np.pi, help="viscosity coefficient")
+    parser.add_argument("--multi-nu", action="store_true", help="run three viscosity values and save comparison")
+    parser.add_argument("--nu-list", type=str, default="0.01,0.04,0.07", help="comma-separated viscosities for --multi-nu")
     parser.add_argument("--epochs", type=int, default=15000, help="final training epochs")
     parser.add_argument("--skip-lbfgs", action="store_true", help="skip L-BFGS in final training")
-    parser.add_argument("--save-dir", type=str, default="results_plots1", help="output directory")
+    parser.add_argument("--save-dir", type=str, default="results/burgers/bayesian", help="output directory")
     parser.add_argument("--checkpoint", type=str, default="bayes_checkpoint_last.pth", help="checkpoint filename")
 
-    parser.add_argument("--bo-init-points", type=int, default=2, help="BO initial random points")
-    parser.add_argument("--bo-iters", type=int, default=8, help="BO guided iterations")
-    parser.add_argument("--bo-epochs", type=int, default=1500, help="training epochs per BO evaluation")
+    parser.add_argument("--bo-init-points", type=int, default=2)
+    parser.add_argument("--bo-iters", type=int, default=8)
+    parser.add_argument("--bo-epochs", type=int, default=1500)
 
-    parser.add_argument("--paper-protocol", action="store_true", help="paper-like multi-viscosity protocol")
-    parser.add_argument("--paper-nus", type=str, default="0.1,0.07,0.04", help="comma-separated nu values")
-    parser.add_argument("--repeats", type=int, default=5, help="number of repeats for each nu")
-    parser.add_argument("--train-nt", type=int, default=21, help="paper train t-grid points")
-    parser.add_argument("--train-nx", type=int, default=250, help="paper train x-grid points")
-    parser.add_argument("--test-nt", type=int, default=21, help="paper test t-grid points")
-    parser.add_argument("--test-nx", type=int, default=500, help="paper test x-grid points")
-
-    parser.add_argument("--seed", type=int, default=42, help="base random seed")
+    parser.add_argument("--paper-protocol", action="store_true")
+    parser.add_argument("--paper-nus", type=str, default="0.1,0.07,0.04")
+    parser.add_argument("--repeats", type=int, default=5)
+    parser.add_argument("--train-nt", type=int, default=21)
+    parser.add_argument("--train-nx", type=int, default=250)
+    parser.add_argument("--test-nt", type=int, default=21)
+    parser.add_argument("--test-nx", type=int, default=500)
+    parser.add_argument("--seed", type=int, default=42)
     return parser.parse_args()
 
 
@@ -419,6 +464,8 @@ def main():
 
     if args.paper_protocol:
         run_paper_protocol(args)
+    elif args.multi_nu:
+        run_multi_nu(args)
     else:
         run_single(args)
 

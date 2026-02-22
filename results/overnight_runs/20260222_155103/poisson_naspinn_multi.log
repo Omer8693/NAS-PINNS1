@@ -1,3 +1,47 @@
 [START] 2026-02-22T22:15:46.960118
 COMMAND: /usr/bin/python3 NAS_PINNs_poisson.py --multi-seed --seed-list 42,43,44
 
+Starting Adam + bi-level optimization...
+[    0] PDE residual: 9.6314e+01   BC: 8.7650e-01
+[ 2000] PDE residual: 5.9603e-03   BC: 8.6527e-05
+[ 4000] PDE residual: 1.3481e-03   BC: 1.6428e-05
+[ 6000] PDE residual: 3.6419e-04   BC: 1.3044e-06
+[ 8000] PDE residual: 6.0601e-04   BC: 2.1710e-06
+[10000] PDE residual: 1.2386e-04   BC: 4.1315e-07
+
+L-BFGS refinement...
+Saved plot: results/poisson/naspinn/seed_42/poisson_naspinn_loss_curve.png
+Saved plot: results/poisson/naspinn/seed_42/poisson_results.png
+
+Relative L2 error (full grid): 4.9755e-05
+Run time (seed=42): 474.62 s
+Starting Adam + bi-level optimization...
+[    0] PDE residual: 9.7344e+01   BC: 5.5781e-01
+[ 2000] PDE residual: 1.4405e-03   BC: 8.8002e-06
+[ 4000] PDE residual: 2.1428e-02   BC: 2.1458e-04
+[ 6000] PDE residual: 1.6484e-04   BC: 3.0830e-07
+[ 8000] PDE residual: 9.9348e-05   BC: 2.0355e-07
+[10000] PDE residual: 1.2345e-03   BC: 8.7679e-06
+
+L-BFGS refinement...
+Saved plot: results/poisson/naspinn/seed_43/poisson_naspinn_loss_curve.png
+Saved plot: results/poisson/naspinn/seed_43/poisson_results.png
+
+Relative L2 error (full grid): 8.6012e-05
+Run time (seed=43): 475.06 s
+Starting Adam + bi-level optimization...
+[    0] PDE residual: 9.7260e+01   BC: 8.0743e-01
+[ 2000] PDE residual: 2.2261e-03   BC: 2.2508e-05
+[ 4000] PDE residual: 4.9807e-04   BC: 1.7866e-06
+[ 6000] PDE residual: 4.8031e-04   BC: 2.3391e-06
+[ 8000] PDE residual: 3.3044e-04   BC: 4.8770e-06
+[10000] PDE residual: 1.2859e-02   BC: 1.3136e-04
+
+L-BFGS refinement...
+Saved plot: results/poisson/naspinn/seed_44/poisson_naspinn_loss_curve.png
+Saved plot: results/poisson/naspinn/seed_44/poisson_results.png
+
+Relative L2 error (full grid): 1.1560e-04
+Run time (seed=44): 463.41 s
+Saved summary: results/poisson/naspinn/seed_comparison.csv
+Saved plot: results/poisson/naspinn/seed_comparison.png

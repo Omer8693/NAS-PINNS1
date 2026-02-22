@@ -1,0 +1,3 @@
+[START] 2026-02-22T20:47:29.524362
+COMMAND: /usr/bin/python3 NAS_PINNs_poisson_nsga2.py --multi-seed --seed-list 42,43,44
+

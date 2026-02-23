@@ -1,0 +1,3 @@
+mode,rel_l2,run_time_seconds,wall_time_seconds,save_dir,params
+baseline,0.040641676,915.656958,919.5027833711356,results/pso_compare/burgers-naspinn/baseline,{}
+pso_best,0.0160215074,213.002671,216.47136591933668,results/pso_compare/burgers-naspinn/pso_best,"{""epochs"": 3454, ""nu"": 0.09067901299907116}"

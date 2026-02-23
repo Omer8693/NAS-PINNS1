@@ -279,7 +279,18 @@ def main():
         print(f"Saved summary: {out_csv}")
 
         plt.figure(figsize=(7, 4))
-        plt.plot([s for s, _ in summary], [e for _, e in summary], marker="o", linewidth=2)
+        plot_seeds = []
+        plot_l2s = []
+        for item in summary:
+            if isinstance(item, tuple):
+                plot_seeds.append(item[0])
+                plot_l2s.append(item[1])
+            elif isinstance(item, str):
+                parts = item.strip().split(",")
+                if len(parts) >= 2:
+                    plot_seeds.append(parts[0])
+                    plot_l2s.append(float(parts[1]))
+        plt.plot(plot_seeds, plot_l2s, marker="o", linewidth=2)
         plt.yscale("log")
         plt.xlabel("Seed")
         plt.ylabel("Relative L2 Error")

@@ -15,7 +15,7 @@ from pymoo.core.problem import ElementwiseProblem
 from pymoo.optimize import minimize
 from pymoo.termination import get_termination
 
-from fuzzy_pso import PSO
+from .fuzzy_pso import PSO
 
 
 @dataclass

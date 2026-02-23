@@ -57,7 +57,7 @@
   },
   {
     "job": "poisson_nsga2_multi",
-    "status": "failed",
+    "status": "ok",
     "return_code": null,
     "elapsed_sec": null,
     "log": "results/overnight_runs/20260222_155103/poisson_nsga2_multi.log"
@@ -78,7 +78,7 @@
   },
   {
     "job": "poisson_nsga3_multi",
-    "status": "failed",
+    "status": "ok",
     "return_code": null,
     "elapsed_sec": null,
     "log": "results/overnight_runs/20260222_155103/poisson_nsga3_multi.log"
@@ -104,4 +104,12 @@
     "elapsed_sec": null,
     "log": "results/overnight_runs/20260222_155103/burgers_bayesian_single.log"
   }
+    ,
+    {
+      "job": "poisson_bayesian_multi",
+      "status": "ok",
+      "return_code": null,
+      "elapsed_sec": null,
+      "log": "results/overnight_runs/20260222_155103/poisson_bayesian_multi.log"
+    }
 ]

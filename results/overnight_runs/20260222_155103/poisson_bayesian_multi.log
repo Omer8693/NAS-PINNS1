@@ -1,4 +1,4 @@
-[START] 2026-02-23T01:05:57.853329
+[START] 2026-02-23T06:21:59.587482
 COMMAND: /usr/bin/python3 NAS_PINNs_poisson_bayesian.py --multi-seed --seed-list 42,43,44
 
 |   iter    |  target   | n_layers  |    n1     |    n2     |    n3     |    n4     |    a1     |    a2     |    a3     |    a4     |    lr     |
@@ -34,7 +34,7 @@ Saved checkpoint: results/poisson/bayesian/seed_42/bayes_poisson_checkpoint_last
 Saved plot: results/poisson/bayesian/seed_42/bayes_poisson_loss_curve.png
 Saved plot: results/poisson/bayesian/seed_42/bayes_poisson_results.png
 Final relative L2 error: 5.0662e-05
-Run time: 252.53 s
+Run time: 255.67 s
 |   iter    |  target   | n_layers  |    n1     |    n2     |    n3     |    n4     |    a1     |    a2     |    a3     |    a4     |    lr     |
 -------------------------------------------------------------------------------------------------------------------------------------------------
 BO eval 01 | widths=[168, 62] acts=['sin', 'sin'] lr=1.60e-03 | relL2=2.7254e-03
@@ -68,7 +68,7 @@ Saved checkpoint: results/poisson/bayesian/seed_43/bayes_poisson_checkpoint_last
 Saved plot: results/poisson/bayesian/seed_43/bayes_poisson_loss_curve.png
 Saved plot: results/poisson/bayesian/seed_43/bayes_poisson_results.png
 Final relative L2 error: 3.6143e-05
-Run time: 169.39 s
+Run time: 171.61 s
 |   iter    |  target   | n_layers  |    n1     |    n2     |    n3     |    n4     |    a1     |    a2     |    a3     |    a4     |    lr     |
 -------------------------------------------------------------------------------------------------------------------------------------------------
 BO eval 01 | widths=[55, 199, 113, 112] acts=['sin', 'tanh', 'tanh', 'sin'] lr=1.57e-03 | relL2=2.7812e-03
@@ -102,12 +102,6 @@ Saved checkpoint: results/poisson/bayesian/seed_44/bayes_poisson_checkpoint_last
 Saved plot: results/poisson/bayesian/seed_44/bayes_poisson_loss_curve.png
 Saved plot: results/poisson/bayesian/seed_44/bayes_poisson_results.png
 Final relative L2 error: 1.0075e-04
-Run time: 186.78 s
+Run time: 190.07 s
 Saved summary: results/poisson/bayesian/seed_comparison.csv
-Traceback (most recent call last):
-  File "/home/coder/NAS-PINNS1/NAS_PINNs_poisson_bayesian.py", line 9, in <module>
-    main()
-  File "/home/coder/NAS-PINNS1/optimizers/poisson/bayesian.py", line 282, in main
-    plt.plot([s for s, _ in summary], [e for _, e in summary], marker="o", linewidth=2)
-                    ^^^^
-ValueError: too many values to unpack (expected 2)
+Saved plot: results/poisson/bayesian/seed_comparison.png

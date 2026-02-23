@@ -7,10 +7,12 @@ burgers_naspinn_multi,ok,,,results/overnight_runs/20260222_155103/burgers_naspin
 poisson_naspinn_single,ok,,,results/overnight_runs/20260222_155103/poisson_naspinn_single.log
 burgers_nsga3_single,ok,,,results/overnight_runs/20260222_155103/burgers_nsga3_single.log
 burgers_bayesian_multi,ok,,,results/overnight_runs/20260222_155103/burgers_bayesian_multi.log
-poisson_nsga2_multi,failed,,,results/overnight_runs/20260222_155103/poisson_nsga2_multi.log
+poisson_nsga2_multi,ok,,,results/overnight_runs/20260222_155103/poisson_nsga2_multi.log
 poisson_nsga2_single,ok,,,results/overnight_runs/20260222_155103/poisson_nsga2_single.log
 burgers_nsga2_multi,ok,,,results/overnight_runs/20260222_155103/burgers_nsga2_multi.log
-poisson_nsga3_multi,failed,,,results/overnight_runs/20260222_155103/poisson_nsga3_multi.log
+poisson_nsga3_multi,ok,,,results/overnight_runs/20260222_155103/poisson_nsga3_multi.log
 burgers_naspinn_single,ok,,,results/overnight_runs/20260222_155103/burgers_naspinn_single.log
 poisson_bayesian_single,ok,,,results/overnight_runs/20260222_155103/poisson_bayesian_single.log
 burgers_bayesian_single,ok,,,results/overnight_runs/20260222_155103/burgers_bayesian_single.log
+
+poisson_bayesian_multi,ok,,,results/overnight_runs/20260222_155103/poisson_bayesian_multi.log

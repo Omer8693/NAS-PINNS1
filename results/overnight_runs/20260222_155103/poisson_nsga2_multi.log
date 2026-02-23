@@ -1,3 +1,50 @@
 [START] 2026-02-22T22:39:23.425035
 COMMAND: /usr/bin/python3 NAS_PINNs_poisson_nsga2.py --multi-seed --seed-list 42,43,44
 
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       16 |      3 |             - |             -
+     2 |       32 |      3 |  0.0859756892 |         ideal
+     3 |       48 |      4 |  0.3048327138 |         ideal
+     4 |       64 |      8 |  0.1405750799 |         ideal
+     5 |       80 |      7 |  0.0428134557 |         ideal
+     6 |       96 |      8 |  0.0683760684 |         ideal
+     7 |      112 |      8 |  1.7375865404 |         nadir
+     8 |      128 |      9 |  0.0082944203 |             f
+Saved plot: results/poisson/nsga2/seed_42/poisson_nsga2_loss_curve.png
+Saved plot: results/poisson/nsga2/seed_42/poisson_nsga2_results.png
+Final relative L2 error: 6.3714e-05
+Run time (seed=42): 1235.50 s
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       16 |      4 |             - |             -
+     2 |       32 |      4 |  0.1343570058 |         ideal
+     3 |       48 |      5 |  0.0696428571 |         ideal
+     4 |       64 |      6 |  0.0996784566 |         ideal
+     5 |       80 |      9 |  0.0204724409 |         ideal
+     6 |       96 |      9 |  0.0062597809 |         ideal
+     7 |      112 |      8 |  0.9266762019 |         nadir
+     8 |      128 |      7 |  0.0191082803 |         ideal
+Saved plot: results/poisson/nsga2/seed_43/poisson_nsga2_loss_curve.png
+Saved plot: results/poisson/nsga2/seed_43/poisson_nsga2_results.png
+Final relative L2 error: 6.1099e-05
+Run time (seed=43): 1363.37 s
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       16 |      2 |             - |             -
+     2 |       32 |      4 |  0.2126790349 |         ideal
+     3 |       48 |      4 |  0.0656934307 |         ideal
+     4 |       64 |      5 |  0.0715173792 |             f
+     5 |       80 |      7 |  0.0309041019 |         ideal
+     6 |       96 |      7 |  0.0383248289 |             f
+     7 |      112 |      4 |  0.0801149511 |         ideal
+     8 |      128 |      5 |  0.0734824281 |         ideal
+Saved plot: results/poisson/nsga2/seed_44/poisson_nsga2_loss_curve.png
+Saved plot: results/poisson/nsga2/seed_44/poisson_nsga2_results.png
+Final relative L2 error: 4.2994e-05
+Run time (seed=44): 1327.72 s
+Saved summary: results/poisson/nsga2/seed_comparison.csv
+Saved plot: results/poisson/nsga2/seed_comparison.png

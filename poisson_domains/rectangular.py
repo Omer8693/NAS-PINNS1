@@ -140,6 +140,10 @@ def train_naspinn(layers=4, base_neurons=110, mask_levels=(30,50,70,90,110),
     x_col, y_col = sample_collocation_points(collocation_n)
     x_bc, y_bc = sample_boundary_points(boundary_n)
     x_outer, y_outer = sample_collocation_points(outer_n)
+    import sys
+    def terminal_print(*args, **kwargs):
+        if sys.stdout.isatty():
+            print(*args, **kwargs)
     for epoch in range(adam_epochs):
         opt_inner.zero_grad()
         l_pde = pde_loss(model, x_col, y_col)
@@ -152,9 +156,9 @@ def train_naspinn(layers=4, base_neurons=110, mask_levels=(30,50,70,90,110),
             l_outer = outer_loss(model, x_outer, y_outer)
             l_outer.backward()
             opt_outer.step()
-        # Terminalde epoch ilerlemesini göster
+        # Sadece terminalde epoch ilerlemesini göster
         if epoch % 100 == 0 or epoch == adam_epochs - 1:
-            print(f"Epoch {epoch}/{adam_epochs} | Inner Loss: {loss_inner.item():.6e}")
+            terminal_print(f"Epoch {epoch}/{adam_epochs} | Inner Loss: {loss_inner.item():.6e}")
     # L-BFGS refinement
     lbfgs = optim.LBFGS(model.parameters(), lr=lbfgs_lr, max_iter=lbfgs_iter, line_search_fn="strong_wolfe")
     def closure():

@@ -42,25 +42,53 @@ def build_jobs(include_pso: bool, quick: bool) -> List[Job]:
 def run_job(job: Job, run_dir: str, timeout: int):
     started_at = time.time()
     log_path = os.path.join(run_dir, f"{job.name}.log")
-    with open(log_path, "w", encoding="utf-8") as logf:
+    # Poisson domain jobs: print stdout live to terminal and save logs
+    if job.name.startswith("poisson_"):
+        import subprocess
+        logf = open(log_path, "w", encoding="utf-8")
         logf.write(f"[START] {dt.datetime.now().isoformat()}\n")
         logf.write("COMMAND: " + " ".join(job.cmd) + "\n\n")
         logf.flush()
         try:
-            proc = subprocess.run(
-                job.cmd,
-                stdout=logf,
-                stderr=subprocess.STDOUT,
-                text=True,
-                timeout=timeout if timeout > 0 else None,
-                check=False,
-            )
-            code = proc.returncode
-            status = "ok" if code == 0 else "failed"
+            proc = subprocess.Popen(job.cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+            code = None
+            status = "ok"
+            while True:
+                line = proc.stdout.readline()
+                if not line and proc.poll() is not None:
+                    break
+                if line:
+                    print(line, end="")
+                    logf.write(line)
+                    logf.flush()
+            code = proc.wait()
+            if code != 0:
+                status = "failed"
         except subprocess.TimeoutExpired:
             code = -9
             status = "timeout"
             logf.write("\n[TIMEOUT]\n")
+        logf.close()
+    else:
+        with open(log_path, "w", encoding="utf-8") as logf:
+            logf.write(f"[START] {dt.datetime.now().isoformat()}\n")
+            logf.write("COMMAND: " + " ".join(job.cmd) + "\n\n")
+            logf.flush()
+            try:
+                proc = subprocess.run(
+                    job.cmd,
+                    stdout=logf,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                    timeout=timeout if timeout > 0 else None,
+                    check=False,
+                )
+                code = proc.returncode
+                status = "ok" if code == 0 else "failed"
+            except subprocess.TimeoutExpired:
+                code = -9
+                status = "timeout"
+                logf.write("\n[TIMEOUT]\n")
     elapsed = time.time() - started_at
     return {
         "job": job.name,

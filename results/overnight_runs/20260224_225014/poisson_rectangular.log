@@ -1,0 +1,3 @@
+[START] 2026-02-24T22:50:14.171879
+COMMAND: /usr/bin/python poisson_domains/rectangular.py
+

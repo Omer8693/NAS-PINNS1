@@ -1,1 +1,1 @@
-run_time_seconds,341.043356
+run_time_seconds,642.667970

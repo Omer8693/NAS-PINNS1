@@ -1,3 +1,0 @@
-mode,rel_l2,run_time_seconds,wall_time_seconds,save_dir,params
-baseline,0.417379429,156.046303,159.46669898554683,results/pso_compare/burgers-nsga3/baseline,{}
-pso_best,0.513961326,66.550197,69.88876732252538,results/pso_compare/burgers-nsga3/pso_best,"{""epochs"": 3986, ""lr"": 0.00110358217272103, ""lambda-ic"": 26.541964291365275, ""lambda-bc"": 95.81278287303601}"

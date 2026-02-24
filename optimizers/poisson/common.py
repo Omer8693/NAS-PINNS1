@@ -14,7 +14,7 @@ y_min, y_max = 0.0, 1.0
 N_col = 10000
 N_bc = 400
 lambda_pde = 1.0
-lambda_bc = 100.0
+lambda_bc = 1.0
 
 
 def finalize_plot(plt, save_path):

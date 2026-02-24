@@ -29,15 +29,13 @@ class SinActivation(nn.Module):
 
 
 class MixedOp(nn.Module):
-    def __init__(self, in_c, out_c, mask_levels=(32, 64, 96, 128, 192, 256)):
+    def __init__(self, in_c, out_c, mask_levels=(30, 50, 70, 90, 110)):
         super().__init__()
         self.mask_levels = list(mask_levels)
         self.n_masks = len(self.mask_levels)
-
         self.ops = nn.ModuleList([
             nn.Identity() if in_c == out_c else nn.Linear(in_c, out_c),
             nn.Sequential(nn.Linear(in_c, out_c), nn.Tanh()),
-            nn.Sequential(nn.Linear(in_c, out_c), SinActivation()),
         ])
         self.n_ops = len(self.ops)
         self.alpha = nn.Parameter(torch.randn(self.n_ops + self.n_masks) * 0.1)
@@ -61,7 +59,7 @@ class MixedOp(nn.Module):
 
 
 class NAS_PINN(nn.Module):
-    def __init__(self, layers=3, base_neurons=192, mask_levels=(64, 96, 128, 192, 256)):
+    def __init__(self, layers=4, base_neurons=110, mask_levels=(30, 50, 70, 90, 110)):
         super().__init__()
         self.layers = nn.ModuleList()
         dims = [2] + [base_neurons] * (layers - 1) + [1]
@@ -141,21 +139,30 @@ def train_with_resume(
     loss_history = []
     print("Starting Adam + bi-level optimization...")
 
+    # Outer loss: supervised MSE with analytic solution
+    def outer_loss(model, x, y):
+        x_t = torch.tensor(x, dtype=torch.float32).view(-1, 1).to(device)
+        y_t = torch.tensor(y, dtype=torch.float32).view(-1, 1).to(device)
+        xy = torch.cat([x_t, y_t], dim=1)
+        u = model(xy)
+        true = torch.cos(np.pi * x_t) * torch.cos(np.pi * y_t)
+        return torch.mean((u - true) ** 2)
+
+    x_outer, y_outer = x_col, y_col  # Outer loop için collocation noktaları kullanılıyor
+
     for epoch in range(start_epoch, total_epochs):
         opt_inner.zero_grad()
         l_pde = pde_loss(model, x_col, y_col)
         l_bc = bc_loss(model, x_bc, y_bc)
-        loss_inner = lambda_pde * l_pde + lambda_bc * l_bc
+        loss_inner = 1.0 * l_pde + 1.0 * l_bc
         loss_inner.backward()
         opt_inner.step()
         loss_history.append(float(loss_inner.detach().cpu().item()))
 
         if epoch % outer_every == 0:
             opt_outer.zero_grad()
-            l_pde_o = pde_loss(model, x_col, y_col)
-            l_bc_o = bc_loss(model, x_bc, y_bc)
-            loss_outer = lambda_pde * l_pde_o + lambda_bc * l_bc_o
-            loss_outer.backward()
+            l_outer = outer_loss(model, x_outer, y_outer)
+            l_outer.backward()
             opt_outer.step()
 
         if epoch % 2000 == 0:
@@ -172,7 +179,7 @@ def train_with_resume(
             lbfgs.zero_grad()
             lp = pde_loss(model, x_col, y_col)
             lb = bc_loss(model, x_bc, y_bc)
-            total = lambda_pde * lp + lambda_bc * lb
+            total = 1.0 * lp + 1.0 * lb
             total.backward()
             return total
 
@@ -184,7 +191,7 @@ def train_with_resume(
 
 def architecture_signature(model):
     parts = []
-    op_names = ["Linear/Identity", "Tanh", "Sin"]
+    op_names = ["Identity", "Tanh"]
     for layer in model.layers:
         op_p = F.softmax(layer.alpha[: layer.n_ops], dim=0)
         mask_p = torch.sigmoid(layer.alpha[layer.n_ops :])

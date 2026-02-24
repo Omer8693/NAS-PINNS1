@@ -1,12 +1,5 @@
 [
   {
-    "job": "poisson_naspinn_multi",
-    "status": "ok",
-    "return_code": null,
-    "elapsed_sec": null,
-    "log": "results/overnight_runs/20260222_155103/poisson_naspinn_multi.log"
-  },
-  {
     "job": "burgers_nsga3_multi",
     "status": "ok",
     "return_code": null,
@@ -21,25 +14,11 @@
     "log": "results/overnight_runs/20260222_155103/burgers_nsga2_single.log"
   },
   {
-    "job": "poisson_nsga3_single",
-    "status": "ok",
-    "return_code": null,
-    "elapsed_sec": null,
-    "log": "results/overnight_runs/20260222_155103/poisson_nsga3_single.log"
-  },
-  {
     "job": "burgers_naspinn_multi",
     "status": "ok",
     "return_code": null,
     "elapsed_sec": null,
     "log": "results/overnight_runs/20260222_155103/burgers_naspinn_multi.log"
-  },
-  {
-    "job": "poisson_naspinn_single",
-    "status": "ok",
-    "return_code": null,
-    "elapsed_sec": null,
-    "log": "results/overnight_runs/20260222_155103/poisson_naspinn_single.log"
   },
   {
     "job": "burgers_nsga3_single",
@@ -56,32 +35,11 @@
     "log": "results/overnight_runs/20260222_155103/burgers_bayesian_multi.log"
   },
   {
-    "job": "poisson_nsga2_multi",
-    "status": "ok",
-    "return_code": null,
-    "elapsed_sec": null,
-    "log": "results/overnight_runs/20260222_155103/poisson_nsga2_multi.log"
-  },
-  {
-    "job": "poisson_nsga2_single",
-    "status": "ok",
-    "return_code": null,
-    "elapsed_sec": null,
-    "log": "results/overnight_runs/20260222_155103/poisson_nsga2_single.log"
-  },
-  {
     "job": "burgers_nsga2_multi",
     "status": "ok",
     "return_code": null,
     "elapsed_sec": null,
     "log": "results/overnight_runs/20260222_155103/burgers_nsga2_multi.log"
-  },
-  {
-    "job": "poisson_nsga3_multi",
-    "status": "ok",
-    "return_code": null,
-    "elapsed_sec": null,
-    "log": "results/overnight_runs/20260222_155103/poisson_nsga3_multi.log"
   },
   {
     "job": "burgers_naspinn_single",
@@ -91,47 +49,10 @@
     "log": "results/overnight_runs/20260222_155103/burgers_naspinn_single.log"
   },
   {
-    "job": "poisson_bayesian_single",
-    "status": "ok",
-    "return_code": null,
-    "elapsed_sec": null,
-    "log": "results/overnight_runs/20260222_155103/poisson_bayesian_single.log"
-  },
-  {
     "job": "burgers_bayesian_single",
     "status": "ok",
     "return_code": null,
     "elapsed_sec": null,
     "log": "results/overnight_runs/20260222_155103/burgers_bayesian_single.log"
-  }
-    ,
-    {
-      "job": "poisson_bayesian_multi",
-      "status": "ok",
-      "return_code": null,
-      "elapsed_sec": null,
-      "log": "results/overnight_runs/20260222_155103/poisson_bayesian_multi.log"
-    }
-  ,
-  {
-    "job": "burgers_naspinn_pso",
-    "status": "ok",
-    "return_code": null,
-    "elapsed_sec": null,
-    "log": "results/overnight_runs/20260222_155103/burgers_naspinn_pso.log"
-  },
-  {
-    "job": "burgers_nsga2_pso",
-    "status": "ok",
-    "return_code": null,
-    "elapsed_sec": null,
-    "log": "results/overnight_runs/20260222_155103/burgers_nsga2_pso.log"
-  },
-  {
-    "job": "burgers_nsga3_pso",
-    "status": "ok",
-    "return_code": null,
-    "elapsed_sec": null,
-    "log": "results/overnight_runs/20260222_155103/burgers_nsga3_pso.log"
   }
 ]

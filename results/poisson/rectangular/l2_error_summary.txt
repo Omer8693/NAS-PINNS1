@@ -1,0 +1,2 @@
+Mean L2 error: 1.48640871e-02
+Std L2 error: 8.82919993e-03

@@ -7,3 +7,4 @@ burgers_bayesian_multi,ok,,,results/overnight_runs/20260222_155103/burgers_bayes
 burgers_nsga2_multi,ok,,,results/overnight_runs/20260222_155103/burgers_nsga2_multi.log
 burgers_naspinn_single,ok,,,results/overnight_runs/20260222_155103/burgers_naspinn_single.log
 burgers_bayesian_single,ok,,,results/overnight_runs/20260222_155103/burgers_bayesian_single.log
+

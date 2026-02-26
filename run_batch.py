@@ -31,11 +31,12 @@ def build_jobs(include_pso: bool, quick: bool) -> List[Job]:
         Job("burgers_nsga2_multi", [python, "NAS_PINNs_burgers_nsga2.py", "--multi-nu", "--nu-list", "0.01,0.04,0.07", *short_flags]),
         Job("burgers_nsga3_multi", [python, "NAS_PINNs_burgers_nsga3.py", "--multi-nu", "--nu-list", "0.01,0.04,0.07", *short_flags]),
         Job("burgers_bayesian_multi", [python, "NAS_PINNs_burgers_bayesian.py", "--multi-nu", "--nu-list", "0.01,0.04,0.07", *short_flags]),
-        # New Poisson domain jobs
-        Job("poisson_rectangular", [python, "poisson_domains/rectangular.py"]),
-        Job("poisson_circle", [python, "poisson_domains/circle.py"]),
-        Job("poisson_lshape", [python, "poisson_domains/lshape.py"]),
-        Job("poisson_flower", [python, "poisson_domains/flower.py"]),
+        # Poisson domain jobs in specified order
+        Job("poisson_rectangular", [python, "-m", "poisson.main", "--domain", "rectangular"]),
+        #Job("poisson_circle", [python, "-m", "poisson.main", "--domain", "circle"]),
+        #Job("poisson_lshape", [python, "-m", "poisson.main", "--domain", "lshape"]),
+        #Job("poisson_flower", [python, "-m", "poisson.main", "--domain", "flower"]),
+        #Job("poisson_annulus", [python, "-m", "poisson.main", "--domain", "annulus"]),
     ]
     return jobs
 
@@ -50,7 +51,13 @@ def run_job(job: Job, run_dir: str, timeout: int):
         logf.write("COMMAND: " + " ".join(job.cmd) + "\n\n")
         logf.flush()
         try:
-            proc = subprocess.Popen(job.cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+            proc = subprocess.Popen(
+                job.cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                bufsize=1,
+                universal_newlines=True
+            )
             code = None
             status = "ok"
             while True:
@@ -58,7 +65,7 @@ def run_job(job: Job, run_dir: str, timeout: int):
                 if not line and proc.poll() is not None:
                     break
                 if line:
-                    print(line, end="")
+                    print(line, end="", flush=True)
                     logf.write(line)
                     logf.flush()
             code = proc.wait()
@@ -141,22 +148,16 @@ def main():
                 job_name = row["job"]
                 if row["status"] == "ok":
                     completed_jobs.add(job_name)
-    # Only run jobs that are not yet completed, in order
-    # Eğer tüm burgers işleri tamamlanmışsa, sadece Poisson işleriyle başla
-    burgers_jobs = [job for job in jobs if job.name.startswith("burgers_")]
-    burgers_completed = all(job.name in completed_jobs for job in burgers_jobs)
-    start_idx = 0
-    if burgers_completed:
-        # Find the index of the first Poisson job
-        for i, job in enumerate(jobs):
-            if job.name.startswith("poisson_"):
-                start_idx = i
-                break
-    for idx, job in enumerate(jobs[start_idx:], start=start_idx+1):
-        if job.name in completed_jobs:
-            print(f"[{idx}/{len(jobs)}] {job.name} ... already completed, skipping.")
-            continue
-        print(f"[{idx}/{len(jobs)}] {job.name} ... running.")
+                    # Handle typo variant for backward compatibility
+                    if job_name == "poisson_rectanguler":
+                        completed_jobs.add("poisson_rectangular")
+    # Run only jobs that are not completed, regardless of order
+    # Skip poisson_circle and start from poisson_rectangular
+    skip_jobs = {"poisson_circle"}
+    incomplete_jobs = [job for job in jobs if job.name not in completed_jobs and job.name not in skip_jobs]
+    failed_jobs = []
+    for idx, job in enumerate(incomplete_jobs, start=1):
+        print(f"[{idx}/{len(incomplete_jobs)}] {job.name} ... running.")
         result = run_job(job, run_dir, timeout=args.timeout)
         summary.append(result)
         print(f"    -> {result['status']} ({result['elapsed_sec']}s)")
@@ -172,14 +173,15 @@ def main():
                         print(line.strip())
             except Exception as e:
                 print(f"Could not read log: {e}")
-            input("After fixing, press Enter to continue.")
+            failed_jobs.append(job)
+    # Retry all failed jobs at the end
+    if failed_jobs:
+        print("\nRetrying failed jobs...")
+        for job in failed_jobs:
             print(f"Retrying: {job.name}")
             result_retry = run_job(job, run_dir, timeout=args.timeout)
             summary.append(result_retry)
             print(f"    -> {result_retry['status']} ({result_retry['elapsed_sec']}s)")
-            if result_retry["status"] != "ok":
-                print("Retry also failed. Stopping script.")
-                break
     csv_path = os.path.join(run_dir, "summary.csv")
     with open(csv_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=["job", "status", "return_code", "elapsed_sec", "log"])

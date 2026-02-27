@@ -30,6 +30,7 @@ from tqdm import tqdm
 from .plots import (
     plot_burgers_full_exact_vs_pred,
     plot_burgers_heatmap,
+    plot_loss_curve,
     plot_burgers_time_slices,
     plot_burgers_time_slices_with_exact,
     should_use_exact_plots,
@@ -714,6 +715,7 @@ def train_with_resume(model, args, train_cfg, fixed_points=None, search_result=N
         points = (x_c, t_c, x_ic, t_ic, x_l, t_l, x_r, t_r)
 
     x_c, t_c, x_ic, t_ic, x_l, t_l, x_r, t_r = points
+    loss_history = []
     for epoch in range(start_epoch, args.epochs):
         optimizer.zero_grad()
         loss, l_pde, l_ic, l_bc = total_loss(
@@ -726,6 +728,7 @@ def train_with_resume(model, args, train_cfg, fixed_points=None, search_result=N
         )
         loss.backward()
         optimizer.step()
+        loss_history.append(float(loss.item()))
 
         if epoch % 2000 == 0:
             print(f"[{epoch:5d}] PDE: {l_pde:.4e}  IC: {l_ic:.4e}  BC: {l_bc:.4e}")
@@ -758,6 +761,8 @@ def train_with_resume(model, args, train_cfg, fixed_points=None, search_result=N
             return total
 
         lbfgs.step(closure)
+
+    return loss_history
 
 
 def plot_heatmap(model, save_dir):
@@ -856,6 +861,7 @@ def run_single(args):
             search_result = None
         model = NASPINNFixed(**model_cfg).to(device)
         load_checkpoint(args.checkpoint, model)
+        loss_history = []
     else:
         fixed_points = sample_points()
         if args.skip_nsga:
@@ -879,12 +885,20 @@ def run_single(args):
             train_cfg = search_result["train_cfg"]
 
         model = NASPINNFixed(**model_cfg).to(device)
-        train_with_resume(model, args, train_cfg, fixed_points=fixed_points, search_result=search_result)
+        loss_history = train_with_resume(
+            model, args, train_cfg, fixed_points=fixed_points, search_result=search_result
+        )
 
     print("\nDiscovered architecture (NSGA-III):")
     print(f"  Layers: {model.model_config['layer_sizes']}")
     print(f"  Activation: {model.model_config['activation']} | Residual: {model.model_config['use_residual']}")
 
+    plot_loss_curve(
+        loss_history,
+        os.path.join(args.save_dir, "loss_curve.png"),
+        title=f"Burgers NSGA-III Loss (nu={args.nu:.3f})",
+        use_interactive=interactive_plots,
+    )
     plot_heatmap(model, args.save_dir)
     if should_use_exact_plots(args.nu):
         plot_time_slices(model, args.save_dir)
@@ -903,6 +917,9 @@ def run_single(args):
     run_time = time.perf_counter() - run_start
     with open(os.path.join(args.save_dir, "run_time.txt"), "w", encoding="utf-8") as f:
         f.write(f"run_time_seconds,{run_time:.6f}\n")
+    with open(os.path.join(args.save_dir, "metrics.csv"), "w", encoding="utf-8") as f:
+        f.write("method,nu,seed,rel_l2,run_time_seconds\n")
+        f.write(f"nsga3,{args.nu:.6f},{args.seed},{rel_l2:.8e},{run_time:.6f}\n")
     print(f"Run time: {run_time:.2f} s")
     return float(rel_l2), float(run_time)
 

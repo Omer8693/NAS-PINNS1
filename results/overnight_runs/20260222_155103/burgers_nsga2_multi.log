@@ -1,95 +1,0 @@
-[START] 2026-02-22T18:02:29.882902
-COMMAND: /usr/bin/python NAS_PINNs_burgers_nsga2.py --multi-nu --nu-list 0.01,0.04,0.07
-
-
-==========================================================================================
-NSGA-II NAS-PINN Search
-==========================================================================================
-  Viscosity: nu=0.010000 | pop=10 | gen=5 | eval_epochs=400
-  Objective: min (relative L2, params)
-==========================================================================================
-
-NSGA-II generation:   0%|          | 0/5 [00:00<?, ?gen/s]NSGA-II generation:  20%|██        | 1/5 [00:33<02:14, 33.51s/gen]NSGA-II generation:  40%|████      | 2/5 [01:05<01:37, 32.38s/gen]NSGA-II generation:  60%|██████    | 3/5 [01:36<01:04, 32.12s/gen]NSGA-II generation:  80%|████████  | 4/5 [02:07<00:31, 31.38s/gen]NSGA-II generation: 100%|██████████| 5/5 [02:37<00:00, 31.09s/gen]NSGA-II generation: 100%|██████████| 5/5 [02:37<00:00, 31.55s/gen]
-  Gen  1/5 -> best relL2=2.77e-01, params=58,221
-  Gen  2/5 -> best relL2=2.77e-01, params=58,221
-  Gen  3/5 -> best relL2=2.56e-01, params=59,112
-  Gen  4/5 -> best relL2=2.40e-01, params=62,788
-  Gen  5/5 -> best relL2=2.36e-01, params=53,667
-[    0] PDE: 1.8599e-04  IC: 4.9248e-01  BC: 6.6892e-03
-[ 2000] PDE: 2.4047e-02  IC: 1.7378e-04  BC: 5.2120e-05
-[ 4000] PDE: 1.3881e-02  IC: 2.8932e-04  BC: 1.8676e-05
-[ 6000] PDE: 7.7546e-03  IC: 2.1718e-05  BC: 3.0716e-05
-[ 8000] PDE: 1.1106e-02  IC: 7.9006e-04  BC: 9.6620e-04
-[10000] PDE: 9.3464e-03  IC: 6.5378e-05  BC: 1.0269e-04
-[12000] PDE: 1.6897e-02  IC: 2.8769e-04  BC: 4.0981e-05
-[14000] PDE: 4.8111e-01  IC: 7.7891e-03  BC: 1.3818e-03
-
-Discovered architecture (NSGA-II):
-  Layers: [2, 175, 169, 38, 81, 166, 1]
-  Activation: tanh | Residual: True
-Saved plot: results/burgers/nsga2/nu_0.010/burgers_heatmap.png
-Saved plot: results/burgers/nsga2/nu_0.010/burgers_time_slices.png
-Saved plot: results/burgers/nsga2/nu_0.010/burgers_exact_vs_pred_time_slices.png
-Relative L2 error (full grid): 7.5900e-02
-Saved plot: results/burgers/nsga2/nu_0.010/burgers_full_exact_vs_pred.png
-Run time: 359.48 s
-
-==========================================================================================
-NSGA-II NAS-PINN Search
-==========================================================================================
-  Viscosity: nu=0.040000 | pop=10 | gen=5 | eval_epochs=400
-  Objective: min (relative L2, params)
-==========================================================================================
-
-NSGA-II generation:   0%|          | 0/5 [00:00<?, ?gen/s]NSGA-II generation:  20%|██        | 1/5 [00:35<02:21, 35.46s/gen]NSGA-II generation:  40%|████      | 2/5 [01:11<01:47, 35.70s/gen]NSGA-II generation:  60%|██████    | 3/5 [01:47<01:12, 36.11s/gen]NSGA-II generation:  80%|████████  | 4/5 [02:22<00:35, 35.43s/gen]NSGA-II generation: 100%|██████████| 5/5 [03:03<00:00, 37.59s/gen]NSGA-II generation: 100%|██████████| 5/5 [03:03<00:00, 36.75s/gen]
-  Gen  1/5 -> best relL2=1.90e-01, params=109,547
-  Gen  2/5 -> best relL2=9.71e-02, params=110,084
-  Gen  3/5 -> best relL2=9.71e-02, params=110,084
-  Gen  4/5 -> best relL2=8.68e-02, params=30,816
-  Gen  5/5 -> best relL2=6.32e-02, params=23,199
-[    0] PDE: 8.7944e-04  IC: 5.2242e-01  BC: 2.3984e-02
-[ 2000] PDE: 4.2300e-03  IC: 8.0932e-06  BC: 3.3634e-06
-[ 4000] PDE: 1.4160e-03  IC: 1.4947e-06  BC: 1.9655e-06
-[ 6000] PDE: 2.6190e-03  IC: 1.2579e-04  BC: 1.8408e-04
-[ 8000] PDE: 1.3810e-03  IC: 3.9817e-05  BC: 3.1563e-05
-[10000] PDE: 3.1770e-04  IC: 9.7778e-06  BC: 2.8727e-05
-[12000] PDE: 3.3926e-04  IC: 7.0474e-06  BC: 1.4409e-05
-[14000] PDE: 4.8487e-04  IC: 3.1160e-07  BC: 8.4905e-08
-
-Discovered architecture (NSGA-II):
-  Layers: [2, 178, 98, 33, 53, 1]
-  Activation: tanh | Residual: True
-Saved plot: results/burgers/nsga2/nu_0.040/burgers_heatmap.png
-Exact/time-slice comparison is only generated for --nu=0.01. Saving heatmap + rel L2 for this run.
-Run time: 341.04 s
-
-==========================================================================================
-NSGA-II NAS-PINN Search
-==========================================================================================
-  Viscosity: nu=0.070000 | pop=10 | gen=5 | eval_epochs=400
-  Objective: min (relative L2, params)
-==========================================================================================
-
-NSGA-II generation:   0%|          | 0/5 [00:00<?, ?gen/s]NSGA-II generation:  20%|██        | 1/5 [00:33<02:15, 33.77s/gen]NSGA-II generation:  40%|████      | 2/5 [01:06<01:39, 33.28s/gen]NSGA-II generation:  60%|██████    | 3/5 [01:40<01:06, 33.43s/gen]NSGA-II generation:  80%|████████  | 4/5 [02:10<00:32, 32.34s/gen]NSGA-II generation: 100%|██████████| 5/5 [02:43<00:00, 32.46s/gen]NSGA-II generation: 100%|██████████| 5/5 [02:43<00:00, 32.73s/gen]
-  Gen  1/5 -> best relL2=1.86e-02, params=56,273
-  Gen  2/5 -> best relL2=1.86e-02, params=56,273
-  Gen  3/5 -> best relL2=1.86e-02, params=56,273
-  Gen  4/5 -> best relL2=1.86e-02, params=56,273
-  Gen  5/5 -> best relL2=7.62e-03, params=58,383
-[    0] PDE: 4.4615e-06  IC: 5.0633e-01  BC: 6.8714e-03
-[ 2000] PDE: 6.6910e-03  IC: 6.8275e-05  BC: 5.3334e-05
-[ 4000] PDE: 4.5222e-04  IC: 8.4966e-06  BC: 8.1499e-06
-[ 6000] PDE: 7.7312e-04  IC: 7.2531e-05  BC: 3.3390e-05
-[ 8000] PDE: 8.5458e-04  IC: 3.3565e-05  BC: 1.2430e-04
-[10000] PDE: 2.2894e-03  IC: 2.4473e-04  BC: 3.4325e-04
-[12000] PDE: 6.0208e-04  IC: 4.2560e-05  BC: 6.9255e-05
-[14000] PDE: 7.8814e-04  IC: 4.1607e-05  BC: 1.1991e-04
-
-Discovered architecture (NSGA-II):
-  Layers: [2, 76, 169, 134, 51, 74, 153, 1]
-  Activation: tanh | Residual: True
-Saved plot: results/burgers/nsga2/nu_0.070/burgers_heatmap.png
-Exact/time-slice comparison is only generated for --nu=0.01. Saving heatmap + rel L2 for this run.
-Run time: 371.75 s
-Saved summary: results/burgers/nsga2/viscosity_comparison.csv
-Saved plot: results/burgers/nsga2/viscosity_comparison.png

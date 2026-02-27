@@ -1,0 +1,3 @@
+stage,lbfgs
+domain,rectangular
+rel_l2,3.80031602e-03

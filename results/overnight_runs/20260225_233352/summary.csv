@@ -1,2 +1,0 @@
-job,status,return_code,elapsed_sec,log
-poisson_rectangular,ok,0,496.18,results/overnight_runs/20260225_233352/poisson_rectangular.log

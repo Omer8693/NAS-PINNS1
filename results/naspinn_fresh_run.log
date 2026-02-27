@@ -1,0 +1,278 @@
+nohup: ignoring input
+Starting Adam + bi-level optimization...
+[    0] PDE: 5.3606e-02  IC: 4.2733e-01  BC: 9.3734e-02
+[ 2000] PDE: 3.0185e-01  IC: 9.1339e-05  BC: 2.0632e-05
+[ 4000] PDE: 1.7098e-01  IC: 4.1843e-05  BC: 5.5138e-06
+[ 6000] PDE: 2.2470e-02  IC: 8.9516e-06  BC: 8.9725e-07
+[ 8000] PDE: 4.9028e-03  IC: 1.8635e-05  BC: 1.0181e-05
+[10000] PDE: 1.8220e-03  IC: 1.8213e-06  BC: 2.4218e-06
+[12000] PDE: 1.0065e-03  IC: 2.5485e-06  BC: 1.7230e-06
+[14000] PDE: 9.1946e-04  IC: 3.0408e-05  BC: 1.6488e-05
+
+L-BFGS refinement...
+
+PSO refinement...
+Stopping search: maximum iterations reached --> 8
+PSO best objective: 7.8644e+01
+
+Discovered architecture (most probable ops & mask):
+Layer 1: Sin , neurons ≈ 128
+Layer 2: Linear/Identity , neurons ≈ 128
+Layer 3: Tanh , neurons ≈ 96
+Layer 4: Sin , neurons ≈ 128
+Saved plot: results/burgers/naspinn/nu_0.010/stage_adam/loss_curve.png
+Saved plot: results/burgers/naspinn/nu_0.010/stage_adam/burgers_heatmap.png
+Saved plot: results/burgers/naspinn/nu_0.010/stage_adam/result_comparison.png
+Saved plot: results/burgers/naspinn/nu_0.010/stage_adam/burgers_time_slices.png
+Saved plot: results/burgers/naspinn/nu_0.010/stage_adam/burgers_exact_vs_pred_time_slices.png
+Relative L2 error (full grid): 7.7124e-02
+Saved plot: results/burgers/naspinn/nu_0.010/stage_adam/burgers_full_exact_vs_pred.png
+
+Discovered architecture (most probable ops & mask):
+Layer 1: Sin , neurons ≈ 128
+Layer 2: Tanh , neurons ≈ 128
+Layer 3: Tanh , neurons ≈ 96
+Layer 4: Tanh , neurons ≈ 128
+Saved plot: results/burgers/naspinn/nu_0.010/stage_lbfgs/loss_curve.png
+Saved plot: results/burgers/naspinn/nu_0.010/stage_lbfgs/burgers_heatmap.png
+Saved plot: results/burgers/naspinn/nu_0.010/stage_lbfgs/result_comparison.png
+Saved plot: results/burgers/naspinn/nu_0.010/stage_lbfgs/burgers_time_slices.png
+Saved plot: results/burgers/naspinn/nu_0.010/stage_lbfgs/burgers_exact_vs_pred_time_slices.png
+Relative L2 error (full grid): 7.5911e-02
+Saved plot: results/burgers/naspinn/nu_0.010/stage_lbfgs/burgers_full_exact_vs_pred.png
+
+Discovered architecture (most probable ops & mask):
+Layer 1: Sin , neurons ≈ 96
+Layer 2: Tanh , neurons ≈ 64
+Layer 3: Tanh , neurons ≈ 128
+Layer 4: Tanh , neurons ≈ 192
+Saved plot: results/burgers/naspinn/nu_0.010/stage_pso/loss_curve.png
+Saved plot: results/burgers/naspinn/nu_0.010/stage_pso/burgers_heatmap.png
+Saved plot: results/burgers/naspinn/nu_0.010/stage_pso/result_comparison.png
+Saved plot: results/burgers/naspinn/nu_0.010/stage_pso/burgers_time_slices.png
+Saved plot: results/burgers/naspinn/nu_0.010/stage_pso/burgers_exact_vs_pred_time_slices.png
+Relative L2 error (full grid): 1.8224e+00
+Saved plot: results/burgers/naspinn/nu_0.010/stage_pso/burgers_full_exact_vs_pred.png
+Run time: 945.88 s
+Starting Adam + bi-level optimization...
+[    0] PDE: 4.4139e-02  IC: 2.7500e-01  BC: 6.4526e-01
+[ 2000] PDE: 8.7774e-03  IC: 2.8773e-06  BC: 6.3286e-06
+[ 4000] PDE: 3.4103e-03  IC: 3.8575e-04  BC: 4.1433e-04
+[ 6000] PDE: 6.2764e-04  IC: 9.0269e-08  BC: 4.9197e-07
+[ 8000] PDE: 3.7632e-04  IC: 8.2541e-08  BC: 3.0665e-07
+[10000] PDE: 2.7599e-04  IC: 1.4848e-07  BC: 2.1489e-07
+[12000] PDE: 2.2936e-04  IC: 3.8313e-07  BC: 9.0559e-07
+[14000] PDE: 2.7240e-04  IC: 3.1352e-05  BC: 7.0165e-05
+
+L-BFGS refinement...
+
+PSO refinement...
+Stopping search: maximum iterations reached --> 8
+PSO best objective: 1.6231e+01
+
+Discovered architecture (most probable ops & mask):
+Layer 1: Tanh , neurons ≈ 128
+Layer 2: Sin , neurons ≈ 192
+Layer 3: Tanh , neurons ≈ 64
+Layer 4: Tanh , neurons ≈ 96
+Saved plot: results/burgers/naspinn/nu_0.040/stage_adam/loss_curve.png
+Saved plot: results/burgers/naspinn/nu_0.040/stage_adam/burgers_heatmap.png
+Saved plot: results/burgers/naspinn/nu_0.040/stage_adam/result_comparison.png
+
+Discovered architecture (most probable ops & mask):
+Layer 1: Tanh , neurons ≈ 128
+Layer 2: Sin , neurons ≈ 192
+Layer 3: Tanh , neurons ≈ 64
+Layer 4: Tanh , neurons ≈ 96
+Saved plot: results/burgers/naspinn/nu_0.040/stage_lbfgs/loss_curve.png
+Saved plot: results/burgers/naspinn/nu_0.040/stage_lbfgs/burgers_heatmap.png
+Saved plot: results/burgers/naspinn/nu_0.040/stage_lbfgs/result_comparison.png
+
+Discovered architecture (most probable ops & mask):
+Layer 1: Tanh , neurons ≈ 32
+Layer 2: Linear/Identity , neurons ≈ 192
+Layer 3: Linear/Identity , neurons ≈ 64
+Layer 4: Tanh , neurons ≈ 128
+Saved plot: results/burgers/naspinn/nu_0.040/stage_pso/loss_curve.png
+Saved plot: results/burgers/naspinn/nu_0.040/stage_pso/burgers_heatmap.png
+Saved plot: results/burgers/naspinn/nu_0.040/stage_pso/result_comparison.png
+Run time: 766.81 s
+Starting Adam + bi-level optimization...
+[    0] PDE: 3.3240e-01  IC: 8.0890e-01  BC: 2.4373e-01
+[ 2000] PDE: 9.5388e-03  IC: 2.3045e-05  BC: 2.3866e-05
+[ 4000] PDE: 1.7413e-03  IC: 5.4294e-06  BC: 7.3002e-06
+[ 6000] PDE: 9.2561e-04  IC: 1.1727e-06  BC: 1.2973e-06
+[ 8000] PDE: 8.2080e-04  IC: 1.0474e-04  BC: 2.3682e-04
+[10000] PDE: 3.7551e-04  IC: 5.7506e-07  BC: 1.0788e-06
+[12000] PDE: 2.5174e-04  IC: 6.7663e-07  BC: 1.6196e-06
+[14000] PDE: 1.8794e-04  IC: 4.1677e-06  BC: 8.2768e-06
+
+L-BFGS refinement...
+
+PSO refinement...
+Stopping search: maximum iterations reached --> 8
+PSO best objective: 1.4679e+01
+
+Discovered architecture (most probable ops & mask):
+Layer 1: Tanh , neurons ≈ 32
+Layer 2: Tanh , neurons ≈ 128
+Layer 3: Tanh , neurons ≈ 192
+Layer 4: Linear/Identity , neurons ≈ 128
+Saved plot: results/burgers/naspinn/nu_0.070/stage_adam/loss_curve.png
+Saved plot: results/burgers/naspinn/nu_0.070/stage_adam/burgers_heatmap.png
+Saved plot: results/burgers/naspinn/nu_0.070/stage_adam/result_comparison.png
+
+Discovered architecture (most probable ops & mask):
+Layer 1: Tanh , neurons ≈ 32
+Layer 2: Tanh , neurons ≈ 128
+Layer 3: Tanh , neurons ≈ 192
+Layer 4: Tanh , neurons ≈ 128
+Saved plot: results/burgers/naspinn/nu_0.070/stage_lbfgs/loss_curve.png
+Saved plot: results/burgers/naspinn/nu_0.070/stage_lbfgs/burgers_heatmap.png
+Saved plot: results/burgers/naspinn/nu_0.070/stage_lbfgs/result_comparison.png
+
+Discovered architecture (most probable ops & mask):
+Layer 1: Linear/Identity , neurons ≈ 64
+Layer 2: Tanh , neurons ≈ 192
+Layer 3: Tanh , neurons ≈ 192
+Layer 4: Tanh , neurons ≈ 128
+Saved plot: results/burgers/naspinn/nu_0.070/stage_pso/loss_curve.png
+Saved plot: results/burgers/naspinn/nu_0.070/stage_pso/burgers_heatmap.png
+Saved plot: results/burgers/naspinn/nu_0.070/stage_pso/result_comparison.png
+Run time: 822.66 s
+Saved summary: results/burgers/naspinn/viscosity_comparison.csv
+Saved plot: results/burgers/naspinn/viscosity_comparison.png
+Using device: cuda
+Starting NAS-PINN training...
+[    0] PDE: 9.7584e+01  BC: 4.8512e-01  Outer MSE: 2.5294e-01
+[ 2000] PDE: 4.3588e-01  BC: 2.0256e-01  Outer MSE: 1.1730e-01
+[ 4000] PDE: 9.9229e-02  BC: 8.0873e-02  Outer MSE: 3.6722e-02
+[ 6000] PDE: 4.4866e-02  BC: 2.6384e-02  Outer MSE: 1.7101e-02
+[ 8000] PDE: 2.6405e-02  BC: 9.4787e-03  Outer MSE: 6.3952e-03
+[10000] PDE: 1.9226e-02  BC: 4.0023e-03  Outer MSE: 1.8584e-03
+[11999] PDE: 3.5105e-02  BC: 2.7596e-03  Outer MSE: 0.0000e+00
+
+Starting L-BFGS refinement...
+
+Starting PSO refinement...
+Stopping search: maximum iterations reached --> 8
+PSO best objective: 1.9753e+01
+
+============================================================
+DISCRETE ARCHITECTURE AFTER TRAINING
+============================================================
+Layer  1 -> SKIP   | neurons:  70 (mask prob: 0.2700)
+Layer  2 -> ACTIVE | neurons:  90 (mask prob: 0.3185)
+Layer  3 -> ACTIVE | neurons: 110 (mask prob: 0.3131)
+Layer  4 -> ACTIVE | neurons: 110 (mask prob: 0.4670)
+Layer  5 -> ACTIVE | neurons:  50 (mask prob: 0.2351)
+============================================================
+
+Saved plot: results/poisson/naspinn/domain_rectangular/stage_adam/poisson_naspinn_loss_curve.png
+
+Relative L2 error (rectangular, grid 500x500): 1.1427e-01
+Saved CSV: results/poisson/naspinn/domain_rectangular/stage_adam/results_summary.csv
+Saved plot: results/poisson/naspinn/domain_rectangular/stage_lbfgs/poisson_naspinn_loss_curve.png
+
+Relative L2 error (rectangular, grid 500x500): 3.8003e-03
+Saved CSV: results/poisson/naspinn/domain_rectangular/stage_lbfgs/results_summary.csv
+Saved plot: results/poisson/naspinn/domain_rectangular/stage_pso/poisson_naspinn_loss_curve.png
+
+Relative L2 error (rectangular, grid 500x500): 9.0200e-01
+Saved CSV: results/poisson/naspinn/domain_rectangular/stage_pso/results_summary.csv
+Run time: 583.83 s
+Starting NAS-PINN training...
+[    0] PDE: 8.8197e+01  BC: 3.6634e-01  Outer MSE: 2.2901e-01
+[ 2000] PDE: 1.1115e+00  BC: 7.5697e-01  Outer MSE: 6.0850e-01
+[ 4000] PDE: 1.1181e-01  BC: 2.2805e-01  Outer MSE: 1.0230e-01
+[ 6000] PDE: 3.1192e-02  BC: 3.7737e-02  Outer MSE: 1.0026e-02
+[ 8000] PDE: 5.6209e-03  BC: 5.5581e-03  Outer MSE: 1.3559e-03
+[10000] PDE: 9.5119e-03  BC: 1.5025e-03  Outer MSE: 2.4515e-04
+[11999] PDE: 1.1265e-03  BC: 6.7824e-04  Outer MSE: 0.0000e+00
+
+Starting L-BFGS refinement...
+
+Starting PSO refinement...
+Stopping search: maximum iterations reached --> 8
+PSO best objective: 2.8980e+01
+
+============================================================
+DISCRETE ARCHITECTURE AFTER TRAINING
+============================================================
+Layer  1 -> ACTIVE | neurons:  90 (mask prob: 0.2257)
+Layer  2 -> SKIP   | neurons:  90 (mask prob: 0.4371)
+Layer  3 -> ACTIVE | neurons:  70 (mask prob: 0.2332)
+Layer  4 -> SKIP   | neurons: 110 (mask prob: 0.3128)
+Layer  5 -> SKIP   | neurons:  30 (mask prob: 0.2484)
+============================================================
+
+Saved plot: results/poisson/naspinn/domain_circle/stage_adam/poisson_naspinn_loss_curve.png
+
+Relative L2 error (circle, grid 500x500): 9.8829e-02
+Saved CSV: results/poisson/naspinn/domain_circle/stage_adam/results_summary.csv
+Saved plot: results/poisson/naspinn/domain_circle/stage_lbfgs/poisson_naspinn_loss_curve.png
+
+Relative L2 error (circle, grid 500x500): 2.7199e-02
+Saved CSV: results/poisson/naspinn/domain_circle/stage_lbfgs/results_summary.csv
+Saved plot: results/poisson/naspinn/domain_circle/stage_pso/poisson_naspinn_loss_curve.png
+
+Relative L2 error (circle, grid 500x500): 1.3853e+00
+Saved CSV: results/poisson/naspinn/domain_circle/stage_pso/results_summary.csv
+Run time: 574.18 s
+Starting NAS-PINN training...
+[    0] PDE: 9.4872e+01  BC: 5.4302e-01  Outer MSE: 2.4451e-01
+[ 2000] PDE: 1.8550e+00  BC: 1.3188e-01  Outer MSE: 1.8014e-01
+[ 4000] PDE: 8.4038e-01  BC: 9.9523e-02  Outer MSE: 5.0294e-02
+[ 6000] PDE: 4.9736e-01  BC: 5.7514e-02  Outer MSE: 2.2398e-02
+[ 8000] PDE: 2.7790e-01  BC: 6.7968e-02  Outer MSE: 2.7072e-02
+[10000] PDE: 1.2942e-01  BC: 7.7046e-02  Outer MSE: 3.3724e-02
+[11999] PDE: 9.4975e-02  BC: 6.8038e-02  Outer MSE: 0.0000e+00
+
+Starting L-BFGS refinement...
+
+Starting PSO refinement...
+Stopping search: maximum iterations reached --> 8
+PSO best objective: 9.4505e+01
+
+============================================================
+DISCRETE ARCHITECTURE AFTER TRAINING
+============================================================
+Layer  1 -> SKIP   | neurons:  70 (mask prob: 0.5078)
+Layer  2 -> SKIP   | neurons: 110 (mask prob: 0.4443)
+Layer  3 -> ACTIVE | neurons:  90 (mask prob: 0.5761)
+Layer  4 -> ACTIVE | neurons:  90 (mask prob: 0.6271)
+Layer  5 -> ACTIVE | neurons:  30 (mask prob: 0.2644)
+============================================================
+
+Saved plot: results/poisson/naspinn/domain_lshape/stage_adam/poisson_naspinn_loss_curve.png
+
+Relative L2 error (lshape, grid 500x500): 4.4933e-01
+Saved CSV: results/poisson/naspinn/domain_lshape/stage_adam/results_summary.csv
+Saved plot: results/poisson/naspinn/domain_lshape/stage_lbfgs/poisson_naspinn_loss_curve.png
+
+Relative L2 error (lshape, grid 500x500): 2.0475e-01
+Saved CSV: results/poisson/naspinn/domain_lshape/stage_lbfgs/results_summary.csv
+Saved plot: results/poisson/naspinn/domain_lshape/stage_pso/poisson_naspinn_loss_curve.png
+
+Relative L2 error (lshape, grid 500x500): 3.9912e+00
+Saved CSV: results/poisson/naspinn/domain_lshape/stage_pso/results_summary.csv
+Run time: 572.11 s
+Starting NAS-PINN training...
+Traceback (most recent call last):
+  File "/home/coder/NAS-PINNS1/NAS_PINNs_poisson.py", line 9, in <module>
+    main()
+  File "/home/coder/NAS-PINNS1/poisson/main.py", line 608, in main
+    run_multi_domain(args)
+  File "/home/coder/NAS-PINNS1/poisson/main.py", line 534, in run_multi_domain
+    rel_l2, run_time = run_single(args, domain_name=domain_name, save_dir=out_dir)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/coder/NAS-PINNS1/poisson/main.py", line 465, in run_single
+    train_info = train_nas_pinn(
+                 ^^^^^^^^^^^^^^^
+  File "/home/coder/NAS-PINNS1/poisson/main.py", line 191, in train_nas_pinn
+    (x_col, y_col), (x_bc, y_bc) = domain_mod.sample_points(N_COL, N_BC, device)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/coder/NAS-PINNS1/poisson/domains/flower.py", line 17, in sample_points
+    r_max = 1.0 + amp * torch.sin(n_petals * theta)
+                                  ~~~~~~~~~^~~~~~~
+TypeError: unsupported operand type(s) for *: 'torch.device' and 'Tensor'

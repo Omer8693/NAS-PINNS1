@@ -1,0 +1,3 @@
+stage,adam
+domain,circle
+rel_l2,9.88294291e-02

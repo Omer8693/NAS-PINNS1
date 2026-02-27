@@ -14,15 +14,23 @@ def poisson_rhs(x, y):
     return -2.0 * (np.pi ** 2) * torch.cos(np.pi * x) * torch.cos(np.pi * y)
 
 def sample_points(n_col=N_COL, n_bc=N_BC, r_inner=R_INNER, r_outer=R_OUTER, device=None):
-    pts = []
-    while len(pts) < n_col:
+    collected = []
+    total = 0
+    while total < n_col:
         cand = torch.rand(n_col * 4, 2, device=device) * 2 - 1
         r = torch.norm(cand, dim=1)
         inside = (r >= r_inner) & (r <= r_outer)
-        pts.append(cand[inside][:n_col - len(pts)])
-    xy_col = torch.cat(pts)
-    x_col, y_col = xy_col[:,0:1], xy_col[:,1:2]
-    theta = torch.linspace(0, 2*np.pi, n_bc//2, device=device)
+        valid = cand[inside]
+        if valid.numel() == 0:
+            continue
+        take = min(n_col - total, valid.shape[0])
+        collected.append(valid[:take])
+        total += take
+
+    xy_col = torch.cat(collected, dim=0)
+    x_col, y_col = xy_col[:, 0:1], xy_col[:, 1:2]
+
+    theta = torch.linspace(0, 2 * np.pi, n_bc // 2, device=device)
     x_inner = r_inner * torch.cos(theta).unsqueeze(1)
     y_inner = r_inner * torch.sin(theta).unsqueeze(1)
     x_outer = r_outer * torch.cos(theta).unsqueeze(1)

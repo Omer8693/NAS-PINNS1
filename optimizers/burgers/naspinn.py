@@ -6,13 +6,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 import argparse
 import os
+import shutil
 import time
 from scipy.io import loadmat  # referans çözüm için (opsiyonel)
 from scipy.integrate import solve_ivp
+try:
+    from pyswarm import pso
+except ImportError:
+    pso = None
 from .plots import (
     plot_burgers_exact_pred_error,
     plot_burgers_full_exact_vs_pred,
     plot_burgers_heatmap,
+    plot_loss_curve,
     plot_burgers_time_slices,
     plot_burgers_time_slices_with_exact,
     should_use_exact_plots,
@@ -46,6 +52,7 @@ t_min, t_max = 0.0, 1.0
 lambda_pde = 1.0
 lambda_ic  = 100.0
 lambda_bc  = 100.0
+PSO_SPAN = 0.25
 
 # ────────────────────────────────────────────────
 # Mixed Operation – DARTS relaxation + mask (NAS-PINN Eq. 8 & 9)
@@ -228,10 +235,29 @@ def load_checkpoint(path, model, opt_inner=None, opt_outer=None):
     return ckpt.get("epoch", 0), points
 
 
+def clone_model_state(model):
+    return {k: v.detach().cpu().clone() for k, v in model.state_dict().items()}
+
+
+def set_model_from_flat_vector(model, flat):
+    offset = 0
+    with torch.no_grad():
+        for param in model.parameters():
+            n_param = param.numel()
+            chunk = torch.from_numpy(flat[offset : offset + n_param]).view_as(param).to(device)
+            param.copy_(chunk)
+            offset += n_param
+
+
+def flatten_model_params(model):
+    return np.concatenate([p.detach().cpu().numpy().reshape(-1) for p in model.parameters()])
+
+
 def train_with_resume(model, total_epochs=15000, inner_lr=1e-3, outer_lr=3e-4,
                       outer_every=5, checkpoint_path="checkpoint_last.pth",
                       checkpoint_every=1000, resume=False, skip_lbfgs=False,
-                      nu_coef=nu, fixed_points=None):
+                      use_pso=False, pso_iters=8, pso_swarm=16, pso_span=PSO_SPAN,
+                      nu_coef=nu, fixed_points=None, return_stage_info=False):
     opt_inner = optim.Adam(model.parameters(), lr=inner_lr)
     arch_params = [l.alpha for l in model.layers]
     opt_outer = optim.Adam(arch_params, lr=outer_lr)
@@ -252,7 +278,9 @@ def train_with_resume(model, total_epochs=15000, inner_lr=1e-3, outer_lr=3e-4,
 
     x_c, t_c, x_ic, t_ic, x_l, t_l, x_r, t_r = points
 
+    training_start = time.perf_counter()
     print("Starting Adam + bi-level optimization...")
+    loss_history = []
     for epoch in range(start_epoch, total_epochs):
         opt_inner.zero_grad()
 
@@ -263,6 +291,7 @@ def train_with_resume(model, total_epochs=15000, inner_lr=1e-3, outer_lr=3e-4,
 
         loss_inner.backward()
         opt_inner.step()
+        loss_history.append(float(loss_inner.item()))
 
         if epoch % outer_every == 0:
             opt_outer.zero_grad()
@@ -286,6 +315,10 @@ def train_with_resume(model, total_epochs=15000, inner_lr=1e-3, outer_lr=3e-4,
                 (x_c, t_c, x_ic, t_ic, x_l, t_l, x_r, t_r),
             )
 
+    stage_states = {"adam": clone_model_state(model)}
+    stage_losses = {"adam": float(loss_history[-1]) if loss_history else float("nan")}
+    stage_times = {"adam": time.perf_counter() - training_start}
+
     if not skip_lbfgs:
         print("\nL-BFGS refinement...")
         lbfgs = optim.LBFGS(model.parameters(), lr=1.0, max_iter=3000, line_search_fn="strong_wolfe")
@@ -300,6 +333,16 @@ def train_with_resume(model, total_epochs=15000, inner_lr=1e-3, outer_lr=3e-4,
             return total
 
         lbfgs.step(closure)
+        lbfgs_loss = float(
+            (
+                lambda_pde * pde_residual(model, x_c, t_c, nu_coef)
+                + lambda_ic * ic_loss(model, x_ic, t_ic)
+                + lambda_bc * bc_loss(model, x_l, t_l, x_r, t_r)
+            ).item()
+        )
+        stage_states["lbfgs"] = clone_model_state(model)
+        stage_losses["lbfgs"] = lbfgs_loss
+        stage_times["lbfgs"] = time.perf_counter() - training_start
 
         save_checkpoint(
             checkpoint_path,
@@ -309,6 +352,45 @@ def train_with_resume(model, total_epochs=15000, inner_lr=1e-3, outer_lr=3e-4,
             total_epochs,
             (x_c, t_c, x_ic, t_ic, x_l, t_l, x_r, t_r),
         )
+
+    if use_pso:
+        if pso is None:
+            raise ImportError("Missing dependency: pyswarm. Install with 'pip install pyswarm' to run PSO.")
+        print("\nPSO refinement...")
+        center = flatten_model_params(model)
+        lower = center - pso_span
+        upper = center + pso_span
+
+        def pso_objective(flat):
+            set_model_from_flat_vector(model, flat)
+            total = (
+                lambda_pde * pde_residual(model, x_c, t_c, nu_coef)
+                + lambda_ic * ic_loss(model, x_ic, t_ic)
+                + lambda_bc * bc_loss(model, x_l, t_l, x_r, t_r)
+            )
+            return float(total.item())
+
+        best_flat, best_loss = pso(
+            pso_objective,
+            lower,
+            upper,
+            swarmsize=pso_swarm,
+            maxiter=pso_iters,
+        )
+        set_model_from_flat_vector(model, best_flat)
+        stage_states["pso"] = clone_model_state(model)
+        stage_losses["pso"] = float(best_loss)
+        stage_times["pso"] = time.perf_counter() - training_start
+        print(f"PSO best objective: {best_loss:.4e}")
+
+    if return_stage_info:
+        return {
+            "loss_history": loss_history,
+            "stage_states": stage_states,
+            "stage_losses": stage_losses,
+            "stage_times": stage_times,
+        }
+    return loss_history
 
 
 def predict_on_grid(model, x_values, t_values):
@@ -365,6 +447,97 @@ def get_reference_solution(nu_coef, x_test, t_test):
             return u_exact
 
     return reference_solution_fd(nu_coef, x_np, t_np)
+
+
+def build_stage_loss_curve(base_history, stage_name, stage_losses):
+    if not base_history:
+        return []
+    if stage_name == "adam":
+        return list(base_history)
+    if stage_name in stage_losses:
+        return list(base_history) + [float(stage_losses[stage_name])]
+    return list(base_history)
+
+
+def save_stage_outputs(model, args, stage_name, stage_dir, loss_history, stage_losses, run_time_seconds):
+    os.makedirs(stage_dir, exist_ok=True)
+    stage_loss = build_stage_loss_curve(loss_history, stage_name, stage_losses)
+    plot_loss_curve(
+        stage_loss,
+        os.path.join(stage_dir, "loss_curve.png"),
+        title=f"Burgers NAS-PINN Loss ({stage_name.upper()}, nu={args.nu:.3f})",
+        use_interactive=interactive_plots,
+    )
+
+    plot_heatmap(model, stage_dir)
+
+    x_test = torch.linspace(x_min, x_max, args.test_nx, device=device)
+    t_test = torch.linspace(t_min, t_max, args.test_nt, device=device)
+    u_pred = predict_on_grid(model, x_test, t_test)
+    u_exact = get_reference_solution(args.nu, x_test, t_test)
+    rel_l2 = np.linalg.norm(u_pred - u_exact) / (np.linalg.norm(u_exact) + 1e-12)
+
+    x_np = x_test.detach().cpu().numpy()
+    t_np = t_test.detach().cpu().numpy()
+    plot_burgers_exact_pred_error(
+        x_np,
+        t_np,
+        u_exact,
+        u_pred,
+        os.path.join(stage_dir, "result_comparison.png"),
+        pred_title=f"Predicted (NAS-PINN, {stage_name.upper()})",
+        use_interactive=interactive_plots,
+    )
+
+    with open(os.path.join(stage_dir, "l2_error.txt"), "w", encoding="utf-8") as f:
+        f.write(f"stage,{stage_name}\nnu,{args.nu:.6f}\nrel_l2,{rel_l2:.8e}\n")
+    with open(os.path.join(stage_dir, "run_time.txt"), "w", encoding="utf-8") as f:
+        f.write(f"run_time_seconds,{run_time_seconds:.6f}\n")
+    with open(os.path.join(stage_dir, "metrics.csv"), "w", encoding="utf-8") as f:
+        f.write("method,stage,nu,seed,rel_l2,run_time_seconds\n")
+        f.write(f"naspinn,{stage_name},{args.nu:.6f},{args.seed},{rel_l2:.8e},{run_time_seconds:.6f}\n")
+
+    if should_use_exact_plots(args.nu):
+        plot_time_slices(model, stage_dir)
+        plot_time_slices_with_exact(model, stage_dir)
+        plot_full_exact_vs_pred(model, stage_dir, "burgers_shock.mat")
+
+    return float(rel_l2)
+
+
+def copy_stage_to_root(stage_dir, root_dir):
+    copy_map = [
+        ("loss_curve.png", "loss_curve.png"),
+        ("burgers_heatmap.png", "burgers_heatmap.png"),
+        ("result_comparison.png", "result_comparison.png"),
+        ("l2_error.txt", "l2_error.txt"),
+        ("run_time.txt", "run_time.txt"),
+        ("metrics.csv", "metrics.csv"),
+    ]
+    for src_name, dst_name in copy_map:
+        src = os.path.join(stage_dir, src_name)
+        if os.path.exists(src):
+            shutil.copy2(src, os.path.join(root_dir, dst_name))
+
+    exact_plot_src = os.path.join(stage_dir, "burgers_full_exact_vs_pred.png")
+    if os.path.exists(exact_plot_src):
+        shutil.copy2(exact_plot_src, os.path.join(root_dir, "burgers_full_exact_vs_pred.png"))
+
+
+def apply_stage_flags(args):
+    stage = getattr(args, "stage", None)
+    if stage == "adam":
+        args.skip_lbfgs = True
+        args.use_pso = False
+    elif stage == "lbfgs":
+        args.skip_lbfgs = False
+        args.use_pso = False
+    elif stage == "pso":
+        args.skip_lbfgs = False
+        args.use_pso = True
+
+    if args.skip_lbfgs:
+        args.use_pso = False
 
 
 def run_paper_protocol(args):
@@ -502,7 +675,18 @@ def parse_args():
     parser.add_argument("--checkpoint", type=str, default="checkpoint_last.pth", help="checkpoint path")
     parser.add_argument("--resume", action="store_true", help="resume training from checkpoint")
     parser.add_argument("--plot-only", action="store_true", help="skip training and only run plots from checkpoint")
+    parser.add_argument(
+        "--stage",
+        type=str,
+        choices=["adam", "lbfgs", "pso"],
+        default=None,
+        help="optional stage shortcut: adam | lbfgs | pso",
+    )
     parser.add_argument("--skip-lbfgs", action="store_true", help="skip L-BFGS refinement")
+    parser.add_argument("--use-pso", action="store_true", help="enable PSO refinement after L-BFGS")
+    parser.add_argument("--pso-iters", type=int, default=8, help="PSO max iterations")
+    parser.add_argument("--pso-swarm", type=int, default=16, help="PSO swarm size")
+    parser.add_argument("--pso-span", type=float, default=PSO_SPAN, help="PSO search span around current weights")
     parser.add_argument("--nu", type=float, default=nu, help="single-run viscosity coefficient")
     parser.add_argument("--multi-nu", action="store_true", help="run three viscosity values and save comparison")
     parser.add_argument("--nu-list", type=str, default="0.01,0.04,0.07", help="comma-separated viscosities for --multi-nu")
@@ -524,6 +708,9 @@ def run_single(args):
     os.makedirs(args.save_dir, exist_ok=True)
     if not os.path.isabs(args.checkpoint):
         args.checkpoint = os.path.join(args.save_dir, args.checkpoint)
+    apply_stage_flags(args)
+    torch.manual_seed(args.seed)
+    np.random.seed(args.seed)
 
     model = NAS_PINN(layers=4, base_neurons=128).to(device)
 
@@ -532,35 +719,78 @@ def run_single(args):
             raise FileNotFoundError(f"Checkpoint not found for plot-only mode: {args.checkpoint}")
         load_checkpoint(args.checkpoint, model)
         print(f"Loaded model for plot-only mode from: {args.checkpoint}")
+        stage_dir = os.path.join(args.save_dir, "stage_loaded")
+        rel_l2 = save_stage_outputs(
+            model,
+            args,
+            stage_name="loaded",
+            stage_dir=stage_dir,
+            loss_history=[],
+            stage_losses={},
+            run_time_seconds=time.perf_counter() - run_start,
+        )
+        copy_stage_to_root(stage_dir, args.save_dir)
+        run_time = time.perf_counter() - run_start
+        print(f"Run time: {run_time:.2f} s")
+        return float(rel_l2), float(run_time)
     else:
-        train_with_resume(
+        train_info = train_with_resume(
             model,
             total_epochs=args.epochs,
             checkpoint_path=args.checkpoint,
             resume=args.resume,
             skip_lbfgs=args.skip_lbfgs,
+            use_pso=args.use_pso,
+            pso_iters=args.pso_iters,
+            pso_swarm=args.pso_swarm,
+            pso_span=args.pso_span,
             nu_coef=args.nu,
+            return_stage_info=True,
         )
+        loss_history = train_info["loss_history"]
+        stage_states = train_info["stage_states"]
+        stage_losses = train_info["stage_losses"]
+        stage_times = train_info["stage_times"]
 
-    print_discovered_architecture(model)
-    plot_heatmap(model, args.save_dir)
-    # Tüm nu değerleri için karşılaştırmalı plotlar kaydedilsin
-    plot_time_slices(model, args.save_dir)
-    plot_time_slices_with_exact(model, args.save_dir)
-    plot_full_exact_vs_pred(model, args.save_dir, 'burgers_shock.mat')
+    stage_order = ["adam", "lbfgs", "pso"]
+    completed_stages = [name for name in stage_order if name in stage_states]
+    stage_results = []
+    for stage_name in completed_stages:
+        model_stage = NAS_PINN(layers=4, base_neurons=128).to(device)
+        model_stage.load_state_dict(stage_states[stage_name])
+        print_discovered_architecture(model_stage)
+        stage_dir = os.path.join(args.save_dir, f"stage_{stage_name}")
+        rel_l2 = save_stage_outputs(
+            model_stage,
+            args,
+            stage_name=stage_name,
+            stage_dir=stage_dir,
+            loss_history=loss_history,
+            stage_losses=stage_losses,
+            run_time_seconds=float(stage_times.get(stage_name, 0.0)),
+        )
+        stage_results.append((stage_name, rel_l2, float(stage_times.get(stage_name, 0.0))))
 
-    x_test = torch.linspace(x_min, x_max, args.test_nx, device=device)
-    t_test = torch.linspace(t_min, t_max, args.test_nt, device=device)
-    u_pred = predict_on_grid(model, x_test, t_test)
-    u_exact = get_reference_solution(args.nu, x_test, t_test)
-    rel_l2 = np.linalg.norm(u_pred - u_exact) / (np.linalg.norm(u_exact) + 1e-12)
-    with open(os.path.join(args.save_dir, "l2_error.txt"), "w", encoding="utf-8") as f:
-        f.write(f"nu,{args.nu:.6f}\nrel_l2,{rel_l2:.8e}\n")
+    if not stage_results:
+        raise RuntimeError("No stage output was produced.")
+
+    final_stage_name, final_rel_l2, _ = stage_results[-1]
+    final_stage_dir = os.path.join(args.save_dir, f"stage_{final_stage_name}")
+    copy_stage_to_root(final_stage_dir, args.save_dir)
+
+    with open(os.path.join(args.save_dir, "stage_summary.csv"), "w", encoding="utf-8") as f:
+        f.write("stage,nu,seed,rel_l2,run_time_seconds\n")
+        for stage_name, rel_l2, stage_time in stage_results:
+            f.write(f"{stage_name},{args.nu:.6f},{args.seed},{rel_l2:.8e},{stage_time:.6f}\n")
+
     run_time = time.perf_counter() - run_start
     with open(os.path.join(args.save_dir, "run_time.txt"), "w", encoding="utf-8") as f:
         f.write(f"run_time_seconds,{run_time:.6f}\n")
+    with open(os.path.join(args.save_dir, "metrics.csv"), "w", encoding="utf-8") as f:
+        f.write("method,stage,nu,seed,rel_l2,run_time_seconds\n")
+        f.write(f"naspinn,{final_stage_name},{args.nu:.6f},{args.seed},{final_rel_l2:.8e},{run_time:.6f}\n")
     print(f"Run time: {run_time:.2f} s")
-    return float(rel_l2), float(run_time)
+    return float(final_rel_l2), float(run_time)
 
 
 def run_multi_nu(args):

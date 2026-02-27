@@ -11,6 +11,7 @@ from scipy.integrate import solve_ivp
 from .plots import (
     plot_burgers_exact_pred_error,
     plot_burgers_heatmap,
+    plot_loss_curve,
     plot_burgers_time_slices,
     plot_burgers_time_slices_with_exact,
     should_use_exact_plots,
@@ -130,10 +131,11 @@ def bc_loss(model, x_l, t_l, x_r, t_r):
     return torch.mean(model(xt_l) ** 2) + torch.mean(model(xt_r) ** 2)
 
 
-def train_model(model, points, nu_coef, epochs=15000, lr=1e-3, skip_lbfgs=False):
+def train_model(model, points, nu_coef, epochs=15000, lr=1e-3, skip_lbfgs=False, record_history=False):
     (x_c, t_c), (x_ic, t_ic), (x_l, t_l), (x_r, t_r) = points
 
     opt = optim.Adam(model.parameters(), lr=lr)
+    loss_history = [] if record_history else None
     for _ in range(epochs):
         opt.zero_grad()
         l_pde = pde_residual(model, x_c, t_c, nu_coef)
@@ -142,6 +144,8 @@ def train_model(model, points, nu_coef, epochs=15000, lr=1e-3, skip_lbfgs=False)
         loss = lambda_pde * l_pde + lambda_ic * l_ic + lambda_bc * l_bc
         loss.backward()
         opt.step()
+        if record_history:
+            loss_history.append(float(loss.item()))
 
     if not skip_lbfgs:
         lbfgs = optim.LBFGS(model.parameters(), lr=1.0, max_iter=3000, line_search_fn="strong_wolfe")
@@ -156,6 +160,8 @@ def train_model(model, points, nu_coef, epochs=15000, lr=1e-3, skip_lbfgs=False)
             return loss
 
         lbfgs.step(closure)
+
+    return loss_history
 
 
 def predict_on_grid(model, x_values, t_values):
@@ -246,7 +252,15 @@ def run_bayesian_search(nu_coef, train_points, x_test, t_test, args):
 
         set_seed(args.seed + eval_counter["k"])
         model = BayesianNASPINN(widths, acts).to(device)
-        train_model(model, train_points, nu_coef=nu_coef, epochs=args.bo_epochs, lr=lr_decoded, skip_lbfgs=True)
+        train_model(
+            model,
+            train_points,
+            nu_coef=nu_coef,
+            epochs=args.bo_epochs,
+            lr=lr_decoded,
+            skip_lbfgs=True,
+            record_history=False,
+        )
 
         pred_u = predict_on_grid(model, x_test, t_test)
         rel_l2 = np.linalg.norm(pred_u - exact_u) / (np.linalg.norm(exact_u) + 1e-12)
@@ -305,7 +319,15 @@ def run_single(args):
     print(f"BO rel L2    : {bo_rel_l2:.4e}")
 
     best_model = BayesianNASPINN(best_widths, best_acts).to(device)
-    train_model(best_model, train_points, nu_coef=args.nu, epochs=args.epochs, lr=best_lr, skip_lbfgs=args.skip_lbfgs)
+    loss_history = train_model(
+        best_model,
+        train_points,
+        nu_coef=args.nu,
+        epochs=args.epochs,
+        lr=best_lr,
+        skip_lbfgs=args.skip_lbfgs,
+        record_history=True,
+    )
 
     ckpt_name = args.checkpoint
     if not os.path.isabs(ckpt_name):
@@ -323,6 +345,13 @@ def run_single(args):
         ckpt_path,
     )
     print(f"Saved checkpoint: {ckpt_path}")
+
+    plot_loss_curve(
+        loss_history,
+        os.path.join(args.save_dir, "loss_curve.png"),
+        title=f"Burgers Bayesian Loss (nu={args.nu:.3f})",
+        use_interactive=interactive_plots,
+    )
 
     plot_burgers_heatmap(
         best_model,
@@ -361,6 +390,9 @@ def run_single(args):
     run_time = time.perf_counter() - run_start
     with open(os.path.join(args.save_dir, "run_time.txt"), "w", encoding="utf-8") as f:
         f.write(f"run_time_seconds,{run_time:.6f}\n")
+    with open(os.path.join(args.save_dir, "metrics.csv"), "w", encoding="utf-8") as f:
+        f.write("method,nu,seed,rel_l2,run_time_seconds\n")
+        f.write(f"bayesian,{args.nu:.6f},{args.seed},{rel_l2:.8e},{run_time:.6f}\n")
     print(f"Run time: {run_time:.2f} s")
     return float(rel_l2), float(run_time)
 

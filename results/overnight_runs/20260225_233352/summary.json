@@ -1,9 +1,0 @@
-[
-  {
-    "job": "poisson_rectangular",
-    "status": "ok",
-    "return_code": 0,
-    "elapsed_sec": 496.18,
-    "log": "results/overnight_runs/20260225_233352/poisson_rectangular.log"
-  }
-]

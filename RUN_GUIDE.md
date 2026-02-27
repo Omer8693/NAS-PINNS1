@@ -1,184 +1,104 @@
-# Run Guide (Güncel)
+# Run Guide (Guncel)
 
-Bu projede çalıştırılacak ana dosyalar kök dizindeki `NAS_PINNs_*.py` dosyalarıdır.
-`optimizers/` klasörü iç implementasyondur.
+Bu dosya yeni akisa gore net komut listesidir.
 
-> Not: Dosya adında `PINNs` kullanılır, `PINNS` değil.
+## 1) Tum projeyi tek komutla sirali calistir
 
-## Burgers
+```bash
+python run_pipeline.py
+```
 
-### Tekli çalıştırma
+### Hizli test
 
-- NAS-PINN: `python NAS_PINNs_burgers.py`
-- NSGA-II: `python NAS_PINNs_burgers_nsga2.py`
-- NSGA-III: `python NAS_PINNs_burgers_nsga3.py`
-- Bayesian: `python NAS_PINNs_burgers_bayesian.py`
+```bash
+python run_pipeline.py --quick
+```
 
-### 3 viskoziteyi tek komutta çalıştırma
+### 3 tekrarli deney
 
-- NAS-PINN: `python NAS_PINNs_burgers.py --multi-nu`
-- NSGA-II: `python NAS_PINNs_burgers_nsga2.py --multi-nu`
-- NSGA-III: `python NAS_PINNs_burgers_nsga3.py --multi-nu`
-- Bayesian: `python NAS_PINNs_burgers_bayesian.py --multi-nu`
+```bash
+python run_pipeline.py --repeats 3
+```
 
-Varsayılan viskozite listesi: `0.01,0.04,0.07` (gerekirse `--nu-list` ile değiştir).
+### Stage secimi
 
-Doğrulanmış örnek komut:
+```bash
+python run_pipeline.py --stage adam
+python run_pipeline.py --stage lbfgs
+python run_pipeline.py --stage pso
+```
 
-- `python NAS_PINNs_burgers.py --multi-nu --nu-list 0.01,0.04,0.07`
+Denklem bazli ayri stage:
 
-Terminal notu:
+```bash
+python run_pipeline.py --burgers-stage adam --poisson-stage pso
+python run_pipeline.py --burgers-stage lbfgs --poisson-stage lbfgs
+```
 
-- Komutu markdown link formatında yapıştırma (`[...](...)` kullanma).
-- Düz metin komut çalıştır: `python NAS_PINNs_burgers.py ...`
+Not:
 
-Üretilen klasör/çıktılar:
+- Burgers tarafinda `pso` NAS-PINN baseline icin calisir.
+- Burgers NSGA2/NSGA3/Bayesian tarafi Adam/L-BFGS akisindadir.
 
-- Alt klasörler: `nu_*/`
-- Karşılaştırma: `viscosity_comparison.csv`, `viscosity_comparison.png`
-- Runtime: `run_time.txt`
+## 2) Manuel calistirma sirasi
 
-Ek not (Burgers `--multi-nu`):
+Asagidaki sira dogrudan hocaya gosterilecek karsilastirma duzenidir.
 
-- `burgers_shock.mat` dosyası `0.01/pi` viskoziteye karşılık gelir.
-- `nu` farklıysa exact-mat kıyası atlanır; heatmap/time-slice ve özet çıktılar yine üretilir.
+1. `python NAS_PINNs_burgers.py --multi-nu --nu-list 0.01,0.04,0.07`
+2. `python NAS_PINNs_burgers_nsga2.py --multi-nu --nu-list 0.01,0.04,0.07`
+3. `python NAS_PINNs_burgers_nsga3.py --multi-nu --nu-list 0.01,0.04,0.07`
+4. `python NAS_PINNs_burgers_bayesian.py --multi-nu --nu-list 0.01,0.04,0.07`
+5. `python NAS_PINNs_poisson.py --multi-domain --domain-list rectangular,circle,lshape,flower,annulus`
+6. `python NAS_PINNs_poisson_nsga2.py --multi-domain --domain-list rectangular,circle,lshape,flower,annulus --skip-pso`
+7. `python NAS_PINNs_poisson_nsga3.py --multi-domain --domain-list rectangular,circle,lshape,flower,annulus --skip-pso`
+8. `python NAS_PINNs_poisson_bayesian.py --multi-domain --domain-list rectangular,circle,lshape,flower,annulus --skip-pso`
 
-Sonuç kökleri:
+## 3) Hoca sorusu: "kac kez run ediliyor?"
+
+Iki seviye var:
+
+- Top-level run: kac ana script cagiriliyor (pipeline'da 8 adet x repeats)
+- Sub-experiment run: her scriptin icindeki nu/domain parcali deney adedi
+
+Varsayilan durumda:
+
+- Burgers: 4 yontem x 3 nu = 12 alt deney
+- Poisson: 4 yontem x 5 domain = 20 alt deney
+- Toplam alt deney = 32 (repeats=1 icin)
+
+`run_pipeline.py` bunu otomatik yazdirir.
+
+## 4) Ciktilar nerede?
+
+### Burgers
 
 - `results/burgers/naspinn`
 - `results/burgers/nsga2`
 - `results/burgers/nsga3`
 - `results/burgers/bayesian`
 
-## Poisson
+NAS-PINN icin stage klasorleri:
 
-### Tekli çalıştırma
+- `stage_adam/`
+- `stage_lbfgs/`
+- `stage_pso/` (PSO aciksa)
+- `stage_summary.csv`
 
-- NAS-PINN: `python NAS_PINNs_poisson.py`
-- NSGA-II: `python NAS_PINNs_poisson_nsga2.py`
-- NSGA-III: `python NAS_PINNs_poisson_nsga3.py`
-- Bayesian: `python NAS_PINNs_poisson_bayesian.py`
-
-### 3 seed karşılaştırmasını tek komutta çalıştırma
-
-Poisson denkleminde viskozite olmadığı için 3 farklı seed kıyası kullanılır:
-
-- NAS-PINN: `python NAS_PINNs_poisson.py --multi-seed`
-- NSGA-II: `python NAS_PINNs_poisson_nsga2.py --multi-seed`
-- NSGA-III: `python NAS_PINNs_poisson_nsga3.py --multi-seed`
-- Bayesian: `python NAS_PINNs_poisson_bayesian.py --multi-seed`
-
-Varsayılan seed listesi: `42,43,44` (gerekirse `--seed-list` ile değiştir).
-
-Üretilen klasör/çıktılar:
-
-- Alt klasörler: `seed_*/`
-- Karşılaştırma: `seed_comparison.csv`, `seed_comparison.png`
-- Runtime: `run_time.txt`
-
-Sonuç kökleri:
+### Poisson
 
 - `results/poisson/naspinn`
 - `results/poisson/nsga2`
 - `results/poisson/nsga3`
 - `results/poisson/bayesian`
 
-## Loss/Epoch Grafikleri
+NAS-PINN icin stage klasorleri:
 
-Poisson akışlarında loss grafiği otomatik kaydedilir:
+- `stage_adam/`
+- `stage_lbfgs/`
+- `stage_pso/` (PSO aciksa)
+- `stage_summary.csv`
 
-- naspinn: `poisson_naspinn_loss_curve.png`
-- nsga2: `poisson_nsga2_loss_curve.png`
-- nsga3: `poisson_nsga3_loss_curve.png`
-- bayesian: `bayes_poisson_loss_curve.png`
+Pipeline log/ozet:
 
-## Plot Kodlarının Yeri
-
-Plot kodları ana eğitim dosyalarından ayrılmıştır:
-
-- `optimizers/burgers/plots.py`
-- `optimizers/poisson/plots.py`
-
-Renk/stil değişikliği yapmak için sadece bu iki dosyayı düzenlemek yeterlidir.
-
-## PSO Karşılaştırma (Ayrı Kod, Mevcut Akışı Bozmaz)
-
-PSO tarafı ayrı dosyalar olarak eklendi; mevcut ana eğitim dosyaları değişmeden kalır.
-
-### Burgers PSO
-
-- NAS-PINN: `python NAS_PINNs_burgers_pso.py`
-- NSGA-II: `python NAS_PINNs_burgers_nsga2_pso.py`
-- NSGA-III: `python NAS_PINNs_burgers_nsga3_pso.py`
-- Bayesian: `python NAS_PINNs_burgers_bayesian_pso.py`
-
-### Poisson PSO
-
-- NAS-PINN: `python NAS_PINNs_poisson_pso.py`
-- NSGA-II: `python NAS_PINNs_poisson_nsga2_pso.py`
-- NSGA-III: `python NAS_PINNs_poisson_nsga3_pso.py`
-- Bayesian: `python NAS_PINNs_poisson_bayesian_pso.py`
-
-### PSO Parametreleri (verdiğin yapı ile)
-
-- `--pop-size`
-- `--generations`
-- `--w`, `--c1`, `--c2`
-- `--adaptive`
-- `--initial-velocity` (`random`/`zero`)
-- `--max-velocity-rate`
-- `--pertube-best`
-- `--base-args` (hedef scriptlere ek argüman geçirmek için)
-
-### Kaydedilen Çıktılar
-
-Her hedef için:
-
-- `results/pso_compare/<target>/baseline/`
-- `results/pso_compare/<target>/pso_evals/`
-- `results/pso_compare/<target>/pso_best/`
-- `results/pso_compare/<target>/pso_comparison.csv`
-- `results/pso_compare/<target>/best_params.json`
-
-`pso_comparison.csv` içinde baseline ve PSO-en-iyi sonuçları birlikte tutulur.
-
----
-
-## Batch Run (Automation)
-
-To automatically run all method and parameter combinations, use the `run_overnight.py` script in the root directory.
-
-Basic command:
-
-```bash
-python3 run_overnight.py
-```
-
-To exclude PSO jobs:
-
-```bash
-python3 run_overnight.py --no-pso
-```
-
-For quick testing:
-
-```bash
-python3 run_overnight.py --quick
-```
-
-To stop on error and allow repair:
-
-```bash
-python3 run_overnight.py --stop-on-error
-```
-
-**NEW:** If an error occurs, the last 20 lines of the log file are automatically displayed. After you repair the issue, press Enter to continue the script from where it left off. If the retry also fails, the script stops.
-
-Summary:
-
-- If an error occurs, log lines are shown
-- After repair, press Enter to continue
-- The job is retried
-- If successful, the script continues; if not, it stops
-
-Outputs and results are saved under `results/`.
+- `results/pipeline_runs/<timestamp>/summary.csv`
+- `results/pipeline_runs/<timestamp>/summary.json`

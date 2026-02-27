@@ -1,0 +1,3 @@
+stage,adam
+domain,rectangular
+rel_l2,1.14273790e-01

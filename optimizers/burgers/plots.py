@@ -209,3 +209,20 @@ def plot_burgers_full_exact_vs_pred(
         use_interactive=use_interactive,
     )
     return float(rel_l2)
+
+
+def plot_loss_curve(loss_values, save_path, title="Training Loss", yscale="log", use_interactive=interactive_plots):
+    if not loss_values:
+        print("Skipping loss plot: empty history.")
+        return
+
+    plt.figure(figsize=(9, 5))
+    plt.plot(loss_values, linewidth=1.2, color="royalblue")
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss")
+    if yscale:
+        plt.yscale(yscale)
+    plt.title(title)
+    plt.grid(True, alpha=0.3)
+    plt.tight_layout()
+    finalize_plot(save_path, use_interactive=use_interactive)

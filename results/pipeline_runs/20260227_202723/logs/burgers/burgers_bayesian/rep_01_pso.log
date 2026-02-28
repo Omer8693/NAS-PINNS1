@@ -1,0 +1,56 @@
+[START] 2026-02-27T22:33:09.453356
+COMMAND: /usr/bin/python NAS_PINNs_burgers_bayesian.py --multi-nu --nu-list 0.01,0.04,0.07 --seed 42 --use-pso --save-dir results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/bayesian
+
+|   iter    |  target   | n_layers  |    n1     |    n2     |    n3     |    n4     |    a1     |    a2     |    a3     |    a4     |    lr     |
+-------------------------------------------------------------------------------------------------------------------------------------------------
+BO eval 01 | widths=[184, 149, 128] acts=['tanh', 'tanh', 'sin'] lr=1.56e-03 | relL2=3.0835e-01
+| [39m1        [39m | [39m-0.308349[39m | [39m3.3745401[39m | [39m184.11428[39m | [39m149.11903[39m | [39m127.78535[39m | [39m56.962982[39m | [39m0.1559945[39m | [39m0.0580836[39m | [39m0.8661761[39m | [39m0.6011150[39m | [39m0.0015621[39m |
+BO eval 02 | widths=[187, 165, 66] acts=['tanh', 'tanh', 'sin'] lr=9.37e-04 | relL2=3.3998e-01
+| [39m2        [39m | [39m-0.339978[39m | [39m3.0205844[39m | [39m187.18557[39m | [39m165.19082[39m | [39m65.974257[39m | [39m61.091994[39m | [39m0.1834045[39m | [39m0.3042422[39m | [39m0.5247564[39m | [39m0.4319450[39m | [39m0.0009368[39m |
+BO eval 03 | widths=[183, 156, 134, 51] acts=['sin', 'sin', 'tanh', 'tanh'] lr=1.54e-03 | relL2=1.4072e-01
+| [35m3        [39m | [35m-0.140715[39m | [35m3.9614923[39m | [35m183.49878[39m | [35m156.30628[39m | [35m134.17384[39m | [35m51.098049[39m | [35m0.8344659[39m | [35m0.7680948[39m | [35m0.4174409[39m | [35m0.2656772[39m | [35m0.0015426[39m |
+BO eval 04 | widths=[39, 137, 68, 137] acts=['sin', 'sin', 'tanh', 'sin'] lr=1.15e-03 | relL2=3.9731e-01
+| [39m4        [39m | [39m-0.397310[39m | [39m3.6764765[39m | [39m38.734159[39m | [39m136.96104[39m | [39m68.334813[39m | [39m137.47051[39m | [39m0.8797493[39m | [39m0.9542661[39m | [39m0.3687843[39m | [39m0.6574882[39m | [39m0.0011509[39m |
+BO eval 05 | widths=[178, 160, 134, 53] acts=['tanh', 'sin', 'tanh', 'sin'] lr=1.42e-03 | relL2=3.0459e-01
+| [39m5        [39m | [39m-0.304589[39m | [39m3.8751524[39m | [39m178.35503[39m | [39m160.30829[39m | [39m134.30637[39m | [39m53.188648[39m | [39m0.3066266[39m | [39m0.8927642[39m | [39m0.3863428[39m | [39m0.5571069[39m | [39m0.0014239[39m |
+BO eval 06 | widths=[76, 42, 117, 153] acts=['tanh', 'tanh', 'sin', 'tanh'] lr=8.71e-04 | relL2=4.4656e-01
+| [39m6        [39m | [39m-0.446558[39m | [39m3.5589802[39m | [39m76.025930[39m | [39m41.675999[39m | [39m117.09022[39m | [39m152.59849[39m | [39m0.2500910[39m | [39m0.3222127[39m | [39m0.5670430[39m | [39m0.4165768[39m | [39m0.0008708[39m |
+BO eval 07 | widths=[185, 155, 132, 50] acts=['sin', 'sin', 'sin', 'tanh'] lr=1.29e-03 | relL2=2.1114e-01
+| [39m7        [39m | [39m-0.211142[39m | [39m3.8666099[39m | [39m184.68045[39m | [39m154.92089[39m | [39m131.67463[39m | [39m50.366703[39m | [39m0.6948990[39m | [39m0.6300221[39m | [39m0.5369375[39m | [39m0.3114816[39m | [39m0.0012909[39m |
+BO eval 08 | widths=[186, 155, 137, 50] acts=['sin', 'sin', 'tanh', 'tanh'] lr=1.93e-03 | relL2=1.8094e-01
+| [39m8        [39m | [39m-0.180940[39m | [39m4.0      [39m | [39m185.60148[39m | [39m155.48786[39m | [39m137.34032[39m | [39m50.340093[39m | [39m1.0      [39m | [39m0.8737132[39m | [39m0.2781880[39m | [39m0.0      [39m | [39m0.0019343[39m |
+BO eval 09 | widths=[181, 154, 136, 49] acts=['sin', 'sin', 'tanh', 'tanh'] lr=1.88e-03 | relL2=7.8244e-02
+| [35m9        [39m | [35m-0.078243[39m | [35m4.0      [39m | [35m180.54768[39m | [35m153.57202[39m | [35m136.16530[39m | [35m48.647657[39m | [35m1.0      [39m | [35m0.9836393[39m | [35m0.0400677[39m | [35m0.1962329[39m | [35m0.0018840[39m |
+BO eval 10 | widths=[181, 156, 136, 44] acts=['sin', 'tanh', 'sin', 'sin'] lr=5.00e-04 | relL2=3.7110e-01
+| [39m10       [39m | [39m-0.371101[39m | [39m4.0      [39m | [39m180.67471[39m | [39m155.94074[39m | [39m136.32807[39m | [39m44.124633[39m | [39m1.0      [39m | [39m0.0      [39m | [39m1.0      [39m | [39m1.0      [39m | [39m0.0005   [39m |
+=================================================================================================================================================
+
+Best architecture from BO
+hidden widths: [181, 154, 136, 49]
+hidden acts  : ['sin', 'sin', 'tanh', 'tanh']
+lr           : 1.8841e-03
+BO rel L2    : 7.8244e-02
+Traceback (most recent call last):
+  File "/home/coder/NAS-PINNS1/NAS_PINNs_burgers_bayesian.py", line 9, in <module>
+    main()
+  File "/home/coder/NAS-PINNS1/optimizers/burgers/bayesian.py", line 722, in main
+    run_multi_nu(args)
+  File "/home/coder/NAS-PINNS1/optimizers/burgers/bayesian.py", line 619, in run_multi_nu
+    rel_l2, run_time = run_single(args_local)
+                       ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/coder/NAS-PINNS1/optimizers/burgers/bayesian.py", line 521, in run_single
+    train_info = train_model(
+                 ^^^^^^^^^^^^
+  File "/home/coder/NAS-PINNS1/optimizers/burgers/bayesian.py", line 225, in train_model
+    l_pde = pde_residual(model, x_c, t_c, nu_coef)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/coder/NAS-PINNS1/optimizers/burgers/bayesian.py", line 117, in pde_residual
+    grads = torch.autograd.grad(u.sum(), xt, create_graph=True)[0]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/autograd/__init__.py", line 496, in grad
+    result = _engine_run_backward(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/autograd/graph.py", line 825, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: element 0 of tensors does not require grad and does not have a grad_fn

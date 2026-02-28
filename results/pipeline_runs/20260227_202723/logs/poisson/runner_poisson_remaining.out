@@ -1,0 +1,345 @@
+nohup: ignoring input
+Run root   : results/pipeline_runs/20260227_202723
+Poisson dir: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson
+Log dir    : results/pipeline_runs/20260227_202723/logs/poisson
+Base seed  : 42
+
+[SKIP] nsga2/rectangular already completed.
+[SKIP] nsga2/circle already completed.
+[SKIP] nsga2/lshape already completed.
+[WAIT] nsga2/flower is already running. Waiting for completion...
+[DONE] nsga2/flower completed by existing process.
+[RUN ] nsga2/annulus (seed=46)
++ PYTHONUNBUFFERED=1
++ python NAS_PINNs_poisson_nsga2.py --domain annulus --seed 46 --save-dir results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga2/domain_annulus
+Using device: cuda
+Starting NSGA-II architecture search: domain=annulus
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       30 |      1 |             - |             -
+     2 |       60 |      1 |  0.8708159924 |         ideal
+     3 |       90 |      1 |  0.000000E+00 |             f
+     4 |      120 |      1 |  0.000000E+00 |             f
+     5 |      150 |      1 |  0.000000E+00 |             f
+     6 |      180 |      1 |  0.9248102903 |         ideal
+     7 |      210 |      1 |  1.1074563265 |         ideal
+     8 |      240 |      1 |  0.000000E+00 |             f
+     9 |      270 |      1 |  0.000000E+00 |             f
+    10 |      300 |      1 |  0.000000E+00 |             f
+    11 |      330 |      1 |  0.000000E+00 |             f
+    12 |      360 |      1 |  0.000000E+00 |             f
+    13 |      390 |      1 |  0.000000E+00 |             f
+    14 |      420 |      1 |  0.000000E+00 |             f
+    15 |      450 |      1 |  0.000000E+00 |             f
+    16 |      480 |      1 |  0.000000E+00 |             f
+    17 |      510 |      1 |  0.000000E+00 |             f
+    18 |      540 |      1 |  0.000000E+00 |             f
+    19 |      570 |      1 |  0.000000E+00 |             f
+    20 |      600 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 3 3 2 1]
+Adam [    0] loss: 7.6080e+01
+Adam [ 2000] loss: 4.6781e+00
+Adam [ 4000] loss: 2.0901e-01
+Adam [ 6000] loss: 8.6342e-02
+Adam [ 8000] loss: 2.5224e-02
+Adam [10000] loss: 1.8585e-02
+Adam [11999] loss: 1.0225e-02
+
+L-BFGS refinement...
+
+PSO refinement...
+PSO best objective: 1.7806e+01
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga2/domain_annulus/stage_adam/poisson_nsga2_loss_curve.png
+
+Relative L2 error (annulus, grid 500x500): 6.7093e-02
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga2/domain_annulus/stage_adam/results_summary.csv
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga2/domain_annulus/stage_lbfgs/poisson_nsga2_loss_curve.png
+
+Relative L2 error (annulus, grid 500x500): 4.7324e-03
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga2/domain_annulus/stage_lbfgs/results_summary.csv
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga2/domain_annulus/stage_pso/poisson_nsga2_loss_curve.png
+
+Relative L2 error (annulus, grid 500x500): 4.1573e-01
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga2/domain_annulus/stage_pso/results_summary.csv
+Selected best stage: lbfgs (rel_l2=4.7324e-03)
+Run time: 5596.01 s
+[OK  ] nsga2/annulus
+[RUN ] nsga3/rectangular (seed=42)
++ PYTHONUNBUFFERED=1
++ python NAS_PINNs_poisson_nsga3.py --domain rectangular --seed 42 --save-dir results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_rectangular
+Using device: cuda
+Starting NSGA-III architecture search: domain=rectangular
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -
+     2 |       26 |      1 |  1.6417305470 |         ideal
+     3 |       39 |      1 |  0.8322379589 |         ideal
+     4 |       52 |      1 |  0.8670520782 |         ideal
+     5 |       65 |      1 |  0.000000E+00 |             f
+     6 |       78 |      1 |  0.000000E+00 |             f
+     7 |       91 |      1 |  0.1488083601 |         ideal
+     8 |      104 |      1 |  0.0190683603 |         ideal
+     9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.000000E+00 |             f
+    12 |      156 |      1 |  0.000000E+00 |             f
+    13 |      169 |      1 |  0.000000E+00 |             f
+    14 |      182 |      1 |  0.4498884678 |         ideal
+    15 |      195 |      1 |  0.000000E+00 |             f
+    16 |      208 |      1 |  0.000000E+00 |             f
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  0.000000E+00 |             f
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 3 3 0 2]
+Adam [    0] loss: 9.7773e+01
+Adam [ 2000] loss: 1.0150e-01
+Adam [ 4000] loss: 3.3409e-02
+Adam [ 6000] loss: 1.2927e-02
+Adam [ 8000] loss: 1.1423e-02
+Adam [10000] loss: 6.6986e-03
+Adam [11999] loss: 2.3934e-03
+
+L-BFGS refinement...
+
+PSO refinement...
+PSO best objective: 8.5884e+00
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_rectangular/stage_adam/poisson_nsga3_loss_curve.png
+
+Relative L2 error (rectangular, grid 500x500): 2.7793e-02
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_rectangular/stage_adam/results_summary.csv
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_rectangular/stage_lbfgs/poisson_nsga3_loss_curve.png
+
+Relative L2 error (rectangular, grid 500x500): 9.1342e-04
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_rectangular/stage_lbfgs/results_summary.csv
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_rectangular/stage_pso/poisson_nsga3_loss_curve.png
+
+Relative L2 error (rectangular, grid 500x500): 5.1209e-01
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_rectangular/stage_pso/results_summary.csv
+Selected best stage: lbfgs (rel_l2=9.1342e-04)
+Run time: 2624.30 s
+[OK  ] nsga3/rectangular
+[RUN ] nsga3/circle (seed=43)
++ PYTHONUNBUFFERED=1
++ python NAS_PINNs_poisson_nsga3.py --domain circle --seed 43 --save-dir results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_circle
+Using device: cuda
+Starting NSGA-III architecture search: domain=circle
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -
+     2 |       26 |      1 |  0.000000E+00 |             f
+     3 |       39 |      1 |  0.000000E+00 |             f
+     4 |       52 |      1 |  7.6511373520 |         ideal
+     5 |       65 |      1 |  0.000000E+00 |             f
+     6 |       78 |      1 |  0.000000E+00 |             f
+     7 |       91 |      1 |  2.7975068092 |         ideal
+     8 |      104 |      1 |  0.000000E+00 |             f
+     9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.000000E+00 |             f
+    12 |      156 |      1 |  0.000000E+00 |             f
+    13 |      169 |      1 |  0.0404391289 |         ideal
+    14 |      182 |      1 |  0.000000E+00 |             f
+    15 |      195 |      1 |  0.000000E+00 |             f
+    16 |      208 |      1 |  0.000000E+00 |             f
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  1.7411093712 |         ideal
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 4 2 3 3]
+Adam [    0] loss: 9.1527e+01
+Adam [ 2000] loss: 4.3050e-01
+Adam [ 4000] loss: 1.3761e-01
+Adam [ 6000] loss: 3.0456e-02
+Adam [ 8000] loss: 2.7734e-02
+Adam [10000] loss: 6.3738e-03
+Adam [11999] loss: 4.2869e-03
+
+L-BFGS refinement...
+
+PSO refinement...
+PSO best objective: 2.4041e+01
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_circle/stage_adam/poisson_nsga3_loss_curve.png
+
+Relative L2 error (circle, grid 500x500): 3.6058e-02
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_circle/stage_adam/results_summary.csv
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_circle/stage_lbfgs/poisson_nsga3_loss_curve.png
+
+Relative L2 error (circle, grid 500x500): 5.4727e-03
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_circle/stage_lbfgs/results_summary.csv
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_circle/stage_pso/poisson_nsga3_loss_curve.png
+
+Relative L2 error (circle, grid 500x500): 5.9524e-01
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_circle/stage_pso/results_summary.csv
+Selected best stage: lbfgs (rel_l2=5.4727e-03)
+Run time: 2542.68 s
+[OK  ] nsga3/circle
+[RUN ] nsga3/lshape (seed=44)
++ PYTHONUNBUFFERED=1
++ python NAS_PINNs_poisson_nsga3.py --domain lshape --seed 44 --save-dir results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_lshape
+Using device: cuda
+Starting NSGA-III architecture search: domain=lshape
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -
+     2 |       26 |      1 |  0.000000E+00 |             f
+     3 |       39 |      1 |  1.395055E+01 |         ideal
+     4 |       52 |      1 |  7.6451253891 |         ideal
+     5 |       65 |      1 |  0.000000E+00 |             f
+     6 |       78 |      1 |  1.4607648849 |         ideal
+     7 |       91 |      1 |  0.000000E+00 |             f
+     8 |      104 |      1 |  0.000000E+00 |             f
+     9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.000000E+00 |             f
+    12 |      156 |      1 |  0.000000E+00 |             f
+    13 |      169 |      1 |  0.000000E+00 |             f
+    14 |      182 |      1 |  0.000000E+00 |             f
+    15 |      195 |      1 |  0.3392124176 |         ideal
+    16 |      208 |      1 |  3.3288917542 |         ideal
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  0.000000E+00 |             f
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 4 1 1 1]
+Adam [    0] loss: 9.8921e+01
+Adam [ 2000] loss: 1.7817e-01
+Adam [ 4000] loss: 3.9034e-02
+Adam [ 6000] loss: 1.8800e-02
+Adam [ 8000] loss: 1.0574e-02
+Adam [10000] loss: 7.8532e-03
+Adam [11999] loss: 6.7913e-03
+
+L-BFGS refinement...
+
+PSO refinement...
+PSO best objective: 1.4066e+01
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_lshape/stage_adam/poisson_nsga3_loss_curve.png
+
+Relative L2 error (lshape, grid 500x500): 4.3986e-02
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_lshape/stage_adam/results_summary.csv
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_lshape/stage_lbfgs/poisson_nsga3_loss_curve.png
+
+Relative L2 error (lshape, grid 500x500): 2.6536e-03
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_lshape/stage_lbfgs/results_summary.csv
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_lshape/stage_pso/poisson_nsga3_loss_curve.png
+
+Relative L2 error (lshape, grid 500x500): 6.0276e-01
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_lshape/stage_pso/results_summary.csv
+Selected best stage: lbfgs (rel_l2=2.6536e-03)
+Run time: 2735.89 s
+[OK  ] nsga3/lshape
+[RUN ] nsga3/flower (seed=45)
++ PYTHONUNBUFFERED=1
++ python NAS_PINNs_poisson_nsga3.py --domain flower --seed 45 --save-dir results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_flower
+Using device: cuda
+Starting NSGA-III architecture search: domain=flower
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -
+     2 |       26 |      1 |  0.9362545013 |         ideal
+     3 |       39 |      1 |  0.7645947933 |         ideal
+     4 |       52 |      1 |  0.000000E+00 |             f
+     5 |       65 |      1 |  1.2051060200 |         ideal
+     6 |       78 |      1 |  0.3026564121 |         ideal
+     7 |       91 |      1 |  0.000000E+00 |             f
+     8 |      104 |      1 |  0.000000E+00 |             f
+     9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.3001093864 |         ideal
+    12 |      156 |      1 |  0.2227897644 |         ideal
+    13 |      169 |      1 |  0.000000E+00 |             f
+    14 |      182 |      1 |  0.000000E+00 |             f
+    15 |      195 |      1 |  0.000000E+00 |             f
+    16 |      208 |      1 |  0.000000E+00 |             f
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  0.000000E+00 |             f
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 3 0 2 0]
+Adam [    0] loss: 9.6168e+01
+Adam [ 2000] loss: 2.4679e-01
+Adam [ 4000] loss: 8.4442e-02
+Adam [ 6000] loss: 5.5186e-02
+Adam [ 8000] loss: 1.3613e-02
+Adam [10000] loss: 5.9667e-03
+Adam [11999] loss: 4.0053e-03
+
+L-BFGS refinement...
+
+PSO refinement...
+PSO best objective: 1.6143e+01
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_flower/stage_adam/poisson_nsga3_loss_curve.png
+
+Relative L2 error (flower, grid 500x500): 3.1239e-02
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_flower/stage_adam/results_summary.csv
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_flower/stage_lbfgs/poisson_nsga3_loss_curve.png
+
+Relative L2 error (flower, grid 500x500): 6.2316e-03
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_flower/stage_lbfgs/results_summary.csv
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_flower/stage_pso/poisson_nsga3_loss_curve.png
+
+Relative L2 error (flower, grid 500x500): 1.3014e+00
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_flower/stage_pso/results_summary.csv
+Selected best stage: lbfgs (rel_l2=6.2316e-03)
+Run time: 2637.53 s
+[OK  ] nsga3/flower
+[RUN ] nsga3/annulus (seed=46)
++ PYTHONUNBUFFERED=1
++ python NAS_PINNs_poisson_nsga3.py --domain annulus --seed 46 --save-dir results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_annulus
+Using device: cuda
+Starting NSGA-III architecture search: domain=annulus
+Traceback (most recent call last):
+  File "/home/coder/NAS-PINNS1/NAS_PINNs_poisson_nsga3.py", line 9, in <module>
+    main()
+  File "/home/coder/NAS-PINNS1/poisson/main_nsga3.py", line 323, in main
+    run_single(args, domain_name=args.domain, save_dir=args.save_dir)
+  File "/home/coder/NAS-PINNS1/poisson/main_nsga3.py", line 231, in run_single
+    best_masks = run_architecture_search(domain_mod, args)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/coder/NAS-PINNS1/poisson/main_nsga3.py", line 142, in run_architecture_search
+    res = minimize(
+          ^^^^^^^^^
+  File "/home/coder/.local/lib/python3.12/site-packages/pymoo/optimize.py", line 67, in minimize
+    res = algorithm.run()
+          ^^^^^^^^^^^^^^^
+  File "/home/coder/.local/lib/python3.12/site-packages/pymoo/core/algorithm.py", line 133, in run
+    self.next()
+  File "/home/coder/.local/lib/python3.12/site-packages/pymoo/core/algorithm.py", line 153, in next
+    self.evaluator.eval(self.problem, infills, algorithm=self)
+  File "/home/coder/.local/lib/python3.12/site-packages/pymoo/core/evaluator.py", line 69, in eval
+    self._eval(problem, pop[I], evaluate_values_of, **kwargs)
+  File "/home/coder/.local/lib/python3.12/site-packages/pymoo/core/evaluator.py", line 90, in _eval
+    out = problem.evaluate(X, return_values_of=evaluate_values_of, return_as_dictionary=True, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/coder/.local/lib/python3.12/site-packages/pymoo/core/problem.py", line 170, in evaluate
+    _out = self.do(X, return_values_of, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/coder/.local/lib/python3.12/site-packages/pymoo/core/problem.py", line 210, in do
+    self._evaluate_elementwise(X, out, *args, **kwargs)
+  File "/home/coder/.local/lib/python3.12/site-packages/pymoo/core/problem.py", line 228, in _evaluate_elementwise
+    elems = self.elementwise_runner(f, X)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/coder/.local/lib/python3.12/site-packages/pymoo/core/problem.py", line 16, in __call__
+    return [f(x) for x in X]
+            ^^^^
+  File "/home/coder/.local/lib/python3.12/site-packages/pymoo/core/problem.py", line 29, in __call__
+    self.problem._evaluate(x, out, *self.args, **self.kwargs)
+  File "/home/coder/NAS-PINNS1/poisson/main_nsga3.py", line 133, in _evaluate
+    loss, nparam = proxy_evaluate(masks, self.domain_mod, proxy_epochs=self.proxy_epochs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/coder/NAS-PINNS1/poisson/main_nsga3.py", line 108, in proxy_evaluate
+    (xc, yc), (xb, yb) = sample_points(domain_mod, N_COL_PROXY, N_BC_PROXY)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/coder/NAS-PINNS1/poisson/main_nsga3.py", line 101, in sample_points
+    return domain_mod.sample_points(n_col, n_bc, device)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/coder/NAS-PINNS1/poisson/domains/annulus.py", line 22, in sample_points
+    inside = (r >= r_inner) & (r <= r_outer)
+              ^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'Tensor' and 'torch.device'

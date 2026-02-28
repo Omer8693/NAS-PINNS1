@@ -1,0 +1,2 @@
+method,domain,seed,rel_l2,run_time_seconds
+nsga2,circle,43,3.21429917e-03,5776.899847

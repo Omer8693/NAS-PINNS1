@@ -1,0 +1,2 @@
+method,stage,nu,seed,rel_l2,run_time_seconds
+nsga3,adam,0.070000,44,5.20832521e-04,108.542843

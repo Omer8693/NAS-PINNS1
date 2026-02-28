@@ -1,0 +1,2 @@
+method,stage,domain,seed,rel_l2,run_time_seconds
+naspinn,best:lbfgs,flower,45,1.26773847e-02,523.805870

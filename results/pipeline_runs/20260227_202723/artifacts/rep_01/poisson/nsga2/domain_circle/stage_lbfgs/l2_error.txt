@@ -1,0 +1,3 @@
+stage,lbfgs
+domain,circle
+rel_l2,3.21429917e-03

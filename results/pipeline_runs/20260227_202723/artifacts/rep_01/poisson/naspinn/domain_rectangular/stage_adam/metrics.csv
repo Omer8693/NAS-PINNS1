@@ -1,0 +1,2 @@
+method,stage,domain,seed,rel_l2,run_time_seconds
+naspinn,adam,rectangular,42,5.07349358e-02,425.047640

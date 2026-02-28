@@ -1,0 +1,2 @@
+method,stage,nu,seed,rel_l2,run_time_seconds
+bayesian,adam,0.070000,44,5.84813158e-04,96.703427

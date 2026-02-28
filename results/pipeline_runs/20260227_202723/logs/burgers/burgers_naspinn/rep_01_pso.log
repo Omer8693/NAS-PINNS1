@@ -1,0 +1,146 @@
+[START] 2026-02-27T20:27:23.553229
+COMMAND: /usr/bin/python NAS_PINNs_burgers.py --multi-nu --nu-list 0.01,0.04,0.07 --seed 42 --stage pso --save-dir results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn
+
+Starting Adam + bi-level optimization...
+[    0] PDE: 5.3606e-02  IC: 4.2733e-01  BC: 9.3734e-02
+[ 2000] PDE: 3.0185e-01  IC: 9.1339e-05  BC: 2.0632e-05
+[ 4000] PDE: 1.7098e-01  IC: 4.1843e-05  BC: 5.5138e-06
+[ 6000] PDE: 2.2470e-02  IC: 8.9516e-06  BC: 8.9725e-07
+[ 8000] PDE: 4.9028e-03  IC: 1.8635e-05  BC: 1.0181e-05
+[10000] PDE: 1.8220e-03  IC: 1.8213e-06  BC: 2.4218e-06
+[12000] PDE: 1.0065e-03  IC: 2.5485e-06  BC: 1.7230e-06
+[14000] PDE: 9.1946e-04  IC: 3.0408e-05  BC: 1.6488e-05
+
+L-BFGS refinement (initialized from Adam checkpoint)...
+
+PSO refinement (initialized from Adam checkpoint)...
+PSO best objective: 2.5321e+01
+
+Discovered architecture (most probable ops & mask):
+Layer 1: Sin , neurons ≈ 128
+Layer 2: Linear/Identity , neurons ≈ 128
+Layer 3: Tanh , neurons ≈ 96
+Layer 4: Sin , neurons ≈ 128
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.010/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.010/stage_adam/burgers_heatmap.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.010/stage_adam/result_comparison.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.010/stage_adam/burgers_time_slices.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.010/stage_adam/burgers_exact_vs_pred_time_slices.png
+Relative L2 error (full grid): 7.6928e-02
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.010/stage_adam/burgers_full_exact_vs_pred.png
+
+Discovered architecture (most probable ops & mask):
+Layer 1: Sin , neurons ≈ 128
+Layer 2: Tanh , neurons ≈ 128
+Layer 3: Tanh , neurons ≈ 96
+Layer 4: Tanh , neurons ≈ 128
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.010/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.010/stage_lbfgs/burgers_heatmap.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.010/stage_lbfgs/result_comparison.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.010/stage_lbfgs/burgers_time_slices.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.010/stage_lbfgs/burgers_exact_vs_pred_time_slices.png
+Relative L2 error (full grid): 7.5914e-02
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.010/stage_lbfgs/burgers_full_exact_vs_pred.png
+
+Discovered architecture (most probable ops & mask):
+Layer 1: Tanh , neurons ≈ 128
+Layer 2: Linear/Identity , neurons ≈ 32
+Layer 3: Tanh , neurons ≈ 96
+Layer 4: Tanh , neurons ≈ 32
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.010/stage_pso/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.010/stage_pso/burgers_heatmap.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.010/stage_pso/result_comparison.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.010/stage_pso/burgers_time_slices.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.010/stage_pso/burgers_exact_vs_pred_time_slices.png
+Relative L2 error (full grid): 6.2532e-01
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.010/stage_pso/burgers_full_exact_vs_pred.png
+Selected best stage: lbfgs (rel_l2=9.4939e-04)
+Run time: 3801.77 s
+Starting Adam + bi-level optimization...
+[    0] PDE: 4.4139e-02  IC: 2.7500e-01  BC: 6.4526e-01
+[ 2000] PDE: 8.7774e-03  IC: 2.8773e-06  BC: 6.3286e-06
+[ 4000] PDE: 3.4103e-03  IC: 3.8575e-04  BC: 4.1433e-04
+[ 6000] PDE: 6.2764e-04  IC: 9.0269e-08  BC: 4.9197e-07
+[ 8000] PDE: 3.7632e-04  IC: 8.2541e-08  BC: 3.0665e-07
+[10000] PDE: 2.7599e-04  IC: 1.4848e-07  BC: 2.1489e-07
+[12000] PDE: 2.2936e-04  IC: 3.8313e-07  BC: 9.0559e-07
+[14000] PDE: 2.7240e-04  IC: 3.1352e-05  BC: 7.0165e-05
+
+L-BFGS refinement (initialized from Adam checkpoint)...
+
+PSO refinement (initialized from Adam checkpoint)...
+PSO best objective: 1.2554e+01
+
+Discovered architecture (most probable ops & mask):
+Layer 1: Tanh , neurons ≈ 128
+Layer 2: Sin , neurons ≈ 192
+Layer 3: Tanh , neurons ≈ 64
+Layer 4: Tanh , neurons ≈ 96
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.040/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.040/stage_adam/burgers_heatmap.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.040/stage_adam/result_comparison.png
+
+Discovered architecture (most probable ops & mask):
+Layer 1: Tanh , neurons ≈ 128
+Layer 2: Linear/Identity , neurons ≈ 192
+Layer 3: Tanh , neurons ≈ 64
+Layer 4: Tanh , neurons ≈ 96
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.040/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.040/stage_lbfgs/burgers_heatmap.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.040/stage_lbfgs/result_comparison.png
+
+Discovered architecture (most probable ops & mask):
+Layer 1: Tanh , neurons ≈ 128
+Layer 2: Linear/Identity , neurons ≈ 192
+Layer 3: Linear/Identity , neurons ≈ 32
+Layer 4: Tanh , neurons ≈ 192
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.040/stage_pso/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.040/stage_pso/burgers_heatmap.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.040/stage_pso/result_comparison.png
+Selected best stage: lbfgs (rel_l2=4.8217e-04)
+Run time: 779.56 s
+Starting Adam + bi-level optimization...
+[    0] PDE: 3.3240e-01  IC: 8.0890e-01  BC: 2.4373e-01
+[ 2000] PDE: 9.5388e-03  IC: 2.3045e-05  BC: 2.3866e-05
+[ 4000] PDE: 1.7413e-03  IC: 5.4294e-06  BC: 7.3002e-06
+[ 6000] PDE: 9.2561e-04  IC: 1.1727e-06  BC: 1.2973e-06
+[ 8000] PDE: 8.2080e-04  IC: 1.0474e-04  BC: 2.3682e-04
+[10000] PDE: 3.7551e-04  IC: 5.7506e-07  BC: 1.0788e-06
+[12000] PDE: 2.5174e-04  IC: 6.7663e-07  BC: 1.6196e-06
+[14000] PDE: 1.8794e-04  IC: 4.1677e-06  BC: 8.2768e-06
+
+L-BFGS refinement (initialized from Adam checkpoint)...
+
+PSO refinement (initialized from Adam checkpoint)...
+PSO best objective: 2.0613e+01
+
+Discovered architecture (most probable ops & mask):
+Layer 1: Tanh , neurons ≈ 32
+Layer 2: Tanh , neurons ≈ 128
+Layer 3: Tanh , neurons ≈ 192
+Layer 4: Linear/Identity , neurons ≈ 128
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.070/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.070/stage_adam/burgers_heatmap.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.070/stage_adam/result_comparison.png
+
+Discovered architecture (most probable ops & mask):
+Layer 1: Tanh , neurons ≈ 32
+Layer 2: Tanh , neurons ≈ 128
+Layer 3: Tanh , neurons ≈ 192
+Layer 4: Tanh , neurons ≈ 128
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.070/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.070/stage_lbfgs/burgers_heatmap.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.070/stage_lbfgs/result_comparison.png
+
+Discovered architecture (most probable ops & mask):
+Layer 1: Tanh , neurons ≈ 32
+Layer 2: Tanh , neurons ≈ 128
+Layer 3: Tanh , neurons ≈ 192
+Layer 4: Tanh , neurons ≈ 96
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.070/stage_pso/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.070/stage_pso/burgers_heatmap.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.070/stage_pso/result_comparison.png
+Selected best stage: lbfgs (rel_l2=2.6200e-04)
+Run time: 832.31 s
+Saved summary: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/viscosity_comparison.csv
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/viscosity_comparison.png

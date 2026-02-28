@@ -1,0 +1,3 @@
+stage,adam
+domain,flower
+rel_l2,3.12392360e-02

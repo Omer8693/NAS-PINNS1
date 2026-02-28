@@ -1,0 +1,2 @@
+method,stage,nu,seed,rel_l2,run_time_seconds
+bayesian,pso,0.010000,42,2.37617090e-01,128.899388

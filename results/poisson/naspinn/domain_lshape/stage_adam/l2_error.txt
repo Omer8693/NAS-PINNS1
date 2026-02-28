@@ -1,3 +1,0 @@
-stage,adam
-domain,lshape
-rel_l2,4.49333766e-01

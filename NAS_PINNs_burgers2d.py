@@ -1,0 +1,9 @@
+import sys
+
+sys.dont_write_bytecode = True
+
+from optimizers.burgers2d.naspinn import main
+
+
+if __name__ == "__main__":
+    main()

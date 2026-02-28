@@ -1,0 +1,5 @@
+stage,domain,seed,rel_l2,run_time_seconds
+adam,circle,43,2.48826219e-02,192.209159
+lbfgs,circle,43,3.21429917e-03,232.666549
+pso,circle,43,3.70334430e-01,200.182698
+best:lbfgs,circle,43,3.21429917e-03,232.666549

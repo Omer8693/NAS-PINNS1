@@ -1,0 +1,3 @@
+stage,adam
+domain,lshape
+rel_l2,4.39856742e-02

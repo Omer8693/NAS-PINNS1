@@ -1,0 +1,122 @@
+[START] 2026-02-27T21:57:50.311557
+COMMAND: /usr/bin/python NAS_PINNs_burgers_nsga2.py --multi-nu --nu-list 0.01,0.04,0.07 --seed 42 --use-pso --save-dir results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2
+
+
+==========================================================================================
+NSGA-II NAS-PINN Search
+==========================================================================================
+  Viscosity: nu=0.010000 | pop=10 | gen=5 | eval_epochs=400
+  Objective: min (relative L2, params)
+==========================================================================================
+
+NSGA-II generation:   0%|          | 0/5 [00:00<?, ?gen/s]NSGA-II generation:  20%|██        | 1/5 [00:35<02:20, 35.22s/gen]NSGA-II generation:  40%|████      | 2/5 [01:09<01:43, 34.46s/gen]NSGA-II generation:  60%|██████    | 3/5 [01:42<01:07, 33.94s/gen]NSGA-II generation:  80%|████████  | 4/5 [02:14<00:33, 33.18s/gen]NSGA-II generation: 100%|██████████| 5/5 [02:46<00:00, 32.68s/gen]NSGA-II generation: 100%|██████████| 5/5 [02:46<00:00, 33.26s/gen]
+  Gen  1/5 -> best relL2=2.77e-01, params=58,221
+  Gen  2/5 -> best relL2=2.77e-01, params=58,221
+  Gen  3/5 -> best relL2=2.56e-01, params=59,112
+  Gen  4/5 -> best relL2=2.40e-01, params=62,788
+  Gen  5/5 -> best relL2=2.36e-01, params=53,667
+[    0] PDE: 1.8599e-04  IC: 4.9248e-01  BC: 6.6892e-03
+[ 2000] PDE: 2.4047e-02  IC: 1.7378e-04  BC: 5.2120e-05
+[ 4000] PDE: 1.3881e-02  IC: 2.8932e-04  BC: 1.8676e-05
+[ 6000] PDE: 7.7546e-03  IC: 2.1718e-05  BC: 3.0716e-05
+[ 8000] PDE: 1.1106e-02  IC: 7.9006e-04  BC: 9.6620e-04
+[10000] PDE: 9.3464e-03  IC: 6.5378e-05  BC: 1.0269e-04
+[12000] PDE: 1.6897e-02  IC: 2.8769e-04  BC: 4.0981e-05
+[14000] PDE: 4.8111e-01  IC: 7.7891e-03  BC: 1.3818e-03
+PSO best objective: 1.6007e+01
+
+Discovered architecture (NSGA-II):
+  Layers: [2, 175, 169, 38, 81, 166, 1]
+  Activation: tanh | Residual: True
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.010/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.010/stage_adam/burgers_heatmap.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.010/stage_adam/burgers_time_slices.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.010/stage_adam/burgers_exact_vs_pred_time_slices.png
+Relative L2 error (full grid): 8.0146e-02
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.010/stage_adam/burgers_full_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.010/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.010/stage_lbfgs/burgers_heatmap.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.010/stage_lbfgs/burgers_time_slices.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.010/stage_lbfgs/burgers_exact_vs_pred_time_slices.png
+Relative L2 error (full grid): 7.5885e-02
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.010/stage_lbfgs/burgers_full_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.010/stage_pso/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.010/stage_pso/burgers_heatmap.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.010/stage_pso/burgers_time_slices.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.010/stage_pso/burgers_exact_vs_pred_time_slices.png
+Relative L2 error (full grid): 8.2156e-01
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.010/stage_pso/burgers_full_exact_vs_pred.png
+Selected best stage: lbfgs (rel_l2=2.3064e-03)
+Run time: 395.41 s
+
+==========================================================================================
+NSGA-II NAS-PINN Search
+==========================================================================================
+  Viscosity: nu=0.040000 | pop=10 | gen=5 | eval_epochs=400
+  Objective: min (relative L2, params)
+==========================================================================================
+
+NSGA-II generation:   0%|          | 0/5 [00:00<?, ?gen/s]NSGA-II generation:  20%|██        | 1/5 [00:36<02:26, 36.63s/gen]NSGA-II generation:  40%|████      | 2/5 [01:13<01:50, 36.76s/gen]NSGA-II generation:  60%|██████    | 3/5 [01:48<01:12, 36.09s/gen]NSGA-II generation:  80%|████████  | 4/5 [02:22<00:35, 35.22s/gen]NSGA-II generation: 100%|██████████| 5/5 [02:59<00:00, 35.72s/gen]NSGA-II generation: 100%|██████████| 5/5 [02:59<00:00, 35.85s/gen]
+  Gen  1/5 -> best relL2=1.90e-01, params=109,547
+  Gen  2/5 -> best relL2=9.71e-02, params=110,084
+  Gen  3/5 -> best relL2=9.71e-02, params=110,084
+  Gen  4/5 -> best relL2=8.68e-02, params=30,816
+  Gen  5/5 -> best relL2=6.32e-02, params=23,199
+[    0] PDE: 8.7944e-04  IC: 5.2242e-01  BC: 2.3984e-02
+[ 2000] PDE: 4.2300e-03  IC: 8.0932e-06  BC: 3.3634e-06
+[ 4000] PDE: 1.4160e-03  IC: 1.4947e-06  BC: 1.9655e-06
+[ 6000] PDE: 2.6190e-03  IC: 1.2579e-04  BC: 1.8408e-04
+[ 8000] PDE: 1.3810e-03  IC: 3.9817e-05  BC: 3.1563e-05
+[10000] PDE: 3.1770e-04  IC: 9.7778e-06  BC: 2.8727e-05
+[12000] PDE: 3.3926e-04  IC: 7.0474e-06  BC: 1.4409e-05
+[14000] PDE: 4.8487e-04  IC: 3.1160e-07  BC: 8.4905e-08
+PSO best objective: 6.3167e+00
+
+Discovered architecture (NSGA-II):
+  Layers: [2, 178, 98, 33, 53, 1]
+  Activation: tanh | Residual: True
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.040/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.040/stage_adam/burgers_heatmap.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.040/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.040/stage_lbfgs/burgers_heatmap.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.040/stage_pso/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.040/stage_pso/burgers_heatmap.png
+Selected best stage: lbfgs (rel_l2=3.1584e-04)
+Run time: 347.15 s
+
+==========================================================================================
+NSGA-II NAS-PINN Search
+==========================================================================================
+  Viscosity: nu=0.070000 | pop=10 | gen=5 | eval_epochs=400
+  Objective: min (relative L2, params)
+==========================================================================================
+
+NSGA-II generation:   0%|          | 0/5 [00:00<?, ?gen/s]NSGA-II generation:  20%|██        | 1/5 [00:35<02:21, 35.31s/gen]NSGA-II generation:  40%|████      | 2/5 [01:09<01:44, 34.88s/gen]NSGA-II generation:  60%|██████    | 3/5 [01:46<01:10, 35.45s/gen]NSGA-II generation:  80%|████████  | 4/5 [02:20<00:35, 35.10s/gen]NSGA-II generation: 100%|██████████| 5/5 [02:55<00:00, 34.97s/gen]NSGA-II generation: 100%|██████████| 5/5 [02:55<00:00, 35.07s/gen]
+  Gen  1/5 -> best relL2=1.86e-02, params=56,273
+  Gen  2/5 -> best relL2=1.86e-02, params=56,273
+  Gen  3/5 -> best relL2=1.86e-02, params=56,273
+  Gen  4/5 -> best relL2=1.86e-02, params=56,273
+  Gen  5/5 -> best relL2=7.62e-03, params=58,383
+[    0] PDE: 4.4615e-06  IC: 5.0633e-01  BC: 6.8714e-03
+[ 2000] PDE: 6.6910e-03  IC: 6.8275e-05  BC: 5.3334e-05
+[ 4000] PDE: 4.5222e-04  IC: 8.4966e-06  BC: 8.1499e-06
+[ 6000] PDE: 7.7312e-04  IC: 7.2531e-05  BC: 3.3390e-05
+[ 8000] PDE: 8.5458e-04  IC: 3.3565e-05  BC: 1.2430e-04
+[10000] PDE: 2.2894e-03  IC: 2.4473e-04  BC: 3.4325e-04
+[12000] PDE: 6.0208e-04  IC: 4.2560e-05  BC: 6.9255e-05
+[14000] PDE: 7.8814e-04  IC: 4.1607e-05  BC: 1.1991e-04
+PSO best objective: 3.2768e+00
+
+Discovered architecture (NSGA-II):
+  Layers: [2, 76, 169, 134, 51, 74, 153, 1]
+  Activation: tanh | Residual: True
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.070/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.070/stage_adam/burgers_heatmap.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.070/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.070/stage_lbfgs/burgers_heatmap.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.070/stage_pso/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.070/stage_pso/burgers_heatmap.png
+Selected best stage: lbfgs (rel_l2=1.6580e-04)
+Run time: 362.61 s
+Saved summary: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/viscosity_comparison.csv
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/viscosity_comparison.png

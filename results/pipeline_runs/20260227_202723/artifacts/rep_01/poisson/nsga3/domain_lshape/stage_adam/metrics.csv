@@ -1,0 +1,2 @@
+method,stage,domain,seed,rel_l2,run_time_seconds
+nsga3,adam,lshape,44,4.39856742e-02,198.307670

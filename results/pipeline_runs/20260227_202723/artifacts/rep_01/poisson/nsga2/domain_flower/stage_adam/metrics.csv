@@ -1,0 +1,2 @@
+method,stage,domain,seed,rel_l2,run_time_seconds
+nsga2,adam,flower,45,2.88304252e-02,186.660264

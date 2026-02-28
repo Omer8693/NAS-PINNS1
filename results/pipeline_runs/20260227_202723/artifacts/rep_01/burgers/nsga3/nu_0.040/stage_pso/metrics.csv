@@ -1,0 +1,2 @@
+method,stage,nu,seed,rel_l2,run_time_seconds
+nsga3,pso,0.040000,43,3.68974413e-01,148.880192

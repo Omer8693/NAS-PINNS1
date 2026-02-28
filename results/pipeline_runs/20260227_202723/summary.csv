@@ -1,0 +1,5 @@
+repeat,seed,job,family,status,return_code,elapsed_sec,log
+1,42,burgers_naspinn,burgers,ok,0,5426.76,results/pipeline_runs/20260227_202723/logs/burgers/burgers_naspinn/rep_01_pso.log
+1,42,burgers_nsga2,burgers,ok,0,1109.17,results/pipeline_runs/20260227_202723/logs/burgers/burgers_nsga2/rep_01_pso.log
+1,42,burgers_nsga3,burgers,ok,0,1009.97,results/pipeline_runs/20260227_202723/logs/burgers/burgers_nsga3/rep_01_pso.log
+1,42,burgers_bayesian,burgers,failed,1,272.76,results/pipeline_runs/20260227_202723/logs/burgers/burgers_bayesian/rep_01_pso.log

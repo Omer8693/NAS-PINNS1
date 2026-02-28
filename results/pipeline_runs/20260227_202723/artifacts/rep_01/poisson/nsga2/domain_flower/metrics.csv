@@ -1,0 +1,2 @@
+method,domain,seed,rel_l2,run_time_seconds
+nsga2,flower,45,4.23108203e-03,5599.956003

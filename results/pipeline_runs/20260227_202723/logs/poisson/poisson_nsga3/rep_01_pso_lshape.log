@@ -1,0 +1,54 @@
++ PYTHONUNBUFFERED=1
++ python NAS_PINNs_poisson_nsga3.py --domain lshape --seed 44 --save-dir results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_lshape
+Using device: cuda
+Starting NSGA-III architecture search: domain=lshape
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -
+     2 |       26 |      1 |  0.000000E+00 |             f
+     3 |       39 |      1 |  1.395055E+01 |         ideal
+     4 |       52 |      1 |  7.6451253891 |         ideal
+     5 |       65 |      1 |  0.000000E+00 |             f
+     6 |       78 |      1 |  1.4607648849 |         ideal
+     7 |       91 |      1 |  0.000000E+00 |             f
+     8 |      104 |      1 |  0.000000E+00 |             f
+     9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.000000E+00 |             f
+    12 |      156 |      1 |  0.000000E+00 |             f
+    13 |      169 |      1 |  0.000000E+00 |             f
+    14 |      182 |      1 |  0.000000E+00 |             f
+    15 |      195 |      1 |  0.3392124176 |         ideal
+    16 |      208 |      1 |  3.3288917542 |         ideal
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  0.000000E+00 |             f
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 4 1 1 1]
+Adam [    0] loss: 9.8921e+01
+Adam [ 2000] loss: 1.7817e-01
+Adam [ 4000] loss: 3.9034e-02
+Adam [ 6000] loss: 1.8800e-02
+Adam [ 8000] loss: 1.0574e-02
+Adam [10000] loss: 7.8532e-03
+Adam [11999] loss: 6.7913e-03
+
+L-BFGS refinement...
+
+PSO refinement...
+PSO best objective: 1.4066e+01
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_lshape/stage_adam/poisson_nsga3_loss_curve.png
+
+Relative L2 error (lshape, grid 500x500): 4.3986e-02
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_lshape/stage_adam/results_summary.csv
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_lshape/stage_lbfgs/poisson_nsga3_loss_curve.png
+
+Relative L2 error (lshape, grid 500x500): 2.6536e-03
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_lshape/stage_lbfgs/results_summary.csv
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_lshape/stage_pso/poisson_nsga3_loss_curve.png
+
+Relative L2 error (lshape, grid 500x500): 6.0276e-01
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_lshape/stage_pso/results_summary.csv
+Selected best stage: lbfgs (rel_l2=2.6536e-03)
+Run time: 2735.89 s

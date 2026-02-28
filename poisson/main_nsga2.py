@@ -99,7 +99,7 @@ def bc_loss(model, xb, yb, masks, domain_mod):
 
 
 def sample_points(domain_mod, n_col=N_COL, n_bc=N_BC):
-    return domain_mod.sample_points(n_col, n_bc, device)
+    return domain_mod.sample_points(n_col, n_bc, device=device)
 
 
 def proxy_evaluate(mask_choices, domain_mod, proxy_epochs):

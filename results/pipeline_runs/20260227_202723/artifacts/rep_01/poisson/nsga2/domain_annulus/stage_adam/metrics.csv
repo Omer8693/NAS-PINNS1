@@ -1,0 +1,2 @@
+method,stage,domain,seed,rel_l2,run_time_seconds
+nsga2,adam,annulus,46,6.70926232e-02,183.683479

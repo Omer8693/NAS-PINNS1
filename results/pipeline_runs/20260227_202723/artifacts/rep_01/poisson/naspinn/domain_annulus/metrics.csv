@@ -1,0 +1,2 @@
+method,stage,domain,seed,rel_l2,run_time_seconds
+naspinn,best:lbfgs,annulus,46,2.22549607e-03,529.123190

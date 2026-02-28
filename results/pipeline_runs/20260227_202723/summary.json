@@ -1,0 +1,42 @@
+[
+  {
+    "repeat": 1,
+    "seed": 42,
+    "job": "burgers_naspinn",
+    "family": "burgers",
+    "status": "ok",
+    "return_code": 0,
+    "elapsed_sec": 5426.76,
+    "log": "results/pipeline_runs/20260227_202723/logs/burgers/burgers_naspinn/rep_01_pso.log"
+  },
+  {
+    "repeat": 1,
+    "seed": 42,
+    "job": "burgers_nsga2",
+    "family": "burgers",
+    "status": "ok",
+    "return_code": 0,
+    "elapsed_sec": 1109.17,
+    "log": "results/pipeline_runs/20260227_202723/logs/burgers/burgers_nsga2/rep_01_pso.log"
+  },
+  {
+    "repeat": 1,
+    "seed": 42,
+    "job": "burgers_nsga3",
+    "family": "burgers",
+    "status": "ok",
+    "return_code": 0,
+    "elapsed_sec": 1009.97,
+    "log": "results/pipeline_runs/20260227_202723/logs/burgers/burgers_nsga3/rep_01_pso.log"
+  },
+  {
+    "repeat": 1,
+    "seed": 42,
+    "job": "burgers_bayesian",
+    "family": "burgers",
+    "status": "failed",
+    "return_code": 1,
+    "elapsed_sec": 272.76,
+    "log": "results/pipeline_runs/20260227_202723/logs/burgers/burgers_bayesian/rep_01_pso.log"
+  }
+]

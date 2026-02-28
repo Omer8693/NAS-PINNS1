@@ -188,7 +188,7 @@ def train_nas_pinn(
     print("Starting NAS-PINN training...")
 
     for epoch in range(epochs):
-        (x_col, y_col), (x_bc, y_bc) = domain_mod.sample_points(N_COL, N_BC, device)
+        (x_col, y_col), (x_bc, y_bc) = domain_mod.sample_points(N_COL, N_BC, device=device)
         opt_inner.zero_grad()
         l_pde = pde_loss(model, x_col, y_col, domain_mod)
         l_bc = bc_loss(model, x_bc, y_bc, domain_mod)

@@ -1,0 +1,3 @@
+stage,lbfgs
+domain,lshape
+rel_l2,2.47811291e-03

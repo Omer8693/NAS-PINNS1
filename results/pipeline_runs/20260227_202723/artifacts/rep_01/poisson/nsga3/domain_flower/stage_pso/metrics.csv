@@ -1,0 +1,2 @@
+method,stage,domain,seed,rel_l2,run_time_seconds
+nsga3,pso,flower,45,1.30144608e+00,200.642917

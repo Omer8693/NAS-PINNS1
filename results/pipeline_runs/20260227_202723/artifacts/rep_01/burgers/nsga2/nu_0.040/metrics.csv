@@ -1,0 +1,2 @@
+method,stage,nu,seed,rel_l2,run_time_seconds
+nsga2,best:lbfgs,0.040000,43,3.15840631e-04,347.148205

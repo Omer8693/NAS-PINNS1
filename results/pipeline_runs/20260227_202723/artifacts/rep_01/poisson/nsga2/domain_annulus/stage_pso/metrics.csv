@@ -1,0 +1,2 @@
+method,stage,domain,seed,rel_l2,run_time_seconds
+nsga2,pso,annulus,46,4.15734824e-01,192.976456

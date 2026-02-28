@@ -1,0 +1,5 @@
+stage,domain,seed,rel_l2,run_time_seconds
+adam,rectangular,42,5.07349358e-02,425.047640
+lbfgs,rectangular,42,3.70313851e-03,494.492815
+pso,rectangular,42,6.36027661e-01,435.558204
+best:lbfgs,rectangular,42,3.70313851e-03,494.492815

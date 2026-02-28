@@ -1,0 +1,5 @@
+stage,domain,seed,rel_l2,run_time_seconds
+adam,flower,45,3.12392360e-02,191.207452
+lbfgs,flower,45,6.23157372e-03,230.536275
+pso,flower,45,1.30144608e+00,200.642917
+best:lbfgs,flower,45,6.23157372e-03,230.536275

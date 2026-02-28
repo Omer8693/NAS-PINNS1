@@ -1,0 +1,2 @@
+method,stage,nu,seed,rel_l2,run_time_seconds
+bayesian,lbfgs,0.010000,42,8.26064539e-04,145.323856

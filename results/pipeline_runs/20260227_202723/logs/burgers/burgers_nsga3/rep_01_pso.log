@@ -1,0 +1,131 @@
+[START] 2026-02-27T22:16:19.482551
+COMMAND: /usr/bin/python NAS_PINNs_burgers_nsga3.py --multi-nu --nu-list 0.01,0.04,0.07 --seed 42 --use-pso --save-dir results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3
+
+
+==========================================================================================
+NSGA-III NAS-PINN Search
+==========================================================================================
+  Viscosity: nu=0.010000 | pop=10 | gen=5 | eval_epochs=400
+  Objective: min (relative L2, params)
+==========================================================================================
+
+WARNING: pop_size=10 is less than the number of reference directions ref_dirs=13.
+This might cause unwanted behavior of the algorithm. 
+Please make sure pop_size is equal or larger than the number of reference directions. 
+NSGA-III generation:   0%|          | 0/5 [00:00<?, ?gen/s]NSGA-III generation:  20%|██        | 1/5 [00:31<02:07, 32.00s/gen]NSGA-III generation:  40%|████      | 2/5 [01:03<01:34, 31.44s/gen]NSGA-III generation:  60%|██████    | 3/5 [01:33<01:01, 30.77s/gen]NSGA-III generation:  80%|████████  | 4/5 [02:03<00:30, 30.83s/gen]NSGA-III generation: 100%|██████████| 5/5 [02:34<00:00, 30.77s/gen]NSGA-III generation: 100%|██████████| 5/5 [02:34<00:00, 30.92s/gen]
+  Gen  1/5 -> best relL2=2.77e-01, params=58,221
+  Gen  2/5 -> best relL2=2.43e-01, params=59,253
+  Gen  3/5 -> best relL2=2.43e-01, params=59,253
+  Gen  4/5 -> best relL2=2.43e-01, params=59,253
+  Gen  5/5 -> best relL2=2.41e-01, params=42,769
+[    0] PDE: 1.8998e-04  IC: 5.3067e-01  BC: 4.0049e-02
+[ 2000] PDE: 1.3564e-02  IC: 2.8458e-03  BC: 5.7477e-03
+[ 4000] PDE: 7.0874e-04  IC: 7.3772e-07  BC: 2.1853e-07
+[ 6000] PDE: 1.8358e-03  IC: 2.3136e-05  BC: 2.4444e-05
+[ 8000] PDE: 1.9901e-03  IC: 6.3229e-05  BC: 4.9713e-05
+[10000] PDE: 2.7537e-04  IC: 8.5093e-06  BC: 1.0869e-06
+[12000] PDE: 4.6623e-04  IC: 3.3357e-06  BC: 1.5161e-05
+[14000] PDE: 2.5779e-04  IC: 7.5641e-06  BC: 5.5816e-06
+PSO best objective: 3.7694e+00
+
+Discovered architecture (NSGA-III):
+  Layers: [2, 164, 107, 144, 47, 46, 1]
+  Activation: tanh | Residual: False
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.010/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.010/stage_adam/burgers_heatmap.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.010/stage_adam/burgers_time_slices.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.010/stage_adam/burgers_exact_vs_pred_time_slices.png
+Relative L2 error (full grid): 7.6102e-02
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.010/stage_adam/burgers_full_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.010/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.010/stage_lbfgs/burgers_heatmap.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.010/stage_lbfgs/burgers_time_slices.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.010/stage_lbfgs/burgers_exact_vs_pred_time_slices.png
+Relative L2 error (full grid): 7.5863e-02
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.010/stage_lbfgs/burgers_full_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.010/stage_pso/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.010/stage_pso/burgers_heatmap.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.010/stage_pso/burgers_time_slices.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.010/stage_pso/burgers_exact_vs_pred_time_slices.png
+Relative L2 error (full grid): 2.5604e-01
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.010/stage_pso/burgers_full_exact_vs_pred.png
+Selected best stage: lbfgs (rel_l2=2.2805e-03)
+Run time: 334.73 s
+
+==========================================================================================
+NSGA-III NAS-PINN Search
+==========================================================================================
+  Viscosity: nu=0.040000 | pop=10 | gen=5 | eval_epochs=400
+  Objective: min (relative L2, params)
+==========================================================================================
+
+WARNING: pop_size=10 is less than the number of reference directions ref_dirs=13.
+This might cause unwanted behavior of the algorithm. 
+Please make sure pop_size is equal or larger than the number of reference directions. 
+NSGA-III generation:   0%|          | 0/5 [00:00<?, ?gen/s]NSGA-III generation:  20%|██        | 1/5 [00:35<02:21, 35.36s/gen]NSGA-III generation:  40%|████      | 2/5 [01:12<01:49, 36.54s/gen]NSGA-III generation:  60%|██████    | 3/5 [01:48<01:12, 36.01s/gen]NSGA-III generation:  80%|████████  | 4/5 [02:24<00:35, 35.97s/gen]NSGA-III generation: 100%|██████████| 5/5 [02:57<00:00, 35.10s/gen]NSGA-III generation: 100%|██████████| 5/5 [02:57<00:00, 35.51s/gen]
+  Gen  1/5 -> best relL2=1.90e-01, params=109,547
+  Gen  2/5 -> best relL2=4.84e-02, params=98,225
+  Gen  3/5 -> best relL2=4.84e-02, params=98,225
+  Gen  4/5 -> best relL2=4.84e-02, params=98,225
+  Gen  5/5 -> best relL2=4.48e-02, params=35,794
+[    0] PDE: 4.3720e-06  IC: 5.7611e-01  BC: 3.0673e-02
+[ 2000] PDE: 3.8817e-03  IC: 2.0138e-06  BC: 1.3712e-06
+[ 4000] PDE: 3.0773e-03  IC: 1.0915e-05  BC: 2.3454e-06
+[ 6000] PDE: 7.2481e-04  IC: 2.4113e-05  BC: 3.1069e-05
+[ 8000] PDE: 7.6465e-04  IC: 8.1208e-05  BC: 1.5942e-04
+[10000] PDE: 7.6425e-04  IC: 2.3003e-05  BC: 4.0555e-05
+[12000] PDE: 4.9866e-04  IC: 1.2466e-05  BC: 6.3070e-06
+[14000] PDE: 1.9826e-04  IC: 9.1847e-06  BC: 1.1843e-05
+PSO best objective: 7.1571e+00
+
+Discovered architecture (NSGA-III):
+  Layers: [2, 48, 79, 106, 128, 56, 41, 1]
+  Activation: tanh | Residual: True
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.040/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.040/stage_adam/burgers_heatmap.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.040/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.040/stage_lbfgs/burgers_heatmap.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.040/stage_pso/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.040/stage_pso/burgers_heatmap.png
+Selected best stage: lbfgs (rel_l2=2.9046e-04)
+Run time: 365.24 s
+
+==========================================================================================
+NSGA-III NAS-PINN Search
+==========================================================================================
+  Viscosity: nu=0.070000 | pop=10 | gen=5 | eval_epochs=400
+  Objective: min (relative L2, params)
+==========================================================================================
+
+WARNING: pop_size=10 is less than the number of reference directions ref_dirs=13.
+This might cause unwanted behavior of the algorithm. 
+Please make sure pop_size is equal or larger than the number of reference directions. 
+NSGA-III generation:   0%|          | 0/5 [00:00<?, ?gen/s]NSGA-III generation:  20%|██        | 1/5 [00:32<02:09, 32.26s/gen]NSGA-III generation:  40%|████      | 2/5 [01:06<01:41, 33.69s/gen]NSGA-III generation:  60%|██████    | 3/5 [01:42<01:09, 34.54s/gen]NSGA-III generation:  80%|████████  | 4/5 [02:17<00:34, 34.68s/gen]NSGA-III generation: 100%|██████████| 5/5 [02:48<00:00, 33.39s/gen]NSGA-III generation: 100%|██████████| 5/5 [02:48<00:00, 33.70s/gen]
+  Gen  1/5 -> best relL2=1.86e-02, params=56,273
+  Gen  2/5 -> best relL2=1.86e-02, params=56,273
+  Gen  3/5 -> best relL2=1.86e-02, params=56,273
+  Gen  4/5 -> best relL2=1.86e-02, params=56,273
+  Gen  5/5 -> best relL2=9.04e-03, params=28,660
+[    0] PDE: 3.9478e-04  IC: 5.0979e-01  BC: 5.0511e-02
+[ 2000] PDE: 1.3657e-03  IC: 4.2020e-06  BC: 4.7029e-06
+[ 4000] PDE: 8.2890e-04  IC: 1.9275e-05  BC: 4.3868e-05
+[ 6000] PDE: 2.8639e-04  IC: 8.8440e-05  BC: 1.9120e-04
+[ 8000] PDE: 2.0699e-04  IC: 2.8155e-05  BC: 1.7215e-05
+[10000] PDE: 9.2282e-05  IC: 8.4268e-08  BC: 1.7350e-08
+[12000] PDE: 1.5115e-04  IC: 4.4933e-06  BC: 7.6074e-06
+[14000] PDE: 1.8772e-04  IC: 3.8773e-06  BC: 3.9261e-06
+PSO best objective: 8.5795e-01
+
+Discovered architecture (NSGA-III):
+  Layers: [2, 130, 159, 38, 34, 1]
+  Activation: tanh | Residual: True
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.070/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.070/stage_adam/burgers_heatmap.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.070/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.070/stage_lbfgs/burgers_heatmap.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.070/stage_pso/loss_curve.png
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.070/stage_pso/burgers_heatmap.png
+Selected best stage: lbfgs (rel_l2=1.7349e-04)
+Run time: 306.10 s
+Saved summary: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/viscosity_comparison.csv
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/viscosity_comparison.png

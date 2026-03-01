@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import json
+import shutil
 import time
 from dataclasses import asdict, replace
 from pathlib import Path
@@ -19,6 +20,7 @@ from .equations import Advection1DEquation, Burgers1DEquation, Burgers2DEquation
 from .model import SearchPINN, load_model_state
 from .search import search_architecture
 from .trainer import evaluate_stage, run_lbfgs, run_pso, set_seed, train_adam
+from .visualization import plot_loss_curve, save_equation_plots
 
 
 def parse_cases(equation_name: str, cases_csv: Optional[str]) -> List[float]:
@@ -70,6 +72,61 @@ def _write_stage_summary(path: Path, rows: List[Dict[str, object]]) -> None:
         writer.writeheader()
         for r in rows:
             writer.writerow(r)
+
+
+def _write_stage_metrics(
+    path: Path,
+    method: str,
+    equation_name: str,
+    case_label: str,
+    seed: int,
+    stage_name: str,
+    train_loss: float,
+    rel_l2: float,
+    elapsed_sec: float,
+) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(
+            [
+                "method",
+                "equation",
+                "case",
+                "seed",
+                "stage",
+                "train_loss",
+                "rel_l2",
+                "elapsed_sec",
+            ]
+        )
+        writer.writerow(
+            [
+                method,
+                equation_name,
+                case_label,
+                int(seed),
+                stage_name,
+                f"{float(train_loss):.8e}",
+                f"{float(rel_l2):.8e}",
+                f"{float(elapsed_sec):.6f}",
+            ]
+        )
+
+
+def _write_l2_file(path: Path, stage_name: str, rel_l2: float) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as f:
+        f.write(f"stage,{stage_name}\n")
+        f.write(f"rel_l2,{float(rel_l2):.8e}\n")
+
+
+def _copy_stage_to_root(stage_dir: Path, root_dir: Path) -> None:
+    root_dir.mkdir(parents=True, exist_ok=True)
+    for src in stage_dir.iterdir():
+        if not src.is_file():
+            continue
+        shutil.copy2(src, root_dir / src.name)
 
 
 def run_single_case(
@@ -141,6 +198,7 @@ def run_single_case(
     print(f"Best mask selections: {best_masks}")
 
     stages: Dict[str, Dict[str, object]] = {}
+    case_label = equation.case_label()
 
     adam_stage_dir = run_dir / "stage_adam"
     adam_stage_dir.mkdir(parents=True, exist_ok=True)
@@ -156,6 +214,31 @@ def run_single_case(
         elapsed_sec=adam_out.elapsed_sec,
     )
     _write_stage_history(adam_stage_dir / "loss_history.csv", adam_out.history)
+    plot_loss_curve(
+        adam_out.history,
+        adam_stage_dir / "loss_curve.png",
+        title=f"{equation_name} {method} loss (ADAM, {case_label})",
+    )
+    _write_l2_file(adam_stage_dir / "l2_error.txt", "adam", adam_eval.rel_l2)
+    _write_stage_metrics(
+        adam_stage_dir / "metrics.csv",
+        method=method,
+        equation_name=equation_name,
+        case_label=case_label,
+        seed=seed,
+        stage_name="adam",
+        train_loss=adam_eval.train_loss,
+        rel_l2=adam_eval.rel_l2,
+        elapsed_sec=adam_eval.elapsed_sec,
+    )
+    save_equation_plots(
+        equation=equation,
+        model=model,
+        mask_indices=best_masks,
+        device=device,
+        stage_dir=adam_stage_dir,
+        rel_l2=adam_eval.rel_l2,
+    )
     stages["adam"] = {
         "train_loss": adam_eval.train_loss,
         "rel_l2": adam_eval.rel_l2,
@@ -188,6 +271,31 @@ def run_single_case(
         )
         lb_dir = run_dir / "stage_lbfgs"
         _write_stage_history(lb_dir / "loss_history.csv", lb_hist)
+        plot_loss_curve(
+            lb_hist if lb_hist else adam_out.history,
+            lb_dir / "loss_curve.png",
+            title=f"{equation_name} {method} loss (LBFGS, {case_label})",
+        )
+        _write_l2_file(lb_dir / "l2_error.txt", "lbfgs", lb_eval.rel_l2)
+        _write_stage_metrics(
+            lb_dir / "metrics.csv",
+            method=method,
+            equation_name=equation_name,
+            case_label=case_label,
+            seed=seed,
+            stage_name="lbfgs",
+            train_loss=lb_eval.train_loss,
+            rel_l2=lb_eval.rel_l2,
+            elapsed_sec=lb_eval.elapsed_sec,
+        )
+        save_equation_plots(
+            equation=equation,
+            model=model,
+            mask_indices=best_masks,
+            device=device,
+            stage_dir=lb_dir,
+            rel_l2=lb_eval.rel_l2,
+        )
         stages["lbfgs"] = {
             "train_loss": lb_eval.train_loss,
             "rel_l2": lb_eval.rel_l2,
@@ -219,6 +327,31 @@ def run_single_case(
         )
         pso_dir = run_dir / "stage_pso"
         _write_stage_history(pso_dir / "loss_history.csv", pso_hist)
+        plot_loss_curve(
+            pso_hist if pso_hist else adam_out.history,
+            pso_dir / "loss_curve.png",
+            title=f"{equation_name} {method} loss (PSO, {case_label})",
+        )
+        _write_l2_file(pso_dir / "l2_error.txt", "pso", pso_eval.rel_l2)
+        _write_stage_metrics(
+            pso_dir / "metrics.csv",
+            method=method,
+            equation_name=equation_name,
+            case_label=case_label,
+            seed=seed,
+            stage_name="pso",
+            train_loss=pso_eval.train_loss,
+            rel_l2=pso_eval.rel_l2,
+            elapsed_sec=pso_eval.elapsed_sec,
+        )
+        save_equation_plots(
+            equation=equation,
+            model=model,
+            mask_indices=best_masks,
+            device=device,
+            stage_dir=pso_dir,
+            rel_l2=pso_eval.rel_l2,
+        )
         stages["pso"] = {
             "train_loss": pso_eval.train_loss,
             "rel_l2": pso_eval.rel_l2,
@@ -239,10 +372,19 @@ def run_single_case(
     ]
     _write_stage_summary(run_dir / "results_summary.csv", summary_rows)
 
+    best_stage_dir = run_dir / f"stage_{best_stage}"
+    stage_best_dir = run_dir / "stage_best"
+    if stage_best_dir.exists():
+        shutil.rmtree(stage_best_dir)
+    shutil.copytree(best_stage_dir, stage_best_dir)
+    with (stage_best_dir / "selected_stage.txt").open("w", encoding="utf-8") as f:
+        f.write(f"{best_stage}\n")
+    _copy_stage_to_root(best_stage_dir, run_dir)
+
     total_time = time.perf_counter() - t_start
     out = {
         "equation": equation_name,
-        "case": equation.case_label(),
+        "case": case_label,
         "method": method,
         "seed": int(seed),
         "best_masks": list(best_masks),

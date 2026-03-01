@@ -1,0 +1,2 @@
+method,domain,seed,rel_l2,run_time_seconds
+nsga3,annulus,46,9.91517299e-02,2609.077643

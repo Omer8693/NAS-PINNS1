@@ -74,6 +74,26 @@ Her run icinde:
 - `results_summary.csv`
 - `run_meta.json`
 
+Gorseller:
+
+- Tum denklemler icin `result_comparison.png`:
+  - Exact
+  - Predicted
+  - `|Pred-Exact|` isi haritasi (Relative L2 bilgisi baslikta)
+- Burgers1D icin ek:
+  - `burgers1d_time_slices_exact_vs_pred.png` (farkli `t` kesitleri, exact vs pred)
+- Burgers2D icin ek:
+  - `slice_t_0.00_comparison.png`
+  - `slice_t_1.00_comparison.png`
+  - `slice_t_2.00_comparison.png`
+- Her stage icin:
+  - `loss_curve.png`
+  - `l2_error.txt`
+  - `metrics.csv`
+- En iyi stage:
+  - `stage_best/` (secili stage dosyalari)
+  - `stage_best/selected_stage.txt`
+
 Root `save-dir` altinda:
 
 - `summary_<equation>_<method>.csv`

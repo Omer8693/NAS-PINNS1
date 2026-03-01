@@ -52,3 +52,36 @@ n_gen  |  n_eval  | n_nds  |      eps      |   indicator
      7 |       91 |      1 |  0.000000E+00 |             f
      8 |      104 |      1 |  0.000000E+00 |             f
      9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.000000E+00 |             f
+    12 |      156 |      1 |  0.000000E+00 |             f
+    13 |      169 |      1 |  0.000000E+00 |             f
+    14 |      182 |      1 |  0.000000E+00 |             f
+    15 |      195 |      1 |  0.000000E+00 |             f
+    16 |      208 |      1 |  0.000000E+00 |             f
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  0.000000E+00 |             f
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 2 2 2 3]
+Adam [    0] loss: 7.5303e+01
+Adam [ 2000] loss: 3.9843e+00
+Adam [ 4000] loss: 6.3375e-01
+Adam [ 6000] loss: 2.8628e-01
+Adam [ 8000] loss: 1.6044e-01
+Adam [10000] loss: 9.5633e-02
+Adam [11999] loss: 7.0406e-02
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_annulus/stage_lbfgs/poisson_nsga3_loss_curve.png
+
+Relative L2 error (annulus, grid 500x500): 9.9152e-02
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_annulus/stage_lbfgs/results_summary.csv
+Run time: 2609.08 s
+[RUN] nsga3/annulus stage_pso (seed=46)
+Using device: cuda
+Starting NSGA-III architecture search: domain=annulus
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -

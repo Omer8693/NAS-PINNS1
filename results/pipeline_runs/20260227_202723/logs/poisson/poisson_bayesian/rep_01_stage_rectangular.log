@@ -145,3 +145,18 @@ Adam [    0] loss: 9.8010e+01
 Adam [ 2000] loss: 3.7291e-01
 Adam [ 4000] loss: 9.2008e-02
 Adam [ 6000] loss: 4.4831e-02
+Adam [ 8000] loss: 2.5390e-02
+Adam [10000] loss: 1.3560e-02
+Adam [11999] loss: 1.5060e-02
+
+L-BFGS refinement...
+
+PSO refinement...
+Stopping search: maximum iterations reached --> 8
+PSO best objective: 2.7438e+01
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_rectangular/stage_pso/poisson_bayesian_loss_curve.png
+
+Relative L2 error (rectangular, grid 500x500): 1.9639e+00
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_rectangular/stage_pso/results_summary.csv
+Run time: 415.34 s
+[OK ] bayesian/rectangular best_stage=lbfgs

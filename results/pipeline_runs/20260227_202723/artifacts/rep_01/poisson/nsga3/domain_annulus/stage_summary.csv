@@ -1,0 +1,4 @@
+stage,method,domain,seed,rel_l2,run_time_seconds
+adam,nsga3,annulus,46,3.66886155e-01,2532.686823
+lbfgs,nsga3,annulus,46,9.91517299e-02,2609.077643
+pso,nsga3,annulus,46,1.28783187e+00,2881.959027

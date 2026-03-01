@@ -1,0 +1,59 @@
+[RUN] bayesian/flower stage_adam (seed=45)
+Using device: cuda
+Starting Bayesian architecture search: domain=flower
+|   iter    |  target   |    m0     |    m1     |    m2     |    m3     |    m4     |
+-------------------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/coder/NAS-PINNS1/NAS_PINNs_poisson_bayesian.py", line 9, in <module>
+    main()
+  File "/home/coder/NAS-PINNS1/poisson/main_bayesian.py", line 318, in main
+    run_single(args, domain_name=args.domain, save_dir=args.save_dir)
+  File "/home/coder/NAS-PINNS1/poisson/main_bayesian.py", line 226, in run_single
+    best_masks = run_bayesian_search(domain_mod, args)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/coder/NAS-PINNS1/poisson/main_bayesian.py", line 143, in run_bayesian_search
+    optimizer.maximize(init_points=args.bo_init_points, n_iter=args.bo_iters)
+  File "/home/coder/.local/lib/python3.12/site-packages/bayes_opt/bayesian_optimization.py", line 409, in maximize
+    self.probe(x_probe, lazy=False)
+  File "/home/coder/.local/lib/python3.12/site-packages/bayes_opt/bayesian_optimization.py", line 326, in probe
+    self._space.probe(params)
+  File "/home/coder/.local/lib/python3.12/site-packages/bayes_opt/target_space.py", line 555, in probe
+    target = self.target_func(**dict_params)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/coder/NAS-PINNS1/poisson/main_bayesian.py", line 132, in objective
+    loss = proxy_evaluate(masks, domain_mod, proxy_epochs=args.proxy_epochs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/coder/NAS-PINNS1/poisson/main_bayesian.py", line 109, in proxy_evaluate
+    loss = pde_loss(model, xc, yc, mask_choices, domain_mod) + bc_loss(model, xb, yb, mask_choices, domain_mod)
+                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/coder/NAS-PINNS1/poisson/main_bayesian.py", line 97, in bc_loss
+    return F.mse_loss(model(xy, masks), domain_mod.true_solution(xb, yb))
+                      ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/coder/NAS-PINNS1/poisson/main_bayesian.py", line 70, in forward
+    x = layer(x, mask_choices[i])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/coder/NAS-PINNS1/poisson/main_bayesian.py", line 52, in forward
+    active = torch.tanh(self.linear(x))
+                        ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1747, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/linear.py", line 125, in forward
+    return F.linear(input, self.weight, self.bias)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: mat1 and mat2 shapes cannot be multiplied (200x400 and 2x110)

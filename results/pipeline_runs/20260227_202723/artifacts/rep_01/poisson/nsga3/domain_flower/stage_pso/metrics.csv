@@ -1,2 +1,2 @@
-method,stage,domain,seed,rel_l2,run_time_seconds
-nsga3,pso,flower,45,1.30144608e+00,200.642917
+method,domain,seed,rel_l2,run_time_seconds
+nsga3,flower,45,8.43208415e-01,2520.064210

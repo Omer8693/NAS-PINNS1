@@ -366,6 +366,7 @@ def plot_slice_comparison(model, t_value, save_path, grid_size=200):
         pred = model(xyt_t).detach().cpu().numpy().reshape(grid_size, grid_size)
     exact = exact_solution_np(X, Y, t_value)
     err = np.abs(pred - exact)
+    rel_l2_slice = float(np.linalg.norm(pred - exact) / (np.linalg.norm(exact) + 1e-12))
 
     fig, axes = plt.subplots(1, 3, figsize=(16, 5), constrained_layout=True)
     cs0 = axes[0].contourf(X, Y, exact, levels=60, cmap="YlGnBu")
@@ -386,6 +387,7 @@ def plot_slice_comparison(model, t_value, save_path, grid_size=200):
     axes[2].set_ylabel("y")
     fig.colorbar(cs2, ax=axes[2])
     finalize_plot(save_path)
+    return rel_l2_slice
 
 
 def build_stage_loss_curve(base_history, stage_name, stage_losses):
@@ -407,13 +409,27 @@ def save_stage_outputs(model, args, stage_name, stage_dir, loss_history, stage_l
         title=f"2D Burgers NAS-PINN Loss ({stage_name.upper()})",
     )
 
+    slice_rows = []
+    default_result_src = None
     for t_value in args.slice_times:
-        plot_slice_comparison(
+        out_path = os.path.join(stage_dir, f"slice_t_{float(t_value):.2f}.png")
+        rel_l2_slice = plot_slice_comparison(
             model,
             t_value=float(t_value),
-            save_path=os.path.join(stage_dir, f"slice_t_{float(t_value):.2f}.png"),
+            save_path=out_path,
             grid_size=args.slice_grid,
         )
+        slice_rows.append((float(t_value), rel_l2_slice))
+        if default_result_src is None or abs(float(t_value) - 1.0) < abs(default_result_src[0] - 1.0):
+            default_result_src = (float(t_value), out_path)
+
+    if default_result_src is not None:
+        shutil.copy2(default_result_src[1], os.path.join(stage_dir, "result_comparison.png"))
+
+    with open(os.path.join(stage_dir, "slice_comparison_table.csv"), "w", encoding="utf-8") as f:
+        f.write("t_slice,rel_l2_slice\n")
+        for t_val, rel_l2_slice in slice_rows:
+            f.write(f"{t_val:.6f},{rel_l2_slice:.8e}\n")
 
     rel_l2 = evaluate_rel_l2_batched(
         model,
@@ -436,7 +452,14 @@ def save_stage_outputs(model, args, stage_name, stage_dir, loss_history, stage_l
 
 def copy_stage_to_root(stage_dir, root_dir):
     os.makedirs(root_dir, exist_ok=True)
-    copy_names = ["loss_curve.png", "l2_error.txt", "run_time.txt", "metrics.csv"]
+    copy_names = [
+        "loss_curve.png",
+        "result_comparison.png",
+        "slice_comparison_table.csv",
+        "l2_error.txt",
+        "run_time.txt",
+        "metrics.csv",
+    ]
     for name in copy_names:
         src = os.path.join(stage_dir, name)
         if os.path.exists(src):

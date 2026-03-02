@@ -1,5 +1,4 @@
-stage,domain,seed,rel_l2,run_time_seconds
-adam,rectangular,42,2.77932916e-02,197.989775
-lbfgs,rectangular,42,9.13419974e-04,237.323631
-pso,rectangular,42,5.12087309e-01,207.222507
-best:lbfgs,rectangular,42,9.13419974e-04,237.323631
+stage,method,domain,seed,rel_l2,run_time_seconds
+adam,nsga3,rectangular,42,2.72211491e-02,2591.991494
+lbfgs,nsga3,rectangular,42,8.92217342e-04,2702.507439
+pso,nsga3,rectangular,42,6.66569507e-01,2539.673446

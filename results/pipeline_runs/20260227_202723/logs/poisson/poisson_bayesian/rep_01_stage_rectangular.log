@@ -5,6 +5,7 @@ Starting Bayesian architecture search: domain=rectangular
 -------------------------------------------------------------------------------------
 BO eval masks=[1, 4, 3, 2, 1] proxy_loss=2.0880e+01
 | [39m1        [39m | [39m-20.87989[39m | [39m1.4981604[39m | [39m3.8028572[39m | [39m2.9279757[39m | [39m2.3946339[39m | [39m0.6240745[39m |
+[WAIT] bayesian/rectangular stage_adam is already running. Waiting...
 BO eval masks=[1, 0, 3, 2, 3] proxy_loss=1.5532e+01
 | [35m2        [39m | [35m-15.53187[39m | [35m0.6239780[39m | [35m0.2323344[39m | [35m3.4647045[39m | [35m2.4044600[39m | [35m2.8322903[39m |
 BO eval masks=[0, 4, 3, 1, 1] proxy_loss=1.8442e+01
@@ -48,7 +49,7 @@ Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayes
 
 Relative L2 error (rectangular, grid 500x500): 7.0058e-02
 Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_rectangular/stage_adam/results_summary.csv
-Run time: 370.99 s
+Run time: 379.92 s
 [RUN] bayesian/rectangular stage_lbfgs (seed=42)
 Using device: cuda
 Starting Bayesian architecture search: domain=rectangular
@@ -62,6 +63,8 @@ BO eval masks=[0, 4, 3, 1, 1] proxy_loss=1.8442e+01
 | [39m3        [39m | [39m-18.44156[39m | [39m0.0823379[39m | [39m3.8796394[39m | [39m3.3297705[39m | [39m0.8493564[39m | [39m0.7272998[39m |
 BO eval masks=[1, 1, 2, 2, 1] proxy_loss=1.6568e+01
 | [39m4        [39m | [39m-16.56807[39m | [39m0.7336180[39m | [39m1.2169689[39m | [39m2.0990257[39m | [39m1.7277800[39m | [39m1.1649165[39m |
+[DONE] bayesian/rectangular stage_adam completed by existing process.
+[WAIT] bayesian/rectangular stage_lbfgs is already running. Waiting...
 BO eval masks=[0, 0, 2, 1, 3] proxy_loss=2.1385e+01
 | [39m5        [39m | [39m-21.38493[39m | [39m0.0      [39m | [39m0.0      [39m | [39m2.2111686[39m | [39m1.3612022[39m | [39m2.8372582[39m |
 BO eval masks=[3, 1, 3, 2, 0] proxy_loss=1.1154e+01
@@ -101,7 +104,7 @@ Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayes
 
 Relative L2 error (rectangular, grid 500x500): 3.2135e-03
 Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_rectangular/stage_lbfgs/results_summary.csv
-Run time: 413.41 s
+Run time: 416.38 s
 [RUN] bayesian/rectangular stage_pso (seed=42)
 Using device: cuda
 Starting Bayesian architecture search: domain=rectangular
@@ -117,6 +120,8 @@ BO eval masks=[1, 1, 2, 2, 1] proxy_loss=1.6568e+01
 | [39m4        [39m | [39m-16.56807[39m | [39m0.7336180[39m | [39m1.2169689[39m | [39m2.0990257[39m | [39m1.7277800[39m | [39m1.1649165[39m |
 BO eval masks=[0, 0, 2, 1, 3] proxy_loss=2.1385e+01
 | [39m5        [39m | [39m-21.38493[39m | [39m0.0      [39m | [39m0.0      [39m | [39m2.2111686[39m | [39m1.3612022[39m | [39m2.8372582[39m |
+[DONE] bayesian/rectangular stage_lbfgs completed by existing process.
+[WAIT] bayesian/rectangular stage_pso is already running. Waiting...
 BO eval masks=[3, 1, 3, 2, 0] proxy_loss=1.1154e+01
 | [35m6        [39m | [35m-11.15449[39m | [35m2.5954691[39m | [35m0.6145504[39m | [35m3.0371981[39m | [35m2.3851270[39m | [35m0.1266270[39m |
 BO eval masks=[0, 1, 1, 0, 3] proxy_loss=2.1103e+01
@@ -158,5 +163,7 @@ Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayes
 
 Relative L2 error (rectangular, grid 500x500): 1.9639e+00
 Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_rectangular/stage_pso/results_summary.csv
-Run time: 415.34 s
+Run time: 414.55 s
+[OK ] bayesian/rectangular best_stage=lbfgs
+[DONE] bayesian/rectangular stage_pso completed by existing process.
 [OK ] bayesian/rectangular best_stage=lbfgs

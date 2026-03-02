@@ -13,6 +13,7 @@ BO eval masks=[1, 2, 1, 0, 3] proxy_loss=4.1321e+01
 | [39m4        [39m | [39m-41.32101[39m | [39m0.8841159[39m | [39m1.6199577[39m | [39m1.2643858[39m | [39m0.3066507[39m | [39m3.3728987[39m |
 BO eval masks=[4, 3, 4, 0, 4] proxy_loss=1.9635e+01
 | [39m5        [39m | [39m-19.63482[39m | [39m4.0      [39m | [39m3.1149109[39m | [39m3.5492866[39m | [39m0.0      [39m | [39m3.7882629[39m |
+[WAIT] bayesian/circle stage_adam is already running. Waiting...
 BO eval masks=[4, 1, 3, 0, 2] proxy_loss=1.9454e+00
 | [35m6        [39m | [35m-1.945424[39m | [35m4.0      [39m | [35m1.1397900[39m | [35m3.4155227[39m | [35m0.0      [39m | [35m1.7073934[39m |
 BO eval masks=[4, 0, 4, 3, 2] proxy_loss=8.6977e+00
@@ -46,9 +47,9 @@ Adam [10000] loss: 6.6844e-02
 Adam [11999] loss: 3.9885e-02
 Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_circle/stage_adam/poisson_bayesian_loss_curve.png
 
-Relative L2 error (circle, grid 500x500): 2.5355e-01
+Relative L2 error (circle, grid 500x500): 1.9494e-01
 Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_circle/stage_adam/results_summary.csv
-Run time: 376.76 s
+Run time: 374.75 s
 [RUN] bayesian/circle stage_lbfgs (seed=43)
 Using device: cuda
 Starting Bayesian architecture search: domain=circle
@@ -60,6 +61,8 @@ BO eval masks=[3, 3, 2, 0, 3] proxy_loss=1.2164e+01
 | [35m2        [39m | [35m-12.16354[39m | [35m3.4365499[39m | [35m2.6643608[39m | [35m2.1646488[39m | [35m0.1160552[39m | [35m2.9349931[39m |
 BO eval masks=[2, 3, 1, 0, 3] proxy_loss=3.5865e+01
 | [39m3        [39m | [39m-35.86454[39m | [39m1.5798000[39m | [39m3.2081884[39m | [39m1.0176845[39m | [39m0.2275397[39m | [39m3.4665945[39m |
+[DONE] bayesian/circle stage_adam completed by existing process.
+[WAIT] bayesian/circle stage_lbfgs is already running. Waiting...
 BO eval masks=[1, 2, 1, 0, 3] proxy_loss=4.1321e+01
 | [39m4        [39m | [39m-41.32101[39m | [39m0.8841159[39m | [39m1.6199577[39m | [39m1.2643858[39m | [39m0.3066507[39m | [39m3.3728987[39m |
 BO eval masks=[4, 3, 4, 0, 4] proxy_loss=1.9635e+01
@@ -99,9 +102,9 @@ Adam [11999] loss: 3.9885e-02
 L-BFGS refinement...
 Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_circle/stage_lbfgs/poisson_bayesian_loss_curve.png
 
-Relative L2 error (circle, grid 500x500): 8.1445e-02
+Relative L2 error (circle, grid 500x500): 5.7385e-02
 Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_circle/stage_lbfgs/results_summary.csv
-Run time: 404.08 s
+Run time: 397.07 s
 [RUN] bayesian/circle stage_pso (seed=43)
 Using device: cuda
 Starting Bayesian architecture search: domain=circle
@@ -117,6 +120,8 @@ BO eval masks=[1, 2, 1, 0, 3] proxy_loss=4.1321e+01
 | [39m4        [39m | [39m-41.32101[39m | [39m0.8841159[39m | [39m1.6199577[39m | [39m1.2643858[39m | [39m0.3066507[39m | [39m3.3728987[39m |
 BO eval masks=[4, 3, 4, 0, 4] proxy_loss=1.9635e+01
 | [39m5        [39m | [39m-19.63482[39m | [39m4.0      [39m | [39m3.1149109[39m | [39m3.5492866[39m | [39m0.0      [39m | [39m3.7882629[39m |
+[DONE] bayesian/circle stage_lbfgs completed by existing process.
+[WAIT] bayesian/circle stage_pso is already running. Waiting...
 BO eval masks=[4, 1, 3, 0, 2] proxy_loss=1.9454e+00
 | [35m6        [39m | [35m-1.945424[39m | [35m4.0      [39m | [35m1.1397900[39m | [35m3.4155227[39m | [35m0.0      [39m | [35m1.7073934[39m |
 BO eval masks=[4, 0, 4, 3, 2] proxy_loss=8.6977e+00
@@ -156,7 +161,9 @@ Stopping search: maximum iterations reached --> 8
 PSO best objective: 5.7444e+01
 Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_circle/stage_pso/poisson_bayesian_loss_curve.png
 
-Relative L2 error (circle, grid 500x500): 1.0621e+00
+Relative L2 error (circle, grid 500x500): 9.8064e-01
 Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_circle/stage_pso/results_summary.csv
-Run time: 430.68 s
+Run time: 407.34 s
+[OK ] bayesian/circle best_stage=lbfgs
+[DONE] bayesian/circle stage_pso completed by existing process.
 [OK ] bayesian/circle best_stage=lbfgs

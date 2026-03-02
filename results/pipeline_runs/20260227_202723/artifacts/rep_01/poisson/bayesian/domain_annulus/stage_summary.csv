@@ -1,0 +1,4 @@
+stage,method,domain,seed,rel_l2,run_time_seconds
+adam,bayesian,annulus,46,2.11890305e-02,375.833129
+lbfgs,bayesian,annulus,46,2.18886332e-03,415.098520
+pso,bayesian,annulus,46,7.53230076e-01,424.112322

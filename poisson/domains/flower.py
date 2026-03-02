@@ -1,13 +1,16 @@
 import torch
 import numpy as np
 
+N_PETALS = 6
+AMP = 0.3
+
 def true_solution(x, y):
     return torch.cos(np.pi * x) * torch.cos(np.pi * y)
 
 def poisson_rhs(x, y):
     return -2.0 * (np.pi ** 2) * torch.cos(np.pi * x) * torch.cos(np.pi * y)
 
-def sample_points(n_col=7000, n_bc=1200, n_petals=6, amp=0.3, device=None):
+def sample_points(n_col=7000, n_bc=1200, n_petals=N_PETALS, amp=AMP, device=None):
     collected = []
     total = 0
     while total < n_col:
@@ -27,7 +30,8 @@ def sample_points(n_col=7000, n_bc=1200, n_petals=6, amp=0.3, device=None):
     x_col, y_col = xy_col[:, 0:1], xy_col[:, 1:2]
 
     theta_b = torch.linspace(0, 2 * np.pi, n_bc, device=device)
-    r_b = 1.0 + amp * torch.sin(n_petals * theta_b)
+    # Keep boundary coordinates as column vectors (n_bc, 1).
+    r_b = (1.0 + amp * torch.sin(n_petals * theta_b)).unsqueeze(1)
     x_bc = r_b * torch.cos(theta_b).unsqueeze(1)
     y_bc = r_b * torch.sin(theta_b).unsqueeze(1)
     return (x_col, y_col), (x_bc, y_bc)

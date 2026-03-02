@@ -1,4 +1,5 @@
 import argparse
+import csv
 import os
 import shutil
 import time
@@ -348,6 +349,50 @@ def plot_advection_heatmap(x_vals_np, t_vals_np, pred_u, save_path):
     finalize_plot(save_path)
 
 
+def _nearest_time_index(t_vals_np, t_query):
+    return int(np.argmin(np.abs(t_vals_np - float(t_query))))
+
+
+def plot_advection_time_slices(x_vals_np, t_vals_np, exact_u, pred_u, slice_times, save_path):
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4), constrained_layout=True)
+    colors = plt.get_cmap("tab10")(np.linspace(0.0, 1.0, max(len(slice_times), 1)))
+
+    for idx, t_sel in enumerate(slice_times):
+        t_idx = _nearest_time_index(t_vals_np, t_sel)
+        t_used = float(t_vals_np[t_idx])
+        c = colors[idx % len(colors)]
+        label = f"t={t_used:.2f}"
+        axes[0].plot(x_vals_np, exact_u[:, t_idx], color=c, linewidth=1.8, label=label)
+        axes[1].plot(x_vals_np, pred_u[:, t_idx], color=c, linewidth=1.8, label=label)
+
+    axes[0].set_title("Exact Time Slices")
+    axes[1].set_title("Predicted Time Slices")
+    for ax in axes:
+        ax.set_xlabel("x")
+        ax.set_ylabel("u(x,t)")
+        ax.grid(True, alpha=0.3)
+        ax.legend(fontsize=8, ncol=2)
+
+    fig.suptitle("Advection1D: Exact vs Predicted Time Slices")
+    finalize_plot(save_path)
+
+
+def save_advection_time_slice_table(path, t_vals_np, exact_u, pred_u, slice_times):
+    with open(path, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(["t_requested", "t_used", "rel_l2_slice", "mae_slice", "max_abs_slice"])
+        for t_sel in slice_times:
+            t_idx = _nearest_time_index(t_vals_np, t_sel)
+            t_used = float(t_vals_np[t_idx])
+            exact_slice = exact_u[:, t_idx]
+            pred_slice = pred_u[:, t_idx]
+            abs_err = np.abs(pred_slice - exact_slice)
+            rel_l2 = float(np.linalg.norm(pred_slice - exact_slice) / (np.linalg.norm(exact_slice) + 1e-12))
+            mae = float(np.mean(abs_err))
+            max_abs = float(np.max(abs_err))
+            writer.writerow([float(t_sel), t_used, f"{rel_l2:.8e}", f"{mae:.8e}", f"{max_abs:.8e}"])
+
+
 def build_stage_loss_curve(base_history, stage_name, stage_losses):
     if not base_history:
         return []
@@ -378,6 +423,21 @@ def save_stage_outputs(model, args, stage_name, stage_dir, loss_history, stage_l
     t_np = t_test.detach().cpu().numpy()
     plot_advection_comparison(x_np, t_np, exact_u, pred_u, os.path.join(stage_dir, "result_comparison.png"))
     plot_advection_heatmap(x_np, t_np, pred_u, os.path.join(stage_dir, "advection_heatmap.png"))
+    plot_advection_time_slices(
+        x_np,
+        t_np,
+        exact_u,
+        pred_u,
+        args.slice_times,
+        os.path.join(stage_dir, "advection_time_slices_exact_vs_pred.png"),
+    )
+    save_advection_time_slice_table(
+        os.path.join(stage_dir, "time_slice_comparison.csv"),
+        t_np,
+        exact_u,
+        pred_u,
+        args.slice_times,
+    )
 
     with open(os.path.join(stage_dir, "l2_error.txt"), "w", encoding="utf-8") as f:
         f.write(f"stage,{stage_name}\nbeta,{args.beta:.6f}\nrel_l2,{rel_l2:.8e}\n")
@@ -395,6 +455,8 @@ def copy_stage_to_root(stage_dir, root_dir):
         "loss_curve.png",
         "result_comparison.png",
         "advection_heatmap.png",
+        "advection_time_slices_exact_vs_pred.png",
+        "time_slice_comparison.csv",
         "l2_error.txt",
         "run_time.txt",
         "metrics.csv",
@@ -572,6 +634,12 @@ def parse_args():
     parser.add_argument("--train-nx", type=int, default=120, help="train grid points along x-axis")
     parser.add_argument("--test-nt", type=int, default=40, help="test grid points along t-axis")
     parser.add_argument("--test-nx", type=int, default=120, help="test grid points along x-axis")
+    parser.add_argument(
+        "--slice-times",
+        type=str,
+        default="0,0.5,1.0,1.5,2.0",
+        help="comma-separated time slices for exact-vs-pred line comparison",
+    )
     parser.add_argument("--paper-protocol", action="store_true", help="run paper-style repeated evaluation")
     parser.add_argument("--paper-betas", type=str, default="1.0,0.5,0.1", help="beta list for paper protocol")
     parser.add_argument("--repeats", type=int, default=5, help="repeat count for paper protocol")
@@ -582,6 +650,7 @@ def parse_args():
 
 def main():
     args = parse_args()
+    args.slice_times = [float(v.strip()) for v in args.slice_times.split(",") if v.strip()]
     os.makedirs(args.save_dir, exist_ok=True)
     if args.paper_protocol:
         run_paper_protocol(args)

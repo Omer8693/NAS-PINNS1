@@ -1,0 +1,133 @@
+[RUN] nsga3/flower stage_adam (seed=45)
+Using device: cuda
+Starting NSGA-III architecture search: domain=flower
+[WAIT] nsga3/flower stage_adam is already running. Waiting...
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -
+     2 |       26 |      1 |  0.9362545013 |         ideal
+     3 |       39 |      1 |  0.7645947933 |         ideal
+     4 |       52 |      1 |  0.000000E+00 |             f
+     5 |       65 |      1 |  1.2051060200 |         ideal
+     6 |       78 |      1 |  0.3026564121 |         ideal
+     7 |       91 |      1 |  0.000000E+00 |             f
+     8 |      104 |      1 |  0.000000E+00 |             f
+     9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.3001093864 |         ideal
+    12 |      156 |      1 |  0.2227897644 |         ideal
+    13 |      169 |      1 |  0.000000E+00 |             f
+    14 |      182 |      1 |  0.000000E+00 |             f
+    15 |      195 |      1 |  0.000000E+00 |             f
+    16 |      208 |      1 |  0.000000E+00 |             f
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  0.000000E+00 |             f
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 3 0 2 0]
+Adam [    0] loss: 9.6168e+01
+Adam [ 2000] loss: 2.4679e-01
+Adam [ 4000] loss: 8.4442e-02
+Adam [ 6000] loss: 5.5186e-02
+Adam [ 8000] loss: 1.3613e-02
+Adam [10000] loss: 5.9667e-03
+Adam [11999] loss: 4.0053e-03
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_flower/stage_adam/poisson_nsga3_loss_curve.png
+
+Relative L2 error (flower, grid 500x500): 3.0328e-02
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_flower/stage_adam/results_summary.csv
+Run time: 2638.09 s
+[RUN] nsga3/flower stage_lbfgs (seed=45)
+Using device: cuda
+Starting NSGA-III architecture search: domain=flower
+[DONE] nsga3/flower stage_adam completed by existing process.
+[WAIT] nsga3/flower stage_lbfgs is already running. Waiting...
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -
+     2 |       26 |      1 |  0.9362545013 |         ideal
+     3 |       39 |      1 |  0.7645947933 |         ideal
+     4 |       52 |      1 |  0.000000E+00 |             f
+     5 |       65 |      1 |  1.2051060200 |         ideal
+     6 |       78 |      1 |  0.3026564121 |         ideal
+     7 |       91 |      1 |  0.000000E+00 |             f
+     8 |      104 |      1 |  0.000000E+00 |             f
+     9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.3001093864 |         ideal
+    12 |      156 |      1 |  0.2227897644 |         ideal
+    13 |      169 |      1 |  0.000000E+00 |             f
+    14 |      182 |      1 |  0.000000E+00 |             f
+    15 |      195 |      1 |  0.000000E+00 |             f
+    16 |      208 |      1 |  0.000000E+00 |             f
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  0.000000E+00 |             f
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 3 0 2 0]
+Adam [    0] loss: 9.6168e+01
+Adam [ 2000] loss: 2.4679e-01
+Adam [ 4000] loss: 8.4442e-02
+Adam [ 6000] loss: 5.5186e-02
+Adam [ 8000] loss: 1.3613e-02
+Adam [10000] loss: 5.9667e-03
+Adam [11999] loss: 4.0053e-03
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_flower/stage_lbfgs/poisson_nsga3_loss_curve.png
+
+Relative L2 error (flower, grid 500x500): 6.3237e-03
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_flower/stage_lbfgs/results_summary.csv
+Run time: 2717.74 s
+[RUN] nsga3/flower stage_pso (seed=45)
+Using device: cuda
+Starting NSGA-III architecture search: domain=flower
+[DONE] nsga3/flower stage_lbfgs completed by existing process.
+[WAIT] nsga3/flower stage_pso is already running. Waiting...
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -
+     2 |       26 |      1 |  0.9362545013 |         ideal
+     3 |       39 |      1 |  0.7645947933 |         ideal
+     4 |       52 |      1 |  0.000000E+00 |             f
+     5 |       65 |      1 |  1.2051060200 |         ideal
+     6 |       78 |      1 |  0.3026564121 |         ideal
+     7 |       91 |      1 |  0.000000E+00 |             f
+     8 |      104 |      1 |  0.000000E+00 |             f
+     9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.3001093864 |         ideal
+    12 |      156 |      1 |  0.2227897644 |         ideal
+    13 |      169 |      1 |  0.000000E+00 |             f
+    14 |      182 |      1 |  0.000000E+00 |             f
+    15 |      195 |      1 |  0.000000E+00 |             f
+    16 |      208 |      1 |  0.000000E+00 |             f
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  0.000000E+00 |             f
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 3 0 2 0]
+Adam [    0] loss: 9.6168e+01
+Adam [ 2000] loss: 2.4679e-01
+Adam [ 4000] loss: 8.4442e-02
+Adam [ 6000] loss: 5.5186e-02
+Adam [ 8000] loss: 1.3613e-02
+Adam [10000] loss: 5.9667e-03
+Adam [11999] loss: 4.0053e-03
+
+L-BFGS refinement...
+
+PSO refinement...
+Stopping search: maximum iterations reached --> 8
+PSO best objective: 1.0355e+01
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_flower/stage_pso/poisson_nsga3_loss_curve.png
+
+Relative L2 error (flower, grid 500x500): 8.4321e-01
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_flower/stage_pso/results_summary.csv
+Run time: 2520.06 s
+[OK ] nsga3/flower best_stage=lbfgs
+[DONE] nsga3/flower stage_pso completed by existing process.
+[OK ] nsga3/flower best_stage=lbfgs

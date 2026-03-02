@@ -13,15 +13,33 @@ from .profiles import apply_profile, parse_beta_list
 
 class AdvectionNSGA2Problem(ElementwiseProblem):
     def __init__(self, beta, args):
-        super().__init__(n_var=2, n_obj=2, n_constr=0, xl=np.array([3, 64]), xu=np.array([6, 192]))
+        super().__init__(
+            n_var=2,
+            n_obj=2,
+            n_constr=0,
+            xl=np.array([args.search_layers_min, args.search_neurons_min]),
+            xu=np.array([args.search_layers_max, args.search_neurons_max]),
+        )
         self.beta = beta
         self.args = args
         self.eval_count = 0
 
     def _evaluate(self, x, out, *args, **kwargs):
         self.eval_count += 1
-        layers = int(np.clip(np.round(float(x[0])), 3, 6))
-        neurons = int(np.clip(np.round(float(x[1])), 64, 192))
+        layers = int(
+            np.clip(
+                np.round(float(x[0])),
+                self.args.search_layers_min,
+                self.args.search_layers_max,
+            )
+        )
+        neurons = int(
+            np.clip(
+                np.round(float(x[1])),
+                self.args.search_neurons_min,
+                self.args.search_neurons_max,
+            )
+        )
 
         seed = self.args.seed + self.eval_count
         torch.manual_seed(seed)
@@ -52,8 +70,20 @@ def run_search(beta, args):
     res = minimize(problem, algorithm, termination=("n_gen", args.n_gen), seed=args.seed, verbose=True)
 
     best_idx = int(np.argmin(res.F[:, 0]))
-    best_layers = int(np.clip(np.round(float(res.X[best_idx, 0])), 3, 6))
-    best_neurons = int(np.clip(np.round(float(res.X[best_idx, 1])), 64, 192))
+    best_layers = int(
+        np.clip(
+            np.round(float(res.X[best_idx, 0])),
+            args.search_layers_min,
+            args.search_layers_max,
+        )
+    )
+    best_neurons = int(
+        np.clip(
+            np.round(float(res.X[best_idx, 1])),
+            args.search_neurons_min,
+            args.search_neurons_max,
+        )
+    )
     return best_layers, best_neurons, res
 
 
@@ -126,7 +156,7 @@ def run_paper_protocol(args):
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Advection NAS-PINN with NSGA-II")
-    parser.add_argument("--profile", type=str, choices=["paper_baseline", "ours_fast"], default="ours_fast")
+    parser.add_argument("--profile", type=str, choices=["paper_baseline", "ours_fast"], default="paper_baseline")
     parser.add_argument("--beta", type=float, default=1.0)
     parser.add_argument("--multi-beta", action="store_true")
     parser.add_argument("--beta-list", type=str, default="1.0,0.5,0.1")
@@ -149,16 +179,25 @@ def parse_args():
     parser.add_argument("--train-nx", type=int, default=120)
     parser.add_argument("--test-nt", type=int, default=40)
     parser.add_argument("--test-nx", type=int, default=120)
+    parser.add_argument("--slice-times", type=str, default="0,0.5,1.0,1.5,2.0")
 
     parser.add_argument("--proxy-epochs", type=int, default=300)
-    parser.add_argument("--pop-size", type=int, default=12)
-    parser.add_argument("--n-gen", type=int, default=6)
+    parser.add_argument("--pop-size", type=int, default=30)
+    parser.add_argument("--n-gen", type=int, default=20)
+    parser.add_argument("--ref-partitions", type=int, default=12)
+    parser.add_argument("--bo-init-points", type=int, default=4)
+    parser.add_argument("--bo-iters", type=int, default=12)
+    parser.add_argument("--search-layers-min", type=int, default=3)
+    parser.add_argument("--search-layers-max", type=int, default=6)
+    parser.add_argument("--search-neurons-min", type=int, default=64)
+    parser.add_argument("--search-neurons-max", type=int, default=192)
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
     args = apply_profile(args, method_name="nsga2")
+    args.slice_times = [float(v.strip()) for v in str(args.slice_times).split(",") if v.strip()]
     os.makedirs(args.save_dir, exist_ok=True)
 
     if args.paper_protocol:

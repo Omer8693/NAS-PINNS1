@@ -1,0 +1,4 @@
+stage,method,domain,seed,rel_l2,run_time_seconds
+adam,bayesian,flower,45,3.92036128e-02,375.797708
+lbfgs,bayesian,flower,45,6.26115576e-03,421.865726
+pso,bayesian,flower,45,1.58706390e+00,434.848688

@@ -1,5 +1,4 @@
-stage,domain,seed,rel_l2,run_time_seconds
-adam,circle,43,3.60578258e-02,180.596214
-lbfgs,circle,43,5.47266543e-03,218.051361
-pso,circle,43,5.95239504e-01,189.990785
-best:lbfgs,circle,43,5.47266543e-03,218.051361
+stage,method,domain,seed,rel_l2,run_time_seconds
+adam,nsga3,circle,43,3.44761868e-02,2489.575757
+lbfgs,nsga3,circle,43,5.40978578e-03,2495.740392
+pso,nsga3,circle,43,7.75943594e-01,2503.839170

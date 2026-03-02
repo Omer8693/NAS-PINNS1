@@ -20,8 +20,20 @@ def run_search(args):
 
     def objective(layers, neurons):
         eval_count["k"] += 1
-        l_int = int(np.clip(np.round(float(layers)), 4, 8))
-        n_int = int(np.clip(np.round(float(neurons)), 64, 256))
+        l_int = int(
+            np.clip(
+                np.round(float(layers)),
+                args.search_layers_min,
+                args.search_layers_max,
+            )
+        )
+        n_int = int(
+            np.clip(
+                np.round(float(neurons)),
+                args.search_neurons_min,
+                args.search_neurons_max,
+            )
+        )
 
         seed = args.seed + eval_count["k"]
         torch.manual_seed(seed)
@@ -58,7 +70,10 @@ def run_search(args):
 
     optimizer = BayesianOptimization(
         f=objective,
-        pbounds={"layers": (4, 8), "neurons": (64, 256)},
+        pbounds={
+            "layers": (args.search_layers_min, args.search_layers_max),
+            "neurons": (args.search_neurons_min, args.search_neurons_max),
+        },
         random_state=args.seed,
         verbose=2,
     )
@@ -112,7 +127,7 @@ def run_paper_protocol(args):
 
 def parse_args():
     parser = argparse.ArgumentParser(description="2D Burgers NAS-PINN with Bayesian Optimization")
-    parser.add_argument("--profile", type=str, choices=["paper_baseline", "ours_fast"], default="ours_fast")
+    parser.add_argument("--profile", type=str, choices=["paper_baseline", "ours_fast"], default="paper_baseline")
     parser.add_argument("--paper-protocol", action="store_true")
     parser.add_argument("--repeats", type=int, default=5)
     parser.add_argument("--seed", type=int, default=42)
@@ -140,6 +155,13 @@ def parse_args():
     parser.add_argument("--proxy-epochs", type=int, default=200)
     parser.add_argument("--bo-init-points", type=int, default=4)
     parser.add_argument("--bo-iters", type=int, default=12)
+    parser.add_argument("--pop-size", type=int, default=30)
+    parser.add_argument("--n-gen", type=int, default=20)
+    parser.add_argument("--ref-partitions", type=int, default=12)
+    parser.add_argument("--search-layers-min", type=int, default=4)
+    parser.add_argument("--search-layers-max", type=int, default=8)
+    parser.add_argument("--search-neurons-min", type=int, default=64)
+    parser.add_argument("--search-neurons-max", type=int, default=256)
     return parser.parse_args()
 
 

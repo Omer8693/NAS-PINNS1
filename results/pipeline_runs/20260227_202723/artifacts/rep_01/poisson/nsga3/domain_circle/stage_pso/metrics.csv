@@ -1,2 +1,2 @@
-method,stage,domain,seed,rel_l2,run_time_seconds
-nsga3,pso,circle,43,5.95239504e-01,189.990785
+method,domain,seed,rel_l2,run_time_seconds
+nsga3,circle,43,7.75943594e-01,2503.839170

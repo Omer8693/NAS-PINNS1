@@ -312,23 +312,57 @@ def evaluate_and_plot(model, domain_mod, save_dir, method_label="NAS-PINN", test
     X, Y = torch.meshgrid(x, y, indexing="xy")
     xy_grid = torch.stack([X.flatten(), Y.flatten()], dim=1)
 
+    def in_domain_mask(name, xx, yy):
+        if name == "rectangular":
+            return torch.ones_like(xx, dtype=torch.bool)
+        if name == "circle":
+            return (xx**2 + yy**2) <= 1.0
+        if name == "annulus":
+            r = torch.sqrt(xx**2 + yy**2)
+            r_inner = float(getattr(annulus, "R_INNER", 0.3))
+            r_outer = float(getattr(annulus, "R_OUTER", 1.0))
+            return (r >= r_inner) & (r <= r_outer)
+        if name == "flower":
+            r = torch.sqrt(xx**2 + yy**2)
+            theta = torch.atan2(yy, xx)
+            n_petals = int(getattr(flower, "N_PETALS", 6))
+            amp = float(getattr(flower, "AMP", 0.3))
+            r_max = 1.0 + amp * torch.sin(n_petals * theta)
+            return r <= r_max
+        if name == "lshape":
+            return (
+                ((xx >= -1.0) & (xx <= 2.0) & (yy >= -1.0) & (yy <= 1.0))
+                | ((xx >= -1.0) & (xx <= 1.0) & (yy >= 1.0) & (yy <= 2.0))
+            )
+        return torch.ones_like(xx, dtype=torch.bool)
+
     with torch.no_grad():
         pred = model(xy_grid).reshape(nx, ny).cpu().numpy()
         true = domain_mod.true_solution(X, Y).cpu().numpy()
         err_abs = np.abs(pred - true)
+        domain_mask = in_domain_mask(domain_name, X, Y).cpu().numpy().astype(bool)
 
     err_sq = (pred - true) ** 2
-    rel_l2 = np.sqrt(np.mean(err_sq)) / (np.sqrt(np.mean(true ** 2)) + 1e-12)
+    if np.any(domain_mask):
+        rel_l2 = np.sqrt(np.mean(err_sq[domain_mask])) / (np.sqrt(np.mean((true[domain_mask]) ** 2)) + 1e-12)
+    else:
+        rel_l2 = np.sqrt(np.mean(err_sq)) / (np.sqrt(np.mean(true ** 2)) + 1e-12)
     print(f"\nRelative L2 error ({domain_name}, grid {nx}x{ny}): {rel_l2:.4e}")
 
+    true_plot = np.where(domain_mask, true, np.nan)
+    pred_plot = np.where(domain_mask, pred, np.nan)
+    err_plot = np.where(domain_mask, err_abs, np.nan)
+    cmap = plt.get_cmap(SIMPLE_CMAP).copy()
+    cmap.set_bad(color="white")
+
     fig, axes = plt.subplots(1, 3, figsize=(18, 5))
-    vmin = float(np.min(true))
-    vmax = float(np.max(true))
+    vmin = float(np.nanmin(true_plot))
+    vmax = float(np.nanmax(true_plot))
 
     im0 = axes[0].imshow(
-        true.T,
+        true_plot.T,
         origin="lower",
-        cmap=SIMPLE_CMAP,
+        cmap=cmap,
         extent=[x_min, x_max, y_min, y_max],
         vmin=vmin,
         vmax=vmax,
@@ -337,9 +371,9 @@ def evaluate_and_plot(model, domain_mod, save_dir, method_label="NAS-PINN", test
     plt.colorbar(im0, ax=axes[0], shrink=0.6)
 
     im1 = axes[1].imshow(
-        pred.T,
+        pred_plot.T,
         origin="lower",
-        cmap=SIMPLE_CMAP,
+        cmap=cmap,
         extent=[x_min, x_max, y_min, y_max],
         vmin=vmin,
         vmax=vmax,
@@ -348,9 +382,9 @@ def evaluate_and_plot(model, domain_mod, save_dir, method_label="NAS-PINN", test
     plt.colorbar(im1, ax=axes[1], shrink=0.6)
 
     im2 = axes[2].imshow(
-        err_abs.T,
+        err_plot.T,
         origin="lower",
-        cmap=SIMPLE_CMAP,
+        cmap=cmap,
         extent=[x_min, x_max, y_min, y_max],
     )
     axes[2].set_title("|Pred - Exact|")
@@ -364,13 +398,14 @@ def evaluate_and_plot(model, domain_mod, save_dir, method_label="NAS-PINN", test
     csv_path = os.path.join(save_dir, "results_summary.csv")
     with open(csv_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
-        writer.writerow(["x", "y", "exact", "predicted", "abs_error"])
+        writer.writerow(["x", "y", "in_domain", "exact", "predicted", "abs_error"])
         for i in range(nx):
             for j in range(ny):
                 writer.writerow(
                     [
                         float(X[i, j]),
                         float(Y[i, j]),
+                        int(domain_mask[i, j]),
                         float(true[i, j]),
                         float(pred[i, j]),
                         float(err_abs[i, j]),

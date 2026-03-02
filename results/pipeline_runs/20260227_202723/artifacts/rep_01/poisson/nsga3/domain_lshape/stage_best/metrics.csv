@@ -1,2 +1,2 @@
-method,stage,domain,seed,rel_l2,run_time_seconds
-nsga3,lbfgs,lshape,44,2.65357443e-03,237.346711
+method,domain,seed,rel_l2,run_time_seconds
+nsga3,lshape,44,2.66775299e-03,2705.839657

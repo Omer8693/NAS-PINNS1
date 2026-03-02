@@ -1,5 +1,4 @@
-stage,domain,seed,rel_l2,run_time_seconds
-adam,flower,45,3.12392360e-02,191.207452
-lbfgs,flower,45,6.23157372e-03,230.536275
-pso,flower,45,1.30144608e+00,200.642917
-best:lbfgs,flower,45,6.23157372e-03,230.536275
+stage,method,domain,seed,rel_l2,run_time_seconds
+adam,nsga3,flower,45,3.03281998e-02,2638.090838
+lbfgs,nsga3,flower,45,6.32370136e-03,2717.738643
+pso,nsga3,flower,45,8.43208415e-01,2520.064210

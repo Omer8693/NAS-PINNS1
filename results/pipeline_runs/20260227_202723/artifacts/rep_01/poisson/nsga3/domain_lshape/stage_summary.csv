@@ -1,5 +1,4 @@
-stage,domain,seed,rel_l2,run_time_seconds
-adam,lshape,44,4.39856742e-02,198.307670
-lbfgs,lshape,44,2.65357443e-03,237.346711
-pso,lshape,44,6.02757672e-01,207.474431
-best:lbfgs,lshape,44,2.65357443e-03,237.346711
+stage,method,domain,seed,rel_l2,run_time_seconds
+adam,nsga3,lshape,44,4.49992510e-02,2608.137550
+lbfgs,nsga3,lshape,44,2.66775299e-03,2705.839657
+pso,nsga3,lshape,44,1.51779667e+00,2577.835217

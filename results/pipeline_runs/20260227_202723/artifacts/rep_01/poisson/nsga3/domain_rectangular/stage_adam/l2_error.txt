@@ -1,3 +1,0 @@
-stage,adam
-domain,rectangular
-rel_l2,2.77932916e-02

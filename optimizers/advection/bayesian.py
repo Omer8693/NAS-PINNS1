@@ -20,8 +20,20 @@ def run_search(beta, args):
 
     def objective(layers, neurons):
         eval_count["k"] += 1
-        l_int = int(np.clip(np.round(float(layers)), 3, 6))
-        n_int = int(np.clip(np.round(float(neurons)), 64, 192))
+        l_int = int(
+            np.clip(
+                np.round(float(layers)),
+                args.search_layers_min,
+                args.search_layers_max,
+            )
+        )
+        n_int = int(
+            np.clip(
+                np.round(float(neurons)),
+                args.search_neurons_min,
+                args.search_neurons_max,
+            )
+        )
 
         seed = args.seed + eval_count["k"]
         torch.manual_seed(seed)
@@ -55,7 +67,10 @@ def run_search(beta, args):
 
     optimizer = BayesianOptimization(
         f=objective,
-        pbounds={"layers": (3, 6), "neurons": (64, 192)},
+        pbounds={
+            "layers": (args.search_layers_min, args.search_layers_max),
+            "neurons": (args.search_neurons_min, args.search_neurons_max),
+        },
         random_state=args.seed,
         verbose=2,
     )
@@ -129,7 +144,7 @@ def run_paper_protocol(args):
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Advection NAS-PINN with Bayesian Optimization")
-    parser.add_argument("--profile", type=str, choices=["paper_baseline", "ours_fast"], default="ours_fast")
+    parser.add_argument("--profile", type=str, choices=["paper_baseline", "ours_fast"], default="paper_baseline")
     parser.add_argument("--beta", type=float, default=1.0)
     parser.add_argument("--multi-beta", action="store_true")
     parser.add_argument("--beta-list", type=str, default="1.0,0.5,0.1")
@@ -152,16 +167,25 @@ def parse_args():
     parser.add_argument("--train-nx", type=int, default=120)
     parser.add_argument("--test-nt", type=int, default=40)
     parser.add_argument("--test-nx", type=int, default=120)
+    parser.add_argument("--slice-times", type=str, default="0,0.5,1.0,1.5,2.0")
 
     parser.add_argument("--proxy-epochs", type=int, default=300)
     parser.add_argument("--bo-init-points", type=int, default=4)
     parser.add_argument("--bo-iters", type=int, default=12)
+    parser.add_argument("--pop-size", type=int, default=30)
+    parser.add_argument("--n-gen", type=int, default=20)
+    parser.add_argument("--ref-partitions", type=int, default=12)
+    parser.add_argument("--search-layers-min", type=int, default=3)
+    parser.add_argument("--search-layers-max", type=int, default=6)
+    parser.add_argument("--search-neurons-min", type=int, default=64)
+    parser.add_argument("--search-neurons-max", type=int, default=192)
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
     args = apply_profile(args, method_name="bayesian")
+    args.slice_times = [float(v.strip()) for v in str(args.slice_times).split(",") if v.strip()]
     os.makedirs(args.save_dir, exist_ok=True)
 
     if args.paper_protocol:

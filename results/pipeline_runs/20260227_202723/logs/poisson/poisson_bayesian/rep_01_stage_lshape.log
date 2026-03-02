@@ -3,6 +3,7 @@ Using device: cuda
 Starting Bayesian architecture search: domain=lshape
 |   iter    |  target   |    m0     |    m1     |    m2     |    m3     |    m4     |
 -------------------------------------------------------------------------------------
+[WAIT] bayesian/lshape stage_adam is already running. Waiting...
 BO eval masks=[3, 0, 3, 1, 1] proxy_loss=6.3274e+01
 | [39m1        [39m | [39m-63.27402[39m | [39m3.3393685[39m | [39m0.4191844[39m | [39m2.9785619[39m | [39m1.4420033[39m | [39m1.4372433[39m |
 BO eval masks=[2, 2, 2, 2, 3] proxy_loss=6.4492e+01
@@ -46,9 +47,9 @@ Adam [10000] loss: 2.7550e-02
 Adam [11999] loss: 1.4215e-02
 Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_lshape/stage_adam/poisson_bayesian_loss_curve.png
 
-Relative L2 error (lshape, grid 500x500): 1.2529e-01
+Relative L2 error (lshape, grid 500x500): 8.7009e-02
 Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_lshape/stage_adam/results_summary.csv
-Run time: 387.46 s
+Run time: 372.23 s
 [RUN] bayesian/lshape stage_lbfgs (seed=44)
 Using device: cuda
 Starting Bayesian architecture search: domain=lshape
@@ -62,6 +63,8 @@ BO eval masks=[4, 2, 2, 0, 1] proxy_loss=2.9469e+01
 | [35m3        [39m | [35m-29.46919[39m | [35m3.8421049[39m | [35m1.8264844[39m | [35m1.7106060[39m | [35m0.4538548[39m | [35m0.8715954[39m |
 BO eval masks=[4, 4, 4, 3, 1] proxy_loss=5.0124e+01
 | [39m4        [39m | [39m-50.12363[39m | [39m3.8298882[39m | [39m3.7734028[39m | [39m3.5272971[39m | [39m2.5856422[39m | [39m0.8552992[39m |
+[DONE] bayesian/lshape stage_adam completed by existing process.
+[WAIT] bayesian/lshape stage_lbfgs is already running. Waiting...
 BO eval masks=[3, 2, 2, 2, 4] proxy_loss=1.7745e+01
 | [35m5        [39m | [35m-17.74481[39m | [35m2.6594043[39m | [35m2.4130468[39m | [35m2.1208247[39m | [35m2.2639698[39m | [35m3.9212364[39m |
 BO eval masks=[1, 2, 1, 0, 1] proxy_loss=6.3467e+01
@@ -99,9 +102,9 @@ Adam [11999] loss: 1.4215e-02
 L-BFGS refinement...
 Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_lshape/stage_lbfgs/poisson_bayesian_loss_curve.png
 
-Relative L2 error (lshape, grid 500x500): 4.3452e-02
+Relative L2 error (lshape, grid 500x500): 6.9225e-03
 Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_lshape/stage_lbfgs/results_summary.csv
-Run time: 419.23 s
+Run time: 428.85 s
 [RUN] bayesian/lshape stage_pso (seed=44)
 Using device: cuda
 Starting Bayesian architecture search: domain=lshape
@@ -113,6 +116,8 @@ BO eval masks=[2, 2, 2, 2, 3] proxy_loss=6.4492e+01
 | [39m2        [39m | [39m-64.49195[39m | [39m2.4369535[39m | [39m1.5751182[39m | [39m1.6362904[39m | [39m2.0396096[39m | [39m2.8405919[39m |
 BO eval masks=[4, 2, 2, 0, 1] proxy_loss=2.9469e+01
 | [35m3        [39m | [35m-29.46919[39m | [35m3.8421049[39m | [35m1.8264844[39m | [35m1.7106060[39m | [35m0.4538548[39m | [35m0.8715954[39m |
+[DONE] bayesian/lshape stage_lbfgs completed by existing process.
+[WAIT] bayesian/lshape stage_pso is already running. Waiting...
 BO eval masks=[4, 4, 4, 3, 1] proxy_loss=5.0124e+01
 | [39m4        [39m | [39m-50.12363[39m | [39m3.8298882[39m | [39m3.7734028[39m | [39m3.5272971[39m | [39m2.5856422[39m | [39m0.8552992[39m |
 BO eval masks=[3, 2, 2, 2, 4] proxy_loss=1.7745e+01
@@ -156,7 +161,9 @@ Stopping search: maximum iterations reached --> 8
 PSO best objective: 1.8023e+01
 Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_lshape/stage_pso/poisson_bayesian_loss_curve.png
 
-Relative L2 error (lshape, grid 500x500): 1.7761e+00
+Relative L2 error (lshape, grid 500x500): 1.8274e+00
 Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_lshape/stage_pso/results_summary.csv
-Run time: 413.76 s
+Run time: 415.77 s
+[OK ] bayesian/lshape best_stage=lbfgs
+[DONE] bayesian/lshape stage_pso completed by existing process.
 [OK ] bayesian/lshape best_stage=lbfgs

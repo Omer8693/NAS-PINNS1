@@ -1,0 +1,1518 @@
+Run root : results/pipeline_runs/20260227_202723
+Art root : results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson
+Log root : results/pipeline_runs/20260227_202723/logs/poisson
+Base seed: 42
+
+[RUN] nsga3/rectangular stage_adam (seed=42)
+Using device: cuda
+Starting NSGA-III architecture search: domain=rectangular
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -
+     2 |       26 |      1 |  1.6417305470 |         ideal
+     3 |       39 |      1 |  0.8322379589 |         ideal
+     4 |       52 |      1 |  0.8670520782 |         ideal
+     5 |       65 |      1 |  0.000000E+00 |             f
+     6 |       78 |      1 |  0.000000E+00 |             f
+     7 |       91 |      1 |  0.1488083601 |         ideal
+     8 |      104 |      1 |  0.0190683603 |         ideal
+     9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.000000E+00 |             f
+    12 |      156 |      1 |  0.000000E+00 |             f
+    13 |      169 |      1 |  0.000000E+00 |             f
+    14 |      182 |      1 |  0.4498884678 |         ideal
+    15 |      195 |      1 |  0.000000E+00 |             f
+    16 |      208 |      1 |  0.000000E+00 |             f
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  0.000000E+00 |             f
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 3 3 0 2]
+Adam [    0] loss: 9.7773e+01
+Adam [ 2000] loss: 1.0150e-01
+Adam [ 4000] loss: 3.3409e-02
+Adam [ 6000] loss: 1.2927e-02
+Adam [ 8000] loss: 1.1423e-02
+Adam [10000] loss: 6.6986e-03
+Adam [11999] loss: 2.3934e-03
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_rectangular/stage_adam/poisson_nsga3_loss_curve.png
+
+Relative L2 error (rectangular, grid 500x500): 2.7221e-02
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_rectangular/stage_adam/results_summary.csv
+Run time: 2591.99 s
+[RUN] nsga3/rectangular stage_lbfgs (seed=42)
+Using device: cuda
+Starting NSGA-III architecture search: domain=rectangular
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -
+     2 |       26 |      1 |  1.6417305470 |         ideal
+     3 |       39 |      1 |  0.8322379589 |         ideal
+     4 |       52 |      1 |  0.8670520782 |         ideal
+     5 |       65 |      1 |  0.000000E+00 |             f
+     6 |       78 |      1 |  0.000000E+00 |             f
+     7 |       91 |      1 |  0.1488083601 |         ideal
+     8 |      104 |      1 |  0.0190683603 |         ideal
+     9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.000000E+00 |             f
+    12 |      156 |      1 |  0.000000E+00 |             f
+    13 |      169 |      1 |  0.000000E+00 |             f
+    14 |      182 |      1 |  0.4498884678 |         ideal
+    15 |      195 |      1 |  0.000000E+00 |             f
+    16 |      208 |      1 |  0.000000E+00 |             f
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  0.000000E+00 |             f
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 3 3 0 2]
+Adam [    0] loss: 9.7773e+01
+Adam [ 2000] loss: 1.0150e-01
+Adam [ 4000] loss: 3.3409e-02
+Adam [ 6000] loss: 1.2927e-02
+Adam [ 8000] loss: 1.1423e-02
+Adam [10000] loss: 6.6986e-03
+Adam [11999] loss: 2.3934e-03
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_rectangular/stage_lbfgs/poisson_nsga3_loss_curve.png
+
+Relative L2 error (rectangular, grid 500x500): 8.9222e-04
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_rectangular/stage_lbfgs/results_summary.csv
+Run time: 2702.51 s
+[RUN] nsga3/rectangular stage_pso (seed=42)
+Using device: cuda
+Starting NSGA-III architecture search: domain=rectangular
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -
+     2 |       26 |      1 |  1.6417305470 |         ideal
+     3 |       39 |      1 |  0.8322379589 |         ideal
+     4 |       52 |      1 |  0.8670520782 |         ideal
+     5 |       65 |      1 |  0.000000E+00 |             f
+     6 |       78 |      1 |  0.000000E+00 |             f
+     7 |       91 |      1 |  0.1488083601 |         ideal
+     8 |      104 |      1 |  0.0190683603 |         ideal
+     9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.000000E+00 |             f
+    12 |      156 |      1 |  0.000000E+00 |             f
+    13 |      169 |      1 |  0.000000E+00 |             f
+    14 |      182 |      1 |  0.4498884678 |         ideal
+    15 |      195 |      1 |  0.000000E+00 |             f
+    16 |      208 |      1 |  0.000000E+00 |             f
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  0.000000E+00 |             f
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 3 3 0 2]
+Adam [    0] loss: 9.7773e+01
+Adam [ 2000] loss: 1.0150e-01
+Adam [ 4000] loss: 3.3409e-02
+Adam [ 6000] loss: 1.2927e-02
+Adam [ 8000] loss: 1.1423e-02
+Adam [10000] loss: 6.6986e-03
+Adam [11999] loss: 2.3934e-03
+
+L-BFGS refinement...
+
+PSO refinement...
+Stopping search: maximum iterations reached --> 8
+PSO best objective: 1.1542e+01
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_rectangular/stage_pso/poisson_nsga3_loss_curve.png
+
+Relative L2 error (rectangular, grid 500x500): 6.6657e-01
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_rectangular/stage_pso/results_summary.csv
+Run time: 2539.67 s
+[OK ] nsga3/rectangular best_stage=lbfgs
+[RUN] nsga3/circle stage_adam (seed=43)
+Using device: cuda
+Starting NSGA-III architecture search: domain=circle
+Run root : results/pipeline_runs/20260227_202723
+Art root : results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson
+Log root : results/pipeline_runs/20260227_202723/logs/poisson
+Base seed: 42
+
+[SKIP] nsga3/rectangular stage_adam already completed.
+[SKIP] nsga3/rectangular stage_lbfgs already completed.
+[SKIP] nsga3/rectangular stage_pso already completed.
+[OK ] nsga3/rectangular best_stage=lbfgs
+[WAIT] nsga3/circle stage_adam is already running. Waiting...
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -
+     2 |       26 |      1 |  0.000000E+00 |             f
+     3 |       39 |      1 |  0.000000E+00 |             f
+     4 |       52 |      1 |  7.6511373520 |         ideal
+     5 |       65 |      1 |  0.000000E+00 |             f
+     6 |       78 |      1 |  0.000000E+00 |             f
+     7 |       91 |      1 |  2.7975068092 |         ideal
+     8 |      104 |      1 |  0.000000E+00 |             f
+     9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.000000E+00 |             f
+    12 |      156 |      1 |  0.000000E+00 |             f
+    13 |      169 |      1 |  0.0404391289 |         ideal
+    14 |      182 |      1 |  0.000000E+00 |             f
+    15 |      195 |      1 |  0.000000E+00 |             f
+    16 |      208 |      1 |  0.000000E+00 |             f
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  1.7411093712 |         ideal
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 4 2 3 3]
+Adam [    0] loss: 9.1527e+01
+Adam [ 2000] loss: 4.3050e-01
+Adam [ 4000] loss: 1.3761e-01
+Adam [ 6000] loss: 3.0456e-02
+Adam [ 8000] loss: 2.7734e-02
+Adam [10000] loss: 6.3738e-03
+Adam [11999] loss: 4.2869e-03
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_circle/stage_adam/poisson_nsga3_loss_curve.png
+
+Relative L2 error (circle, grid 500x500): 3.4476e-02
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_circle/stage_adam/results_summary.csv
+Run time: 2489.58 s
+[RUN] nsga3/circle stage_lbfgs (seed=43)
+Using device: cuda
+Starting NSGA-III architecture search: domain=circle
+[DONE] nsga3/circle stage_adam completed by existing process.
+[WAIT] nsga3/circle stage_lbfgs is already running. Waiting...
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -
+     2 |       26 |      1 |  0.000000E+00 |             f
+     3 |       39 |      1 |  0.000000E+00 |             f
+     4 |       52 |      1 |  7.6511373520 |         ideal
+     5 |       65 |      1 |  0.000000E+00 |             f
+     6 |       78 |      1 |  0.000000E+00 |             f
+     7 |       91 |      1 |  2.7975068092 |         ideal
+     8 |      104 |      1 |  0.000000E+00 |             f
+     9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.000000E+00 |             f
+    12 |      156 |      1 |  0.000000E+00 |             f
+    13 |      169 |      1 |  0.0404391289 |         ideal
+    14 |      182 |      1 |  0.000000E+00 |             f
+    15 |      195 |      1 |  0.000000E+00 |             f
+    16 |      208 |      1 |  0.000000E+00 |             f
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  1.7411093712 |         ideal
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 4 2 3 3]
+Adam [    0] loss: 9.1527e+01
+Adam [ 2000] loss: 4.3050e-01
+Adam [ 4000] loss: 1.3761e-01
+Adam [ 6000] loss: 3.0456e-02
+Adam [ 8000] loss: 2.7734e-02
+Adam [10000] loss: 6.3738e-03
+Adam [11999] loss: 4.2869e-03
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_circle/stage_lbfgs/poisson_nsga3_loss_curve.png
+
+Relative L2 error (circle, grid 500x500): 5.4098e-03
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_circle/stage_lbfgs/results_summary.csv
+Run time: 2495.74 s
+[RUN] nsga3/circle stage_pso (seed=43)
+[DONE] nsga3/circle stage_lbfgs completed by existing process.
+[WAIT] nsga3/circle stage_pso is already running. Waiting...
+Using device: cuda
+Starting NSGA-III architecture search: domain=circle
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -
+     2 |       26 |      1 |  0.000000E+00 |             f
+     3 |       39 |      1 |  0.000000E+00 |             f
+     4 |       52 |      1 |  7.6511373520 |         ideal
+     5 |       65 |      1 |  0.000000E+00 |             f
+     6 |       78 |      1 |  0.000000E+00 |             f
+     7 |       91 |      1 |  2.7975068092 |         ideal
+     8 |      104 |      1 |  0.000000E+00 |             f
+     9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.000000E+00 |             f
+    12 |      156 |      1 |  0.000000E+00 |             f
+    13 |      169 |      1 |  0.0404391289 |         ideal
+    14 |      182 |      1 |  0.000000E+00 |             f
+    15 |      195 |      1 |  0.000000E+00 |             f
+    16 |      208 |      1 |  0.000000E+00 |             f
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  1.7411093712 |         ideal
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 4 2 3 3]
+Adam [    0] loss: 9.1527e+01
+Adam [ 2000] loss: 4.3050e-01
+Adam [ 4000] loss: 1.3761e-01
+Adam [ 6000] loss: 3.0456e-02
+Adam [ 8000] loss: 2.7734e-02
+Adam [10000] loss: 6.3738e-03
+Adam [11999] loss: 4.2869e-03
+
+L-BFGS refinement...
+
+PSO refinement...
+Stopping search: maximum iterations reached --> 8
+PSO best objective: 3.3023e+01
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_circle/stage_pso/poisson_nsga3_loss_curve.png
+
+Relative L2 error (circle, grid 500x500): 7.7594e-01
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_circle/stage_pso/results_summary.csv
+Run time: 2503.84 s
+[OK ] nsga3/circle best_stage=lbfgs
+[RUN] nsga3/lshape stage_adam (seed=44)
+Using device: cuda
+Starting NSGA-III architecture search: domain=lshape
+[DONE] nsga3/circle stage_pso completed by existing process.
+[OK ] nsga3/circle best_stage=lbfgs
+[WAIT] nsga3/lshape stage_adam is already running. Waiting...
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -
+     2 |       26 |      1 |  0.000000E+00 |             f
+     3 |       39 |      1 |  1.395055E+01 |         ideal
+     4 |       52 |      1 |  7.6451253891 |         ideal
+     5 |       65 |      1 |  0.000000E+00 |             f
+     6 |       78 |      1 |  1.4607648849 |         ideal
+     7 |       91 |      1 |  0.000000E+00 |             f
+     8 |      104 |      1 |  0.000000E+00 |             f
+     9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.000000E+00 |             f
+    12 |      156 |      1 |  0.000000E+00 |             f
+    13 |      169 |      1 |  0.000000E+00 |             f
+    14 |      182 |      1 |  0.000000E+00 |             f
+    15 |      195 |      1 |  0.3392124176 |         ideal
+    16 |      208 |      1 |  3.3288917542 |         ideal
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  0.000000E+00 |             f
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 4 1 1 1]
+Adam [    0] loss: 9.8921e+01
+Adam [ 2000] loss: 1.7817e-01
+Adam [ 4000] loss: 3.9034e-02
+Adam [ 6000] loss: 1.8800e-02
+Adam [ 8000] loss: 1.0574e-02
+Adam [10000] loss: 7.8532e-03
+Adam [11999] loss: 6.7913e-03
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_lshape/stage_adam/poisson_nsga3_loss_curve.png
+
+Relative L2 error (lshape, grid 500x500): 4.4999e-02
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_lshape/stage_adam/results_summary.csv
+Run time: 2608.14 s
+[RUN] nsga3/lshape stage_lbfgs (seed=44)
+Using device: cuda
+Starting NSGA-III architecture search: domain=lshape
+[DONE] nsga3/lshape stage_adam completed by existing process.
+[WAIT] nsga3/lshape stage_lbfgs is already running. Waiting...
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -
+     2 |       26 |      1 |  0.000000E+00 |             f
+     3 |       39 |      1 |  1.395055E+01 |         ideal
+     4 |       52 |      1 |  7.6451253891 |         ideal
+     5 |       65 |      1 |  0.000000E+00 |             f
+     6 |       78 |      1 |  1.4607648849 |         ideal
+     7 |       91 |      1 |  0.000000E+00 |             f
+     8 |      104 |      1 |  0.000000E+00 |             f
+     9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.000000E+00 |             f
+    12 |      156 |      1 |  0.000000E+00 |             f
+    13 |      169 |      1 |  0.000000E+00 |             f
+    14 |      182 |      1 |  0.000000E+00 |             f
+    15 |      195 |      1 |  0.3392124176 |         ideal
+    16 |      208 |      1 |  3.3288917542 |         ideal
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  0.000000E+00 |             f
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 4 1 1 1]
+Adam [    0] loss: 9.8921e+01
+Adam [ 2000] loss: 1.7817e-01
+Adam [ 4000] loss: 3.9034e-02
+Adam [ 6000] loss: 1.8800e-02
+Adam [ 8000] loss: 1.0574e-02
+Adam [10000] loss: 7.8532e-03
+Adam [11999] loss: 6.7913e-03
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_lshape/stage_lbfgs/poisson_nsga3_loss_curve.png
+
+Relative L2 error (lshape, grid 500x500): 2.6678e-03
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_lshape/stage_lbfgs/results_summary.csv
+Run time: 2705.84 s
+[RUN] nsga3/lshape stage_pso (seed=44)
+Using device: cuda
+Starting NSGA-III architecture search: domain=lshape
+[DONE] nsga3/lshape stage_lbfgs completed by existing process.
+[WAIT] nsga3/lshape stage_pso is already running. Waiting...
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -
+     2 |       26 |      1 |  0.000000E+00 |             f
+     3 |       39 |      1 |  1.395055E+01 |         ideal
+     4 |       52 |      1 |  7.6451253891 |         ideal
+     5 |       65 |      1 |  0.000000E+00 |             f
+     6 |       78 |      1 |  1.4607648849 |         ideal
+     7 |       91 |      1 |  0.000000E+00 |             f
+     8 |      104 |      1 |  0.000000E+00 |             f
+     9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.000000E+00 |             f
+    12 |      156 |      1 |  0.000000E+00 |             f
+    13 |      169 |      1 |  0.000000E+00 |             f
+    14 |      182 |      1 |  0.000000E+00 |             f
+    15 |      195 |      1 |  0.3392124176 |         ideal
+    16 |      208 |      1 |  3.3288917542 |         ideal
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  0.000000E+00 |             f
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 4 1 1 1]
+Adam [    0] loss: 9.8921e+01
+Adam [ 2000] loss: 1.7817e-01
+Adam [ 4000] loss: 3.9034e-02
+Adam [ 6000] loss: 1.8800e-02
+Adam [ 8000] loss: 1.0574e-02
+Adam [10000] loss: 7.8532e-03
+Adam [11999] loss: 6.7913e-03
+
+L-BFGS refinement...
+
+PSO refinement...
+Stopping search: maximum iterations reached --> 8
+PSO best objective: 2.2401e+01
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_lshape/stage_pso/poisson_nsga3_loss_curve.png
+
+Relative L2 error (lshape, grid 500x500): 1.5178e+00
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_lshape/stage_pso/results_summary.csv
+Run time: 2577.84 s
+[OK ] nsga3/lshape best_stage=lbfgs
+[RUN] nsga3/flower stage_adam (seed=45)
+Using device: cuda
+Starting NSGA-III architecture search: domain=flower
+[DONE] nsga3/lshape stage_pso completed by existing process.
+[OK ] nsga3/lshape best_stage=lbfgs
+[WAIT] nsga3/flower stage_adam is already running. Waiting...
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -
+     2 |       26 |      1 |  0.9362545013 |         ideal
+     3 |       39 |      1 |  0.7645947933 |         ideal
+     4 |       52 |      1 |  0.000000E+00 |             f
+     5 |       65 |      1 |  1.2051060200 |         ideal
+     6 |       78 |      1 |  0.3026564121 |         ideal
+     7 |       91 |      1 |  0.000000E+00 |             f
+     8 |      104 |      1 |  0.000000E+00 |             f
+     9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.3001093864 |         ideal
+    12 |      156 |      1 |  0.2227897644 |         ideal
+    13 |      169 |      1 |  0.000000E+00 |             f
+    14 |      182 |      1 |  0.000000E+00 |             f
+    15 |      195 |      1 |  0.000000E+00 |             f
+    16 |      208 |      1 |  0.000000E+00 |             f
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  0.000000E+00 |             f
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 3 0 2 0]
+Adam [    0] loss: 9.6168e+01
+Adam [ 2000] loss: 2.4679e-01
+Adam [ 4000] loss: 8.4442e-02
+Adam [ 6000] loss: 5.5186e-02
+Adam [ 8000] loss: 1.3613e-02
+Adam [10000] loss: 5.9667e-03
+Adam [11999] loss: 4.0053e-03
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_flower/stage_adam/poisson_nsga3_loss_curve.png
+
+Relative L2 error (flower, grid 500x500): 3.0328e-02
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_flower/stage_adam/results_summary.csv
+Run time: 2638.09 s
+[RUN] nsga3/flower stage_lbfgs (seed=45)
+Using device: cuda
+Starting NSGA-III architecture search: domain=flower
+[DONE] nsga3/flower stage_adam completed by existing process.
+[WAIT] nsga3/flower stage_lbfgs is already running. Waiting...
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -
+     2 |       26 |      1 |  0.9362545013 |         ideal
+     3 |       39 |      1 |  0.7645947933 |         ideal
+     4 |       52 |      1 |  0.000000E+00 |             f
+     5 |       65 |      1 |  1.2051060200 |         ideal
+     6 |       78 |      1 |  0.3026564121 |         ideal
+     7 |       91 |      1 |  0.000000E+00 |             f
+     8 |      104 |      1 |  0.000000E+00 |             f
+     9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.3001093864 |         ideal
+    12 |      156 |      1 |  0.2227897644 |         ideal
+    13 |      169 |      1 |  0.000000E+00 |             f
+    14 |      182 |      1 |  0.000000E+00 |             f
+    15 |      195 |      1 |  0.000000E+00 |             f
+    16 |      208 |      1 |  0.000000E+00 |             f
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  0.000000E+00 |             f
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 3 0 2 0]
+Adam [    0] loss: 9.6168e+01
+Adam [ 2000] loss: 2.4679e-01
+Adam [ 4000] loss: 8.4442e-02
+Adam [ 6000] loss: 5.5186e-02
+Adam [ 8000] loss: 1.3613e-02
+Adam [10000] loss: 5.9667e-03
+Adam [11999] loss: 4.0053e-03
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_flower/stage_lbfgs/poisson_nsga3_loss_curve.png
+
+Relative L2 error (flower, grid 500x500): 6.3237e-03
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_flower/stage_lbfgs/results_summary.csv
+Run time: 2717.74 s
+[RUN] nsga3/flower stage_pso (seed=45)
+Using device: cuda
+Starting NSGA-III architecture search: domain=flower
+[DONE] nsga3/flower stage_lbfgs completed by existing process.
+[WAIT] nsga3/flower stage_pso is already running. Waiting...
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -
+     2 |       26 |      1 |  0.9362545013 |         ideal
+     3 |       39 |      1 |  0.7645947933 |         ideal
+     4 |       52 |      1 |  0.000000E+00 |             f
+     5 |       65 |      1 |  1.2051060200 |         ideal
+     6 |       78 |      1 |  0.3026564121 |         ideal
+     7 |       91 |      1 |  0.000000E+00 |             f
+     8 |      104 |      1 |  0.000000E+00 |             f
+     9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.3001093864 |         ideal
+    12 |      156 |      1 |  0.2227897644 |         ideal
+    13 |      169 |      1 |  0.000000E+00 |             f
+    14 |      182 |      1 |  0.000000E+00 |             f
+    15 |      195 |      1 |  0.000000E+00 |             f
+    16 |      208 |      1 |  0.000000E+00 |             f
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  0.000000E+00 |             f
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 3 0 2 0]
+Adam [    0] loss: 9.6168e+01
+Adam [ 2000] loss: 2.4679e-01
+Adam [ 4000] loss: 8.4442e-02
+Adam [ 6000] loss: 5.5186e-02
+Adam [ 8000] loss: 1.3613e-02
+Adam [10000] loss: 5.9667e-03
+Adam [11999] loss: 4.0053e-03
+
+L-BFGS refinement...
+
+PSO refinement...
+Stopping search: maximum iterations reached --> 8
+PSO best objective: 1.0355e+01
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_flower/stage_pso/poisson_nsga3_loss_curve.png
+
+Relative L2 error (flower, grid 500x500): 8.4321e-01
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_flower/stage_pso/results_summary.csv
+Run time: 2520.06 s
+[OK ] nsga3/flower best_stage=lbfgs
+[RUN] nsga3/annulus stage_adam (seed=46)
+Using device: cuda
+Starting NSGA-III architecture search: domain=annulus
+[DONE] nsga3/flower stage_pso completed by existing process.
+[OK ] nsga3/flower best_stage=lbfgs
+[WAIT] nsga3/annulus stage_adam is already running. Waiting...
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -
+     2 |       26 |      1 |  4.4137090445 |         ideal
+     3 |       39 |      1 |  0.1308192015 |         ideal
+     4 |       52 |      1 |  0.5687975883 |         ideal
+     5 |       65 |      1 |  0.000000E+00 |             f
+     6 |       78 |      1 |  0.000000E+00 |             f
+     7 |       91 |      1 |  0.000000E+00 |             f
+     8 |      104 |      1 |  0.000000E+00 |             f
+     9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.000000E+00 |             f
+    12 |      156 |      1 |  0.000000E+00 |             f
+    13 |      169 |      1 |  0.000000E+00 |             f
+    14 |      182 |      1 |  0.000000E+00 |             f
+    15 |      195 |      1 |  0.000000E+00 |             f
+    16 |      208 |      1 |  0.000000E+00 |             f
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  0.000000E+00 |             f
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 2 2 2 3]
+Adam [    0] loss: 7.5303e+01
+Adam [ 2000] loss: 3.9843e+00
+Adam [ 4000] loss: 6.3375e-01
+Adam [ 6000] loss: 2.8628e-01
+Adam [ 8000] loss: 1.6044e-01
+Adam [10000] loss: 9.5633e-02
+Adam [11999] loss: 7.0406e-02
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_annulus/stage_adam/poisson_nsga3_loss_curve.png
+
+Relative L2 error (annulus, grid 500x500): 3.9493e-01
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_annulus/stage_adam/results_summary.csv
+Run time: 2512.20 s
+[RUN] nsga3/annulus stage_lbfgs (seed=46)
+Using device: cuda
+Starting NSGA-III architecture search: domain=annulus
+[DONE] nsga3/annulus stage_adam completed by existing process.
+[WAIT] nsga3/annulus stage_lbfgs is already running. Waiting...
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -
+     2 |       26 |      1 |  4.4137090445 |         ideal
+     3 |       39 |      1 |  0.1308192015 |         ideal
+     4 |       52 |      1 |  0.5687975883 |         ideal
+     5 |       65 |      1 |  0.000000E+00 |             f
+     6 |       78 |      1 |  0.000000E+00 |             f
+     7 |       91 |      1 |  0.000000E+00 |             f
+     8 |      104 |      1 |  0.000000E+00 |             f
+     9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.000000E+00 |             f
+    12 |      156 |      1 |  0.000000E+00 |             f
+    13 |      169 |      1 |  0.000000E+00 |             f
+    14 |      182 |      1 |  0.000000E+00 |             f
+    15 |      195 |      1 |  0.000000E+00 |             f
+    16 |      208 |      1 |  0.000000E+00 |             f
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  0.000000E+00 |             f
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 2 2 2 3]
+Adam [    0] loss: 7.5303e+01
+Adam [ 2000] loss: 3.9843e+00
+Adam [ 4000] loss: 6.3375e-01
+Adam [ 6000] loss: 2.8628e-01
+Adam [ 8000] loss: 1.6044e-01
+Adam [10000] loss: 9.5633e-02
+Adam [11999] loss: 7.0406e-02
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_annulus/stage_lbfgs/poisson_nsga3_loss_curve.png
+
+Relative L2 error (annulus, grid 500x500): 7.3296e-03
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_annulus/stage_lbfgs/results_summary.csv
+Run time: 2592.63 s
+[RUN] nsga3/annulus stage_pso (seed=46)
+Using device: cuda
+Starting NSGA-III architecture search: domain=annulus
+[DONE] nsga3/annulus stage_lbfgs completed by existing process.
+[WAIT] nsga3/annulus stage_pso is already running. Waiting...
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       13 |      1 |             - |             -
+     2 |       26 |      1 |  4.4137090445 |         ideal
+     3 |       39 |      1 |  0.1308192015 |         ideal
+     4 |       52 |      1 |  0.5687975883 |         ideal
+     5 |       65 |      1 |  0.000000E+00 |             f
+     6 |       78 |      1 |  0.000000E+00 |             f
+     7 |       91 |      1 |  0.000000E+00 |             f
+     8 |      104 |      1 |  0.000000E+00 |             f
+     9 |      117 |      1 |  0.000000E+00 |             f
+    10 |      130 |      1 |  0.000000E+00 |             f
+    11 |      143 |      1 |  0.000000E+00 |             f
+    12 |      156 |      1 |  0.000000E+00 |             f
+    13 |      169 |      1 |  0.000000E+00 |             f
+    14 |      182 |      1 |  0.000000E+00 |             f
+    15 |      195 |      1 |  0.000000E+00 |             f
+    16 |      208 |      1 |  0.000000E+00 |             f
+    17 |      221 |      1 |  0.000000E+00 |             f
+    18 |      234 |      1 |  0.000000E+00 |             f
+    19 |      247 |      1 |  0.000000E+00 |             f
+    20 |      260 |      1 |  0.000000E+00 |             f
+Best mask selections: [4 2 2 2 3]
+Adam [    0] loss: 7.5303e+01
+Adam [ 2000] loss: 3.9843e+00
+Adam [ 4000] loss: 6.3375e-01
+Adam [ 6000] loss: 2.8628e-01
+Adam [ 8000] loss: 1.6044e-01
+Adam [10000] loss: 9.5633e-02
+Adam [11999] loss: 7.0406e-02
+
+L-BFGS refinement...
+
+PSO refinement...
+Stopping search: maximum iterations reached --> 8
+PSO best objective: 3.5552e+01
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_annulus/stage_pso/poisson_nsga3_loss_curve.png
+
+Relative L2 error (annulus, grid 500x500): 9.8728e-01
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_annulus/stage_pso/results_summary.csv
+Run time: 2555.51 s
+[OK ] nsga3/annulus best_stage=lbfgs
+[RUN] bayesian/rectangular stage_adam (seed=42)
+Using device: cuda
+Starting Bayesian architecture search: domain=rectangular
+|   iter    |  target   |    m0     |    m1     |    m2     |    m3     |    m4     |
+-------------------------------------------------------------------------------------
+BO eval masks=[1, 4, 3, 2, 1] proxy_loss=2.0880e+01
+| [39m1        [39m | [39m-20.87989[39m | [39m1.4981604[39m | [39m3.8028572[39m | [39m2.9279757[39m | [39m2.3946339[39m | [39m0.6240745[39m |
+[DONE] nsga3/annulus stage_pso completed by existing process.
+[OK ] nsga3/annulus best_stage=lbfgs
+[WAIT] bayesian/rectangular stage_adam is already running. Waiting...
+BO eval masks=[1, 0, 3, 2, 3] proxy_loss=1.5532e+01
+| [35m2        [39m | [35m-15.53187[39m | [35m0.6239780[39m | [35m0.2323344[39m | [35m3.4647045[39m | [35m2.4044600[39m | [35m2.8322903[39m |
+BO eval masks=[0, 4, 3, 1, 1] proxy_loss=1.8442e+01
+| [39m3        [39m | [39m-18.44156[39m | [39m0.0823379[39m | [39m3.8796394[39m | [39m3.3297705[39m | [39m0.8493564[39m | [39m0.7272998[39m |
+BO eval masks=[1, 1, 2, 2, 1] proxy_loss=1.6568e+01
+| [39m4        [39m | [39m-16.56807[39m | [39m0.7336180[39m | [39m1.2169689[39m | [39m2.0990257[39m | [39m1.7277800[39m | [39m1.1649165[39m |
+BO eval masks=[0, 0, 2, 1, 3] proxy_loss=2.1385e+01
+| [39m5        [39m | [39m-21.38493[39m | [39m0.0      [39m | [39m0.0      [39m | [39m2.2111686[39m | [39m1.3612022[39m | [39m2.8372582[39m |
+BO eval masks=[3, 1, 3, 2, 0] proxy_loss=1.1154e+01
+| [35m6        [39m | [35m-11.15449[39m | [35m2.5954691[39m | [35m0.6145504[39m | [35m3.0371981[39m | [35m2.3851270[39m | [35m0.1266270[39m |
+BO eval masks=[0, 1, 1, 0, 3] proxy_loss=2.1103e+01
+| [39m7        [39m | [39m-21.10266[39m | [39m0.3621292[39m | [39m1.2601570[39m | [39m0.9697724[39m | [39m0.0031010[39m | [39m2.5465360[39m |
+BO eval masks=[0, 3, 1, 4, 2] proxy_loss=1.6442e+01
+| [39m8        [39m | [39m-16.44184[39m | [39m0.4030493[39m | [39m2.5381758[39m | [39m1.1210886[39m | [39m3.5309164[39m | [39m1.8957613[39m |
+BO eval masks=[3, 2, 0, 3, 4] proxy_loss=6.7083e+00
+| [35m9        [39m | [35m-6.708290[39m | [35m3.1270438[39m | [35m1.6666627[39m | [35m0.4364208[39m | [35m3.0570021[39m | [35m3.8287733[39m |
+BO eval masks=[4, 1, 1, 4, 3] proxy_loss=7.3397e+00
+| [39m10       [39m | [39m-7.339697[39m | [39m3.9568045[39m | [39m0.8143435[39m | [39m1.2525490[39m | [39m3.5589053[39m | [39m2.9079869[39m |
+BO eval masks=[4, 3, 0, 4, 4] proxy_loss=7.0926e+00
+| [39m11       [39m | [39m-7.092624[39m | [39m4.0      [39m | [39m3.1822888[39m | [39m0.0      [39m | [39m4.0      [39m | [39m4.0      [39m |
+BO eval masks=[4, 1, 4, 4, 4] proxy_loss=5.9480e+00
+| [35m12       [39m | [35m-5.947990[39m | [35m4.0      [39m | [35m1.3301372[39m | [35m4.0      [39m | [35m4.0      [39m | [35m4.0      [39m |
+BO eval masks=[4, 0, 4, 1, 4] proxy_loss=1.4304e+01
+| [39m13       [39m | [39m-14.30408[39m | [39m4.0      [39m | [39m0.0      [39m | [39m4.0      [39m | [39m1.4605326[39m | [39m4.0      [39m |
+BO eval masks=[4, 3, 3, 4, 4] proxy_loss=6.0105e+00
+| [39m14       [39m | [39m-6.010493[39m | [39m4.0      [39m | [39m3.3824169[39m | [39m2.8285673[39m | [39m4.0      [39m | [39m4.0      [39m |
+BO eval masks=[4, 0, 0, 4, 0] proxy_loss=5.3708e+00
+| [35m15       [39m | [35m-5.370765[39m | [35m4.0      [39m | [35m0.0      [39m | [35m0.0      [39m | [35m4.0      [39m | [35m0.0      [39m |
+BO eval masks=[4, 0, 0, 1, 0] proxy_loss=6.2838e+00
+| [39m16       [39m | [39m-6.283839[39m | [39m4.0      [39m | [39m0.0      [39m | [39m0.0      [39m | [39m1.0221844[39m | [39m0.0      [39m |
+=====================================================================================
+Best mask selections: [4 0 0 4 0]
+Adam [    0] loss: 9.8010e+01
+Adam [ 2000] loss: 3.7291e-01
+Adam [ 4000] loss: 9.2008e-02
+Adam [ 6000] loss: 4.4831e-02
+Adam [ 8000] loss: 2.5390e-02
+Adam [10000] loss: 1.3560e-02
+Adam [11999] loss: 1.5060e-02
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_rectangular/stage_adam/poisson_bayesian_loss_curve.png
+
+Relative L2 error (rectangular, grid 500x500): 7.0058e-02
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_rectangular/stage_adam/results_summary.csv
+Run time: 379.92 s
+[RUN] bayesian/rectangular stage_lbfgs (seed=42)
+Using device: cuda
+Starting Bayesian architecture search: domain=rectangular
+|   iter    |  target   |    m0     |    m1     |    m2     |    m3     |    m4     |
+-------------------------------------------------------------------------------------
+BO eval masks=[1, 4, 3, 2, 1] proxy_loss=2.0880e+01
+| [39m1        [39m | [39m-20.87989[39m | [39m1.4981604[39m | [39m3.8028572[39m | [39m2.9279757[39m | [39m2.3946339[39m | [39m0.6240745[39m |
+BO eval masks=[1, 0, 3, 2, 3] proxy_loss=1.5532e+01
+| [35m2        [39m | [35m-15.53187[39m | [35m0.6239780[39m | [35m0.2323344[39m | [35m3.4647045[39m | [35m2.4044600[39m | [35m2.8322903[39m |
+BO eval masks=[0, 4, 3, 1, 1] proxy_loss=1.8442e+01
+| [39m3        [39m | [39m-18.44156[39m | [39m0.0823379[39m | [39m3.8796394[39m | [39m3.3297705[39m | [39m0.8493564[39m | [39m0.7272998[39m |
+BO eval masks=[1, 1, 2, 2, 1] proxy_loss=1.6568e+01
+| [39m4        [39m | [39m-16.56807[39m | [39m0.7336180[39m | [39m1.2169689[39m | [39m2.0990257[39m | [39m1.7277800[39m | [39m1.1649165[39m |
+[DONE] bayesian/rectangular stage_adam completed by existing process.
+[WAIT] bayesian/rectangular stage_lbfgs is already running. Waiting...
+BO eval masks=[0, 0, 2, 1, 3] proxy_loss=2.1385e+01
+| [39m5        [39m | [39m-21.38493[39m | [39m0.0      [39m | [39m0.0      [39m | [39m2.2111686[39m | [39m1.3612022[39m | [39m2.8372582[39m |
+BO eval masks=[3, 1, 3, 2, 0] proxy_loss=1.1154e+01
+| [35m6        [39m | [35m-11.15449[39m | [35m2.5954691[39m | [35m0.6145504[39m | [35m3.0371981[39m | [35m2.3851270[39m | [35m0.1266270[39m |
+BO eval masks=[0, 1, 1, 0, 3] proxy_loss=2.1103e+01
+| [39m7        [39m | [39m-21.10266[39m | [39m0.3621292[39m | [39m1.2601570[39m | [39m0.9697724[39m | [39m0.0031010[39m | [39m2.5465360[39m |
+BO eval masks=[0, 3, 1, 4, 2] proxy_loss=1.6442e+01
+| [39m8        [39m | [39m-16.44184[39m | [39m0.4030493[39m | [39m2.5381758[39m | [39m1.1210886[39m | [39m3.5309164[39m | [39m1.8957613[39m |
+BO eval masks=[3, 2, 0, 3, 4] proxy_loss=6.7083e+00
+| [35m9        [39m | [35m-6.708290[39m | [35m3.1270438[39m | [35m1.6666627[39m | [35m0.4364208[39m | [35m3.0570021[39m | [35m3.8287733[39m |
+BO eval masks=[4, 1, 1, 4, 3] proxy_loss=7.3397e+00
+| [39m10       [39m | [39m-7.339697[39m | [39m3.9568045[39m | [39m0.8143435[39m | [39m1.2525490[39m | [39m3.5589053[39m | [39m2.9079869[39m |
+BO eval masks=[4, 3, 0, 4, 4] proxy_loss=7.0926e+00
+| [39m11       [39m | [39m-7.092624[39m | [39m4.0      [39m | [39m3.1822888[39m | [39m0.0      [39m | [39m4.0      [39m | [39m4.0      [39m |
+BO eval masks=[4, 1, 4, 4, 4] proxy_loss=5.9480e+00
+| [35m12       [39m | [35m-5.947990[39m | [35m4.0      [39m | [35m1.3301372[39m | [35m4.0      [39m | [35m4.0      [39m | [35m4.0      [39m |
+BO eval masks=[4, 0, 4, 1, 4] proxy_loss=1.4304e+01
+| [39m13       [39m | [39m-14.30408[39m | [39m4.0      [39m | [39m0.0      [39m | [39m4.0      [39m | [39m1.4605326[39m | [39m4.0      [39m |
+BO eval masks=[4, 3, 3, 4, 4] proxy_loss=6.0105e+00
+| [39m14       [39m | [39m-6.010493[39m | [39m4.0      [39m | [39m3.3824169[39m | [39m2.8285673[39m | [39m4.0      [39m | [39m4.0      [39m |
+BO eval masks=[4, 0, 0, 4, 0] proxy_loss=5.3708e+00
+| [35m15       [39m | [35m-5.370765[39m | [35m4.0      [39m | [35m0.0      [39m | [35m0.0      [39m | [35m4.0      [39m | [35m0.0      [39m |
+BO eval masks=[4, 0, 0, 1, 0] proxy_loss=6.2838e+00
+| [39m16       [39m | [39m-6.283839[39m | [39m4.0      [39m | [39m0.0      [39m | [39m0.0      [39m | [39m1.0221844[39m | [39m0.0      [39m |
+=====================================================================================
+Best mask selections: [4 0 0 4 0]
+Adam [    0] loss: 9.8010e+01
+Adam [ 2000] loss: 3.7291e-01
+Adam [ 4000] loss: 9.2008e-02
+Adam [ 6000] loss: 4.4831e-02
+Adam [ 8000] loss: 2.5390e-02
+Adam [10000] loss: 1.3560e-02
+Adam [11999] loss: 1.5060e-02
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_rectangular/stage_lbfgs/poisson_bayesian_loss_curve.png
+
+Relative L2 error (rectangular, grid 500x500): 3.2135e-03
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_rectangular/stage_lbfgs/results_summary.csv
+Run time: 416.38 s
+[RUN] bayesian/rectangular stage_pso (seed=42)
+Using device: cuda
+Starting Bayesian architecture search: domain=rectangular
+|   iter    |  target   |    m0     |    m1     |    m2     |    m3     |    m4     |
+-------------------------------------------------------------------------------------
+BO eval masks=[1, 4, 3, 2, 1] proxy_loss=2.0880e+01
+| [39m1        [39m | [39m-20.87989[39m | [39m1.4981604[39m | [39m3.8028572[39m | [39m2.9279757[39m | [39m2.3946339[39m | [39m0.6240745[39m |
+BO eval masks=[1, 0, 3, 2, 3] proxy_loss=1.5532e+01
+| [35m2        [39m | [35m-15.53187[39m | [35m0.6239780[39m | [35m0.2323344[39m | [35m3.4647045[39m | [35m2.4044600[39m | [35m2.8322903[39m |
+BO eval masks=[0, 4, 3, 1, 1] proxy_loss=1.8442e+01
+| [39m3        [39m | [39m-18.44156[39m | [39m0.0823379[39m | [39m3.8796394[39m | [39m3.3297705[39m | [39m0.8493564[39m | [39m0.7272998[39m |
+BO eval masks=[1, 1, 2, 2, 1] proxy_loss=1.6568e+01
+| [39m4        [39m | [39m-16.56807[39m | [39m0.7336180[39m | [39m1.2169689[39m | [39m2.0990257[39m | [39m1.7277800[39m | [39m1.1649165[39m |
+BO eval masks=[0, 0, 2, 1, 3] proxy_loss=2.1385e+01
+| [39m5        [39m | [39m-21.38493[39m | [39m0.0      [39m | [39m0.0      [39m | [39m2.2111686[39m | [39m1.3612022[39m | [39m2.8372582[39m |
+[DONE] bayesian/rectangular stage_lbfgs completed by existing process.
+[WAIT] bayesian/rectangular stage_pso is already running. Waiting...
+BO eval masks=[3, 1, 3, 2, 0] proxy_loss=1.1154e+01
+| [35m6        [39m | [35m-11.15449[39m | [35m2.5954691[39m | [35m0.6145504[39m | [35m3.0371981[39m | [35m2.3851270[39m | [35m0.1266270[39m |
+BO eval masks=[0, 1, 1, 0, 3] proxy_loss=2.1103e+01
+| [39m7        [39m | [39m-21.10266[39m | [39m0.3621292[39m | [39m1.2601570[39m | [39m0.9697724[39m | [39m0.0031010[39m | [39m2.5465360[39m |
+BO eval masks=[0, 3, 1, 4, 2] proxy_loss=1.6442e+01
+| [39m8        [39m | [39m-16.44184[39m | [39m0.4030493[39m | [39m2.5381758[39m | [39m1.1210886[39m | [39m3.5309164[39m | [39m1.8957613[39m |
+BO eval masks=[3, 2, 0, 3, 4] proxy_loss=6.7083e+00
+| [35m9        [39m | [35m-6.708290[39m | [35m3.1270438[39m | [35m1.6666627[39m | [35m0.4364208[39m | [35m3.0570021[39m | [35m3.8287733[39m |
+BO eval masks=[4, 1, 1, 4, 3] proxy_loss=7.3397e+00
+| [39m10       [39m | [39m-7.339697[39m | [39m3.9568045[39m | [39m0.8143435[39m | [39m1.2525490[39m | [39m3.5589053[39m | [39m2.9079869[39m |
+BO eval masks=[4, 3, 0, 4, 4] proxy_loss=7.0926e+00
+| [39m11       [39m | [39m-7.092624[39m | [39m4.0      [39m | [39m3.1822888[39m | [39m0.0      [39m | [39m4.0      [39m | [39m4.0      [39m |
+BO eval masks=[4, 1, 4, 4, 4] proxy_loss=5.9480e+00
+| [35m12       [39m | [35m-5.947990[39m | [35m4.0      [39m | [35m1.3301372[39m | [35m4.0      [39m | [35m4.0      [39m | [35m4.0      [39m |
+BO eval masks=[4, 0, 4, 1, 4] proxy_loss=1.4304e+01
+| [39m13       [39m | [39m-14.30408[39m | [39m4.0      [39m | [39m0.0      [39m | [39m4.0      [39m | [39m1.4605326[39m | [39m4.0      [39m |
+BO eval masks=[4, 3, 3, 4, 4] proxy_loss=6.0105e+00
+| [39m14       [39m | [39m-6.010493[39m | [39m4.0      [39m | [39m3.3824169[39m | [39m2.8285673[39m | [39m4.0      [39m | [39m4.0      [39m |
+BO eval masks=[4, 0, 0, 4, 0] proxy_loss=5.3708e+00
+| [35m15       [39m | [35m-5.370765[39m | [35m4.0      [39m | [35m0.0      [39m | [35m0.0      [39m | [35m4.0      [39m | [35m0.0      [39m |
+BO eval masks=[4, 0, 0, 1, 0] proxy_loss=6.2838e+00
+| [39m16       [39m | [39m-6.283839[39m | [39m4.0      [39m | [39m0.0      [39m | [39m0.0      [39m | [39m1.0221844[39m | [39m0.0      [39m |
+=====================================================================================
+Best mask selections: [4 0 0 4 0]
+Adam [    0] loss: 9.8010e+01
+Adam [ 2000] loss: 3.7291e-01
+Adam [ 4000] loss: 9.2008e-02
+Adam [ 6000] loss: 4.4831e-02
+Adam [ 8000] loss: 2.5390e-02
+Adam [10000] loss: 1.3560e-02
+Adam [11999] loss: 1.5060e-02
+
+L-BFGS refinement...
+
+PSO refinement...
+Stopping search: maximum iterations reached --> 8
+PSO best objective: 2.7438e+01
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_rectangular/stage_pso/poisson_bayesian_loss_curve.png
+
+Relative L2 error (rectangular, grid 500x500): 1.9639e+00
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_rectangular/stage_pso/results_summary.csv
+Run time: 414.55 s
+[OK ] bayesian/rectangular best_stage=lbfgs
+[RUN] bayesian/circle stage_adam (seed=43)
+Using device: cuda
+Starting Bayesian architecture search: domain=circle
+|   iter    |  target   |    m0     |    m1     |    m2     |    m3     |    m4     |
+-------------------------------------------------------------------------------------
+BO eval masks=[0, 2, 1, 1, 1] proxy_loss=5.5464e+01
+| [39m1        [39m | [39m-55.46447[39m | [39m0.4602182[39m | [39m2.4362661[39m | [39m0.5335638[39m | [39m0.9623584[39m | [39m1.3085562[39m |
+BO eval masks=[3, 3, 2, 0, 3] proxy_loss=1.2164e+01
+| [35m2        [39m | [35m-12.16354[39m | [35m3.4365499[39m | [35m2.6643608[39m | [35m2.1646488[39m | [35m0.1160552[39m | [35m2.9349931[39m |
+BO eval masks=[2, 3, 1, 0, 3] proxy_loss=3.5865e+01
+| [39m3        [39m | [39m-35.86454[39m | [39m1.5798000[39m | [39m3.2081884[39m | [39m1.0176845[39m | [39m0.2275397[39m | [39m3.4665945[39m |
+BO eval masks=[1, 2, 1, 0, 3] proxy_loss=4.1321e+01
+| [39m4        [39m | [39m-41.32101[39m | [39m0.8841159[39m | [39m1.6199577[39m | [39m1.2643858[39m | [39m0.3066507[39m | [39m3.3728987[39m |
+BO eval masks=[4, 3, 4, 0, 4] proxy_loss=1.9635e+01
+| [39m5        [39m | [39m-19.63482[39m | [39m4.0      [39m | [39m3.1149109[39m | [39m3.5492866[39m | [39m0.0      [39m | [39m3.7882629[39m |
+[DONE] bayesian/rectangular stage_pso completed by existing process.
+[OK ] bayesian/rectangular best_stage=lbfgs
+[WAIT] bayesian/circle stage_adam is already running. Waiting...
+BO eval masks=[4, 1, 3, 0, 2] proxy_loss=1.9454e+00
+| [35m6        [39m | [35m-1.945424[39m | [35m4.0      [39m | [35m1.1397900[39m | [35m3.4155227[39m | [35m0.0      [39m | [35m1.7073934[39m |
+BO eval masks=[4, 0, 4, 3, 2] proxy_loss=8.6977e+00
+| [39m7        [39m | [39m-8.697655[39m | [39m4.0      [39m | [39m0.0      [39m | [39m4.0      [39m | [39m2.7895788[39m | [39m1.6270734[39m |
+BO eval masks=[4, 3, 4, 1, 0] proxy_loss=1.7914e+01
+| [39m8        [39m | [39m-17.91381[39m | [39m4.0      [39m | [39m3.1013181[39m | [39m4.0      [39m | [39m1.3848350[39m | [39m0.0      [39m |
+BO eval masks=[4, 0, 2, 0, 0] proxy_loss=1.9999e+00
+| [39m9        [39m | [39m-1.999875[39m | [39m4.0      [39m | [39m0.0      [39m | [39m1.8175588[39m | [39m0.0      [39m | [39m0.0      [39m |
+BO eval masks=[4, 0, 1, 0, 3] proxy_loss=4.3817e+01
+| [39m10       [39m | [39m-43.81671[39m | [39m4.0      [39m | [39m0.0      [39m | [39m0.8636189[39m | [39m0.0      [39m | [39m3.4947176[39m |
+BO eval masks=[4, 0, 4, 0, 0] proxy_loss=2.7604e+01
+| [39m11       [39m | [39m-27.60365[39m | [39m4.0      [39m | [39m0.0      [39m | [39m4.0      [39m | [39m0.0      [39m | [39m0.0      [39m |
+BO eval masks=[4, 1, 2, 1, 1] proxy_loss=2.1842e+01
+| [39m12       [39m | [39m-21.84224[39m | [39m4.0      [39m | [39m1.2551316[39m | [39m2.2487740[39m | [39m1.2998365[39m | [39m0.9278129[39m |
+BO eval masks=[4, 1, 4, 1, 3] proxy_loss=2.4388e+01
+| [39m13       [39m | [39m-24.38819[39m | [39m3.9805269[39m | [39m1.2119105[39m | [39m4.0      [39m | [39m1.1970543[39m | [39m2.6077841[39m |
+BO eval masks=[4, 2, 3, 0, 1] proxy_loss=2.6937e+01
+| [39m14       [39m | [39m-26.93682[39m | [39m4.0      [39m | [39m2.4355317[39m | [39m3.1729415[39m | [39m0.0      [39m | [39m1.4990926[39m |
+BO eval masks=[4, 0, 3, 0, 1] proxy_loss=2.8155e+01
+| [39m15       [39m | [39m-28.15546[39m | [39m3.9956859[39m | [39m0.4544538[39m | [39m2.6056457[39m | [39m0.0      [39m | [39m1.1095299[39m |
+BO eval masks=[4, 2, 4, 0, 2] proxy_loss=2.9447e+01
+| [39m16       [39m | [39m-29.44696[39m | [39m3.9195661[39m | [39m1.5210497[39m | [39m3.5628314[39m | [39m0.0929923[39m | [39m1.7142923[39m |
+=====================================================================================
+Best mask selections: [4 1 3 0 2]
+Adam [    0] loss: 9.0069e+01
+Adam [ 2000] loss: 1.6450e+00
+Adam [ 4000] loss: 4.0421e-01
+Adam [ 6000] loss: 1.9365e-01
+Adam [ 8000] loss: 1.1831e-01
+Adam [10000] loss: 6.6844e-02
+Adam [11999] loss: 3.9885e-02
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_circle/stage_adam/poisson_bayesian_loss_curve.png
+
+Relative L2 error (circle, grid 500x500): 1.9494e-01
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_circle/stage_adam/results_summary.csv
+Run time: 374.75 s
+[RUN] bayesian/circle stage_lbfgs (seed=43)
+Using device: cuda
+Starting Bayesian architecture search: domain=circle
+|   iter    |  target   |    m0     |    m1     |    m2     |    m3     |    m4     |
+-------------------------------------------------------------------------------------
+BO eval masks=[0, 2, 1, 1, 1] proxy_loss=5.5464e+01
+| [39m1        [39m | [39m-55.46447[39m | [39m0.4602182[39m | [39m2.4362661[39m | [39m0.5335638[39m | [39m0.9623584[39m | [39m1.3085562[39m |
+BO eval masks=[3, 3, 2, 0, 3] proxy_loss=1.2164e+01
+| [35m2        [39m | [35m-12.16354[39m | [35m3.4365499[39m | [35m2.6643608[39m | [35m2.1646488[39m | [35m0.1160552[39m | [35m2.9349931[39m |
+BO eval masks=[2, 3, 1, 0, 3] proxy_loss=3.5865e+01
+| [39m3        [39m | [39m-35.86454[39m | [39m1.5798000[39m | [39m3.2081884[39m | [39m1.0176845[39m | [39m0.2275397[39m | [39m3.4665945[39m |
+[DONE] bayesian/circle stage_adam completed by existing process.
+[WAIT] bayesian/circle stage_lbfgs is already running. Waiting...
+BO eval masks=[1, 2, 1, 0, 3] proxy_loss=4.1321e+01
+| [39m4        [39m | [39m-41.32101[39m | [39m0.8841159[39m | [39m1.6199577[39m | [39m1.2643858[39m | [39m0.3066507[39m | [39m3.3728987[39m |
+BO eval masks=[4, 3, 4, 0, 4] proxy_loss=1.9635e+01
+| [39m5        [39m | [39m-19.63482[39m | [39m4.0      [39m | [39m3.1149109[39m | [39m3.5492866[39m | [39m0.0      [39m | [39m3.7882629[39m |
+BO eval masks=[4, 1, 3, 0, 2] proxy_loss=1.9454e+00
+| [35m6        [39m | [35m-1.945424[39m | [35m4.0      [39m | [35m1.1397900[39m | [35m3.4155227[39m | [35m0.0      [39m | [35m1.7073934[39m |
+BO eval masks=[4, 0, 4, 3, 2] proxy_loss=8.6977e+00
+| [39m7        [39m | [39m-8.697655[39m | [39m4.0      [39m | [39m0.0      [39m | [39m4.0      [39m | [39m2.7895788[39m | [39m1.6270734[39m |
+BO eval masks=[4, 3, 4, 1, 0] proxy_loss=1.7914e+01
+| [39m8        [39m | [39m-17.91381[39m | [39m4.0      [39m | [39m3.1013181[39m | [39m4.0      [39m | [39m1.3848350[39m | [39m0.0      [39m |
+BO eval masks=[4, 0, 2, 0, 0] proxy_loss=1.9999e+00
+| [39m9        [39m | [39m-1.999875[39m | [39m4.0      [39m | [39m0.0      [39m | [39m1.8175588[39m | [39m0.0      [39m | [39m0.0      [39m |
+BO eval masks=[4, 0, 1, 0, 3] proxy_loss=4.3817e+01
+| [39m10       [39m | [39m-43.81671[39m | [39m4.0      [39m | [39m0.0      [39m | [39m0.8636189[39m | [39m0.0      [39m | [39m3.4947176[39m |
+BO eval masks=[4, 0, 4, 0, 0] proxy_loss=2.7604e+01
+| [39m11       [39m | [39m-27.60365[39m | [39m4.0      [39m | [39m0.0      [39m | [39m4.0      [39m | [39m0.0      [39m | [39m0.0      [39m |
+BO eval masks=[4, 1, 2, 1, 1] proxy_loss=2.1842e+01
+| [39m12       [39m | [39m-21.84224[39m | [39m4.0      [39m | [39m1.2551316[39m | [39m2.2487740[39m | [39m1.2998365[39m | [39m0.9278129[39m |
+BO eval masks=[4, 1, 4, 1, 3] proxy_loss=2.4388e+01
+| [39m13       [39m | [39m-24.38819[39m | [39m3.9805269[39m | [39m1.2119105[39m | [39m4.0      [39m | [39m1.1970543[39m | [39m2.6077841[39m |
+BO eval masks=[4, 2, 3, 0, 1] proxy_loss=2.6937e+01
+| [39m14       [39m | [39m-26.93682[39m | [39m4.0      [39m | [39m2.4355317[39m | [39m3.1729415[39m | [39m0.0      [39m | [39m1.4990926[39m |
+BO eval masks=[4, 0, 3, 0, 1] proxy_loss=2.8155e+01
+| [39m15       [39m | [39m-28.15546[39m | [39m3.9956859[39m | [39m0.4544538[39m | [39m2.6056457[39m | [39m0.0      [39m | [39m1.1095299[39m |
+BO eval masks=[4, 2, 4, 0, 2] proxy_loss=2.9447e+01
+| [39m16       [39m | [39m-29.44696[39m | [39m3.9195661[39m | [39m1.5210497[39m | [39m3.5628314[39m | [39m0.0929923[39m | [39m1.7142923[39m |
+=====================================================================================
+Best mask selections: [4 1 3 0 2]
+Adam [    0] loss: 9.0069e+01
+Adam [ 2000] loss: 1.6450e+00
+Adam [ 4000] loss: 4.0421e-01
+Adam [ 6000] loss: 1.9365e-01
+Adam [ 8000] loss: 1.1831e-01
+Adam [10000] loss: 6.6844e-02
+Adam [11999] loss: 3.9885e-02
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_circle/stage_lbfgs/poisson_bayesian_loss_curve.png
+
+Relative L2 error (circle, grid 500x500): 5.7385e-02
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_circle/stage_lbfgs/results_summary.csv
+Run time: 397.07 s
+[RUN] bayesian/circle stage_pso (seed=43)
+Using device: cuda
+Starting Bayesian architecture search: domain=circle
+|   iter    |  target   |    m0     |    m1     |    m2     |    m3     |    m4     |
+-------------------------------------------------------------------------------------
+BO eval masks=[0, 2, 1, 1, 1] proxy_loss=5.5464e+01
+| [39m1        [39m | [39m-55.46447[39m | [39m0.4602182[39m | [39m2.4362661[39m | [39m0.5335638[39m | [39m0.9623584[39m | [39m1.3085562[39m |
+BO eval masks=[3, 3, 2, 0, 3] proxy_loss=1.2164e+01
+| [35m2        [39m | [35m-12.16354[39m | [35m3.4365499[39m | [35m2.6643608[39m | [35m2.1646488[39m | [35m0.1160552[39m | [35m2.9349931[39m |
+BO eval masks=[2, 3, 1, 0, 3] proxy_loss=3.5865e+01
+| [39m3        [39m | [39m-35.86454[39m | [39m1.5798000[39m | [39m3.2081884[39m | [39m1.0176845[39m | [39m0.2275397[39m | [39m3.4665945[39m |
+BO eval masks=[1, 2, 1, 0, 3] proxy_loss=4.1321e+01
+| [39m4        [39m | [39m-41.32101[39m | [39m0.8841159[39m | [39m1.6199577[39m | [39m1.2643858[39m | [39m0.3066507[39m | [39m3.3728987[39m |
+BO eval masks=[4, 3, 4, 0, 4] proxy_loss=1.9635e+01
+| [39m5        [39m | [39m-19.63482[39m | [39m4.0      [39m | [39m3.1149109[39m | [39m3.5492866[39m | [39m0.0      [39m | [39m3.7882629[39m |
+[DONE] bayesian/circle stage_lbfgs completed by existing process.
+[WAIT] bayesian/circle stage_pso is already running. Waiting...
+BO eval masks=[4, 1, 3, 0, 2] proxy_loss=1.9454e+00
+| [35m6        [39m | [35m-1.945424[39m | [35m4.0      [39m | [35m1.1397900[39m | [35m3.4155227[39m | [35m0.0      [39m | [35m1.7073934[39m |
+BO eval masks=[4, 0, 4, 3, 2] proxy_loss=8.6977e+00
+| [39m7        [39m | [39m-8.697655[39m | [39m4.0      [39m | [39m0.0      [39m | [39m4.0      [39m | [39m2.7895788[39m | [39m1.6270734[39m |
+BO eval masks=[4, 3, 4, 1, 0] proxy_loss=1.7914e+01
+| [39m8        [39m | [39m-17.91381[39m | [39m4.0      [39m | [39m3.1013181[39m | [39m4.0      [39m | [39m1.3848350[39m | [39m0.0      [39m |
+BO eval masks=[4, 0, 2, 0, 0] proxy_loss=1.9999e+00
+| [39m9        [39m | [39m-1.999875[39m | [39m4.0      [39m | [39m0.0      [39m | [39m1.8175588[39m | [39m0.0      [39m | [39m0.0      [39m |
+BO eval masks=[4, 0, 1, 0, 3] proxy_loss=4.3817e+01
+| [39m10       [39m | [39m-43.81671[39m | [39m4.0      [39m | [39m0.0      [39m | [39m0.8636189[39m | [39m0.0      [39m | [39m3.4947176[39m |
+BO eval masks=[4, 0, 4, 0, 0] proxy_loss=2.7604e+01
+| [39m11       [39m | [39m-27.60365[39m | [39m4.0      [39m | [39m0.0      [39m | [39m4.0      [39m | [39m0.0      [39m | [39m0.0      [39m |
+BO eval masks=[4, 1, 2, 1, 1] proxy_loss=2.1842e+01
+| [39m12       [39m | [39m-21.84224[39m | [39m4.0      [39m | [39m1.2551316[39m | [39m2.2487740[39m | [39m1.2998365[39m | [39m0.9278129[39m |
+BO eval masks=[4, 1, 4, 1, 3] proxy_loss=2.4388e+01
+| [39m13       [39m | [39m-24.38819[39m | [39m3.9805269[39m | [39m1.2119105[39m | [39m4.0      [39m | [39m1.1970543[39m | [39m2.6077841[39m |
+BO eval masks=[4, 2, 3, 0, 1] proxy_loss=2.6937e+01
+| [39m14       [39m | [39m-26.93682[39m | [39m4.0      [39m | [39m2.4355317[39m | [39m3.1729415[39m | [39m0.0      [39m | [39m1.4990926[39m |
+BO eval masks=[4, 0, 3, 0, 1] proxy_loss=2.8155e+01
+| [39m15       [39m | [39m-28.15546[39m | [39m3.9956859[39m | [39m0.4544538[39m | [39m2.6056457[39m | [39m0.0      [39m | [39m1.1095299[39m |
+BO eval masks=[4, 2, 4, 0, 2] proxy_loss=2.9447e+01
+| [39m16       [39m | [39m-29.44696[39m | [39m3.9195661[39m | [39m1.5210497[39m | [39m3.5628314[39m | [39m0.0929923[39m | [39m1.7142923[39m |
+=====================================================================================
+Best mask selections: [4 1 3 0 2]
+Adam [    0] loss: 9.0069e+01
+Adam [ 2000] loss: 1.6450e+00
+Adam [ 4000] loss: 4.0421e-01
+Adam [ 6000] loss: 1.9365e-01
+Adam [ 8000] loss: 1.1831e-01
+Adam [10000] loss: 6.6844e-02
+Adam [11999] loss: 3.9885e-02
+
+L-BFGS refinement...
+
+PSO refinement...
+Stopping search: maximum iterations reached --> 8
+PSO best objective: 5.7444e+01
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_circle/stage_pso/poisson_bayesian_loss_curve.png
+
+Relative L2 error (circle, grid 500x500): 9.8064e-01
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_circle/stage_pso/results_summary.csv
+Run time: 407.34 s
+[OK ] bayesian/circle best_stage=lbfgs
+[RUN] bayesian/lshape stage_adam (seed=44)
+Using device: cuda
+Starting Bayesian architecture search: domain=lshape
+|   iter    |  target   |    m0     |    m1     |    m2     |    m3     |    m4     |
+-------------------------------------------------------------------------------------
+[DONE] bayesian/circle stage_pso completed by existing process.
+[OK ] bayesian/circle best_stage=lbfgs
+[WAIT] bayesian/lshape stage_adam is already running. Waiting...
+BO eval masks=[3, 0, 3, 1, 1] proxy_loss=6.3274e+01
+| [39m1        [39m | [39m-63.27402[39m | [39m3.3393685[39m | [39m0.4191844[39m | [39m2.9785619[39m | [39m1.4420033[39m | [39m1.4372433[39m |
+BO eval masks=[2, 2, 2, 2, 3] proxy_loss=6.4492e+01
+| [39m2        [39m | [39m-64.49195[39m | [39m2.4369535[39m | [39m1.5751182[39m | [39m1.6362904[39m | [39m2.0396096[39m | [39m2.8405919[39m |
+BO eval masks=[4, 2, 2, 0, 1] proxy_loss=2.9469e+01
+| [35m3        [39m | [35m-29.46919[39m | [35m3.8421049[39m | [35m1.8264844[39m | [35m1.7106060[39m | [35m0.4538548[39m | [35m0.8715954[39m |
+BO eval masks=[4, 4, 4, 3, 1] proxy_loss=5.0124e+01
+| [39m4        [39m | [39m-50.12363[39m | [39m3.8298882[39m | [39m3.7734028[39m | [39m3.5272971[39m | [39m2.5856422[39m | [39m0.8552992[39m |
+BO eval masks=[3, 2, 2, 2, 4] proxy_loss=1.7745e+01
+| [35m5        [39m | [35m-17.74481[39m | [35m2.6594043[39m | [35m2.4130468[39m | [35m2.1208247[39m | [35m2.2639698[39m | [35m3.9212364[39m |
+BO eval masks=[1, 2, 1, 0, 1] proxy_loss=6.3467e+01
+| [39m6        [39m | [39m-63.46699[39m | [39m0.8169247[39m | [39m1.7152883[39m | [39m1.2984990[39m | [39m0.2715457[39m | [39m1.3982354[39m |
+BO eval masks=[4, 2, 0, 3, 1] proxy_loss=7.1065e+01
+| [39m7        [39m | [39m-71.06518[39m | [39m3.8691303[39m | [39m2.4739030[39m | [39m0.2957791[39m | [39m2.6155039[39m | [39m0.8663577[39m |
+BO eval masks=[2, 1, 2, 0, 1] proxy_loss=6.1414e+01
+| [39m8        [39m | [39m-61.41382[39m | [39m2.3949770[39m | [39m0.9809221[39m | [39m2.0659478[39m | [39m0.2637343[39m | [39m1.0523659[39m |
+BO eval masks=[2, 3, 0, 1, 3] proxy_loss=6.8532e+01
+| [39m9        [39m | [39m-68.53163[39m | [39m1.5738685[39m | [39m3.0708620[39m | [39m0.4969578[39m | [39m0.9517090[39m | [39m3.1818418[39m |
+BO eval masks=[2, 2, 2, 0, 4] proxy_loss=6.4355e+01
+| [39m10       [39m | [39m-64.35541[39m | [39m1.8936024[39m | [39m1.8370930[39m | [39m1.6606804[39m | [39m0.4730071[39m | [39m3.8314325[39m |
+BO eval masks=[0, 4, 2, 3, 4] proxy_loss=6.6777e+01
+| [39m11       [39m | [39m-66.77680[39m | [39m0.1924859[39m | [39m3.6922724[39m | [39m2.1754029[39m | [39m3.3632478[39m | [39m3.6993376[39m |
+BO eval masks=[4, 3, 2, 4, 1] proxy_loss=6.3896e+01
+| [39m12       [39m | [39m-63.89591[39m | [39m3.9481589[39m | [39m2.7283513[39m | [39m2.0170845[39m | [39m3.6643323[39m | [39m0.7259122[39m |
+BO eval masks=[3, 2, 2, 2, 4] proxy_loss=1.1649e+01
+| [35m13       [39m | [35m-11.64948[39m | [35m2.6547414[39m | [35m2.4543282[39m | [35m2.0991143[39m | [35m2.2934792[39m | [35m3.9306893[39m |
+BO eval masks=[3, 3, 2, 2, 4] proxy_loss=6.6251e+01
+| [39m14       [39m | [39m-66.25128[39m | [39m2.7099809[39m | [39m2.5905814[39m | [39m2.1857195[39m | [39m2.3521844[39m | [39m4.0      [39m |
+BO eval masks=[4, 1, 2, 2, 2] proxy_loss=6.3897e+01
+| [39m15       [39m | [39m-63.89658[39m | [39m3.9979479[39m | [39m1.3250604[39m | [39m2.1565514[39m | [39m2.0814250[39m | [39m1.7005289[39m |
+BO eval masks=[3, 3, 2, 2, 1] proxy_loss=6.6463e+01
+| [39m16       [39m | [39m-66.46269[39m | [39m2.5040333[39m | [39m2.8898503[39m | [39m1.7652952[39m | [39m1.8812104[39m | [39m0.5776592[39m |
+=====================================================================================
+Best mask selections: [3 2 2 2 4]
+Adam [    0] loss: 9.5576e+01
+Adam [ 2000] loss: 8.7609e-01
+Adam [ 4000] loss: 2.6825e-01
+Adam [ 6000] loss: 1.4216e-01
+Adam [ 8000] loss: 6.6157e-02
+Adam [10000] loss: 2.7550e-02
+Adam [11999] loss: 1.4215e-02
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_lshape/stage_adam/poisson_bayesian_loss_curve.png
+
+Relative L2 error (lshape, grid 500x500): 8.7009e-02
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_lshape/stage_adam/results_summary.csv
+Run time: 372.23 s
+[RUN] bayesian/lshape stage_lbfgs (seed=44)
+Using device: cuda
+Starting Bayesian architecture search: domain=lshape
+|   iter    |  target   |    m0     |    m1     |    m2     |    m3     |    m4     |
+-------------------------------------------------------------------------------------
+BO eval masks=[3, 0, 3, 1, 1] proxy_loss=6.3274e+01
+| [39m1        [39m | [39m-63.27402[39m | [39m3.3393685[39m | [39m0.4191844[39m | [39m2.9785619[39m | [39m1.4420033[39m | [39m1.4372433[39m |
+BO eval masks=[2, 2, 2, 2, 3] proxy_loss=6.4492e+01
+| [39m2        [39m | [39m-64.49195[39m | [39m2.4369535[39m | [39m1.5751182[39m | [39m1.6362904[39m | [39m2.0396096[39m | [39m2.8405919[39m |
+BO eval masks=[4, 2, 2, 0, 1] proxy_loss=2.9469e+01
+| [35m3        [39m | [35m-29.46919[39m | [35m3.8421049[39m | [35m1.8264844[39m | [35m1.7106060[39m | [35m0.4538548[39m | [35m0.8715954[39m |
+BO eval masks=[4, 4, 4, 3, 1] proxy_loss=5.0124e+01
+| [39m4        [39m | [39m-50.12363[39m | [39m3.8298882[39m | [39m3.7734028[39m | [39m3.5272971[39m | [39m2.5856422[39m | [39m0.8552992[39m |
+[DONE] bayesian/lshape stage_adam completed by existing process.
+[WAIT] bayesian/lshape stage_lbfgs is already running. Waiting...
+BO eval masks=[3, 2, 2, 2, 4] proxy_loss=1.7745e+01
+| [35m5        [39m | [35m-17.74481[39m | [35m2.6594043[39m | [35m2.4130468[39m | [35m2.1208247[39m | [35m2.2639698[39m | [35m3.9212364[39m |
+BO eval masks=[1, 2, 1, 0, 1] proxy_loss=6.3467e+01
+| [39m6        [39m | [39m-63.46699[39m | [39m0.8169247[39m | [39m1.7152883[39m | [39m1.2984990[39m | [39m0.2715457[39m | [39m1.3982354[39m |
+BO eval masks=[4, 2, 0, 3, 1] proxy_loss=7.1065e+01
+| [39m7        [39m | [39m-71.06518[39m | [39m3.8691303[39m | [39m2.4739030[39m | [39m0.2957791[39m | [39m2.6155039[39m | [39m0.8663577[39m |
+BO eval masks=[2, 1, 2, 0, 1] proxy_loss=6.1414e+01
+| [39m8        [39m | [39m-61.41382[39m | [39m2.3949770[39m | [39m0.9809221[39m | [39m2.0659478[39m | [39m0.2637343[39m | [39m1.0523659[39m |
+BO eval masks=[2, 3, 0, 1, 3] proxy_loss=6.8532e+01
+| [39m9        [39m | [39m-68.53163[39m | [39m1.5738685[39m | [39m3.0708620[39m | [39m0.4969578[39m | [39m0.9517090[39m | [39m3.1818418[39m |
+BO eval masks=[2, 2, 2, 0, 4] proxy_loss=6.4355e+01
+| [39m10       [39m | [39m-64.35541[39m | [39m1.8936024[39m | [39m1.8370930[39m | [39m1.6606804[39m | [39m0.4730071[39m | [39m3.8314325[39m |
+BO eval masks=[0, 4, 2, 3, 4] proxy_loss=6.6777e+01
+| [39m11       [39m | [39m-66.77680[39m | [39m0.1924859[39m | [39m3.6922724[39m | [39m2.1754029[39m | [39m3.3632478[39m | [39m3.6993376[39m |
+BO eval masks=[4, 3, 2, 4, 1] proxy_loss=6.3896e+01
+| [39m12       [39m | [39m-63.89591[39m | [39m3.9481589[39m | [39m2.7283513[39m | [39m2.0170845[39m | [39m3.6643323[39m | [39m0.7259122[39m |
+BO eval masks=[3, 2, 2, 2, 4] proxy_loss=1.1649e+01
+| [35m13       [39m | [35m-11.64948[39m | [35m2.6547414[39m | [35m2.4543282[39m | [35m2.0991143[39m | [35m2.2934792[39m | [35m3.9306893[39m |
+BO eval masks=[3, 3, 2, 2, 4] proxy_loss=6.6251e+01
+| [39m14       [39m | [39m-66.25128[39m | [39m2.7099809[39m | [39m2.5905814[39m | [39m2.1857195[39m | [39m2.3521844[39m | [39m4.0      [39m |
+BO eval masks=[4, 1, 2, 2, 2] proxy_loss=6.3897e+01
+| [39m15       [39m | [39m-63.89658[39m | [39m3.9979479[39m | [39m1.3250604[39m | [39m2.1565514[39m | [39m2.0814250[39m | [39m1.7005289[39m |
+BO eval masks=[3, 3, 2, 2, 1] proxy_loss=6.6463e+01
+| [39m16       [39m | [39m-66.46269[39m | [39m2.5040333[39m | [39m2.8898503[39m | [39m1.7652952[39m | [39m1.8812104[39m | [39m0.5776592[39m |
+=====================================================================================
+Best mask selections: [3 2 2 2 4]
+Adam [    0] loss: 9.5576e+01
+Adam [ 2000] loss: 8.7609e-01
+Adam [ 4000] loss: 2.6825e-01
+Adam [ 6000] loss: 1.4216e-01
+Adam [ 8000] loss: 6.6157e-02
+Adam [10000] loss: 2.7550e-02
+Adam [11999] loss: 1.4215e-02
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_lshape/stage_lbfgs/poisson_bayesian_loss_curve.png
+
+Relative L2 error (lshape, grid 500x500): 6.9225e-03
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_lshape/stage_lbfgs/results_summary.csv
+Run time: 428.85 s
+[RUN] bayesian/lshape stage_pso (seed=44)
+Using device: cuda
+Starting Bayesian architecture search: domain=lshape
+|   iter    |  target   |    m0     |    m1     |    m2     |    m3     |    m4     |
+-------------------------------------------------------------------------------------
+BO eval masks=[3, 0, 3, 1, 1] proxy_loss=6.3274e+01
+| [39m1        [39m | [39m-63.27402[39m | [39m3.3393685[39m | [39m0.4191844[39m | [39m2.9785619[39m | [39m1.4420033[39m | [39m1.4372433[39m |
+BO eval masks=[2, 2, 2, 2, 3] proxy_loss=6.4492e+01
+| [39m2        [39m | [39m-64.49195[39m | [39m2.4369535[39m | [39m1.5751182[39m | [39m1.6362904[39m | [39m2.0396096[39m | [39m2.8405919[39m |
+BO eval masks=[4, 2, 2, 0, 1] proxy_loss=2.9469e+01
+| [35m3        [39m | [35m-29.46919[39m | [35m3.8421049[39m | [35m1.8264844[39m | [35m1.7106060[39m | [35m0.4538548[39m | [35m0.8715954[39m |
+[DONE] bayesian/lshape stage_lbfgs completed by existing process.
+[WAIT] bayesian/lshape stage_pso is already running. Waiting...
+BO eval masks=[4, 4, 4, 3, 1] proxy_loss=5.0124e+01
+| [39m4        [39m | [39m-50.12363[39m | [39m3.8298882[39m | [39m3.7734028[39m | [39m3.5272971[39m | [39m2.5856422[39m | [39m0.8552992[39m |
+BO eval masks=[3, 2, 2, 2, 4] proxy_loss=1.7745e+01
+| [35m5        [39m | [35m-17.74481[39m | [35m2.6594043[39m | [35m2.4130468[39m | [35m2.1208247[39m | [35m2.2639698[39m | [35m3.9212364[39m |
+BO eval masks=[1, 2, 1, 0, 1] proxy_loss=6.3467e+01
+| [39m6        [39m | [39m-63.46699[39m | [39m0.8169247[39m | [39m1.7152883[39m | [39m1.2984990[39m | [39m0.2715457[39m | [39m1.3982354[39m |
+BO eval masks=[4, 2, 0, 3, 1] proxy_loss=7.1065e+01
+| [39m7        [39m | [39m-71.06518[39m | [39m3.8691303[39m | [39m2.4739030[39m | [39m0.2957791[39m | [39m2.6155039[39m | [39m0.8663577[39m |
+BO eval masks=[2, 1, 2, 0, 1] proxy_loss=6.1414e+01
+| [39m8        [39m | [39m-61.41382[39m | [39m2.3949770[39m | [39m0.9809221[39m | [39m2.0659478[39m | [39m0.2637343[39m | [39m1.0523659[39m |
+BO eval masks=[2, 3, 0, 1, 3] proxy_loss=6.8532e+01
+| [39m9        [39m | [39m-68.53163[39m | [39m1.5738685[39m | [39m3.0708620[39m | [39m0.4969578[39m | [39m0.9517090[39m | [39m3.1818418[39m |
+BO eval masks=[2, 2, 2, 0, 4] proxy_loss=6.4355e+01
+| [39m10       [39m | [39m-64.35541[39m | [39m1.8936024[39m | [39m1.8370930[39m | [39m1.6606804[39m | [39m0.4730071[39m | [39m3.8314325[39m |
+BO eval masks=[0, 4, 2, 3, 4] proxy_loss=6.6777e+01
+| [39m11       [39m | [39m-66.77680[39m | [39m0.1924859[39m | [39m3.6922724[39m | [39m2.1754029[39m | [39m3.3632478[39m | [39m3.6993376[39m |
+BO eval masks=[4, 3, 2, 4, 1] proxy_loss=6.3896e+01
+| [39m12       [39m | [39m-63.89591[39m | [39m3.9481589[39m | [39m2.7283513[39m | [39m2.0170845[39m | [39m3.6643323[39m | [39m0.7259122[39m |
+BO eval masks=[3, 2, 2, 2, 4] proxy_loss=1.1649e+01
+| [35m13       [39m | [35m-11.64948[39m | [35m2.6547414[39m | [35m2.4543282[39m | [35m2.0991143[39m | [35m2.2934792[39m | [35m3.9306893[39m |
+BO eval masks=[3, 3, 2, 2, 4] proxy_loss=6.6251e+01
+| [39m14       [39m | [39m-66.25128[39m | [39m2.7099809[39m | [39m2.5905814[39m | [39m2.1857195[39m | [39m2.3521844[39m | [39m4.0      [39m |
+BO eval masks=[4, 1, 2, 2, 2] proxy_loss=6.3897e+01
+| [39m15       [39m | [39m-63.89658[39m | [39m3.9979479[39m | [39m1.3250604[39m | [39m2.1565514[39m | [39m2.0814250[39m | [39m1.7005289[39m |
+BO eval masks=[3, 3, 2, 2, 1] proxy_loss=6.6463e+01
+| [39m16       [39m | [39m-66.46269[39m | [39m2.5040333[39m | [39m2.8898503[39m | [39m1.7652952[39m | [39m1.8812104[39m | [39m0.5776592[39m |
+=====================================================================================
+Best mask selections: [3 2 2 2 4]
+Adam [    0] loss: 9.5576e+01
+Adam [ 2000] loss: 8.7609e-01
+Adam [ 4000] loss: 2.6825e-01
+Adam [ 6000] loss: 1.4216e-01
+Adam [ 8000] loss: 6.6157e-02
+Adam [10000] loss: 2.7550e-02
+Adam [11999] loss: 1.4215e-02
+
+L-BFGS refinement...
+
+PSO refinement...
+Stopping search: maximum iterations reached --> 8
+PSO best objective: 1.8023e+01
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_lshape/stage_pso/poisson_bayesian_loss_curve.png
+
+Relative L2 error (lshape, grid 500x500): 1.8274e+00
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_lshape/stage_pso/results_summary.csv
+Run time: 415.77 s
+[OK ] bayesian/lshape best_stage=lbfgs
+[RUN] bayesian/flower stage_adam (seed=45)
+Using device: cuda
+Starting Bayesian architecture search: domain=flower
+|   iter    |  target   |    m0     |    m1     |    m2     |    m3     |    m4     |
+-------------------------------------------------------------------------------------
+BO eval masks=[4, 2, 1, 0, 2] proxy_loss=2.3662e+00
+| [39m1        [39m | [39m-2.366150[39m | [39m3.9560460[39m | [39m2.1981789[39m | [39m1.1257892[39m | [39m0.3091582[39m | [39m1.7778779[39m |
+BO eval masks=[2, 0, 1, 0, 3] proxy_loss=1.3268e+01
+| [39m2        [39m | [39m-13.26762[39m | [39m1.8912318[39m | [39m0.1940880[39m | [39m0.6532977[39m | [39m0.4638028[39m | [39m2.5095667[39m |
+BO eval masks=[3, 3, 4, 2, 2] proxy_loss=4.6285e+01
+| [39m3        [39m | [39m-46.28485[39m | [39m3.4247281[39m | [39m2.6004096[39m | [39m3.9628867[39m | [39m1.8814029[39m | [39m2.4731779[39m |
+[DONE] bayesian/lshape stage_pso completed by existing process.
+[OK ] bayesian/lshape best_stage=lbfgs
+[WAIT] bayesian/flower stage_adam is already running. Waiting...
+BO eval masks=[1, 4, 3, 2, 1] proxy_loss=1.4045e+01
+| [39m4        [39m | [39m-14.04496[39m | [39m1.1306688[39m | [39m3.9040132[39m | [39m2.6922719[39m | [39m1.7621235[39m | [39m1.1587493[39m |
+BO eval masks=[2, 1, 3, 1, 3] proxy_loss=4.0125e+01
+| [39m5        [39m | [39m-40.12453[39m | [39m1.5519300[39m | [39m1.3787078[39m | [39m3.0722016[39m | [39m1.2112247[39m | [39m3.2305797[39m |
+BO eval masks=[3, 1, 1, 0, 2] proxy_loss=4.4173e+01
+| [39m6        [39m | [39m-44.17259[39m | [39m3.2954836[39m | [39m1.3773194[39m | [39m0.5143704[39m | [39m0.1945266[39m | [39m1.8805102[39m |
+BO eval masks=[1, 4, 3, 2, 1] proxy_loss=5.3406e+01
+| [39m7        [39m | [39m-53.40584[39m | [39m0.8469739[39m | [39m3.8233831[39m | [39m2.6511451[39m | [39m1.7953563[39m | [39m0.7968505[39m |
+BO eval masks=[3, 1, 0, 4, 3] proxy_loss=4.8650e+01
+| [39m8        [39m | [39m-48.65027[39m | [39m3.4127653[39m | [39m0.9731216[39m | [39m0.1680525[39m | [39m3.5938017[39m | [39m2.9033231[39m |
+BO eval masks=[4, 4, 4, 4, 3] proxy_loss=9.0025e+00
+| [39m9        [39m | [39m-9.002511[39m | [39m3.9986377[39m | [39m3.6111399[39m | [39m3.8385465[39m | [39m3.7046763[39m | [39m2.8875214[39m |
+BO eval masks=[2, 3, 3, 0, 3] proxy_loss=3.7408e+00
+| [39m10       [39m | [39m-3.740807[39m | [39m1.5294390[39m | [39m2.6069781[39m | [39m3.1935925[39m | [39m0.2512464[39m | [39m3.2977857[39m |
+BO eval masks=[1, 4, 3, 2, 3] proxy_loss=5.4288e+01
+| [39m11       [39m | [39m-54.28790[39m | [39m0.9729668[39m | [39m3.5567967[39m | [39m2.5581609[39m | [39m1.5183737[39m | [39m3.3709753[39m |
+BO eval masks=[1, 2, 1, 4, 4] proxy_loss=5.1960e+01
+| [39m12       [39m | [39m-51.96041[39m | [39m0.7861973[39m | [39m1.7758607[39m | [39m1.4940299[39m | [39m3.5337386[39m | [39m3.5032202[39m |
+BO eval masks=[2, 1, 1, 3, 0] proxy_loss=7.8613e+00
+| [39m13       [39m | [39m-7.861338[39m | [39m2.2236703[39m | [39m1.0706502[39m | [39m1.2837686[39m | [39m2.9417673[39m | [39m0.2252183[39m |
+BO eval masks=[4, 2, 3, 3, 0] proxy_loss=2.8607e+00
+| [39m14       [39m | [39m-2.860702[39m | [39m3.5445515[39m | [39m2.1858822[39m | [39m3.0646191[39m | [39m2.6608701[39m | [39m0.4116782[39m |
+BO eval masks=[0, 1, 2, 3, 4] proxy_loss=4.9522e+01
+| [39m15       [39m | [39m-49.52207[39m | [39m0.4345089[39m | [39m1.3722258[39m | [39m2.3369741[39m | [39m2.7483479[39m | [39m3.8158335[39m |
+BO eval masks=[2, 3, 0, 3, 3] proxy_loss=6.6945e+00
+| [39m16       [39m | [39m-6.694476[39m | [39m1.6496057[39m | [39m2.5940990[39m | [39m0.1337592[39m | [39m3.0397726[39m | [39m3.2815950[39m |
+=====================================================================================
+Best mask selections: [4 2 1 0 2]
+Adam [    0] loss: 9.5741e+01
+Adam [ 2000] loss: 1.7344e-01
+Adam [ 4000] loss: 5.0574e-02
+Adam [ 6000] loss: 2.7465e-02
+Adam [ 8000] loss: 1.0473e-02
+Adam [10000] loss: 7.9167e-03
+Adam [11999] loss: 3.8979e-03
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_flower/stage_adam/poisson_bayesian_loss_curve.png
+
+Relative L2 error (flower, grid 500x500): 3.9204e-02
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_flower/stage_adam/results_summary.csv
+Run time: 375.80 s
+[RUN] bayesian/flower stage_lbfgs (seed=45)
+Using device: cuda
+Starting Bayesian architecture search: domain=flower
+|   iter    |  target   |    m0     |    m1     |    m2     |    m3     |    m4     |
+-------------------------------------------------------------------------------------
+BO eval masks=[4, 2, 1, 0, 2] proxy_loss=2.3662e+00
+| [39m1        [39m | [39m-2.366150[39m | [39m3.9560460[39m | [39m2.1981789[39m | [39m1.1257892[39m | [39m0.3091582[39m | [39m1.7778779[39m |
+[DONE] bayesian/flower stage_adam completed by existing process.
+[WAIT] bayesian/flower stage_lbfgs is already running. Waiting...
+BO eval masks=[2, 0, 1, 0, 3] proxy_loss=1.3268e+01
+| [39m2        [39m | [39m-13.26762[39m | [39m1.8912318[39m | [39m0.1940880[39m | [39m0.6532977[39m | [39m0.4638028[39m | [39m2.5095667[39m |
+BO eval masks=[3, 3, 4, 2, 2] proxy_loss=4.6285e+01
+| [39m3        [39m | [39m-46.28485[39m | [39m3.4247281[39m | [39m2.6004096[39m | [39m3.9628867[39m | [39m1.8814029[39m | [39m2.4731779[39m |
+BO eval masks=[1, 4, 3, 2, 1] proxy_loss=1.4045e+01
+| [39m4        [39m | [39m-14.04496[39m | [39m1.1306688[39m | [39m3.9040132[39m | [39m2.6922719[39m | [39m1.7621235[39m | [39m1.1587493[39m |
+BO eval masks=[2, 1, 3, 1, 3] proxy_loss=4.0125e+01
+| [39m5        [39m | [39m-40.12453[39m | [39m1.5519300[39m | [39m1.3787078[39m | [39m3.0722016[39m | [39m1.2112247[39m | [39m3.2305797[39m |
+BO eval masks=[3, 1, 1, 0, 2] proxy_loss=4.4173e+01
+| [39m6        [39m | [39m-44.17259[39m | [39m3.2954836[39m | [39m1.3773194[39m | [39m0.5143704[39m | [39m0.1945266[39m | [39m1.8805102[39m |
+BO eval masks=[1, 4, 3, 2, 1] proxy_loss=5.3406e+01
+| [39m7        [39m | [39m-53.40584[39m | [39m0.8469739[39m | [39m3.8233831[39m | [39m2.6511451[39m | [39m1.7953563[39m | [39m0.7968505[39m |
+BO eval masks=[3, 1, 0, 4, 3] proxy_loss=4.8650e+01
+| [39m8        [39m | [39m-48.65027[39m | [39m3.4127653[39m | [39m0.9731216[39m | [39m0.1680525[39m | [39m3.5938017[39m | [39m2.9033231[39m |
+BO eval masks=[4, 4, 4, 4, 3] proxy_loss=9.0025e+00
+| [39m9        [39m | [39m-9.002511[39m | [39m3.9986377[39m | [39m3.6111399[39m | [39m3.8385465[39m | [39m3.7046763[39m | [39m2.8875214[39m |
+BO eval masks=[2, 3, 3, 0, 3] proxy_loss=3.7408e+00
+| [39m10       [39m | [39m-3.740807[39m | [39m1.5294390[39m | [39m2.6069781[39m | [39m3.1935925[39m | [39m0.2512464[39m | [39m3.2977857[39m |
+BO eval masks=[1, 4, 3, 2, 3] proxy_loss=5.4288e+01
+| [39m11       [39m | [39m-54.28790[39m | [39m0.9729668[39m | [39m3.5567967[39m | [39m2.5581609[39m | [39m1.5183737[39m | [39m3.3709753[39m |
+BO eval masks=[1, 2, 1, 4, 4] proxy_loss=5.1960e+01
+| [39m12       [39m | [39m-51.96041[39m | [39m0.7861973[39m | [39m1.7758607[39m | [39m1.4940299[39m | [39m3.5337386[39m | [39m3.5032202[39m |
+BO eval masks=[2, 1, 1, 3, 0] proxy_loss=7.8613e+00
+| [39m13       [39m | [39m-7.861338[39m | [39m2.2236703[39m | [39m1.0706502[39m | [39m1.2837686[39m | [39m2.9417673[39m | [39m0.2252183[39m |
+BO eval masks=[4, 2, 3, 3, 0] proxy_loss=2.8607e+00
+| [39m14       [39m | [39m-2.860702[39m | [39m3.5445515[39m | [39m2.1858822[39m | [39m3.0646191[39m | [39m2.6608701[39m | [39m0.4116782[39m |
+BO eval masks=[0, 1, 2, 3, 4] proxy_loss=4.9522e+01
+| [39m15       [39m | [39m-49.52207[39m | [39m0.4345089[39m | [39m1.3722258[39m | [39m2.3369741[39m | [39m2.7483479[39m | [39m3.8158335[39m |
+BO eval masks=[2, 3, 0, 3, 3] proxy_loss=6.6945e+00
+| [39m16       [39m | [39m-6.694476[39m | [39m1.6496057[39m | [39m2.5940990[39m | [39m0.1337592[39m | [39m3.0397726[39m | [39m3.2815950[39m |
+=====================================================================================
+Best mask selections: [4 2 1 0 2]
+Adam [    0] loss: 9.5741e+01
+Adam [ 2000] loss: 1.7344e-01
+Adam [ 4000] loss: 5.0574e-02
+Adam [ 6000] loss: 2.7465e-02
+Adam [ 8000] loss: 1.0473e-02
+Adam [10000] loss: 7.9167e-03
+Adam [11999] loss: 3.8979e-03
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_flower/stage_lbfgs/poisson_bayesian_loss_curve.png
+
+Relative L2 error (flower, grid 500x500): 6.2612e-03
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_flower/stage_lbfgs/results_summary.csv
+Run time: 421.87 s
+[RUN] bayesian/flower stage_pso (seed=45)
+Using device: cuda
+Starting Bayesian architecture search: domain=flower
+|   iter    |  target   |    m0     |    m1     |    m2     |    m3     |    m4     |
+-------------------------------------------------------------------------------------
+[DONE] bayesian/flower stage_lbfgs completed by existing process.
+[WAIT] bayesian/flower stage_pso is already running. Waiting...
+BO eval masks=[4, 2, 1, 0, 2] proxy_loss=2.3662e+00
+| [39m1        [39m | [39m-2.366150[39m | [39m3.9560460[39m | [39m2.1981789[39m | [39m1.1257892[39m | [39m0.3091582[39m | [39m1.7778779[39m |
+BO eval masks=[2, 0, 1, 0, 3] proxy_loss=1.3268e+01
+| [39m2        [39m | [39m-13.26762[39m | [39m1.8912318[39m | [39m0.1940880[39m | [39m0.6532977[39m | [39m0.4638028[39m | [39m2.5095667[39m |
+BO eval masks=[3, 3, 4, 2, 2] proxy_loss=4.6285e+01
+| [39m3        [39m | [39m-46.28485[39m | [39m3.4247281[39m | [39m2.6004096[39m | [39m3.9628867[39m | [39m1.8814029[39m | [39m2.4731779[39m |
+BO eval masks=[1, 4, 3, 2, 1] proxy_loss=1.4045e+01
+| [39m4        [39m | [39m-14.04496[39m | [39m1.1306688[39m | [39m3.9040132[39m | [39m2.6922719[39m | [39m1.7621235[39m | [39m1.1587493[39m |
+BO eval masks=[2, 1, 3, 1, 3] proxy_loss=4.0125e+01
+| [39m5        [39m | [39m-40.12453[39m | [39m1.5519300[39m | [39m1.3787078[39m | [39m3.0722016[39m | [39m1.2112247[39m | [39m3.2305797[39m |
+BO eval masks=[3, 1, 1, 0, 2] proxy_loss=4.4173e+01
+| [39m6        [39m | [39m-44.17259[39m | [39m3.2954836[39m | [39m1.3773194[39m | [39m0.5143704[39m | [39m0.1945266[39m | [39m1.8805102[39m |
+BO eval masks=[1, 4, 3, 2, 1] proxy_loss=5.3406e+01
+| [39m7        [39m | [39m-53.40584[39m | [39m0.8469739[39m | [39m3.8233831[39m | [39m2.6511451[39m | [39m1.7953563[39m | [39m0.7968505[39m |
+BO eval masks=[3, 1, 0, 4, 3] proxy_loss=4.8650e+01
+| [39m8        [39m | [39m-48.65027[39m | [39m3.4127653[39m | [39m0.9731216[39m | [39m0.1680525[39m | [39m3.5938017[39m | [39m2.9033231[39m |
+BO eval masks=[4, 4, 4, 4, 3] proxy_loss=9.0025e+00
+| [39m9        [39m | [39m-9.002511[39m | [39m3.9986377[39m | [39m3.6111399[39m | [39m3.8385465[39m | [39m3.7046763[39m | [39m2.8875214[39m |
+BO eval masks=[2, 3, 3, 0, 3] proxy_loss=3.7408e+00
+| [39m10       [39m | [39m-3.740807[39m | [39m1.5294390[39m | [39m2.6069781[39m | [39m3.1935925[39m | [39m0.2512464[39m | [39m3.2977857[39m |
+BO eval masks=[1, 4, 3, 2, 3] proxy_loss=5.4288e+01
+| [39m11       [39m | [39m-54.28790[39m | [39m0.9729668[39m | [39m3.5567967[39m | [39m2.5581609[39m | [39m1.5183737[39m | [39m3.3709753[39m |
+BO eval masks=[1, 2, 1, 4, 4] proxy_loss=5.1960e+01
+| [39m12       [39m | [39m-51.96041[39m | [39m0.7861973[39m | [39m1.7758607[39m | [39m1.4940299[39m | [39m3.5337386[39m | [39m3.5032202[39m |
+BO eval masks=[2, 1, 1, 3, 0] proxy_loss=7.8613e+00
+| [39m13       [39m | [39m-7.861338[39m | [39m2.2236703[39m | [39m1.0706502[39m | [39m1.2837686[39m | [39m2.9417673[39m | [39m0.2252183[39m |
+BO eval masks=[4, 2, 3, 3, 0] proxy_loss=2.8607e+00
+| [39m14       [39m | [39m-2.860702[39m | [39m3.5445515[39m | [39m2.1858822[39m | [39m3.0646191[39m | [39m2.6608701[39m | [39m0.4116782[39m |
+BO eval masks=[0, 1, 2, 3, 4] proxy_loss=4.9522e+01
+| [39m15       [39m | [39m-49.52207[39m | [39m0.4345089[39m | [39m1.3722258[39m | [39m2.3369741[39m | [39m2.7483479[39m | [39m3.8158335[39m |
+BO eval masks=[2, 3, 0, 3, 3] proxy_loss=6.6945e+00
+| [39m16       [39m | [39m-6.694476[39m | [39m1.6496057[39m | [39m2.5940990[39m | [39m0.1337592[39m | [39m3.0397726[39m | [39m3.2815950[39m |
+=====================================================================================
+Best mask selections: [4 2 1 0 2]
+Adam [    0] loss: 9.5741e+01
+Adam [ 2000] loss: 1.7344e-01
+Adam [ 4000] loss: 5.0574e-02
+Adam [ 6000] loss: 2.7465e-02
+Adam [ 8000] loss: 1.0473e-02
+Adam [10000] loss: 7.9167e-03
+Adam [11999] loss: 3.8979e-03
+
+L-BFGS refinement...
+
+PSO refinement...
+Stopping search: maximum iterations reached --> 8
+PSO best objective: 1.2573e+01
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_flower/stage_pso/poisson_bayesian_loss_curve.png
+
+Relative L2 error (flower, grid 500x500): 1.5871e+00
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_flower/stage_pso/results_summary.csv
+Run time: 434.85 s
+[OK ] bayesian/flower best_stage=lbfgs
+[RUN] bayesian/annulus stage_adam (seed=46)
+Using device: cuda
+Starting Bayesian architecture search: domain=annulus
+|   iter    |  target   |    m0     |    m1     |    m2     |    m3     |    m4     |
+-------------------------------------------------------------------------------------
+BO eval masks=[3, 3, 1, 3, 1] proxy_loss=1.3152e+01
+| [39m1        [39m | [39m-13.15220[39m | [39m3.1353294[39m | [39m2.5393348[39m | [39m0.9961723[39m | [39m3.0323034[39m | [39m1.2523077[39m |
+BO eval masks=[4, 0, 2, 4, 2] proxy_loss=1.7047e+01
+| [39m2        [39m | [39m-17.04730[39m | [39m3.7489494[39m | [39m0.1714617[39m | [39m1.7634688[39m | [39m3.6508891[39m | [39m1.8200156[39m |
+BO eval masks=[2, 0, 2, 3, 3] proxy_loss=2.7089e+01
+| [39m3        [39m | [39m-27.08896[39m | [39m2.0317373[39m | [39m0.3396318[39m | [39m1.7053991[39m | [39m2.9828678[39m | [39m3.4683255[39m |
+BO eval masks=[1, 0, 3, 2, 3] proxy_loss=3.5882e+01
+| [39m4        [39m | [39m-35.88183[39m | [39m1.2946633[39m | [39m0.4162975[39m | [39m3.2084321[39m | [39m1.5793277[39m | [39m2.5110723[39m |
+[DONE] bayesian/flower stage_pso completed by existing process.
+[OK ] bayesian/flower best_stage=lbfgs
+[WAIT] bayesian/annulus stage_adam is already running. Waiting...
+BO eval masks=[4, 2, 0, 4, 0] proxy_loss=2.0597e+01
+| [39m5        [39m | [39m-20.59715[39m | [39m4.0      [39m | [39m1.5365435[39m | [39m0.0      [39m | [39m4.0      [39m | [39m0.0      [39m |
+BO eval masks=[4, 3, 2, 4, 2] proxy_loss=7.8594e+00
+| [35m6        [39m | [35m-7.859428[39m | [35m4.0      [39m | [35m2.9581740[39m | [35m2.2890369[39m | [35m4.0      [39m | [35m1.5669059[39m |
+BO eval masks=[4, 4, 1, 4, 4] proxy_loss=2.9351e+01
+| [39m7        [39m | [39m-29.35062[39m | [39m4.0      [39m | [39m4.0      [39m | [39m1.0420084[39m | [39m4.0      [39m | [39m3.5059587[39m |
+BO eval masks=[4, 2, 3, 3, 0] proxy_loss=8.5264e+00
+| [39m8        [39m | [39m-8.526383[39m | [39m4.0      [39m | [39m2.4179350[39m | [39m2.5943405[39m | [39m3.4391559[39m | [39m0.4410334[39m |
+BO eval masks=[3, 4, 3, 4, 0] proxy_loss=9.0431e+00
+| [39m9        [39m | [39m-9.043145[39m | [39m2.8738395[39m | [39m4.0      [39m | [39m3.0182642[39m | [39m4.0      [39m | [39m0.2360673[39m |
+BO eval masks=[4, 4, 4, 2, 1] proxy_loss=2.2344e+00
+| [35m10       [39m | [35m-2.234424[39m | [35m4.0      [39m | [35m4.0      [39m | [35m4.0      [39m | [35m2.2783341[39m | [35m1.0004659[39m |
+BO eval masks=[4, 4, 3, 0, 0] proxy_loss=8.2472e-01
+| [35m11       [39m | [35m-0.824722[39m | [35m4.0      [39m | [35m4.0      [39m | [35m3.4304715[39m | [35m0.0794240[39m | [35m0.0      [39m |
+BO eval masks=[4, 4, 1, 0, 0] proxy_loss=6.5293e-01
+| [35m12       [39m | [35m-0.652928[39m | [35m4.0      [39m | [35m4.0      [39m | [35m0.8109701[39m | [35m0.0      [39m | [35m0.0      [39m |
+BO eval masks=[1, 4, 0, 0, 0] proxy_loss=4.1713e+00
+| [39m13       [39m | [39m-4.171334[39m | [39m0.9091602[39m | [39m4.0      [39m | [39m0.0      [39m | [39m0.0      [39m | [39m0.0      [39m |
+BO eval masks=[1, 4, 3, 0, 0] proxy_loss=1.6357e+01
+| [39m14       [39m | [39m-16.35696[39m | [39m1.2666657[39m | [39m4.0      [39m | [39m3.1386934[39m | [39m0.0      [39m | [39m0.0      [39m |
+BO eval masks=[4, 4, 2, 0, 2] proxy_loss=1.1367e+00
+| [39m15       [39m | [39m-1.136736[39m | [39m4.0      [39m | [39m4.0      [39m | [39m2.2838936[39m | [39m0.0      [39m | [39m2.0361272[39m |
+BO eval masks=[4, 1, 0, 0, 0] proxy_loss=1.6119e+01
+| [39m16       [39m | [39m-16.11883[39m | [39m4.0      [39m | [39m1.4212394[39m | [39m0.0      [39m | [39m0.0      [39m | [39m0.0      [39m |
+=====================================================================================
+Best mask selections: [4 4 1 0 0]
+Adam [    0] loss: 7.3373e+01
+Adam [ 2000] loss: 1.9030e-01
+Adam [ 4000] loss: 2.3558e-02
+Adam [ 6000] loss: 6.6968e-03
+Adam [ 8000] loss: 1.9605e-03
+Adam [10000] loss: 1.0453e-03
+Adam [11999] loss: 5.3629e-04
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_annulus/stage_adam/poisson_bayesian_loss_curve.png
+
+Relative L2 error (annulus, grid 500x500): 2.1189e-02
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_annulus/stage_adam/results_summary.csv
+Run time: 375.83 s
+[RUN] bayesian/annulus stage_lbfgs (seed=46)
+Using device: cuda
+Starting Bayesian architecture search: domain=annulus
+|   iter    |  target   |    m0     |    m1     |    m2     |    m3     |    m4     |
+-------------------------------------------------------------------------------------
+BO eval masks=[3, 3, 1, 3, 1] proxy_loss=1.3152e+01
+| [39m1        [39m | [39m-13.15220[39m | [39m3.1353294[39m | [39m2.5393348[39m | [39m0.9961723[39m | [39m3.0323034[39m | [39m1.2523077[39m |
+BO eval masks=[4, 0, 2, 4, 2] proxy_loss=1.7047e+01
+| [39m2        [39m | [39m-17.04730[39m | [39m3.7489494[39m | [39m0.1714617[39m | [39m1.7634688[39m | [39m3.6508891[39m | [39m1.8200156[39m |
+[DONE] bayesian/annulus stage_adam completed by existing process.
+[WAIT] bayesian/annulus stage_lbfgs is already running. Waiting...
+BO eval masks=[2, 0, 2, 3, 3] proxy_loss=2.7089e+01
+| [39m3        [39m | [39m-27.08896[39m | [39m2.0317373[39m | [39m0.3396318[39m | [39m1.7053991[39m | [39m2.9828678[39m | [39m3.4683255[39m |
+BO eval masks=[1, 0, 3, 2, 3] proxy_loss=3.5882e+01
+| [39m4        [39m | [39m-35.88183[39m | [39m1.2946633[39m | [39m0.4162975[39m | [39m3.2084321[39m | [39m1.5793277[39m | [39m2.5110723[39m |
+BO eval masks=[4, 2, 0, 4, 0] proxy_loss=2.0597e+01
+| [39m5        [39m | [39m-20.59715[39m | [39m4.0      [39m | [39m1.5365435[39m | [39m0.0      [39m | [39m4.0      [39m | [39m0.0      [39m |
+BO eval masks=[4, 3, 2, 4, 2] proxy_loss=7.8594e+00
+| [35m6        [39m | [35m-7.859428[39m | [35m4.0      [39m | [35m2.9581740[39m | [35m2.2890369[39m | [35m4.0      [39m | [35m1.5669059[39m |
+BO eval masks=[4, 4, 1, 4, 4] proxy_loss=2.9351e+01
+| [39m7        [39m | [39m-29.35062[39m | [39m4.0      [39m | [39m4.0      [39m | [39m1.0420084[39m | [39m4.0      [39m | [39m3.5059587[39m |
+BO eval masks=[4, 2, 3, 3, 0] proxy_loss=8.5264e+00
+| [39m8        [39m | [39m-8.526383[39m | [39m4.0      [39m | [39m2.4179350[39m | [39m2.5943405[39m | [39m3.4391559[39m | [39m0.4410334[39m |
+BO eval masks=[3, 4, 3, 4, 0] proxy_loss=9.0431e+00
+| [39m9        [39m | [39m-9.043145[39m | [39m2.8738395[39m | [39m4.0      [39m | [39m3.0182642[39m | [39m4.0      [39m | [39m0.2360673[39m |
+BO eval masks=[4, 4, 4, 2, 1] proxy_loss=2.2344e+00
+| [35m10       [39m | [35m-2.234424[39m | [35m4.0      [39m | [35m4.0      [39m | [35m4.0      [39m | [35m2.2783341[39m | [35m1.0004659[39m |
+BO eval masks=[4, 4, 3, 0, 0] proxy_loss=8.2472e-01
+| [35m11       [39m | [35m-0.824722[39m | [35m4.0      [39m | [35m4.0      [39m | [35m3.4304715[39m | [35m0.0794240[39m | [35m0.0      [39m |
+BO eval masks=[4, 4, 1, 0, 0] proxy_loss=6.5293e-01
+| [35m12       [39m | [35m-0.652928[39m | [35m4.0      [39m | [35m4.0      [39m | [35m0.8109701[39m | [35m0.0      [39m | [35m0.0      [39m |
+BO eval masks=[1, 4, 0, 0, 0] proxy_loss=4.1713e+00
+| [39m13       [39m | [39m-4.171334[39m | [39m0.9091602[39m | [39m4.0      [39m | [39m0.0      [39m | [39m0.0      [39m | [39m0.0      [39m |
+BO eval masks=[1, 4, 3, 0, 0] proxy_loss=1.6357e+01
+| [39m14       [39m | [39m-16.35696[39m | [39m1.2666657[39m | [39m4.0      [39m | [39m3.1386934[39m | [39m0.0      [39m | [39m0.0      [39m |
+BO eval masks=[4, 4, 2, 0, 2] proxy_loss=1.1367e+00
+| [39m15       [39m | [39m-1.136736[39m | [39m4.0      [39m | [39m4.0      [39m | [39m2.2838936[39m | [39m0.0      [39m | [39m2.0361272[39m |
+BO eval masks=[4, 1, 0, 0, 0] proxy_loss=1.6119e+01
+| [39m16       [39m | [39m-16.11883[39m | [39m4.0      [39m | [39m1.4212394[39m | [39m0.0      [39m | [39m0.0      [39m | [39m0.0      [39m |
+=====================================================================================
+Best mask selections: [4 4 1 0 0]
+Adam [    0] loss: 7.3373e+01
+Adam [ 2000] loss: 1.9030e-01
+Adam [ 4000] loss: 2.3558e-02
+Adam [ 6000] loss: 6.6968e-03
+Adam [ 8000] loss: 1.9605e-03
+Adam [10000] loss: 1.0453e-03
+Adam [11999] loss: 5.3629e-04
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_annulus/stage_lbfgs/poisson_bayesian_loss_curve.png
+
+Relative L2 error (annulus, grid 500x500): 2.1889e-03
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_annulus/stage_lbfgs/results_summary.csv
+Run time: 415.10 s
+[RUN] bayesian/annulus stage_pso (seed=46)
+Using device: cuda
+Starting Bayesian architecture search: domain=annulus
+|   iter    |  target   |    m0     |    m1     |    m2     |    m3     |    m4     |
+-------------------------------------------------------------------------------------
+BO eval masks=[3, 3, 1, 3, 1] proxy_loss=1.3152e+01
+| [39m1        [39m | [39m-13.15220[39m | [39m3.1353294[39m | [39m2.5393348[39m | [39m0.9961723[39m | [39m3.0323034[39m | [39m1.2523077[39m |
+BO eval masks=[4, 0, 2, 4, 2] proxy_loss=1.7047e+01
+| [39m2        [39m | [39m-17.04730[39m | [39m3.7489494[39m | [39m0.1714617[39m | [39m1.7634688[39m | [39m3.6508891[39m | [39m1.8200156[39m |
+[DONE] bayesian/annulus stage_lbfgs completed by existing process.
+[WAIT] bayesian/annulus stage_pso is already running. Waiting...
+BO eval masks=[2, 0, 2, 3, 3] proxy_loss=2.7089e+01
+| [39m3        [39m | [39m-27.08896[39m | [39m2.0317373[39m | [39m0.3396318[39m | [39m1.7053991[39m | [39m2.9828678[39m | [39m3.4683255[39m |
+BO eval masks=[1, 0, 3, 2, 3] proxy_loss=3.5882e+01
+| [39m4        [39m | [39m-35.88183[39m | [39m1.2946633[39m | [39m0.4162975[39m | [39m3.2084321[39m | [39m1.5793277[39m | [39m2.5110723[39m |
+BO eval masks=[4, 2, 0, 4, 0] proxy_loss=2.0597e+01
+| [39m5        [39m | [39m-20.59715[39m | [39m4.0      [39m | [39m1.5365435[39m | [39m0.0      [39m | [39m4.0      [39m | [39m0.0      [39m |
+BO eval masks=[4, 3, 2, 4, 2] proxy_loss=7.8594e+00
+| [35m6        [39m | [35m-7.859428[39m | [35m4.0      [39m | [35m2.9581740[39m | [35m2.2890369[39m | [35m4.0      [39m | [35m1.5669059[39m |
+BO eval masks=[4, 4, 1, 4, 4] proxy_loss=2.9351e+01
+| [39m7        [39m | [39m-29.35062[39m | [39m4.0      [39m | [39m4.0      [39m | [39m1.0420084[39m | [39m4.0      [39m | [39m3.5059587[39m |
+BO eval masks=[4, 2, 3, 3, 0] proxy_loss=8.5264e+00
+| [39m8        [39m | [39m-8.526383[39m | [39m4.0      [39m | [39m2.4179350[39m | [39m2.5943405[39m | [39m3.4391559[39m | [39m0.4410334[39m |
+BO eval masks=[3, 4, 3, 4, 0] proxy_loss=9.0431e+00
+| [39m9        [39m | [39m-9.043145[39m | [39m2.8738395[39m | [39m4.0      [39m | [39m3.0182642[39m | [39m4.0      [39m | [39m0.2360673[39m |
+BO eval masks=[4, 4, 4, 2, 1] proxy_loss=2.2344e+00
+| [35m10       [39m | [35m-2.234424[39m | [35m4.0      [39m | [35m4.0      [39m | [35m4.0      [39m | [35m2.2783341[39m | [35m1.0004659[39m |
+BO eval masks=[4, 4, 3, 0, 0] proxy_loss=8.2472e-01
+| [35m11       [39m | [35m-0.824722[39m | [35m4.0      [39m | [35m4.0      [39m | [35m3.4304715[39m | [35m0.0794240[39m | [35m0.0      [39m |
+BO eval masks=[4, 4, 1, 0, 0] proxy_loss=6.5293e-01
+| [35m12       [39m | [35m-0.652928[39m | [35m4.0      [39m | [35m4.0      [39m | [35m0.8109701[39m | [35m0.0      [39m | [35m0.0      [39m |
+BO eval masks=[1, 4, 0, 0, 0] proxy_loss=4.1713e+00
+| [39m13       [39m | [39m-4.171334[39m | [39m0.9091602[39m | [39m4.0      [39m | [39m0.0      [39m | [39m0.0      [39m | [39m0.0      [39m |
+BO eval masks=[1, 4, 3, 0, 0] proxy_loss=1.6357e+01
+| [39m14       [39m | [39m-16.35696[39m | [39m1.2666657[39m | [39m4.0      [39m | [39m3.1386934[39m | [39m0.0      [39m | [39m0.0      [39m |
+BO eval masks=[4, 4, 2, 0, 2] proxy_loss=1.1367e+00
+| [39m15       [39m | [39m-1.136736[39m | [39m4.0      [39m | [39m4.0      [39m | [39m2.2838936[39m | [39m0.0      [39m | [39m2.0361272[39m |
+BO eval masks=[4, 1, 0, 0, 0] proxy_loss=1.6119e+01
+| [39m16       [39m | [39m-16.11883[39m | [39m4.0      [39m | [39m1.4212394[39m | [39m0.0      [39m | [39m0.0      [39m | [39m0.0      [39m |
+=====================================================================================
+Best mask selections: [4 4 1 0 0]
+Adam [    0] loss: 7.3373e+01
+Adam [ 2000] loss: 1.9030e-01
+Adam [ 4000] loss: 2.3558e-02
+Adam [ 6000] loss: 6.6968e-03
+Adam [ 8000] loss: 1.9605e-03
+Adam [10000] loss: 1.0453e-03
+Adam [11999] loss: 5.3629e-04
+
+L-BFGS refinement...
+
+PSO refinement...
+Stopping search: maximum iterations reached --> 8
+PSO best objective: 1.9134e+01
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_annulus/stage_pso/poisson_bayesian_loss_curve.png
+
+Relative L2 error (annulus, grid 500x500): 7.5323e-01
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_annulus/stage_pso/results_summary.csv
+Run time: 424.11 s
+[OK ] bayesian/annulus best_stage=lbfgs
+[DONE] bayesian/annulus stage_pso completed by existing process.
+[OK ] bayesian/annulus best_stage=lbfgs
+[DONE] Poisson NSGA3 + Bayesian staged re-run completed.

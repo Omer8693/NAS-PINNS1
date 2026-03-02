@@ -1,4 +1,4 @@
 stage,method,domain,seed,rel_l2,run_time_seconds
-adam,bayesian,rectangular,42,7.00579367e-02,370.989269
-lbfgs,bayesian,rectangular,42,3.21347619e-03,413.411107
-pso,bayesian,rectangular,42,1.96390850e+00,415.341679
+adam,bayesian,rectangular,42,7.00579367e-02,379.918534
+lbfgs,bayesian,rectangular,42,3.21347619e-03,416.376625
+pso,bayesian,rectangular,42,1.96390850e+00,414.545603

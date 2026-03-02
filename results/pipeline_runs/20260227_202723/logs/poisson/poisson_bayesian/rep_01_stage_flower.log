@@ -3,57 +3,167 @@ Using device: cuda
 Starting Bayesian architecture search: domain=flower
 |   iter    |  target   |    m0     |    m1     |    m2     |    m3     |    m4     |
 -------------------------------------------------------------------------------------
-Traceback (most recent call last):
-  File "/home/coder/NAS-PINNS1/NAS_PINNs_poisson_bayesian.py", line 9, in <module>
-    main()
-  File "/home/coder/NAS-PINNS1/poisson/main_bayesian.py", line 318, in main
-    run_single(args, domain_name=args.domain, save_dir=args.save_dir)
-  File "/home/coder/NAS-PINNS1/poisson/main_bayesian.py", line 226, in run_single
-    best_masks = run_bayesian_search(domain_mod, args)
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/coder/NAS-PINNS1/poisson/main_bayesian.py", line 143, in run_bayesian_search
-    optimizer.maximize(init_points=args.bo_init_points, n_iter=args.bo_iters)
-  File "/home/coder/.local/lib/python3.12/site-packages/bayes_opt/bayesian_optimization.py", line 409, in maximize
-    self.probe(x_probe, lazy=False)
-  File "/home/coder/.local/lib/python3.12/site-packages/bayes_opt/bayesian_optimization.py", line 326, in probe
-    self._space.probe(params)
-  File "/home/coder/.local/lib/python3.12/site-packages/bayes_opt/target_space.py", line 555, in probe
-    target = self.target_func(**dict_params)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/coder/NAS-PINNS1/poisson/main_bayesian.py", line 132, in objective
-    loss = proxy_evaluate(masks, domain_mod, proxy_epochs=args.proxy_epochs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/coder/NAS-PINNS1/poisson/main_bayesian.py", line 109, in proxy_evaluate
-    loss = pde_loss(model, xc, yc, mask_choices, domain_mod) + bc_loss(model, xb, yb, mask_choices, domain_mod)
-                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/coder/NAS-PINNS1/poisson/main_bayesian.py", line 97, in bc_loss
-    return F.mse_loss(model(xy, masks), domain_mod.true_solution(xb, yb))
-                      ^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1747, in _call_impl
-    return forward_call(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/coder/NAS-PINNS1/poisson/main_bayesian.py", line 70, in forward
-    x = layer(x, mask_choices[i])
-        ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1747, in _call_impl
-    return forward_call(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/coder/NAS-PINNS1/poisson/main_bayesian.py", line 52, in forward
-    active = torch.tanh(self.linear(x))
-                        ^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1736, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1747, in _call_impl
-    return forward_call(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/linear.py", line 125, in forward
-    return F.linear(input, self.weight, self.bias)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-RuntimeError: mat1 and mat2 shapes cannot be multiplied (200x400 and 2x110)
+BO eval masks=[4, 2, 1, 0, 2] proxy_loss=2.3662e+00
+| [39m1        [39m | [39m-2.366150[39m | [39m3.9560460[39m | [39m2.1981789[39m | [39m1.1257892[39m | [39m0.3091582[39m | [39m1.7778779[39m |
+BO eval masks=[2, 0, 1, 0, 3] proxy_loss=1.3268e+01
+| [39m2        [39m | [39m-13.26762[39m | [39m1.8912318[39m | [39m0.1940880[39m | [39m0.6532977[39m | [39m0.4638028[39m | [39m2.5095667[39m |
+BO eval masks=[3, 3, 4, 2, 2] proxy_loss=4.6285e+01
+| [39m3        [39m | [39m-46.28485[39m | [39m3.4247281[39m | [39m2.6004096[39m | [39m3.9628867[39m | [39m1.8814029[39m | [39m2.4731779[39m |
+[WAIT] bayesian/flower stage_adam is already running. Waiting...
+BO eval masks=[1, 4, 3, 2, 1] proxy_loss=1.4045e+01
+| [39m4        [39m | [39m-14.04496[39m | [39m1.1306688[39m | [39m3.9040132[39m | [39m2.6922719[39m | [39m1.7621235[39m | [39m1.1587493[39m |
+BO eval masks=[2, 1, 3, 1, 3] proxy_loss=4.0125e+01
+| [39m5        [39m | [39m-40.12453[39m | [39m1.5519300[39m | [39m1.3787078[39m | [39m3.0722016[39m | [39m1.2112247[39m | [39m3.2305797[39m |
+BO eval masks=[3, 1, 1, 0, 2] proxy_loss=4.4173e+01
+| [39m6        [39m | [39m-44.17259[39m | [39m3.2954836[39m | [39m1.3773194[39m | [39m0.5143704[39m | [39m0.1945266[39m | [39m1.8805102[39m |
+BO eval masks=[1, 4, 3, 2, 1] proxy_loss=5.3406e+01
+| [39m7        [39m | [39m-53.40584[39m | [39m0.8469739[39m | [39m3.8233831[39m | [39m2.6511451[39m | [39m1.7953563[39m | [39m0.7968505[39m |
+BO eval masks=[3, 1, 0, 4, 3] proxy_loss=4.8650e+01
+| [39m8        [39m | [39m-48.65027[39m | [39m3.4127653[39m | [39m0.9731216[39m | [39m0.1680525[39m | [39m3.5938017[39m | [39m2.9033231[39m |
+BO eval masks=[4, 4, 4, 4, 3] proxy_loss=9.0025e+00
+| [39m9        [39m | [39m-9.002511[39m | [39m3.9986377[39m | [39m3.6111399[39m | [39m3.8385465[39m | [39m3.7046763[39m | [39m2.8875214[39m |
+BO eval masks=[2, 3, 3, 0, 3] proxy_loss=3.7408e+00
+| [39m10       [39m | [39m-3.740807[39m | [39m1.5294390[39m | [39m2.6069781[39m | [39m3.1935925[39m | [39m0.2512464[39m | [39m3.2977857[39m |
+BO eval masks=[1, 4, 3, 2, 3] proxy_loss=5.4288e+01
+| [39m11       [39m | [39m-54.28790[39m | [39m0.9729668[39m | [39m3.5567967[39m | [39m2.5581609[39m | [39m1.5183737[39m | [39m3.3709753[39m |
+BO eval masks=[1, 2, 1, 4, 4] proxy_loss=5.1960e+01
+| [39m12       [39m | [39m-51.96041[39m | [39m0.7861973[39m | [39m1.7758607[39m | [39m1.4940299[39m | [39m3.5337386[39m | [39m3.5032202[39m |
+BO eval masks=[2, 1, 1, 3, 0] proxy_loss=7.8613e+00
+| [39m13       [39m | [39m-7.861338[39m | [39m2.2236703[39m | [39m1.0706502[39m | [39m1.2837686[39m | [39m2.9417673[39m | [39m0.2252183[39m |
+BO eval masks=[4, 2, 3, 3, 0] proxy_loss=2.8607e+00
+| [39m14       [39m | [39m-2.860702[39m | [39m3.5445515[39m | [39m2.1858822[39m | [39m3.0646191[39m | [39m2.6608701[39m | [39m0.4116782[39m |
+BO eval masks=[0, 1, 2, 3, 4] proxy_loss=4.9522e+01
+| [39m15       [39m | [39m-49.52207[39m | [39m0.4345089[39m | [39m1.3722258[39m | [39m2.3369741[39m | [39m2.7483479[39m | [39m3.8158335[39m |
+BO eval masks=[2, 3, 0, 3, 3] proxy_loss=6.6945e+00
+| [39m16       [39m | [39m-6.694476[39m | [39m1.6496057[39m | [39m2.5940990[39m | [39m0.1337592[39m | [39m3.0397726[39m | [39m3.2815950[39m |
+=====================================================================================
+Best mask selections: [4 2 1 0 2]
+Adam [    0] loss: 9.5741e+01
+Adam [ 2000] loss: 1.7344e-01
+Adam [ 4000] loss: 5.0574e-02
+Adam [ 6000] loss: 2.7465e-02
+Adam [ 8000] loss: 1.0473e-02
+Adam [10000] loss: 7.9167e-03
+Adam [11999] loss: 3.8979e-03
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_flower/stage_adam/poisson_bayesian_loss_curve.png
+
+Relative L2 error (flower, grid 500x500): 3.9204e-02
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_flower/stage_adam/results_summary.csv
+Run time: 375.80 s
+[RUN] bayesian/flower stage_lbfgs (seed=45)
+Using device: cuda
+Starting Bayesian architecture search: domain=flower
+|   iter    |  target   |    m0     |    m1     |    m2     |    m3     |    m4     |
+-------------------------------------------------------------------------------------
+BO eval masks=[4, 2, 1, 0, 2] proxy_loss=2.3662e+00
+| [39m1        [39m | [39m-2.366150[39m | [39m3.9560460[39m | [39m2.1981789[39m | [39m1.1257892[39m | [39m0.3091582[39m | [39m1.7778779[39m |
+[DONE] bayesian/flower stage_adam completed by existing process.
+[WAIT] bayesian/flower stage_lbfgs is already running. Waiting...
+BO eval masks=[2, 0, 1, 0, 3] proxy_loss=1.3268e+01
+| [39m2        [39m | [39m-13.26762[39m | [39m1.8912318[39m | [39m0.1940880[39m | [39m0.6532977[39m | [39m0.4638028[39m | [39m2.5095667[39m |
+BO eval masks=[3, 3, 4, 2, 2] proxy_loss=4.6285e+01
+| [39m3        [39m | [39m-46.28485[39m | [39m3.4247281[39m | [39m2.6004096[39m | [39m3.9628867[39m | [39m1.8814029[39m | [39m2.4731779[39m |
+BO eval masks=[1, 4, 3, 2, 1] proxy_loss=1.4045e+01
+| [39m4        [39m | [39m-14.04496[39m | [39m1.1306688[39m | [39m3.9040132[39m | [39m2.6922719[39m | [39m1.7621235[39m | [39m1.1587493[39m |
+BO eval masks=[2, 1, 3, 1, 3] proxy_loss=4.0125e+01
+| [39m5        [39m | [39m-40.12453[39m | [39m1.5519300[39m | [39m1.3787078[39m | [39m3.0722016[39m | [39m1.2112247[39m | [39m3.2305797[39m |
+BO eval masks=[3, 1, 1, 0, 2] proxy_loss=4.4173e+01
+| [39m6        [39m | [39m-44.17259[39m | [39m3.2954836[39m | [39m1.3773194[39m | [39m0.5143704[39m | [39m0.1945266[39m | [39m1.8805102[39m |
+BO eval masks=[1, 4, 3, 2, 1] proxy_loss=5.3406e+01
+| [39m7        [39m | [39m-53.40584[39m | [39m0.8469739[39m | [39m3.8233831[39m | [39m2.6511451[39m | [39m1.7953563[39m | [39m0.7968505[39m |
+BO eval masks=[3, 1, 0, 4, 3] proxy_loss=4.8650e+01
+| [39m8        [39m | [39m-48.65027[39m | [39m3.4127653[39m | [39m0.9731216[39m | [39m0.1680525[39m | [39m3.5938017[39m | [39m2.9033231[39m |
+BO eval masks=[4, 4, 4, 4, 3] proxy_loss=9.0025e+00
+| [39m9        [39m | [39m-9.002511[39m | [39m3.9986377[39m | [39m3.6111399[39m | [39m3.8385465[39m | [39m3.7046763[39m | [39m2.8875214[39m |
+BO eval masks=[2, 3, 3, 0, 3] proxy_loss=3.7408e+00
+| [39m10       [39m | [39m-3.740807[39m | [39m1.5294390[39m | [39m2.6069781[39m | [39m3.1935925[39m | [39m0.2512464[39m | [39m3.2977857[39m |
+BO eval masks=[1, 4, 3, 2, 3] proxy_loss=5.4288e+01
+| [39m11       [39m | [39m-54.28790[39m | [39m0.9729668[39m | [39m3.5567967[39m | [39m2.5581609[39m | [39m1.5183737[39m | [39m3.3709753[39m |
+BO eval masks=[1, 2, 1, 4, 4] proxy_loss=5.1960e+01
+| [39m12       [39m | [39m-51.96041[39m | [39m0.7861973[39m | [39m1.7758607[39m | [39m1.4940299[39m | [39m3.5337386[39m | [39m3.5032202[39m |
+BO eval masks=[2, 1, 1, 3, 0] proxy_loss=7.8613e+00
+| [39m13       [39m | [39m-7.861338[39m | [39m2.2236703[39m | [39m1.0706502[39m | [39m1.2837686[39m | [39m2.9417673[39m | [39m0.2252183[39m |
+BO eval masks=[4, 2, 3, 3, 0] proxy_loss=2.8607e+00
+| [39m14       [39m | [39m-2.860702[39m | [39m3.5445515[39m | [39m2.1858822[39m | [39m3.0646191[39m | [39m2.6608701[39m | [39m0.4116782[39m |
+BO eval masks=[0, 1, 2, 3, 4] proxy_loss=4.9522e+01
+| [39m15       [39m | [39m-49.52207[39m | [39m0.4345089[39m | [39m1.3722258[39m | [39m2.3369741[39m | [39m2.7483479[39m | [39m3.8158335[39m |
+BO eval masks=[2, 3, 0, 3, 3] proxy_loss=6.6945e+00
+| [39m16       [39m | [39m-6.694476[39m | [39m1.6496057[39m | [39m2.5940990[39m | [39m0.1337592[39m | [39m3.0397726[39m | [39m3.2815950[39m |
+=====================================================================================
+Best mask selections: [4 2 1 0 2]
+Adam [    0] loss: 9.5741e+01
+Adam [ 2000] loss: 1.7344e-01
+Adam [ 4000] loss: 5.0574e-02
+Adam [ 6000] loss: 2.7465e-02
+Adam [ 8000] loss: 1.0473e-02
+Adam [10000] loss: 7.9167e-03
+Adam [11999] loss: 3.8979e-03
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_flower/stage_lbfgs/poisson_bayesian_loss_curve.png
+
+Relative L2 error (flower, grid 500x500): 6.2612e-03
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_flower/stage_lbfgs/results_summary.csv
+Run time: 421.87 s
+[RUN] bayesian/flower stage_pso (seed=45)
+Using device: cuda
+Starting Bayesian architecture search: domain=flower
+|   iter    |  target   |    m0     |    m1     |    m2     |    m3     |    m4     |
+-------------------------------------------------------------------------------------
+[DONE] bayesian/flower stage_lbfgs completed by existing process.
+[WAIT] bayesian/flower stage_pso is already running. Waiting...
+BO eval masks=[4, 2, 1, 0, 2] proxy_loss=2.3662e+00
+| [39m1        [39m | [39m-2.366150[39m | [39m3.9560460[39m | [39m2.1981789[39m | [39m1.1257892[39m | [39m0.3091582[39m | [39m1.7778779[39m |
+BO eval masks=[2, 0, 1, 0, 3] proxy_loss=1.3268e+01
+| [39m2        [39m | [39m-13.26762[39m | [39m1.8912318[39m | [39m0.1940880[39m | [39m0.6532977[39m | [39m0.4638028[39m | [39m2.5095667[39m |
+BO eval masks=[3, 3, 4, 2, 2] proxy_loss=4.6285e+01
+| [39m3        [39m | [39m-46.28485[39m | [39m3.4247281[39m | [39m2.6004096[39m | [39m3.9628867[39m | [39m1.8814029[39m | [39m2.4731779[39m |
+BO eval masks=[1, 4, 3, 2, 1] proxy_loss=1.4045e+01
+| [39m4        [39m | [39m-14.04496[39m | [39m1.1306688[39m | [39m3.9040132[39m | [39m2.6922719[39m | [39m1.7621235[39m | [39m1.1587493[39m |
+BO eval masks=[2, 1, 3, 1, 3] proxy_loss=4.0125e+01
+| [39m5        [39m | [39m-40.12453[39m | [39m1.5519300[39m | [39m1.3787078[39m | [39m3.0722016[39m | [39m1.2112247[39m | [39m3.2305797[39m |
+BO eval masks=[3, 1, 1, 0, 2] proxy_loss=4.4173e+01
+| [39m6        [39m | [39m-44.17259[39m | [39m3.2954836[39m | [39m1.3773194[39m | [39m0.5143704[39m | [39m0.1945266[39m | [39m1.8805102[39m |
+BO eval masks=[1, 4, 3, 2, 1] proxy_loss=5.3406e+01
+| [39m7        [39m | [39m-53.40584[39m | [39m0.8469739[39m | [39m3.8233831[39m | [39m2.6511451[39m | [39m1.7953563[39m | [39m0.7968505[39m |
+BO eval masks=[3, 1, 0, 4, 3] proxy_loss=4.8650e+01
+| [39m8        [39m | [39m-48.65027[39m | [39m3.4127653[39m | [39m0.9731216[39m | [39m0.1680525[39m | [39m3.5938017[39m | [39m2.9033231[39m |
+BO eval masks=[4, 4, 4, 4, 3] proxy_loss=9.0025e+00
+| [39m9        [39m | [39m-9.002511[39m | [39m3.9986377[39m | [39m3.6111399[39m | [39m3.8385465[39m | [39m3.7046763[39m | [39m2.8875214[39m |
+BO eval masks=[2, 3, 3, 0, 3] proxy_loss=3.7408e+00
+| [39m10       [39m | [39m-3.740807[39m | [39m1.5294390[39m | [39m2.6069781[39m | [39m3.1935925[39m | [39m0.2512464[39m | [39m3.2977857[39m |
+BO eval masks=[1, 4, 3, 2, 3] proxy_loss=5.4288e+01
+| [39m11       [39m | [39m-54.28790[39m | [39m0.9729668[39m | [39m3.5567967[39m | [39m2.5581609[39m | [39m1.5183737[39m | [39m3.3709753[39m |
+BO eval masks=[1, 2, 1, 4, 4] proxy_loss=5.1960e+01
+| [39m12       [39m | [39m-51.96041[39m | [39m0.7861973[39m | [39m1.7758607[39m | [39m1.4940299[39m | [39m3.5337386[39m | [39m3.5032202[39m |
+BO eval masks=[2, 1, 1, 3, 0] proxy_loss=7.8613e+00
+| [39m13       [39m | [39m-7.861338[39m | [39m2.2236703[39m | [39m1.0706502[39m | [39m1.2837686[39m | [39m2.9417673[39m | [39m0.2252183[39m |
+BO eval masks=[4, 2, 3, 3, 0] proxy_loss=2.8607e+00
+| [39m14       [39m | [39m-2.860702[39m | [39m3.5445515[39m | [39m2.1858822[39m | [39m3.0646191[39m | [39m2.6608701[39m | [39m0.4116782[39m |
+BO eval masks=[0, 1, 2, 3, 4] proxy_loss=4.9522e+01
+| [39m15       [39m | [39m-49.52207[39m | [39m0.4345089[39m | [39m1.3722258[39m | [39m2.3369741[39m | [39m2.7483479[39m | [39m3.8158335[39m |
+BO eval masks=[2, 3, 0, 3, 3] proxy_loss=6.6945e+00
+| [39m16       [39m | [39m-6.694476[39m | [39m1.6496057[39m | [39m2.5940990[39m | [39m0.1337592[39m | [39m3.0397726[39m | [39m3.2815950[39m |
+=====================================================================================
+Best mask selections: [4 2 1 0 2]
+Adam [    0] loss: 9.5741e+01
+Adam [ 2000] loss: 1.7344e-01
+Adam [ 4000] loss: 5.0574e-02
+Adam [ 6000] loss: 2.7465e-02
+Adam [ 8000] loss: 1.0473e-02
+Adam [10000] loss: 7.9167e-03
+Adam [11999] loss: 3.8979e-03
+
+L-BFGS refinement...
+
+PSO refinement...
+Stopping search: maximum iterations reached --> 8
+PSO best objective: 1.2573e+01
+Saved plot: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_flower/stage_pso/poisson_bayesian_loss_curve.png
+
+Relative L2 error (flower, grid 500x500): 1.5871e+00
+Saved CSV: results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_flower/stage_pso/results_summary.csv
+Run time: 434.85 s
+[OK ] bayesian/flower best_stage=lbfgs
+[DONE] bayesian/flower stage_pso completed by existing process.
+[OK ] bayesian/flower best_stage=lbfgs

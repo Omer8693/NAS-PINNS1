@@ -1,3 +1,0 @@
-stage,adam
-domain,circle
-rel_l2,3.60578258e-02

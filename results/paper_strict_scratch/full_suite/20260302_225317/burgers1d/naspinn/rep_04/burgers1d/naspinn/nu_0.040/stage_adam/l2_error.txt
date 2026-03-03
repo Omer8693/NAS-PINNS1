@@ -1,0 +1,2 @@
+stage,adam
+rel_l2,1.34067108e+00

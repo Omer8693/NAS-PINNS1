@@ -1,17 +1,41 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Dict, Optional, Sequence, Tuple
 
 import numpy as np
 import torch
 import torch.nn.functional as F
 from scipy.integrate import solve_ivp
+from scipy.io import loadmat
 
 from .config import EquationConfig
 
 
 Tensor = torch.Tensor
+
+
+POISSON_DOMAIN_MODULES = {
+    "rectangular": "rectangular",
+    "circle": "circle",
+    "annulus": "annulus",
+    "flower": "flower",
+    "lshape": "lshape",
+}
+
+POISSON_DOMAIN_BOUNDS = {
+    "rectangular": (-1.0, 1.0, -1.0, 1.0),
+    "circle": (-1.0, 1.0, -1.0, 1.0),
+    "annulus": (-1.0, 1.0, -1.0, 1.0),
+    "flower": (-1.4, 1.4, -1.4, 1.4),
+    "lshape": (-1.0, 2.0, -1.0, 2.0),
+}
+
+POISSON_ANNULUS_R_INNER = 0.3
+POISSON_ANNULUS_R_OUTER = 1.0
+POISSON_FLOWER_N_PETALS = 6
+POISSON_FLOWER_AMP = 0.3
 
 
 def _forward(model, x: Tensor, mask_indices: Optional[Sequence[int]]) -> Tensor:
@@ -43,6 +67,14 @@ class TrainData2D:
     t_bc: Tensor
 
 
+@dataclass
+class TrainDataPoisson:
+    x_col: Tensor
+    y_col: Tensor
+    x_bc: Tensor
+    y_bc: Tensor
+
+
 class Burgers1DEquation:
     """Paper-style Burgers 1D setup."""
 
@@ -62,6 +94,7 @@ class Burgers1DEquation:
         self.test_nt = int(test_nt)
         self.test_nx = int(test_nx)
         self._reference_cache: Dict[Tuple[int, int, float], np.ndarray] = {}
+        self._mat_reference_cache: Dict[Tuple[int, int], np.ndarray] = {}
 
     def sample_train(self, device: torch.device) -> TrainData1D:
         x_vals = torch.linspace(-1.0, 1.0, self.train_nx, device=device)
@@ -146,6 +179,54 @@ class Burgers1DEquation:
         self._reference_cache[key] = U
         return U
 
+    def _reference_solution_mat(self, x_vals_np: np.ndarray, t_vals_np: np.ndarray) -> Optional[np.ndarray]:
+        key = (len(x_vals_np), len(t_vals_np))
+        if key in self._mat_reference_cache:
+            return self._mat_reference_cache[key]
+
+        mat_path = Path(__file__).resolve().parents[1] / "burgers_shock.mat"
+        if not mat_path.exists():
+            return None
+
+        try:
+            data = loadmat(str(mat_path))
+            x_exact = np.asarray(data["x"]).squeeze()
+            t_exact = np.asarray(data["t"]).squeeze()
+            u_exact = np.real(np.asarray(data["usol"]))
+        except Exception:
+            return None
+
+        if x_exact.ndim != 1 or t_exact.ndim != 1 or u_exact.ndim != 2:
+            return None
+        if u_exact.shape != (len(x_exact), len(t_exact)):
+            return None
+
+        if np.array_equal(x_exact, x_vals_np) and np.array_equal(t_exact, t_vals_np):
+            out = u_exact.astype(np.float64, copy=False)
+            self._mat_reference_cache[key] = out
+            return out
+
+        # Match target test grid by separable interpolation over x then t.
+        u_x = np.empty((len(x_vals_np), len(t_exact)), dtype=np.float64)
+        for j in range(len(t_exact)):
+            u_x[:, j] = np.interp(x_vals_np, x_exact, u_exact[:, j])
+
+        u_xt = np.empty((len(x_vals_np), len(t_vals_np)), dtype=np.float64)
+        for i in range(len(x_vals_np)):
+            u_xt[i, :] = np.interp(t_vals_np, t_exact, u_x[i, :])
+
+        self._mat_reference_cache[key] = u_xt
+        return u_xt
+
+    def reference_solution(self, x_vals_np: np.ndarray, t_vals_np: np.ndarray) -> np.ndarray:
+        # Keep consistency with existing NAS-PINN exact-plot behavior:
+        # prefer burgers_shock.mat for nu≈0.01, otherwise FD reference.
+        if abs(float(self.nu) - 0.01) <= 1e-12:
+            mat_ref = self._reference_solution_mat(x_vals_np, t_vals_np)
+            if mat_ref is not None:
+                return mat_ref
+        return self._reference_solution_fd(x_vals_np, t_vals_np)
+
     def relative_l2(self, model, mask_indices: Optional[Sequence[int]], device: torch.device) -> float:
         x_test = torch.linspace(-1.0, 1.0, self.test_nx, device=device)
         t_test = torch.linspace(0.0, 1.0, self.test_nt, device=device)
@@ -153,7 +234,7 @@ class Burgers1DEquation:
         XT = torch.cat([Xg.reshape(-1, 1), Tg.reshape(-1, 1)], dim=1)
         with torch.no_grad():
             pred = _forward(model, XT, mask_indices).reshape(self.test_nx, self.test_nt).detach().cpu().numpy()
-        ref = self._reference_solution_fd(x_test.detach().cpu().numpy(), t_test.detach().cpu().numpy())
+        ref = self.reference_solution(x_test.detach().cpu().numpy(), t_test.detach().cpu().numpy())
         return float(np.linalg.norm(pred - ref) / (np.linalg.norm(ref) + 1e-12))
 
     def case_label(self) -> str:
@@ -371,3 +452,268 @@ class Burgers2DEquation:
 
     def case_label(self) -> str:
         return "default"
+
+
+class PoissonEquation:
+    """Poisson setup aligned with the original NAS-PINN Poisson benchmark."""
+
+    def __init__(
+        self,
+        cfg: EquationConfig,
+        domain_name: str = "rectangular",
+        n_col: int = 4000,
+        n_bc: int = 400,
+        test_grid_size: int = 500,
+    ) -> None:
+        if domain_name not in POISSON_DOMAIN_MODULES:
+            raise ValueError(
+                f"Unsupported poisson domain: {domain_name}. "
+                f"Available: {sorted(POISSON_DOMAIN_MODULES)}"
+            )
+        self.cfg = cfg
+        self.domain_name = str(domain_name)
+        self.n_col = int(n_col)
+        self.n_bc = int(n_bc)
+        self.test_grid_size = int(test_grid_size)
+
+    @staticmethod
+    def true_solution(x: Tensor, y: Tensor) -> Tensor:
+        return torch.cos(torch.pi * x) * torch.cos(torch.pi * y)
+
+    @staticmethod
+    def poisson_rhs(x: Tensor, y: Tensor) -> Tensor:
+        return -2.0 * (torch.pi**2) * torch.cos(torch.pi * x) * torch.cos(torch.pi * y)
+
+    def _sample_rectangular(self, device: torch.device) -> Tuple[Tuple[Tensor, Tensor], Tuple[Tensor, Tensor]]:
+        x_col = torch.rand(self.n_col, 1, device=device) * 2.0 - 1.0
+        y_col = torch.rand(self.n_col, 1, device=device) * 2.0 - 1.0
+        n_side = max(self.n_bc // 4, 1)
+        xb: list[Tensor] = []
+        yb: list[Tensor] = []
+        for val in (-1.0, 1.0):
+            xb.append(torch.rand(n_side, 1, device=device) * 2.0 - 1.0)
+            yb.append(torch.full((n_side, 1), val, device=device))
+            xb.append(torch.full((n_side, 1), val, device=device))
+            yb.append(torch.rand(n_side, 1, device=device) * 2.0 - 1.0)
+        return (x_col, y_col), (torch.cat(xb, dim=0), torch.cat(yb, dim=0))
+
+    def _sample_circle(self, device: torch.device) -> Tuple[Tuple[Tensor, Tensor], Tuple[Tensor, Tensor]]:
+        r = torch.sqrt(torch.rand(self.n_col, device=device))
+        theta = 2.0 * torch.pi * torch.rand(self.n_col, device=device)
+        x_col = (r * torch.cos(theta)).unsqueeze(1)
+        y_col = (r * torch.sin(theta)).unsqueeze(1)
+        theta_bc = torch.linspace(0.0, 2.0 * torch.pi, self.n_bc, device=device)
+        x_bc = torch.cos(theta_bc).unsqueeze(1)
+        y_bc = torch.sin(theta_bc).unsqueeze(1)
+        return (x_col, y_col), (x_bc, y_bc)
+
+    def _sample_annulus(self, device: torch.device) -> Tuple[Tuple[Tensor, Tensor], Tuple[Tensor, Tensor]]:
+        collected = []
+        total = 0
+        while total < self.n_col:
+            cand = torch.rand(self.n_col * 4, 2, device=device) * 2.0 - 1.0
+            r = torch.norm(cand, dim=1)
+            inside = (r >= POISSON_ANNULUS_R_INNER) & (r <= POISSON_ANNULUS_R_OUTER)
+            valid = cand[inside]
+            if valid.numel() == 0:
+                continue
+            take = min(self.n_col - total, valid.shape[0])
+            collected.append(valid[:take])
+            total += take
+
+        xy_col = torch.cat(collected, dim=0)
+        x_col, y_col = xy_col[:, 0:1], xy_col[:, 1:2]
+
+        theta = torch.linspace(0.0, 2.0 * torch.pi, max(self.n_bc // 2, 2), device=device)
+        x_inner = POISSON_ANNULUS_R_INNER * torch.cos(theta).unsqueeze(1)
+        y_inner = POISSON_ANNULUS_R_INNER * torch.sin(theta).unsqueeze(1)
+        x_outer = POISSON_ANNULUS_R_OUTER * torch.cos(theta).unsqueeze(1)
+        y_outer = POISSON_ANNULUS_R_OUTER * torch.sin(theta).unsqueeze(1)
+        x_bc = torch.cat([x_inner, x_outer], dim=0)
+        y_bc = torch.cat([y_inner, y_outer], dim=0)
+        return (x_col, y_col), (x_bc, y_bc)
+
+    def _sample_flower(self, device: torch.device) -> Tuple[Tuple[Tensor, Tensor], Tuple[Tensor, Tensor]]:
+        collected = []
+        total = 0
+        while total < self.n_col:
+            cand = torch.rand(self.n_col * 6, 2, device=device) * 2.8 - 1.4
+            r = torch.norm(cand, dim=1)
+            theta = torch.atan2(cand[:, 1], cand[:, 0])
+            r_max = 1.0 + POISSON_FLOWER_AMP * torch.sin(POISSON_FLOWER_N_PETALS * theta)
+            valid = cand[r <= r_max]
+            if valid.numel() == 0:
+                continue
+            take = min(self.n_col - total, valid.shape[0])
+            collected.append(valid[:take])
+            total += take
+
+        xy_col = torch.cat(collected, dim=0)
+        x_col, y_col = xy_col[:, 0:1], xy_col[:, 1:2]
+
+        theta_b = torch.linspace(0.0, 2.0 * torch.pi, self.n_bc, device=device)
+        r_b = (1.0 + POISSON_FLOWER_AMP * torch.sin(POISSON_FLOWER_N_PETALS * theta_b)).unsqueeze(1)
+        x_bc = r_b * torch.cos(theta_b).unsqueeze(1)
+        y_bc = r_b * torch.sin(theta_b).unsqueeze(1)
+        return (x_col, y_col), (x_bc, y_bc)
+
+    def _sample_lshape(self, device: torch.device) -> Tuple[Tuple[Tensor, Tensor], Tuple[Tensor, Tensor]]:
+        collected = []
+        total = 0
+        while total < self.n_col:
+            cand = torch.rand(self.n_col * 4, 2, device=device) * 3.0 - 1.0
+            x, y = cand[:, 0], cand[:, 1]
+            inside = (
+                ((x >= -1.0) & (x <= 2.0) & (y >= -1.0) & (y <= 1.0))
+                | ((x >= -1.0) & (x <= 1.0) & (y >= 1.0) & (y <= 2.0))
+            )
+            valid = cand[inside]
+            if valid.numel() == 0:
+                continue
+            take = min(self.n_col - total, valid.shape[0])
+            collected.append(valid[:take])
+            total += take
+
+        xy_col = torch.cat(collected, dim=0)
+        x_col, y_col = xy_col[:, 0:1], xy_col[:, 1:2]
+
+        n_seg = max(self.n_bc // 6, 1)
+        rem = self.n_bc - (n_seg * 6)
+        counts = [n_seg] * 6
+        for i in range(rem):
+            counts[i % 6] += 1
+
+        x_bc_parts = []
+        y_bc_parts = []
+        x_bc_parts.append(torch.rand(counts[0], 1, device=device) * 3.0 - 1.0)
+        y_bc_parts.append(torch.full((counts[0], 1), -1.0, device=device))
+        x_bc_parts.append(torch.full((counts[1], 1), 2.0, device=device))
+        y_bc_parts.append(torch.rand(counts[1], 1, device=device) * 2.0 - 1.0)
+        x_bc_parts.append(torch.rand(counts[2], 1, device=device) + 1.0)
+        y_bc_parts.append(torch.full((counts[2], 1), 1.0, device=device))
+        x_bc_parts.append(torch.full((counts[3], 1), 1.0, device=device))
+        y_bc_parts.append(torch.rand(counts[3], 1, device=device) + 1.0)
+        x_bc_parts.append(torch.rand(counts[4], 1, device=device) * 2.0 - 1.0)
+        y_bc_parts.append(torch.full((counts[4], 1), 2.0, device=device))
+        x_bc_parts.append(torch.full((counts[5], 1), -1.0, device=device))
+        y_bc_parts.append(torch.rand(counts[5], 1, device=device) * 3.0 - 1.0)
+        x_bc = torch.cat(x_bc_parts, dim=0)
+        y_bc = torch.cat(y_bc_parts, dim=0)
+        return (x_col, y_col), (x_bc, y_bc)
+
+    def _sample_points(self, device: torch.device) -> Tuple[Tuple[Tensor, Tensor], Tuple[Tensor, Tensor]]:
+        if self.domain_name == "rectangular":
+            return self._sample_rectangular(device)
+        if self.domain_name == "circle":
+            return self._sample_circle(device)
+        if self.domain_name == "annulus":
+            return self._sample_annulus(device)
+        if self.domain_name == "flower":
+            return self._sample_flower(device)
+        if self.domain_name == "lshape":
+            return self._sample_lshape(device)
+        raise ValueError(f"Unsupported poisson domain: {self.domain_name}")
+
+    def sample_train(self, device: torch.device) -> TrainDataPoisson:
+        (x_col, y_col), (x_bc, y_bc) = self._sample_points(device=device)
+        return TrainDataPoisson(
+            x_col=x_col,
+            y_col=y_col,
+            x_bc=x_bc,
+            y_bc=y_bc,
+        )
+
+    def loss_components(self, model, data: TrainDataPoisson, mask_indices: Optional[Sequence[int]]) -> Tuple[Tensor, Tensor, Tensor]:
+        xy = torch.cat([data.x_col, data.y_col], dim=1).requires_grad_(True)
+        u = _forward(model, xy, mask_indices)
+        grads = torch.autograd.grad(u.sum(), xy, create_graph=True)[0]
+        u_x = grads[:, 0:1]
+        u_y = grads[:, 1:2]
+        u_xx = torch.autograd.grad(u_x.sum(), xy, create_graph=True)[0][:, 0:1]
+        u_yy = torch.autograd.grad(u_y.sum(), xy, create_graph=True)[0][:, 1:2]
+
+        rhs = self.poisson_rhs(data.x_col, data.y_col)
+        l_pde = torch.mean((u_xx + u_yy - rhs).pow(2))
+
+        bc_xy = torch.cat([data.x_bc, data.y_bc], dim=1)
+        u_bc_pred = _forward(model, bc_xy, mask_indices)
+        u_bc_true = self.true_solution(data.x_bc, data.y_bc)
+        l_bc = F.mse_loss(u_bc_pred, u_bc_true)
+
+        l_ic = torch.zeros((), device=l_pde.device, dtype=l_pde.dtype)
+        return l_pde, l_ic, l_bc
+
+    def weighted_loss(self, l_pde: Tensor, l_ic: Tensor, l_bc: Tensor) -> Tensor:
+        del l_ic
+        return self.cfg.lambda_pde * l_pde + self.cfg.lambda_bc * l_bc
+
+    def _domain_mask(self, x: Tensor, y: Tensor) -> Tensor:
+        if self.domain_name == "rectangular":
+            return torch.ones_like(x, dtype=torch.bool)
+        if self.domain_name == "circle":
+            return (x**2 + y**2) <= 1.0
+        if self.domain_name == "annulus":
+            r = torch.sqrt(x**2 + y**2)
+            return (r >= POISSON_ANNULUS_R_INNER) & (r <= POISSON_ANNULUS_R_OUTER)
+        if self.domain_name == "flower":
+            r = torch.sqrt(x**2 + y**2)
+            theta = torch.atan2(y, x)
+            r_max = 1.0 + POISSON_FLOWER_AMP * torch.sin(POISSON_FLOWER_N_PETALS * theta)
+            return r <= r_max
+        if self.domain_name == "lshape":
+            return (
+                ((x >= -1.0) & (x <= 2.0) & (y >= -1.0) & (y <= 1.0))
+                | ((x >= -1.0) & (x <= 1.0) & (y >= 1.0) & (y <= 2.0))
+            )
+        return torch.ones_like(x, dtype=torch.bool)
+
+    def evaluate_on_grid(
+        self,
+        model,
+        mask_indices: Optional[Sequence[int]],
+        device: torch.device,
+        batch_size: int = 65536,
+    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+        x_min, x_max, y_min, y_max = POISSON_DOMAIN_BOUNDS[self.domain_name]
+        x_vals = np.linspace(x_min, x_max, self.test_grid_size, dtype=np.float64)
+        y_vals = np.linspace(y_min, y_max, self.test_grid_size, dtype=np.float64)
+
+        X, Y = np.meshgrid(x_vals, y_vals, indexing="xy")
+        xy_np = np.stack([X.reshape(-1), Y.reshape(-1)], axis=1)
+        pred = np.empty((xy_np.shape[0], 1), dtype=np.float64)
+
+        model.eval()
+        with torch.no_grad():
+            for i in range(0, xy_np.shape[0], batch_size):
+                j = min(i + batch_size, xy_np.shape[0])
+                xy = torch.from_numpy(xy_np[i:j]).to(device=device, dtype=torch.float32)
+                out = _forward(model, xy, mask_indices).detach().cpu().numpy()
+                pred[i:j] = out
+
+        x_t = torch.from_numpy(X).to(device=device, dtype=torch.float32)
+        y_t = torch.from_numpy(Y).to(device=device, dtype=torch.float32)
+        with torch.no_grad():
+            true = self.true_solution(x_t, y_t).detach().cpu().numpy()
+            mask = self._domain_mask(x_t, y_t).detach().cpu().numpy().astype(bool)
+
+        pred_field = pred.reshape(self.test_grid_size, self.test_grid_size)
+        return x_vals, y_vals, pred_field, true, mask
+
+    def relative_l2(
+        self,
+        model,
+        mask_indices: Optional[Sequence[int]],
+        device: torch.device,
+    ) -> float:
+        _, _, pred, true, mask = self.evaluate_on_grid(model, mask_indices, device=device)
+        err_sq = (pred - true) ** 2
+        if np.any(mask):
+            num = float(np.sqrt(np.mean(err_sq[mask])))
+            den = float(np.sqrt(np.mean((true[mask]) ** 2)) + 1e-12)
+            return num / den
+        num = float(np.sqrt(np.mean(err_sq)))
+        den = float(np.sqrt(np.mean(true**2)) + 1e-12)
+        return num / den
+
+    def case_label(self) -> str:
+        return f"domain_{self.domain_name}"

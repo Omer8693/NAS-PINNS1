@@ -1,13 +1,13 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Optional, Sequence
+from typing import Sequence
 
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
 
-from .equations import Advection1DEquation, Burgers1DEquation, Burgers2DEquation
+from .equations import Advection1DEquation, Burgers1DEquation, Burgers2DEquation, PoissonEquation
 
 
 CMAP = "YlGnBu"
@@ -67,40 +67,6 @@ def _plot_xt_comparison(
     fig.colorbar(cs2, ax=axes[2])
 
     fig.suptitle(f"{title_prefix} | Relative L2={rel_l2:.4e}")
-    _finalize(save_path)
-
-
-def _plot_burgers1d_time_slices(
-    x_vals: np.ndarray,
-    t_vals: np.ndarray,
-    exact_u: np.ndarray,
-    pred_u: np.ndarray,
-    save_path: Path,
-    t_slices: Optional[Sequence[float]] = None,
-) -> None:
-    if t_slices is None:
-        t_slices = (0.0, 0.25, 0.5, 0.75, 1.0)
-
-    fig, axes = plt.subplots(1, 2, figsize=(14, 6), sharex=True, sharey=True)
-    colors = plt.get_cmap("tab10")(np.linspace(0.0, 1.0, len(t_slices)))
-
-    for idx, t_sel in enumerate(t_slices):
-        t_idx = int(np.argmin(np.abs(t_vals - float(t_sel))))
-        t_used = float(t_vals[t_idx])
-        axes[0].plot(x_vals, exact_u[:, t_idx], color=colors[idx], linewidth=2.2, label=f"t={t_used:.2f}")
-        axes[1].plot(x_vals, pred_u[:, t_idx], color=colors[idx], linewidth=2.2, label=f"t={t_used:.2f}")
-
-    axes[0].set_title("Exact Time Slices")
-    axes[1].set_title("Predicted Time Slices")
-    axes[0].set_xlabel("x")
-    axes[1].set_xlabel("x")
-    axes[0].set_ylabel("u(x,t)")
-    axes[0].grid(True, alpha=0.3)
-    axes[1].grid(True, alpha=0.3)
-    axes[0].legend(title="Exact")
-    axes[1].legend(title="Pred")
-    fig.suptitle("Burgers1D: Exact vs Predicted Time Slices")
-    plt.tight_layout(rect=[0, 0, 1, 0.95])
     _finalize(save_path)
 
 
@@ -176,6 +142,51 @@ def _plot_xy_comparison(
     _finalize(save_path)
 
 
+def _plot_poisson_comparison(
+    x_vals: np.ndarray,
+    y_vals: np.ndarray,
+    exact_u: np.ndarray,
+    pred_u: np.ndarray,
+    domain_mask: np.ndarray,
+    rel_l2: float,
+    save_path: Path,
+    title_prefix: str,
+) -> None:
+    Xg, Yg = np.meshgrid(x_vals, y_vals, indexing="xy")
+    err = np.abs(pred_u - exact_u)
+
+    exact_plot = np.where(domain_mask, exact_u, np.nan)
+    pred_plot = np.where(domain_mask, pred_u, np.nan)
+    err_plot = np.where(domain_mask, err, np.nan)
+
+    cmap = plt.get_cmap(CMAP).copy()
+    cmap.set_bad(color="white")
+    vmin = float(np.nanmin(exact_plot))
+    vmax = float(np.nanmax(exact_plot))
+
+    fig, axes = plt.subplots(1, 3, figsize=(16, 5), constrained_layout=True)
+    cs0 = axes[0].contourf(Xg, Yg, exact_plot, levels=60, cmap=cmap, vmin=vmin, vmax=vmax)
+    axes[0].set_title("Exact")
+    axes[0].set_xlabel("x")
+    axes[0].set_ylabel("y")
+    fig.colorbar(cs0, ax=axes[0])
+
+    cs1 = axes[1].contourf(Xg, Yg, pred_plot, levels=60, cmap=cmap, vmin=vmin, vmax=vmax)
+    axes[1].set_title("Predicted")
+    axes[1].set_xlabel("x")
+    axes[1].set_ylabel("y")
+    fig.colorbar(cs1, ax=axes[1])
+
+    cs2 = axes[2].contourf(Xg, Yg, err_plot, levels=60, cmap=cmap)
+    axes[2].set_title("|Pred-Exact|")
+    axes[2].set_xlabel("x")
+    axes[2].set_ylabel("y")
+    fig.colorbar(cs2, ax=axes[2])
+
+    fig.suptitle(f"{title_prefix} | Relative L2={rel_l2:.4e}")
+    _finalize(save_path)
+
+
 def save_equation_plots(
     equation,
     model,
@@ -192,7 +203,7 @@ def save_equation_plots(
         pred = _predict_1d_field(model, mask_indices, x_test, t_test)
         x_np = x_test.detach().cpu().numpy()
         t_np = t_test.detach().cpu().numpy()
-        exact = equation._reference_solution_fd(x_np, t_np)
+        exact = equation.reference_solution(x_np, t_np)
 
         _plot_xt_comparison(
             x_vals=x_np,
@@ -202,13 +213,6 @@ def save_equation_plots(
             rel_l2=rel_l2,
             save_path=stage_dir / "result_comparison.png",
             title_prefix=f"Burgers1D ({equation.case_label()})",
-        )
-        _plot_burgers1d_time_slices(
-            x_vals=x_np,
-            t_vals=t_np,
-            exact_u=exact,
-            pred_u=pred,
-            save_path=stage_dir / "burgers1d_time_slices_exact_vs_pred.png",
         )
         return
 
@@ -256,6 +260,20 @@ def save_equation_plots(
         if first.exists():
             data = first.read_bytes()
             (stage_dir / "result_comparison.png").write_bytes(data)
+        return
+
+    if isinstance(equation, PoissonEquation):
+        x_vals, y_vals, pred, exact, mask = equation.evaluate_on_grid(model, mask_indices, device=device)
+        _plot_poisson_comparison(
+            x_vals=x_vals,
+            y_vals=y_vals,
+            exact_u=exact,
+            pred_u=pred,
+            domain_mask=mask,
+            rel_l2=rel_l2,
+            save_path=stage_dir / "result_comparison.png",
+            title_prefix=f"Poisson ({equation.case_label()})",
+        )
         return
 
     raise TypeError(f"Unsupported equation type for plotting: {type(equation).__name__}")

@@ -14,11 +14,11 @@ from paper_strict_scratch.runner import run_experiment
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Strict-paper NSGA-II NAS-PINN runner")
-    parser.add_argument("--equation", type=str, choices=["burgers1d", "advection1d", "burgers2d"], required=True)
+    parser.add_argument("--equation", type=str, choices=["burgers1d", "advection1d", "burgers2d", "poisson"], required=True)
     parser.add_argument("--save-dir", type=str, default=None)
     parser.add_argument("--repeats", type=int, default=None)
     parser.add_argument("--seed", type=int, default=None)
-    parser.add_argument("--cases", type=str, default=None, help="CSV values: nu list for burgers1d, beta list for advection1d")
+    parser.add_argument("--cases", type=str, default=None, help="CSV values: nu list for burgers1d, beta list for advection1d, domain list for poisson")
     parser.add_argument("--epochs", type=int, default=None)
     parser.add_argument("--proxy-epochs", type=int, default=None)
     parser.add_argument("--lbfgs-max-iter", type=int, default=None)

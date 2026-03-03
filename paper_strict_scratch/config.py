@@ -5,6 +5,7 @@ from typing import Tuple
 
 
 MASK_LEVELS: Tuple[int, ...] = (20, 40, 64, 96, 128, 192)
+POISSON_MASK_LEVELS: Tuple[int, ...] = (30, 50, 70, 90, 110)
 
 
 @dataclass(frozen=True)
@@ -35,6 +36,7 @@ class EquationConfig:
     input_dim: int
     hidden_layers: int
     base_neurons: int
+    mask_levels: Tuple[int, ...]
     lambda_pde: float
     lambda_ic: float
     lambda_bc: float
@@ -49,17 +51,18 @@ BURGERS1D = EquationConfig(
     input_dim=2,
     hidden_layers=5,
     base_neurons=128,
+    mask_levels=MASK_LEVELS,
     lambda_pde=1.0,
     lambda_ic=100.0,
     lambda_bc=100.0,
     repeats=5,
     base_seed=42,
     stage=StageConfig(
-        epochs=15000,
+        epochs=30000,
         inner_lr=1e-3,
         outer_lr=3e-4,
         outer_every=5,
-        lbfgs_max_iter=3000,
+        lbfgs_max_iter=6000,
         pso_iters=8,
         pso_swarm=16,
         pso_span=0.25,
@@ -80,17 +83,18 @@ ADVECTION1D = EquationConfig(
     input_dim=2,
     hidden_layers=4,
     base_neurons=128,
+    mask_levels=MASK_LEVELS,
     lambda_pde=1.0,
     lambda_ic=100.0,
     lambda_bc=10.0,
     repeats=5,
     base_seed=42,
     stage=StageConfig(
-        epochs=12000,
+        epochs=30000,
         inner_lr=1e-3,
         outer_lr=3e-4,
         outer_every=5,
-        lbfgs_max_iter=1500,
+        lbfgs_max_iter=6000,
         pso_iters=8,
         pso_swarm=16,
         pso_span=0.25,
@@ -111,17 +115,18 @@ BURGERS2D = EquationConfig(
     input_dim=3,
     hidden_layers=5,
     base_neurons=128,
+    mask_levels=MASK_LEVELS,
     lambda_pde=1.0,
     lambda_ic=100.0,
     lambda_bc=100.0,
     repeats=5,
     base_seed=42,
     stage=StageConfig(
-        epochs=12000,
+        epochs=30000,
         inner_lr=1e-3,
         outer_lr=3e-4,
         outer_every=5,
-        lbfgs_max_iter=1500,
+        lbfgs_max_iter=6000,
         pso_iters=8,
         pso_swarm=16,
         pso_span=0.25,
@@ -137,13 +142,47 @@ BURGERS2D = EquationConfig(
 )
 
 
+POISSON = EquationConfig(
+    name="poisson",
+    input_dim=2,
+    hidden_layers=5,
+    base_neurons=110,
+    mask_levels=POISSON_MASK_LEVELS,
+    lambda_pde=1.0,
+    lambda_ic=0.0,
+    lambda_bc=1.0,
+    repeats=1,
+    base_seed=42,
+    stage=StageConfig(
+        epochs=30000,
+        inner_lr=1e-3,
+        outer_lr=3e-4,
+        outer_every=5,
+        lbfgs_max_iter=6000,
+        pso_iters=8,
+        pso_swarm=16,
+        pso_span=0.25,
+    ),
+    search=SearchConfig(
+        proxy_epochs=600,
+        pop_size=30,
+        n_gen=20,
+        ref_partitions=12,
+        bo_init_points=4,
+        bo_iters=12,
+    ),
+)
+
+
 EQUATION_CONFIGS = {
     BURGERS1D.name: BURGERS1D,
     ADVECTION1D.name: ADVECTION1D,
     BURGERS2D.name: BURGERS2D,
+    POISSON.name: POISSON,
 }
 
 
 # Paper protocol sweeps
-BURGERS1D_NU_LIST = (0.1, 0.07, 0.04)
+BURGERS1D_NU_LIST = (0.01, 0.04, 0.07)
 ADVECTION1D_BETA_LIST = (1.0, 0.5, 0.1)
+POISSON_DOMAIN_LIST = ("rectangular", "circle", "lshape", "flower", "annulus")

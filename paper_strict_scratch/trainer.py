@@ -207,54 +207,104 @@ def run_pso(
     lower = center - scale
     upper = center + scale
 
-    rng = np.random.default_rng()
-    positions = rng.uniform(lower, upper, size=(swarm, center.size))
-    positions[0] = center.copy()
-    velocities = np.zeros_like(positions)
-
-    personal_best_pos = positions.copy()
-    personal_best_val = np.full((swarm,), np.inf, dtype=np.float64)
-    global_best_pos = center.copy()
-    global_best_val = float("inf")
-
-    history: List[float] = []
-
     def objective(vec: np.ndarray) -> float:
         _set_params_from_flat(params, vec, device)
         loss, _ = compute_total_loss(model, equation, train_data, mask_indices)
         return float(loss.detach().item())
 
-    w = 0.729
-    c1 = 1.49445
-    c2 = 1.49445
+    history: List[float] = []
+    best_x = center.copy()
+    best_f = float("inf")
 
     t0 = time.perf_counter()
-    for _ in range(iters):
-        for i in range(swarm):
-            val = objective(positions[i])
-            if val < personal_best_val[i]:
-                personal_best_val[i] = val
-                personal_best_pos[i] = positions[i].copy()
-            if val < global_best_val:
-                global_best_val = val
-                global_best_pos = positions[i].copy()
+    try:
+        # Use pymoo's adaptive fuzzy-PSO implementation (same family as the provided code).
+        from pymoo.algorithms.soo.nonconvex.pso import PSO
+        from pymoo.core.problem import ElementwiseProblem
+        from pymoo.optimize import minimize
 
-        history.append(float(global_best_val))
+        class WeightsProblem(ElementwiseProblem):
+            def __init__(self) -> None:
+                super().__init__(n_var=center.size, n_obj=1, n_ieq_constr=0, xl=lower, xu=upper)
 
-        r1 = rng.random(size=positions.shape)
-        r2 = rng.random(size=positions.shape)
-        velocities = (
-            w * velocities
-            + c1 * r1 * (personal_best_pos - positions)
-            + c2 * r2 * (global_best_pos[None, :] - positions)
+            def _evaluate(self, x, out, *args, **kwargs):
+                out["F"] = objective(np.asarray(x, dtype=np.float64))
+
+        problem = WeightsProblem()
+        algorithm = PSO(
+            pop_size=swarm,
+            w=0.9,
+            c1=2.0,
+            c2=2.0,
+            adaptive=True,
+            initial_velocity="random",
+            max_velocity_rate=0.20,
+            pertube_best=True,
         )
-        positions = np.clip(positions + velocities, lower, upper)
+        res = minimize(
+            problem,
+            algorithm,
+            termination=("n_gen", iters),
+            save_history=True,
+            verbose=True,
+        )
 
-    _set_params_from_flat(params, global_best_pos, device)
+        if res.X is not None and res.F is not None:
+            best_x = np.asarray(res.X, dtype=np.float64)
+            best_f = float(np.asarray(res.F, dtype=np.float64).reshape(-1)[0])
+        if getattr(res, "history", None):
+            for h in res.history:
+                try:
+                    fval = float(np.asarray(h.opt[0].F, dtype=np.float64).reshape(-1)[0])
+                except Exception:
+                    fvals = np.asarray(h.pop.get("F"), dtype=np.float64).reshape(-1)
+                    fval = float(np.min(fvals)) if fvals.size else np.nan
+                history.append(fval)
+    except Exception:
+        # Fallback to deterministic bounded PSO if pymoo PSO is unavailable.
+        rng = np.random.default_rng()
+        positions = rng.uniform(lower, upper, size=(swarm, center.size))
+        positions[0] = center.copy()
+        velocities = np.zeros_like(positions)
+
+        personal_best_pos = positions.copy()
+        personal_best_val = np.full((swarm,), np.inf, dtype=np.float64)
+        global_best_pos = center.copy()
+        global_best_val = float("inf")
+
+        w = 0.729
+        c1 = 1.49445
+        c2 = 1.49445
+
+        for _ in range(iters):
+            for i in range(swarm):
+                val = objective(positions[i])
+                if val < personal_best_val[i]:
+                    personal_best_val[i] = val
+                    personal_best_pos[i] = positions[i].copy()
+                if val < global_best_val:
+                    global_best_val = val
+                    global_best_pos = positions[i].copy()
+
+            history.append(float(global_best_val))
+
+            r1 = rng.random(size=positions.shape)
+            r2 = rng.random(size=positions.shape)
+            velocities = (
+                w * velocities
+                + c1 * r1 * (personal_best_pos - positions)
+                + c2 * r2 * (global_best_pos[None, :] - positions)
+            )
+            positions = np.clip(positions + velocities, lower, upper)
+
+        best_x = global_best_pos
+        best_f = float(global_best_val)
+
+    _set_params_from_flat(params, best_x, device)
     elapsed = time.perf_counter() - t0
 
     _set_requires_grad(mask_params, True)
-    return float(global_best_val), history, elapsed
+    return float(best_f), history, elapsed
 
 
 def evaluate_stage(

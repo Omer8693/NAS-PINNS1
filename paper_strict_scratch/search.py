@@ -6,7 +6,7 @@ from typing import Dict, Sequence, Tuple
 import numpy as np
 import torch
 
-from .config import EquationConfig, MASK_LEVELS
+from .config import EquationConfig
 from .model import SearchPINN
 from .trainer import compute_total_loss, set_seed
 
@@ -41,7 +41,7 @@ def _proxy_train_loss(
         input_dim=cfg.input_dim,
         hidden_layers=cfg.hidden_layers,
         base_neurons=cfg.base_neurons,
-        mask_levels=MASK_LEVELS,
+        mask_levels=cfg.mask_levels,
     ).to(device)
 
     for p in model.mask_parameters():
@@ -75,7 +75,7 @@ def _evaluate_cached(
         return cache[key]
 
     loss = _proxy_train_loss(cfg, equation, key, device, seed)
-    nparam = _effective_param_count(cfg, key, MASK_LEVELS)
+    nparam = _effective_param_count(cfg, key, cfg.mask_levels)
     cache[key] = (loss, nparam)
     return loss, nparam
 
@@ -103,7 +103,7 @@ def run_nsga2(
 
     cache: Dict[Tuple[int, ...], Tuple[float, int]] = {}
     n_layers = int(cfg.hidden_layers)
-    n_levels = len(MASK_LEVELS)
+    n_levels = len(cfg.mask_levels)
 
     class MaskProblem(ElementwiseProblem):
         def __init__(self) -> None:
@@ -150,7 +150,7 @@ def run_nsga3(
 
     cache: Dict[Tuple[int, ...], Tuple[float, int]] = {}
     n_layers = int(cfg.hidden_layers)
-    n_levels = len(MASK_LEVELS)
+    n_levels = len(cfg.mask_levels)
 
     class MaskProblem(ElementwiseProblem):
         def __init__(self) -> None:
@@ -194,7 +194,7 @@ def run_bayesian(
 
     cache: Dict[Tuple[int, ...], Tuple[float, int]] = {}
     n_layers = int(cfg.hidden_layers)
-    n_levels = len(MASK_LEVELS)
+    n_levels = len(cfg.mask_levels)
 
     pbounds = {f"m{i}": (0.0, float(n_levels - 1)) for i in range(n_layers)}
 

@@ -8,6 +8,7 @@ Bu klasor mevcut proje koduna dokunmadan, NAS-PINN paper protokolune gore sifird
   - Burgers 1D
   - Advection 1D
   - Burgers 2D
+  - Poisson 2D (domain: rectangular/circle/lshape/flower/annulus)
 - `model.py`: NAS-PINN supernet (op + mask relaxation)
 - `search.py`: NSGA-II / NSGA-III / Bayesian architecture search
 - `trainer.py`: Adam-best -> LBFGS ve Adam-best -> PSO stage akisi
@@ -16,14 +17,22 @@ Bu klasor mevcut proje koduna dokunmadan, NAS-PINN paper protokolune gore sifird
 - `run_nsga2.py`: NSGA-II tabanli arama + ayni stage akisi
 - `run_nsga3.py`: NSGA-III tabanli arama + ayni stage akisi
 - `run_bayesian.py`: Bayesian tabanli arama + ayni stage akisi
+- `run_full_suite.sh`: tum equation x method kombinasyonlarini (poisson dahil) sirali calistirir
 
 ## Paper-Locked Varsayilanlar
 
-- Burgers1D: `nu = [0.1, 0.07, 0.04]`, repeats=5
+- Burgers1D: `nu = [0.01, 0.04, 0.07]`, repeats=5
 - Advection1D: `beta = [1.0, 0.5, 0.1]`, repeats=5
 - Burgers2D: tek case, repeats=5
+- Poisson: `domain = [rectangular, circle, lshape, flower, annulus]`, repeats=1
 - Advection train/test grid: `40 x 120`
 - Burgers2D train grid: `20 x 25 x 25`, test grid: `41 x 500 x 500`
+- Poisson parametreleri (orijinal NAS-PINN Poisson ayarlari):
+  - `base_neurons=110`, `hidden_layers=5`, `mask_levels=[30,50,70,90,110]`
+  - `epochs=30000`, `inner_lr=1e-3`, `outer_lr=3e-4`, `outer_every=5`
+  - `lbfgs_max_iter=6000`, `pso_iters=8`, `pso_swarm=16`, `pso_span=0.25`
+  - PSO: pymoo adaptif fuzzy-PSO (fallback: bounded basic PSO)
+  - `n_col=4000`, `n_bc=400`, `test_grid=500`
 - Stage mantigi: Adam-best -> LBFGS ve Adam-best -> PSO (ayri stage), en iyi stage rel L2 ile secilir
 
 ## Ornek Komutlar
@@ -56,6 +65,13 @@ python paper_strict_scratch/run_bayesian.py --equation burgers1d \
   --save-dir results/paper_strict_scratch/burgers1d/bayesian
 ```
 
+Poisson (ornek):
+
+```bash
+python paper_strict_scratch/run_nsga3.py --equation poisson \
+  --save-dir results/paper_strict_scratch/poisson/nsga3
+```
+
 ## Hızlı smoke-test icin
 
 ```bash
@@ -80,8 +96,6 @@ Gorseller:
   - Exact
   - Predicted
   - `|Pred-Exact|` isi haritasi (Relative L2 bilgisi baslikta)
-- Burgers1D icin ek:
-  - `burgers1d_time_slices_exact_vs_pred.png` (farkli `t` kesitleri, exact vs pred)
 - Burgers2D icin ek:
   - `slice_t_0.00_comparison.png`
   - `slice_t_1.00_comparison.png`

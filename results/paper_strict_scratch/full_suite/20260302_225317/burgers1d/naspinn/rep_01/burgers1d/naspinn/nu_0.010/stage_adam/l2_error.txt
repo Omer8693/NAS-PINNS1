@@ -1,0 +1,2 @@
+stage,adam
+rel_l2,8.18437764e-01

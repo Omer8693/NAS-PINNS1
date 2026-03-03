@@ -14,42 +14,59 @@ from .config import (
     ADVECTION1D_BETA_LIST,
     BURGERS1D_NU_LIST,
     EQUATION_CONFIGS,
-    MASK_LEVELS,
+    POISSON_DOMAIN_LIST,
 )
-from .equations import Advection1DEquation, Burgers1DEquation, Burgers2DEquation
+from .equations import Advection1DEquation, Burgers1DEquation, Burgers2DEquation, PoissonEquation
 from .model import SearchPINN, load_model_state
 from .search import search_architecture
 from .trainer import evaluate_stage, run_lbfgs, run_pso, set_seed, train_adam
 from .visualization import plot_loss_curve, save_equation_plots
 
 
-def parse_cases(equation_name: str, cases_csv: Optional[str]) -> List[float]:
+def parse_cases(equation_name: str, cases_csv: Optional[str]) -> List[object]:
     if equation_name == "burgers1d":
         default = list(BURGERS1D_NU_LIST)
     elif equation_name == "advection1d":
         default = list(ADVECTION1D_BETA_LIST)
     elif equation_name == "burgers2d":
         default = [0.0]
+    elif equation_name == "poisson":
+        default = list(POISSON_DOMAIN_LIST)
     else:
         raise ValueError(f"Unsupported equation: {equation_name}")
 
     if not cases_csv:
         return default
 
-    values = [float(v.strip()) for v in cases_csv.split(",") if v.strip()]
     if equation_name == "burgers2d":
         # Single-case equation.
         return [0.0]
+    if equation_name == "poisson":
+        values = [v.strip() for v in cases_csv.split(",") if v.strip()]
+        if not values:
+            return default
+        allowed = set(POISSON_DOMAIN_LIST)
+        invalid = [v for v in values if v not in allowed]
+        if invalid:
+            raise ValueError(
+                f"Unknown poisson domain(s): {invalid}. "
+                f"Allowed: {sorted(allowed)}"
+            )
+        return values
+
+    values = [float(v.strip()) for v in cases_csv.split(",") if v.strip()]
     return values
 
 
-def build_equation(equation_name: str, cfg, case_value: float):
+def build_equation(equation_name: str, cfg, case_value: object):
     if equation_name == "burgers1d":
         return Burgers1DEquation(cfg, nu=float(case_value))
     if equation_name == "advection1d":
         return Advection1DEquation(cfg, beta=float(case_value))
     if equation_name == "burgers2d":
         return Burgers2DEquation(cfg)
+    if equation_name == "poisson":
+        return PoissonEquation(cfg, domain_name=str(case_value))
     raise ValueError(f"Unsupported equation: {equation_name}")
 
 
@@ -147,7 +164,7 @@ def run_single_case(
         input_dim=cfg.input_dim,
         hidden_layers=cfg.hidden_layers,
         base_neurons=cfg.base_neurons,
-        mask_levels=MASK_LEVELS,
+        mask_levels=cfg.mask_levels,
     ).to(device)
     train_data = equation.sample_train(device)
 
@@ -181,7 +198,7 @@ def run_single_case(
             input_dim=cfg.input_dim,
             hidden_layers=cfg.hidden_layers,
             base_neurons=cfg.base_neurons,
-            mask_levels=MASK_LEVELS,
+            mask_levels=cfg.mask_levels,
         ).to(device)
         train_data = equation.sample_train(device)
 

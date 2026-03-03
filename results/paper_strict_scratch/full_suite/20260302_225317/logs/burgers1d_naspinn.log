@@ -622,3 +622,33 @@ Adam [17999] loss: 7.7860e-03
 Adam [19999] loss: 4.0309e-03
 Adam [21999] loss: 3.6259e-03
 Adam [23999] loss: 5.4757e-03
+Adam [25999] loss: 1.4355e-03
+Adam [27999] loss: 1.3985e-03
+Adam [29999] loss: 1.7937e-03
+Best mask selections: [2, 4, 4, 3, 4]
+Saved plot: results/paper_strict_scratch/full_suite/20260302_225317/burgers1d/naspinn/rep_05/burgers1d/naspinn/nu_0.070/stage_adam/loss_curve.png
+Saved plot: results/paper_strict_scratch/full_suite/20260302_225317/burgers1d/naspinn/rep_05/burgers1d/naspinn/nu_0.070/stage_adam/result_comparison.png
+L-BFGS refinement...
+Saved plot: results/paper_strict_scratch/full_suite/20260302_225317/burgers1d/naspinn/rep_05/burgers1d/naspinn/nu_0.070/stage_lbfgs/loss_curve.png
+Saved plot: results/paper_strict_scratch/full_suite/20260302_225317/burgers1d/naspinn/rep_05/burgers1d/naspinn/nu_0.070/stage_lbfgs/result_comparison.png
+PSO refinement...
+======================================================================================================
+n_gen  |  n_eval  |    f     |    S    |    w    |    c1    |    c2    |     f_avg     |     f_min    
+======================================================================================================
+     1 |       16 |        - |       - |  0.9000 |  2.00000 |  2.00000 |  6.700662E+02 |  1.322293E+02
+     2 |       32 | -2.7E-01 |       3 |  0.2494 |  2.00000 |  2.01824 |  2.619207E+02 |  5.133437E+01
+     3 |       48 | -2.8E-02 |       3 |  0.3824 |  1.99107 |  2.03019 |  1.385942E+02 |  2.648144E+01
+     4 |       64 | -5.0E-02 |       3 |  0.3695 |  1.98092 |  2.04389 |  8.983939E+01 |  2.361408E+01
+     5 |       80 | -4.2E-02 |       3 |  0.3743 |  1.96925 |  2.05421 |  6.894076E+01 |  1.733578E+01
+     6 |       96 | -7.9E-02 |       3 |  0.3517 |  1.95841 |  2.06289 |  5.707576E+01 |  1.733578E+01
+     7 |      112 | -1.0E-01 |       3 |  0.3386 |  1.94908 |  2.07648 |  3.378530E+01 |  9.9661617279
+     8 |      128 | -7.9E-02 |       3 |  0.3516 |  1.93800 |  2.08901 |  1.505963E+01 |  8.3944873810
+PSO best objective: 8.3945e+00
+Saved plot: results/paper_strict_scratch/full_suite/20260302_225317/burgers1d/naspinn/rep_05/burgers1d/naspinn/nu_0.070/stage_pso/loss_curve.png
+Saved plot: results/paper_strict_scratch/full_suite/20260302_225317/burgers1d/naspinn/rep_05/burgers1d/naspinn/nu_0.070/stage_pso/result_comparison.png
+Selected best stage: lbfgs (rel_l2=5.2395e-04)
+Run time: 1871.95 s
+[OK  ] naspinn/burgers1d/nu_0.070 (rep=5)
+Saved summary CSV: results/paper_strict_scratch/full_suite/20260302_225317/burgers1d/naspinn/summary_burgers1d_naspinn.csv
+Saved summary JSON: results/paper_strict_scratch/full_suite/20260302_225317/burgers1d/naspinn/summary_burgers1d_naspinn.json
+[OK  ] burgers1d/naspinn

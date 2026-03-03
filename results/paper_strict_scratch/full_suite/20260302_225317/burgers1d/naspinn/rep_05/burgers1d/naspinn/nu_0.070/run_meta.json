@@ -1,0 +1,34 @@
+{
+  "equation": "burgers1d",
+  "case": "nu_0.070",
+  "method": "naspinn",
+  "seed": 46,
+  "best_masks": [
+    2,
+    4,
+    4,
+    3,
+    4
+  ],
+  "stages": {
+    "adam": {
+      "train_loss": 0.000974442227743566,
+      "rel_l2": 2.6801409662742737,
+      "elapsed_sec": 1728.0027310959995
+    },
+    "lbfgs": {
+      "train_loss": 2.3842423615860753e-05,
+      "rel_l2": 0.0005239465250540125,
+      "elapsed_sec": 103.72836034186184
+    },
+    "pso": {
+      "train_loss": 8.394487380981445,
+      "rel_l2": 0.658863475867457,
+      "elapsed_sec": 33.21884148567915
+    }
+  },
+  "best_stage": "lbfgs",
+  "best_rel_l2": 0.0005239465250540125,
+  "run_time_sec": 1871.9532586280257,
+  "search": {}
+}

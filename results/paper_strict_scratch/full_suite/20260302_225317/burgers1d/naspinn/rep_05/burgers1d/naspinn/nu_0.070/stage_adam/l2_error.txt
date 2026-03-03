@@ -1,2 +1,0 @@
-stage,adam
-rel_l2,2.68014097e+00

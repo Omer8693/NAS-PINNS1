@@ -1,2 +1,0 @@
-method,equation,case,seed,stage,train_loss,rel_l2,elapsed_sec
-naspinn,burgers1d,nu_0.010,43,adam,4.34375741e-03,1.81532381e+00,1466.017038

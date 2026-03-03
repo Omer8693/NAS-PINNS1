@@ -1,0 +1,58 @@
+Adam [    0] loss: 3.1202e+01
+Adam [ 2000] loss: 1.2017e-01
+Adam [ 4000] loss: 8.9168e-02
+Adam [ 6000] loss: 1.0487e-02
+Adam [ 8000] loss: 1.1898e-03
+Adam [10000] loss: 2.3476e-02
+Adam [11999] loss: 5.0438e-03
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_1.000/run_01/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_1.000/run_01/stage_adam/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_1.000/run_01/stage_adam/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_1.000/run_01/stage_adam/advection_time_slices_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_1.000/run_01/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_1.000/run_01/stage_lbfgs/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_1.000/run_01/stage_lbfgs/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_1.000/run_01/stage_lbfgs/advection_time_slices_exact_vs_pred.png
+Selected best stage: lbfgs (rel_l2=4.5757e-03)
+Run time: 563.20 s
+Adam [    0] loss: 3.1168e+01
+Adam [ 2000] loss: 7.4728e-02
+Adam [ 4000] loss: 3.2756e-03
+Adam [ 6000] loss: 1.8165e-03
+Adam [ 8000] loss: 8.8019e-04
+Adam [10000] loss: 5.9777e-02
+Adam [11999] loss: 5.0891e-02
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_0.500/run_01/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_0.500/run_01/stage_adam/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_0.500/run_01/stage_adam/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_0.500/run_01/stage_adam/advection_time_slices_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_0.500/run_01/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_0.500/run_01/stage_lbfgs/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_0.500/run_01/stage_lbfgs/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_0.500/run_01/stage_lbfgs/advection_time_slices_exact_vs_pred.png
+Selected best stage: lbfgs (rel_l2=2.7640e-03)
+Run time: 518.83 s
+Adam [    0] loss: 3.1166e+01
+Adam [ 2000] loss: 2.5221e-03
+Adam [ 4000] loss: 9.5231e-04
+Adam [ 6000] loss: 1.8348e-02
+Adam [ 8000] loss: 8.5784e-04
+Adam [10000] loss: 1.4774e-03
+Adam [11999] loss: 3.4098e-04
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_0.100/run_01/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_0.100/run_01/stage_adam/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_0.100/run_01/stage_adam/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_0.100/run_01/stage_adam/advection_time_slices_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_0.100/run_01/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_0.100/run_01/stage_lbfgs/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_0.100/run_01/stage_lbfgs/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_0.100/run_01/stage_lbfgs/advection_time_slices_exact_vs_pred.png
+Selected best stage: lbfgs (rel_l2=4.5126e-03)
+Run time: 526.82 s
+Saved summary: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_protocol_summary.csv

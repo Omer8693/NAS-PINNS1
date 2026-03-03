@@ -1,2 +1,0 @@
-stage,lbfgs
-rel_l2,7.75221095e-04

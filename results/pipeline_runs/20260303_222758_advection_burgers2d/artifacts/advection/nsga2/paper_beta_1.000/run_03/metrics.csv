@@ -1,0 +1,2 @@
+method,stage,beta,seed,rel_l2,run_time_seconds
+naspinn,best:lbfgs,1.000000,45,7.02804292e-03,734.141029

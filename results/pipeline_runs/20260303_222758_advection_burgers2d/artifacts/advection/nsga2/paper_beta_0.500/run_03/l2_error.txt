@@ -1,0 +1,3 @@
+stage,lbfgs
+beta,0.500000
+rel_l2,2.69221893e-03

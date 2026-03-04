@@ -412,3 +412,422 @@ Adam [  119] loss: 2.8663e+01
 Adam [    0] loss: 5.2803e+01
 Adam [  119] loss: 2.8731e+01
 Adam [    0] loss: 3.0866e+01
+Adam [  119] loss: 2.7494e+01
+Adam [    0] loss: 9.1874e+01
+Adam [  119] loss: 2.0661e+01
+     2 |       24 |      3 |  0.0549155909 |         ideal
+Adam [    0] loss: 2.0182e+02
+Adam [  119] loss: 2.8955e+01
+Adam [    0] loss: 5.7975e+01
+Adam [  119] loss: 2.9213e+01
+Adam [    0] loss: 4.3640e+01
+Adam [  119] loss: 2.8157e+01
+Adam [    0] loss: 3.8671e+01
+Adam [  119] loss: 1.9139e+01
+Adam [    0] loss: 3.7889e+01
+Adam [  119] loss: 2.7521e+01
+Adam [    0] loss: 3.2286e+01
+Adam [  119] loss: 2.9239e+01
+Adam [    0] loss: 5.0187e+01
+Adam [  119] loss: 1.8653e+01
+Adam [    0] loss: 5.0406e+01
+Adam [  119] loss: 2.9731e+01
+Adam [    0] loss: 3.8217e+01
+Adam [  119] loss: 2.7596e+01
+Adam [    0] loss: 3.8577e+01
+Adam [  119] loss: 2.9862e+01
+Adam [    0] loss: 3.4816e+01
+Adam [  119] loss: 2.9758e+01
+Adam [    0] loss: 9.2805e+01
+Adam [  119] loss: 2.5973e+01
+     3 |       36 |      6 |  0.0210057110 |         ideal
+Adam [    0] loss: 4.2141e+01
+Adam [  119] loss: 2.9825e+01
+Adam [    0] loss: 3.2925e+01
+Adam [  119] loss: 2.9806e+01
+Adam [    0] loss: 3.9466e+01
+Adam [  119] loss: 2.7143e+01
+Adam [    0] loss: 4.1854e+01
+Adam [  119] loss: 2.0678e+01
+Adam [    0] loss: 7.5487e+01
+Adam [  119] loss: 2.2370e+01
+Adam [    0] loss: 1.4747e+02
+Adam [  119] loss: 2.9152e+01
+Adam [    0] loss: 3.1016e+01
+Adam [  119] loss: 2.8398e+01
+Adam [    0] loss: 3.4747e+01
+Adam [  119] loss: 2.8476e+01
+Adam [    0] loss: 3.9276e+01
+Adam [  119] loss: 2.9110e+01
+Adam [    0] loss: 5.6195e+01
+Adam [  119] loss: 3.0104e+01
+Adam [    0] loss: 5.6033e+01
+Adam [  119] loss: 2.4404e+01
+Adam [    0] loss: 5.7065e+01
+Adam [  119] loss: 2.9493e+01
+     4 |       48 |      6 |  0.0606463832 |         ideal
+Adam [    0] loss: 4.0594e+01
+Adam [  119] loss: 2.9129e+01
+Adam [    0] loss: 3.3231e+01
+Adam [  119] loss: 2.7899e+01
+Adam [    0] loss: 4.9276e+01
+Adam [  119] loss: 2.9020e+01
+Adam [    0] loss: 1.7856e+02
+Adam [  119] loss: 2.9342e+01
+Adam [    0] loss: 6.6050e+01
+Adam [  119] loss: 2.9837e+01
+Adam [    0] loss: 5.7064e+01
+Adam [  119] loss: 2.9469e+01
+Adam [    0] loss: 8.9511e+01
+Adam [  119] loss: 2.9325e+01
+Adam [    0] loss: 1.2488e+02
+Adam [  119] loss: 2.9457e+01
+Adam [    0] loss: 2.8657e+02
+Adam [  119] loss: 2.8288e+01
+Adam [    0] loss: 5.8753e+01
+Adam [  119] loss: 2.3530e+01
+Adam [    0] loss: 3.5824e+01
+Adam [  119] loss: 2.6206e+01
+Adam [    0] loss: 3.4548e+01
+Adam [  119] loss: 2.7827e+01
+     5 |       60 |      6 |  0.000000E+00 |             f
+Adam [    0] loss: 1.3152e+02
+Adam [  119] loss: 2.9858e+01
+Adam [    0] loss: 1.1020e+02
+Adam [  119] loss: 2.9728e+01
+Adam [    0] loss: 6.2692e+01
+Adam [  119] loss: 2.5763e+01
+Adam [    0] loss: 6.2207e+01
+Adam [  119] loss: 2.9866e+01
+Adam [    0] loss: 4.1401e+01
+Adam [  119] loss: 2.8857e+01
+Adam [    0] loss: 5.7727e+01
+Adam [  119] loss: 2.9722e+01
+Adam [    0] loss: 3.1984e+01
+Adam [  119] loss: 2.1065e+01
+Adam [    0] loss: 3.3110e+01
+Adam [  119] loss: 2.9382e+01
+Adam [    0] loss: 4.7435e+01
+Adam [  119] loss: 2.9631e+01
+Adam [    0] loss: 5.8108e+01
+Adam [  119] loss: 2.9453e+01
+Adam [    0] loss: 4.9861e+01
+Adam [  119] loss: 2.9396e+01
+Adam [    0] loss: 1.0856e+02
+Adam [  119] loss: 2.9543e+01
+     6 |       72 |      6 |  0.000000E+00 |             f
+Best architecture from NSGA-II: layers=5, neurons=153
+Adam [    0] loss: 3.8563e+01
+Adam [ 2000] loss: 1.2227e-01
+Adam [ 4000] loss: 9.0950e-02
+Adam [ 6000] loss: 2.9833e-01
+Adam [ 8000] loss: 8.5363e-03
+Adam [10000] loss: 4.8900e-03
+Adam [11999] loss: 7.1111e-03
+
+L-BFGS refinement...
+
+PSO refinement...
+PSO best objective: 1.4356e+01
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_03/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_03/stage_adam/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_03/stage_adam/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_03/stage_adam/advection_time_slices_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_03/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_03/stage_lbfgs/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_03/stage_lbfgs/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_03/stage_lbfgs/advection_time_slices_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_03/stage_pso/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_03/stage_pso/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_03/stage_pso/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_03/stage_pso/advection_time_slices_exact_vs_pred.png
+Selected best stage: lbfgs (rel_l2=7.0280e-03)
+Run time: 734.14 s
+Saved summary: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_03/search_summary.csv
+Starting NSGA-II architecture search: beta=1.000
+Adam [    0] loss: 4.6020e+01
+Adam [  119] loss: 1.8864e+01
+Adam [    0] loss: 3.6280e+01
+Adam [  119] loss: 2.1391e+01
+Adam [    0] loss: 3.6641e+01
+Adam [  119] loss: 2.9006e+01
+Adam [    0] loss: 3.4492e+01
+Adam [  119] loss: 2.9859e+01
+Adam [    0] loss: 4.7334e+01
+Adam [  119] loss: 2.8924e+01
+Adam [    0] loss: 7.9968e+01
+Adam [  119] loss: 3.0166e+01
+Adam [    0] loss: 3.6992e+01
+Adam [  119] loss: 2.9421e+01
+Adam [    0] loss: 7.8363e+01
+Adam [  119] loss: 2.9373e+01
+Adam [    0] loss: 3.7952e+01
+Adam [  119] loss: 2.9296e+01
+Adam [    0] loss: 6.3530e+01
+Adam [  119] loss: 2.9110e+01
+Adam [    0] loss: 5.9047e+01
+Adam [  119] loss: 2.5266e+01
+Adam [    0] loss: 4.1283e+01
+Adam [  119] loss: 2.9844e+01
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       12 |      3 |             - |             -
+Adam [    0] loss: 4.4132e+01
+Adam [  119] loss: 2.1598e+01
+Adam [    0] loss: 3.3376e+01
+Adam [  119] loss: 2.9678e+01
+Adam [    0] loss: 3.3223e+01
+Adam [  119] loss: 2.9023e+01
+Adam [    0] loss: 3.1930e+01
+Adam [  119] loss: 2.9299e+01
+Adam [    0] loss: 6.8263e+01
+Adam [  119] loss: 2.9802e+01
+Adam [    0] loss: 4.8445e+01
+Adam [  119] loss: 2.8645e+01
+Adam [    0] loss: 6.4438e+01
+Adam [  119] loss: 2.9828e+01
+Adam [    0] loss: 3.5984e+01
+Adam [  119] loss: 2.8949e+01
+Adam [    0] loss: 6.7290e+01
+Adam [  119] loss: 2.8663e+01
+Adam [    0] loss: 5.2803e+01
+Adam [  119] loss: 2.8731e+01
+Adam [    0] loss: 3.0866e+01
+Adam [  119] loss: 2.7494e+01
+Adam [    0] loss: 9.1874e+01
+Adam [  119] loss: 2.0661e+01
+     2 |       24 |      3 |  0.0549155909 |         ideal
+Adam [    0] loss: 2.0182e+02
+Adam [  119] loss: 2.8955e+01
+Adam [    0] loss: 5.7975e+01
+Adam [  119] loss: 2.9213e+01
+Adam [    0] loss: 4.3640e+01
+Adam [  119] loss: 2.8157e+01
+Adam [    0] loss: 3.8671e+01
+Adam [  119] loss: 1.9139e+01
+Adam [    0] loss: 3.7889e+01
+Adam [  119] loss: 2.7521e+01
+Adam [    0] loss: 3.2286e+01
+Adam [  119] loss: 2.9239e+01
+Adam [    0] loss: 5.0187e+01
+Adam [  119] loss: 1.8653e+01
+Adam [    0] loss: 5.0406e+01
+Adam [  119] loss: 2.9731e+01
+Adam [    0] loss: 3.8217e+01
+Adam [  119] loss: 2.7596e+01
+Adam [    0] loss: 3.8577e+01
+Adam [  119] loss: 2.9862e+01
+Adam [    0] loss: 3.4816e+01
+Adam [  119] loss: 2.9758e+01
+Adam [    0] loss: 9.2805e+01
+Adam [  119] loss: 2.5973e+01
+     3 |       36 |      6 |  0.0210057110 |         ideal
+Adam [    0] loss: 4.2141e+01
+Adam [  119] loss: 2.9825e+01
+Adam [    0] loss: 3.2925e+01
+Adam [  119] loss: 2.9806e+01
+Adam [    0] loss: 3.9466e+01
+Adam [  119] loss: 2.7143e+01
+Adam [    0] loss: 4.1854e+01
+Adam [  119] loss: 2.0678e+01
+Adam [    0] loss: 7.5487e+01
+Adam [  119] loss: 2.2370e+01
+Adam [    0] loss: 1.4747e+02
+Adam [  119] loss: 2.9152e+01
+Adam [    0] loss: 3.1016e+01
+Adam [  119] loss: 2.8398e+01
+Adam [    0] loss: 3.4747e+01
+Adam [  119] loss: 2.8476e+01
+Adam [    0] loss: 3.9276e+01
+Adam [  119] loss: 2.9110e+01
+Adam [    0] loss: 5.6195e+01
+Adam [  119] loss: 3.0104e+01
+Adam [    0] loss: 5.6033e+01
+Adam [  119] loss: 2.4404e+01
+Adam [    0] loss: 5.7065e+01
+Adam [  119] loss: 2.9493e+01
+     4 |       48 |      6 |  0.0606463832 |         ideal
+Adam [    0] loss: 4.0594e+01
+Adam [  119] loss: 2.9129e+01
+Adam [    0] loss: 3.3231e+01
+Adam [  119] loss: 2.7899e+01
+Adam [    0] loss: 4.9276e+01
+Adam [  119] loss: 2.9020e+01
+Adam [    0] loss: 1.7856e+02
+Adam [  119] loss: 2.9342e+01
+Adam [    0] loss: 6.6050e+01
+Adam [  119] loss: 2.9837e+01
+Adam [    0] loss: 5.7064e+01
+Adam [  119] loss: 2.9469e+01
+Adam [    0] loss: 8.9511e+01
+Adam [  119] loss: 2.9325e+01
+Adam [    0] loss: 1.2488e+02
+Adam [  119] loss: 2.9457e+01
+Adam [    0] loss: 2.8657e+02
+Adam [  119] loss: 2.8288e+01
+Adam [    0] loss: 5.8753e+01
+Adam [  119] loss: 2.3530e+01
+Adam [    0] loss: 3.5824e+01
+Adam [  119] loss: 2.6206e+01
+Adam [    0] loss: 3.4548e+01
+Adam [  119] loss: 2.7827e+01
+     5 |       60 |      6 |  0.000000E+00 |             f
+Adam [    0] loss: 1.3152e+02
+Adam [  119] loss: 2.9858e+01
+Adam [    0] loss: 1.1020e+02
+Adam [  119] loss: 2.9728e+01
+Adam [    0] loss: 6.2692e+01
+Adam [  119] loss: 2.5763e+01
+Adam [    0] loss: 6.2207e+01
+Adam [  119] loss: 2.9866e+01
+Adam [    0] loss: 4.1401e+01
+Adam [  119] loss: 2.8857e+01
+Adam [    0] loss: 5.7727e+01
+Adam [  119] loss: 2.9722e+01
+Adam [    0] loss: 3.1984e+01
+Adam [  119] loss: 2.1065e+01
+Adam [    0] loss: 3.3110e+01
+Adam [  119] loss: 2.9382e+01
+Adam [    0] loss: 4.7435e+01
+Adam [  119] loss: 2.9631e+01
+Adam [    0] loss: 5.8108e+01
+Adam [  119] loss: 2.9453e+01
+Adam [    0] loss: 4.9861e+01
+Adam [  119] loss: 2.9396e+01
+Adam [    0] loss: 1.0856e+02
+Adam [  119] loss: 2.9543e+01
+     6 |       72 |      6 |  0.000000E+00 |             f
+Best architecture from NSGA-II: layers=5, neurons=153
+Adam [    0] loss: 5.6649e+01
+Adam [ 2000] loss: 1.0753e-01
+Adam [ 4000] loss: 1.0126e-02
+Adam [ 6000] loss: 1.5879e-03
+Adam [ 8000] loss: 4.2219e-03
+Adam [10000] loss: 1.8625e-03
+Adam [11999] loss: 2.7797e-03
+
+L-BFGS refinement...
+
+PSO refinement...
+PSO best objective: 3.3872e+01
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_04/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_04/stage_adam/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_04/stage_adam/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_04/stage_adam/advection_time_slices_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_04/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_04/stage_lbfgs/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_04/stage_lbfgs/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_04/stage_lbfgs/advection_time_slices_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_04/stage_pso/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_04/stage_pso/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_04/stage_pso/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_04/stage_pso/advection_time_slices_exact_vs_pred.png
+Selected best stage: lbfgs (rel_l2=2.5481e-03)
+Run time: 702.66 s
+Saved summary: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_04/search_summary.csv
+Starting NSGA-II architecture search: beta=1.000
+Adam [    0] loss: 4.6020e+01
+Adam [  119] loss: 1.8864e+01
+Adam [    0] loss: 3.6280e+01
+Adam [  119] loss: 2.1391e+01
+Adam [    0] loss: 3.6641e+01
+Adam [  119] loss: 2.9006e+01
+Adam [    0] loss: 3.4492e+01
+Adam [  119] loss: 2.9859e+01
+Adam [    0] loss: 4.7334e+01
+Adam [  119] loss: 2.8924e+01
+Adam [    0] loss: 7.9968e+01
+Adam [  119] loss: 3.0166e+01
+Adam [    0] loss: 3.6992e+01
+Adam [  119] loss: 2.9421e+01
+Adam [    0] loss: 7.8363e+01
+Adam [  119] loss: 2.9373e+01
+Adam [    0] loss: 3.7952e+01
+Adam [  119] loss: 2.9296e+01
+Adam [    0] loss: 6.3530e+01
+Adam [  119] loss: 2.9110e+01
+Adam [    0] loss: 5.9047e+01
+Adam [  119] loss: 2.5266e+01
+Adam [    0] loss: 4.1283e+01
+Adam [  119] loss: 2.9844e+01
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       12 |      3 |             - |             -
+Adam [    0] loss: 4.4132e+01
+Adam [  119] loss: 2.1598e+01
+Adam [    0] loss: 3.3376e+01
+Adam [  119] loss: 2.9678e+01
+Adam [    0] loss: 3.3223e+01
+Adam [  119] loss: 2.9023e+01
+Adam [    0] loss: 3.1930e+01
+Adam [  119] loss: 2.9299e+01
+Adam [    0] loss: 6.8263e+01
+Adam [  119] loss: 2.9802e+01
+Adam [    0] loss: 4.8445e+01
+Adam [  119] loss: 2.8645e+01
+Adam [    0] loss: 6.4438e+01
+Adam [  119] loss: 2.9828e+01
+Adam [    0] loss: 3.5984e+01
+Adam [  119] loss: 2.8949e+01
+Adam [    0] loss: 6.7290e+01
+Adam [  119] loss: 2.8663e+01
+Adam [    0] loss: 5.2803e+01
+Adam [  119] loss: 2.8731e+01
+Adam [    0] loss: 3.0866e+01
+Adam [  119] loss: 2.7494e+01
+Adam [    0] loss: 9.1874e+01
+Adam [  119] loss: 2.0661e+01
+     2 |       24 |      3 |  0.0549155909 |         ideal
+Adam [    0] loss: 2.0182e+02
+Adam [  119] loss: 2.8955e+01
+Adam [    0] loss: 5.7975e+01
+Adam [  119] loss: 2.9213e+01
+Adam [    0] loss: 4.3640e+01
+Adam [  119] loss: 2.8157e+01
+Adam [    0] loss: 3.8671e+01
+Adam [  119] loss: 1.9139e+01
+Adam [    0] loss: 3.7889e+01
+Adam [  119] loss: 2.7521e+01
+Adam [    0] loss: 3.2286e+01
+Adam [  119] loss: 2.9239e+01
+Adam [    0] loss: 5.0187e+01
+Adam [  119] loss: 1.8653e+01
+Adam [    0] loss: 5.0406e+01
+Adam [  119] loss: 2.9731e+01
+Adam [    0] loss: 3.8217e+01
+Adam [  119] loss: 2.7596e+01
+Adam [    0] loss: 3.8577e+01
+Adam [  119] loss: 2.9862e+01
+Adam [    0] loss: 3.4816e+01
+Adam [  119] loss: 2.9758e+01
+Adam [    0] loss: 9.2805e+01
+Adam [  119] loss: 2.5973e+01
+     3 |       36 |      6 |  0.0210057110 |         ideal
+Adam [    0] loss: 4.2141e+01
+Adam [  119] loss: 2.9825e+01
+Adam [    0] loss: 3.2925e+01
+Adam [  119] loss: 2.9806e+01
+Adam [    0] loss: 3.9466e+01
+Adam [  119] loss: 2.7143e+01
+Adam [    0] loss: 4.1854e+01
+Adam [  119] loss: 2.0678e+01
+Adam [    0] loss: 7.5487e+01
+Adam [  119] loss: 2.2370e+01
+Adam [    0] loss: 1.4747e+02
+Adam [  119] loss: 2.9152e+01
+Adam [    0] loss: 3.1016e+01
+Adam [  119] loss: 2.8398e+01
+Adam [    0] loss: 3.4747e+01
+Adam [  119] loss: 2.8476e+01
+Adam [    0] loss: 3.9276e+01
+Adam [  119] loss: 2.9110e+01
+Adam [    0] loss: 5.6195e+01
+Adam [  119] loss: 3.0104e+01
+Adam [    0] loss: 5.6033e+01
+Adam [  119] loss: 2.4404e+01
+Adam [    0] loss: 5.7065e+01
+Adam [  119] loss: 2.9493e+01
+     4 |       48 |      6 |  0.0606463832 |         ideal
+Adam [    0] loss: 4.0594e+01

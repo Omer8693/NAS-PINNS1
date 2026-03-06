@@ -3,3 +3,74 @@ NAS_PINNs_burgers2d_bayesian.py --profile paper_baseline --seed 43 --save-dir re
 NAS_PINNs_burgers2d_bayesian.py --profile paper_baseline --seed 44 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/bayesian/run_03
 NAS_PINNs_burgers2d_bayesian.py --profile paper_baseline --seed 45 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/bayesian/run_04
 NAS_PINNs_burgers2d_bayesian.py --profile paper_baseline --seed 46 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/bayesian/run_05
+Starting Bayesian architecture search (2D Burgers)
+|   iter    |  target   |  layers   |  neurons  |
+-------------------------------------------------
+Adam [    0] loss: 8.9432e+01
+Adam [  199] loss: 4.4828e-01
+BO eval 01 | layers=5 neurons=247 | proxy_loss=3.6948e-01
+| [39m1        [39m | [39m-0.369484[39m | [39m5.4981604[39m | [39m246.53714[39m |
+Adam [    0] loss: 1.2770e+02
+Adam [  199] loss: 1.0267e-02
+BO eval 02 | layers=7 neurons=179 | proxy_loss=1.0267e-02
+| [35m2        [39m | [35m-0.010267[39m | [35m6.9279757[39m | [35m178.94242[39m |
+Adam [    0] loss: 8.3859e+01
+Adam [  199] loss: 2.9070e-01
+BO eval 03 | layers=5 neurons=94 | proxy_loss=2.9070e-01
+| [39m3        [39m | [39m-0.290701[39m | [39m4.6240745[39m | [39m93.950947[39m |
+Adam [    0] loss: 2.2908e+01
+Adam [  199] loss: 1.4386e-02
+BO eval 04 | layers=4 neurons=230 | proxy_loss=1.4386e-02
+| [39m4        [39m | [39m-0.014385[39m | [39m4.2323344[39m | [39m230.30581[39m |
+Adam [    0] loss: 2.2022e+01
+Adam [  199] loss: 1.3821e-02
+BO eval 05 | layers=5 neurons=128 | proxy_loss=1.3821e-02
+| [39m5        [39m | [39m-0.013820[39m | [39m4.8493564[39m | [39m127.87006[39m |
+Adam [    0] loss: 6.4841e+01
+Adam [  199] loss: 8.8120e-03
+BO eval 06 | layers=7 neurons=179 | proxy_loss=8.8120e-03
+| [35m6        [39m | [35m-0.008812[39m | [35m6.9127122[39m | [35m178.92548[39m |
+Adam [    0] loss: 2.8014e+01
+Adam [  199] loss: 1.3492e-02
+BO eval 07 | layers=4 neurons=175 | proxy_loss=1.3492e-02
+| [39m7        [39m | [39m-0.013492[39m | [39m4.0      [39m | [39m175.43251[39m |
+Adam [    0] loss: 6.9154e+01
+Adam [  199] loss: 7.0182e-03
+BO eval 08 | layers=8 neurons=174 | proxy_loss=7.0182e-03
+| [35m8        [39m | [35m-0.007018[39m | [35m8.0      [39m | [35m174.17742[39m |
+Adam [    0] loss: 1.0874e+02
+Adam [  199] loss: 1.3370e-02
+BO eval 09 | layers=6 neurons=134 | proxy_loss=1.3370e-02
+| [39m9        [39m | [39m-0.013369[39m | [39m5.8866203[39m | [39m134.18345[39m |
+Adam [    0] loss: 8.8481e+01
+Adam [  199] loss: 9.5550e-02
+BO eval 10 | layers=4 neurons=224 | proxy_loss=9.5550e-02
+| [39m10       [39m | [39m-0.095549[39m | [39m4.1841926[39m | [39m223.78275[39m |
+Adam [    0] loss: 1.8093e+02
+Adam [  199] loss: 1.7874e-02
+BO eval 11 | layers=8 neurons=122 | proxy_loss=1.7874e-02
+| [39m11       [39m | [39m-0.017873[39m | [39m8.0      [39m | [39m122.35110[39m |
+Adam [    0] loss: 1.9025e+02
+Adam [  199] loss: 1.7802e-01
+BO eval 12 | layers=4 neurons=118 | proxy_loss=1.7802e-01
+| [39m12       [39m | [39m-0.178017[39m | [39m4.0      [39m | [39m117.54565[39m |
+Adam [    0] loss: 3.8246e+01
+Adam [  199] loss: 2.9681e-02
+BO eval 13 | layers=4 neurons=140 | proxy_loss=2.9681e-02
+| [39m13       [39m | [39m-0.029680[39m | [39m4.0      [39m | [39m139.80141[39m |
+Adam [    0] loss: 6.3290e+01
+Adam [  199] loss: 6.7503e-03
+BO eval 14 | layers=8 neurons=234 | proxy_loss=6.7503e-03
+| [35m14       [39m | [35m-0.006750[39m | [35m8.0      [39m | [35m233.99910[39m |
+Adam [    0] loss: 6.1692e+01
+Adam [  199] loss: 1.0209e-02
+BO eval 15 | layers=8 neurons=145 | proxy_loss=1.0209e-02
+| [39m15       [39m | [39m-0.010209[39m | [39m8.0      [39m | [39m145.14954[39m |
+Adam [    0] loss: 5.4324e+01
+Adam [  199] loss: 1.1775e-01
+BO eval 16 | layers=4 neurons=149 | proxy_loss=1.1775e-01
+| [39m16       [39m | [39m-0.117750[39m | [39m4.0      [39m | [39m149.11063[39m |
+=================================================
+Best architecture from Bayesian: layers=8, neurons=234
+Adam [    0] loss: 2.5712e+01
+Adam [ 2000] loss: 1.5039e-04

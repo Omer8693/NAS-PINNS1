@@ -1,11 +1,11 @@
 # NAS-PINNs Comparative Project
 
-Bu repo iki ana deney hattini icerir:
+This repository contains two main experiment tracks:
 
-1. Burgers + Poisson (multi-case, klasik pipeline)
-2. Advection + Burgers2D (paper-profile, resume destekli pipeline)
+1. Burgers + Poisson (multi-case, classic pipeline)
+2. Advection + Burgers2D (paper-profile, resume-enabled pipeline)
 
-Temel karsilastirma yontemleri:
+Core comparison methods:
 
 - `naspinn` (baseline)
 - `nsga2`
@@ -50,7 +50,7 @@ Temel karsilastirma yontemleri:
 python run_pipeline.py
 ```
 
-Yararlilar:
+Useful options:
 
 - `python run_pipeline.py --quick`
 - `python run_pipeline.py --repeats 3`
@@ -62,19 +62,19 @@ Yararlilar:
 ./run_advection_burgers2d_remaining.sh
 ```
 
-Bu script eksik runlari resume eder, tamamlananlari otomatik atlar.
+This script resumes missing runs and automatically skips completed ones.
 
-Onemli ortam degiskenleri:
+Important environment variables:
 
-- `RUN_ROOT`: mevcut run klasoru (bos ise en guncel run otomatik secilir)
-- `REQUIRE_GPU=1`: CUDA yoksa fail-fast
+- `RUN_ROOT`: existing run directory (if empty, the most recent run is selected automatically)
+- `REQUIRE_GPU=1`: fail-fast if CUDA is not available
 - `PROFILE=paper_baseline|ours_fast`
 - `REPEATS`, `SEED`, `BETA_LIST`
 - `RUN_FAMILIES=advection,burgers2d`
 - `ADVECTION_METHODS=naspinn,nsga2,nsga3,bayesian`
 - `BURGERS2D_METHODS=naspinn,nsga2,nsga3,bayesian`
 
-Ornek (yalniz burgers2d search zinciri):
+Example (only burgers2d search chain):
 
 ```bash
 RUN_ROOT=results/pipeline_runs/20260303_222758_advection_burgers2d \
@@ -99,20 +99,20 @@ REQUIRE_GPU=1 \
 - `results/pipeline_runs/<timestamp>_advection_burgers2d/artifacts/burgers2d/...`
 - `results/pipeline_runs/<timestamp>_advection_burgers2d/logs/*.log`
 
-Her method/case klasorunde tipik olarak:
+Typical files inside each method/case directory:
 
 - `metrics.csv`
 - `run_time.txt`
 - `loss_curve*.png` / `result_comparison*.png`
-- stage klasorleri: `stage_adam/`, `stage_lbfgs/`, `stage_pso/`, `stage_best/` (methode gore)
+- stage directories: `stage_adam/`, `stage_lbfgs/`, `stage_pso/`, `stage_best/` (depending on method)
 
 ## Current Result Exports
 
-Tum tamamlanmis kayitlardan uretilen csv dosyalari:
+CSV files generated from all completed records:
 
 - `results/pipeline_runs/poisson_burgers_completed_all.csv`
 - `results/pipeline_runs/poisson_burgers_completed_summary_by_stage.csv`
 - `results/pipeline_runs/best_only_list.csv`
 
-Not: Bu export dosyalari adlarinda eski isim kalmis olsa da su anda
-`poisson + burgers + advection + burgers2d` tamamlanmis kayitlarini birlestirir.
+Note: These export filenames keep legacy naming, but currently they include
+completed records from `poisson + burgers + advection + burgers2d`.

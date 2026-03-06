@@ -1347,3 +1347,32 @@ Adam [  199] loss: 1.1951e-01
     20 |      600 |      9 |  0.0153613070 |             f
 Best architecture from NSGA-II: layers=7, neurons=188
 Adam [    0] loss: 6.2155e+01
+Adam [ 2000] loss: 4.0097e-04
+Adam [ 4000] loss: 2.0858e-04
+Adam [ 6000] loss: 1.2035e-02
+Adam [ 8000] loss: 4.9024e-04
+Adam [10000] loss: 1.9402e-04
+Adam [11999] loss: 4.7582e-04
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/nsga2/run_01/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/nsga2/run_01/stage_adam/slice_t_0.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/nsga2/run_01/stage_adam/slice_t_1.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/nsga2/run_01/stage_adam/slice_t_2.00.png
+Relative L2 error (2D Burgers): 1.1301e-03
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/nsga2/run_01/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/nsga2/run_01/stage_lbfgs/slice_t_0.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/nsga2/run_01/stage_lbfgs/slice_t_1.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/nsga2/run_01/stage_lbfgs/slice_t_2.00.png
+Relative L2 error (2D Burgers): 4.7348e-04
+Selected best stage: lbfgs (rel_l2=4.7348e-04)
+Run time: 1993.82 s
+Saved summary: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/nsga2/run_01/search_summary.csv
+Starting NSGA-II architecture search (2D Burgers)
+Adam [    0] loss: 8.2359e+01
+Adam [  199] loss: 3.7266e-02
+Adam [    0] loss: 1.9010e+01
+Adam [  199] loss: 1.3999e-02
+Adam [    0] loss: 9.5326e+01
+Adam [  199] loss: 3.9492e-01
+Adam [    0] loss: 7.4956e+01

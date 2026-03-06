@@ -1,15 +1,18 @@
-# NAS-PINNs Comparative Project (Burgers + Poisson)
+# NAS-PINNs Comparative Project
 
-Bu repo toplantı sonrası hedefe göre düzenlendi:
+Bu repo iki ana deney hattini icerir:
 
-- Baseline: NAS-PINN
-- Arama yöntemleri: NSGA-II, NSGA-III, Bayesian
-- Denklem seti: Burgers + Poisson
-- Poisson için domain karşılaştırması
-- Burgers için viscosity karşılaştırması
-- Standart çıktı: loss grafiği, heatmap karşılaştırmaları, CSV/metric/log
+1. Burgers + Poisson (multi-case, klasik pipeline)
+2. Advection + Burgers2D (paper-profile, resume destekli pipeline)
 
-## Active Entry Scripts
+Temel karsilastirma yontemleri:
+
+- `naspinn` (baseline)
+- `nsga2`
+- `nsga3`
+- `bayesian`
+
+## Entry Scripts
 
 ### Burgers
 
@@ -25,122 +28,91 @@ Bu repo toplantı sonrası hedefe göre düzenlendi:
 - `python NAS_PINNs_poisson_nsga3.py`
 - `python NAS_PINNs_poisson_bayesian.py`
 
-## Multi-Case Runs
+### Advection
 
-### Burgers (multi-nu)
+- `python NAS_PINNs_advection.py`
+- `python NAS_PINNs_advection_nsga2.py`
+- `python NAS_PINNs_advection_nsga3.py`
+- `python NAS_PINNs_advection_bayesian.py`
 
-Örnek:
+### Burgers2D
 
-```bash
-python NAS_PINNs_burgers.py --multi-nu --nu-list 0.01,0.04,0.07
-```
+- `python NAS_PINNs_burgers2d.py`
+- `python NAS_PINNs_burgers2d_nsga2.py`
+- `python NAS_PINNs_burgers2d_nsga3.py`
+- `python NAS_PINNs_burgers2d_bayesian.py`
 
-Aynı şekilde NSGA2/NSGA3/Bayesian scriptlerinde de `--multi-nu` + `--nu-list` var.
+## Main Runners
 
-### Poisson (multi-domain)
-
-Örnek:
-
-```bash
-python NAS_PINNs_poisson.py --multi-domain --domain-list rectangular,circle,lshape,flower,annulus
-```
-
-Aynı şekilde NSGA2/NSGA3/Bayesian scriptlerinde de `--multi-domain` + `--domain-list` var.
-
-## Output Layout
-
-### Burgers
-
-- `results/burgers/naspinn`
-- `results/burgers/nsga2`
-- `results/burgers/nsga3`
-- `results/burgers/bayesian`
-
-Tipik dosyalar:
-
-- `loss_curve.png`
-- `burgers_heatmap.png`
-- `result_comparison.png` (Exact / Pred / |Pred-Exact|)
-- `burgers_exact_vs_pred_time_slices.png` (yalnız `nu=0.01`)
-- `l2_error.txt`
-- `run_time.txt`
-- `metrics.csv`
-- `viscosity_comparison.csv`
-
-NAS-PINN stage bazlı çıktı klasörleri:
-
-- `stage_adam/`
-- `stage_lbfgs/` (L-BFGS açıksa)
-- `stage_pso/` (PSO açıksa)
-- `stage_summary.csv`
-
-### Poisson
-
-- `results/poisson/naspinn`
-- `results/poisson/nsga2`
-- `results/poisson/nsga3`
-- `results/poisson/bayesian`
-
-Tipik dosyalar:
-
-- `poisson_*_loss_curve.png`
-- `result_comparison.png` (Exact / Pred / |Pred-Exact|)
-- `results_summary.csv`
-- `run_time.txt`
-- `metrics.csv`
-- `domain_comparison.csv`
-
-NAS-PINN stage bazlı çıktı klasörleri:
-
-- `stage_adam/`
-- `stage_lbfgs/` (L-BFGS açıksa)
-- `stage_pso/` (PSO açıksa)
-- `stage_summary.csv`
-
-## Sequential Runner
-
-Tüm scriptleri sırayla çalıştırmak için:
+### 1) Burgers + Poisson sequential runner
 
 ```bash
 python run_pipeline.py
 ```
 
-Hızlı smoke:
+Yararlilar:
+
+- `python run_pipeline.py --quick`
+- `python run_pipeline.py --repeats 3`
+- `python run_pipeline.py --burgers-stage lbfgs --poisson-stage pso`
+
+### 2) Advection + Burgers2D resume runner
 
 ```bash
-python run_pipeline.py --quick
+./run_advection_burgers2d_remaining.sh
 ```
 
-Tekrar sayısı (hoca sorusu için run sayısı burada görünür):
+Bu script eksik runlari resume eder, tamamlananlari otomatik atlar.
+
+Onemli ortam degiskenleri:
+
+- `RUN_ROOT`: mevcut run klasoru (bos ise en guncel run otomatik secilir)
+- `REQUIRE_GPU=1`: CUDA yoksa fail-fast
+- `PROFILE=paper_baseline|ours_fast`
+- `REPEATS`, `SEED`, `BETA_LIST`
+- `RUN_FAMILIES=advection,burgers2d`
+- `ADVECTION_METHODS=naspinn,nsga2,nsga3,bayesian`
+- `BURGERS2D_METHODS=naspinn,nsga2,nsga3,bayesian`
+
+Ornek (yalniz burgers2d search zinciri):
 
 ```bash
-python run_pipeline.py --repeats 3
+RUN_ROOT=results/pipeline_runs/20260303_222758_advection_burgers2d \
+RUN_FAMILIES=burgers2d \
+BURGERS2D_METHODS=nsga2,nsga3,bayesian \
+REQUIRE_GPU=1 \
+./run_advection_burgers2d_remaining.sh
 ```
 
-Script başlangıçta iki sayı basar:
+## Output Layout
 
-- `Top-level job count`: çalıştırılacak ana script adedi
-- `Estimated sub-experiment count`: `nu/domain` bazlı toplam alt deney adedi
+### Classic pipeline (Burgers + Poisson)
 
-## Stage Mode
+- `results/pipeline_runs/<timestamp>/artifacts/rep_XX/burgers/...`
+- `results/pipeline_runs/<timestamp>/artifacts/rep_XX/poisson/...`
+- `results/pipeline_runs/<timestamp>/summary.csv`
+- `results/pipeline_runs/<timestamp>/summary.json`
 
-`run_pipeline.py` stage seçimini iki denklem için ayrı verebilir:
+### Advection + Burgers2D pipeline
 
-- `--burgers-stage {adam,lbfgs,pso}`
-- `--poisson-stage {adam,lbfgs,pso}`
+- `results/pipeline_runs/<timestamp>_advection_burgers2d/artifacts/advection/...`
+- `results/pipeline_runs/<timestamp>_advection_burgers2d/artifacts/burgers2d/...`
+- `results/pipeline_runs/<timestamp>_advection_burgers2d/logs/*.log`
 
-Örnek:
+Her method/case klasorunde tipik olarak:
 
-```bash
-python run_pipeline.py --burgers-stage lbfgs --poisson-stage pso
-```
+- `metrics.csv`
+- `run_time.txt`
+- `loss_curve*.png` / `result_comparison*.png`
+- stage klasorleri: `stage_adam/`, `stage_lbfgs/`, `stage_pso/`, `stage_best/` (methode gore)
 
-Notlar:
+## Current Result Exports
 
-- Burgers tarafında `pso` NAS-PINN baseline için aktiftir; NSGA2/NSGA3/Bayesian Burgers scriptleri Adam/L-BFGS akışındadır.
-- `--stage` parametresi geri uyumluluk için var ve iki tarafa aynı stage’i uygular.
+Tum tamamlanmis kayitlardan uretilen csv dosyalari:
 
-## Notes
+- `results/pipeline_runs/poisson_burgers_completed_all.csv`
+- `results/pipeline_runs/poisson_burgers_completed_summary_by_stage.csv`
+- `results/pipeline_runs/best_only_list.csv`
 
-- Burgers exact karşılaştırması veri seti uyumu nedeniyle `nu=0.01` için üretilir.
-- Poisson tarafı domain bazlı karşılaştırma için normalize edildi.
+Not: Bu export dosyalari adlarinda eski isim kalmis olsa da su anda
+`poisson + burgers + advection + burgers2d` tamamlanmis kayitlarini birlestirir.

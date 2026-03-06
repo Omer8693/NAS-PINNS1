@@ -1,0 +1,2 @@
+method,stage,seed,rel_l2,run_time_seconds
+naspinn,best:lbfgs,43,7.04449721e-04,2136.022951

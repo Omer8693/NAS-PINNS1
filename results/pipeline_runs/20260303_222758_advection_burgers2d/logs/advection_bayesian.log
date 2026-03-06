@@ -1,0 +1,1350 @@
+NAS_PINNs_advection_bayesian.py --profile paper_baseline --beta 1.0 --seed 43 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_01
+NAS_PINNs_advection_bayesian.py --profile paper_baseline --beta 1.0 --seed 44 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_02
+NAS_PINNs_advection_bayesian.py --profile paper_baseline --beta 1.0 --seed 45 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_03
+NAS_PINNs_advection_bayesian.py --profile paper_baseline --beta 1.0 --seed 46 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_04
+NAS_PINNs_advection_bayesian.py --profile paper_baseline --beta 1.0 --seed 47 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_05
+NAS_PINNs_advection_bayesian.py --profile paper_baseline --beta 0.5 --seed 43 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_01
+NAS_PINNs_advection_bayesian.py --profile paper_baseline --beta 0.5 --seed 44 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_02
+NAS_PINNs_advection_bayesian.py --profile paper_baseline --beta 0.5 --seed 45 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_03
+NAS_PINNs_advection_bayesian.py --profile paper_baseline --beta 0.5 --seed 46 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_04
+NAS_PINNs_advection_bayesian.py --profile paper_baseline --beta 0.5 --seed 47 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_05
+NAS_PINNs_advection_bayesian.py --profile paper_baseline --beta 0.1 --seed 43 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_01
+NAS_PINNs_advection_bayesian.py --profile paper_baseline --beta 0.1 --seed 44 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_02
+NAS_PINNs_advection_bayesian.py --profile paper_baseline --beta 0.1 --seed 45 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_03
+NAS_PINNs_advection_bayesian.py --profile paper_baseline --beta 0.1 --seed 46 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_04
+NAS_PINNs_advection_bayesian.py --profile paper_baseline --beta 0.1 --seed 47 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_05
+Starting Bayesian architecture search: beta=1.000
+|   iter    |  target   |  layers   |  neurons  |
+-------------------------------------------------
+Adam [    0] loss: 3.1357e+01
+Adam [  299] loss: 3.2005e-01
+BO eval 01 | layers=4 neurons=186 | proxy_loss=3.2005e-01
+| [39m1        [39m | [39m-0.320054[39m | [39m4.1236203[39m | [39m185.69143[39m |
+Adam [    0] loss: 4.4730e+01
+Adam [  299] loss: 1.5173e+00
+BO eval 02 | layers=5 neurons=141 | proxy_loss=4.7005e-01
+| [39m2        [39m | [39m-0.470054[39m | [39m5.1959818[39m | [39m140.62828[39m |
+Adam [    0] loss: 3.4043e+01
+Adam [  299] loss: 2.8593e+00
+BO eval 03 | layers=3 neurons=84 | proxy_loss=2.8593e+00
+| [39m3        [39m | [39m-2.859327[39m | [39m3.4680559[39m | [39m83.967298[39m |
+Adam [    0] loss: 6.4149e+01
+Adam [  299] loss: 2.7398e+01
+BO eval 04 | layers=3 neurons=175 | proxy_loss=2.7398e+01
+| [39m4        [39m | [39m-27.39814[39m | [39m3.1742508[39m | [39m174.87054[39m |
+Adam [    0] loss: 3.9533e+01
+Adam [  299] loss: 2.3387e+01
+BO eval 05 | layers=4 neurons=186 | proxy_loss=2.3387e+01
+| [39m5        [39m | [39m-23.38744[39m | [39m3.5887031[39m | [39m186.40141[39m |
+Adam [    0] loss: 2.4811e+02
+Adam [  299] loss: 1.5463e+00
+BO eval 06 | layers=5 neurons=141 | proxy_loss=1.5463e+00
+| [39m6        [39m | [39m-1.546274[39m | [39m5.2000133[39m | [39m140.60648[39m |
+Adam [    0] loss: 3.8246e+01
+Adam [  299] loss: 7.2332e-01
+BO eval 07 | layers=5 neurons=150 | proxy_loss=7.2332e-01
+| [39m7        [39m | [39m-0.723318[39m | [39m4.7400300[39m | [39m149.54893[39m |
+Adam [    0] loss: 3.9513e+01
+Adam [  299] loss: 3.8693e-01
+BO eval 08 | layers=5 neurons=141 | proxy_loss=3.8693e-01
+| [39m8        [39m | [39m-0.386932[39m | [39m5.1212451[39m | [39m141.03245[39m |
+Adam [    0] loss: 3.3605e+01
+Adam [  299] loss: 3.9415e-01
+BO eval 09 | layers=6 neurons=141 | proxy_loss=3.9415e-01
+| [39m9        [39m | [39m-0.394146[39m | [39m5.5751664[39m | [39m140.91511[39m |
+Adam [    0] loss: 5.8128e+01
+Adam [  299] loss: 3.9257e-01
+BO eval 10 | layers=6 neurons=92 | proxy_loss=3.9257e-01
+| [39m10       [39m | [39m-0.392571[39m | [39m5.8671966[39m | [39m92.167317[39m |
+Adam [    0] loss: 3.3271e+01
+Adam [  299] loss: 1.3435e+00
+BO eval 11 | layers=4 neurons=93 | proxy_loss=1.3435e+00
+| [39m11       [39m | [39m-1.343480[39m | [39m3.5081882[39m | [39m92.620630[39m |
+Adam [    0] loss: 3.4209e+01
+Adam [  299] loss: 6.4530e-01
+BO eval 12 | layers=5 neurons=141 | proxy_loss=6.4530e-01
+| [39m12       [39m | [39m-0.645300[39m | [39m4.7065459[39m | [39m140.75855[39m |
+Adam [    0] loss: 3.1624e+01
+Adam [  299] loss: 9.8171e-01
+BO eval 13 | layers=4 neurons=185 | proxy_loss=9.7863e-01
+| [39m13       [39m | [39m-0.978630[39m | [39m4.4517357[39m | [39m185.25592[39m |
+Adam [    0] loss: 4.4010e+01
+Adam [  299] loss: 7.0133e+00
+BO eval 14 | layers=5 neurons=186 | proxy_loss=7.0133e+00
+| [39m14       [39m | [39m-7.013327[39m | [39m4.6922842[39m | [39m185.79774[39m |
+Adam [    0] loss: 4.7457e+01
+Adam [  299] loss: 6.2035e+00
+BO eval 15 | layers=3 neurons=190 | proxy_loss=6.2035e+00
+| [39m15       [39m | [39m-6.203450[39m | [39m3.4186402[39m | [39m190.09849[39m |
+Adam [    0] loss: 4.0682e+01
+Adam [  299] loss: 6.6847e+00
+BO eval 16 | layers=5 neurons=123 | proxy_loss=6.6847e+00
+| [39m16       [39m | [39m-6.684682[39m | [39m4.6028144[39m | [39m123.27339[39m |
+=================================================
+Best architecture from Bayesian: layers=4, neurons=186
+Adam [    0] loss: 3.1357e+01
+Adam [ 2000] loss: 1.1071e-01
+Adam [ 4000] loss: 3.1443e-02
+Adam [ 6000] loss: 3.3911e-03
+Adam [ 8000] loss: 5.3300e-03
+Adam [10000] loss: 1.8258e-03
+Adam [11999] loss: 5.5584e-02
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_01/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_01/stage_adam/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_01/stage_adam/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_01/stage_adam/advection_time_slices_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_01/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_01/stage_lbfgs/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_01/stage_lbfgs/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_01/stage_lbfgs/advection_time_slices_exact_vs_pred.png
+Selected best stage: lbfgs (rel_l2=3.5978e-03)
+Run time: 726.50 s
+Saved summary: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_01/search_summary.csv
+Starting Bayesian architecture search: beta=1.000
+|   iter    |  target   |  layers   |  neurons  |
+-------------------------------------------------
+Adam [    0] loss: 3.1357e+01
+Adam [  299] loss: 3.2005e-01
+BO eval 01 | layers=4 neurons=186 | proxy_loss=3.2005e-01
+| [39m1        [39m | [39m-0.320054[39m | [39m4.1236203[39m | [39m185.69143[39m |
+Adam [    0] loss: 4.4730e+01
+Adam [  299] loss: 1.5173e+00
+BO eval 02 | layers=5 neurons=141 | proxy_loss=4.7005e-01
+| [39m2        [39m | [39m-0.470054[39m | [39m5.1959818[39m | [39m140.62828[39m |
+Adam [    0] loss: 3.4043e+01
+Adam [  299] loss: 2.8593e+00
+BO eval 03 | layers=3 neurons=84 | proxy_loss=2.8593e+00
+| [39m3        [39m | [39m-2.859327[39m | [39m3.4680559[39m | [39m83.967298[39m |
+Adam [    0] loss: 6.4149e+01
+Adam [  299] loss: 2.7398e+01
+BO eval 04 | layers=3 neurons=175 | proxy_loss=2.7398e+01
+| [39m4        [39m | [39m-27.39814[39m | [39m3.1742508[39m | [39m174.87054[39m |
+Adam [    0] loss: 3.9533e+01
+Adam [  299] loss: 2.3387e+01
+BO eval 05 | layers=4 neurons=186 | proxy_loss=2.3387e+01
+| [39m5        [39m | [39m-23.38744[39m | [39m3.5887031[39m | [39m186.40141[39m |
+Adam [    0] loss: 2.4811e+02
+Adam [  299] loss: 1.5463e+00
+BO eval 06 | layers=5 neurons=141 | proxy_loss=1.5463e+00
+| [39m6        [39m | [39m-1.546274[39m | [39m5.2000133[39m | [39m140.60648[39m |
+Adam [    0] loss: 3.8246e+01
+Adam [  299] loss: 7.2332e-01
+BO eval 07 | layers=5 neurons=150 | proxy_loss=7.2332e-01
+| [39m7        [39m | [39m-0.723318[39m | [39m4.7400300[39m | [39m149.54893[39m |
+Adam [    0] loss: 3.9513e+01
+Adam [  299] loss: 3.8693e-01
+BO eval 08 | layers=5 neurons=141 | proxy_loss=3.8693e-01
+| [39m8        [39m | [39m-0.386932[39m | [39m5.1212451[39m | [39m141.03245[39m |
+Adam [    0] loss: 3.3605e+01
+Adam [  299] loss: 3.9415e-01
+BO eval 09 | layers=6 neurons=141 | proxy_loss=3.9415e-01
+| [39m9        [39m | [39m-0.394146[39m | [39m5.5751664[39m | [39m140.91511[39m |
+Adam [    0] loss: 5.8128e+01
+Adam [  299] loss: 3.9257e-01
+BO eval 10 | layers=6 neurons=92 | proxy_loss=3.9257e-01
+| [39m10       [39m | [39m-0.392571[39m | [39m5.8671966[39m | [39m92.167317[39m |
+Adam [    0] loss: 3.3271e+01
+Adam [  299] loss: 1.3435e+00
+BO eval 11 | layers=4 neurons=93 | proxy_loss=1.3435e+00
+| [39m11       [39m | [39m-1.343480[39m | [39m3.5081882[39m | [39m92.620630[39m |
+Adam [    0] loss: 3.4209e+01
+Adam [  299] loss: 6.4530e-01
+BO eval 12 | layers=5 neurons=141 | proxy_loss=6.4530e-01
+| [39m12       [39m | [39m-0.645300[39m | [39m4.7065459[39m | [39m140.75855[39m |
+Adam [    0] loss: 3.1624e+01
+Adam [  299] loss: 9.8171e-01
+BO eval 13 | layers=4 neurons=185 | proxy_loss=9.7863e-01
+| [39m13       [39m | [39m-0.978630[39m | [39m4.4517357[39m | [39m185.25592[39m |
+Adam [    0] loss: 4.4010e+01
+Adam [  299] loss: 7.0133e+00
+BO eval 14 | layers=5 neurons=186 | proxy_loss=7.0133e+00
+| [39m14       [39m | [39m-7.013327[39m | [39m4.6922842[39m | [39m185.79774[39m |
+Adam [    0] loss: 4.7457e+01
+Adam [  299] loss: 6.2035e+00
+BO eval 15 | layers=3 neurons=190 | proxy_loss=6.2035e+00
+| [39m15       [39m | [39m-6.203450[39m | [39m3.4186402[39m | [39m190.09849[39m |
+Adam [    0] loss: 4.0682e+01
+Adam [  299] loss: 6.6847e+00
+BO eval 16 | layers=5 neurons=123 | proxy_loss=6.6847e+00
+| [39m16       [39m | [39m-6.684682[39m | [39m4.6028144[39m | [39m123.27339[39m |
+=================================================
+Best architecture from Bayesian: layers=4, neurons=186
+Adam [    0] loss: 3.2870e+01
+Adam [ 2000] loss: 6.1813e-02
+Adam [ 4000] loss: 1.5731e-03
+Adam [ 6000] loss: 6.7339e-04
+Adam [ 8000] loss: 5.3153e-04
+Adam [10000] loss: 2.8705e-04
+Adam [11999] loss: 6.0013e-03
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_02/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_02/stage_adam/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_02/stage_adam/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_02/stage_adam/advection_time_slices_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_02/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_02/stage_lbfgs/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_02/stage_lbfgs/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_02/stage_lbfgs/advection_time_slices_exact_vs_pred.png
+Selected best stage: lbfgs (rel_l2=5.4217e-03)
+Run time: 810.79 s
+Saved summary: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_02/search_summary.csv
+Starting Bayesian architecture search: beta=1.000
+|   iter    |  target   |  layers   |  neurons  |
+-------------------------------------------------
+Adam [    0] loss: 3.1357e+01
+Adam [  299] loss: 3.2005e-01
+BO eval 01 | layers=4 neurons=186 | proxy_loss=3.2005e-01
+| [39m1        [39m | [39m-0.320054[39m | [39m4.1236203[39m | [39m185.69143[39m |
+Adam [    0] loss: 4.4730e+01
+Adam [  299] loss: 1.5173e+00
+BO eval 02 | layers=5 neurons=141 | proxy_loss=4.7005e-01
+| [39m2        [39m | [39m-0.470054[39m | [39m5.1959818[39m | [39m140.62828[39m |
+Adam [    0] loss: 3.4043e+01
+Adam [  299] loss: 2.8593e+00
+BO eval 03 | layers=3 neurons=84 | proxy_loss=2.8593e+00
+| [39m3        [39m | [39m-2.859327[39m | [39m3.4680559[39m | [39m83.967298[39m |
+Adam [    0] loss: 6.4149e+01
+Adam [  299] loss: 2.7398e+01
+BO eval 04 | layers=3 neurons=175 | proxy_loss=2.7398e+01
+| [39m4        [39m | [39m-27.39814[39m | [39m3.1742508[39m | [39m174.87054[39m |
+Adam [    0] loss: 3.9533e+01
+Adam [  299] loss: 2.3387e+01
+BO eval 05 | layers=4 neurons=186 | proxy_loss=2.3387e+01
+| [39m5        [39m | [39m-23.38744[39m | [39m3.5887031[39m | [39m186.40141[39m |
+Adam [    0] loss: 2.4811e+02
+Adam [  299] loss: 1.5463e+00
+BO eval 06 | layers=5 neurons=141 | proxy_loss=1.5463e+00
+| [39m6        [39m | [39m-1.546274[39m | [39m5.2000133[39m | [39m140.60648[39m |
+Adam [    0] loss: 3.8246e+01
+Adam [  299] loss: 7.2332e-01
+BO eval 07 | layers=5 neurons=150 | proxy_loss=7.2332e-01
+| [39m7        [39m | [39m-0.723318[39m | [39m4.7400300[39m | [39m149.54893[39m |
+Adam [    0] loss: 3.9513e+01
+Adam [  299] loss: 3.8693e-01
+BO eval 08 | layers=5 neurons=141 | proxy_loss=3.8693e-01
+| [39m8        [39m | [39m-0.386932[39m | [39m5.1212451[39m | [39m141.03245[39m |
+Adam [    0] loss: 3.3605e+01
+Adam [  299] loss: 3.9415e-01
+BO eval 09 | layers=6 neurons=141 | proxy_loss=3.9415e-01
+| [39m9        [39m | [39m-0.394146[39m | [39m5.5751664[39m | [39m140.91511[39m |
+Adam [    0] loss: 5.8128e+01
+Adam [  299] loss: 3.9257e-01
+BO eval 10 | layers=6 neurons=92 | proxy_loss=3.9257e-01
+| [39m10       [39m | [39m-0.392571[39m | [39m5.8671966[39m | [39m92.167317[39m |
+Adam [    0] loss: 3.3271e+01
+Adam [  299] loss: 1.3435e+00
+BO eval 11 | layers=4 neurons=93 | proxy_loss=1.3435e+00
+| [39m11       [39m | [39m-1.343480[39m | [39m3.5081882[39m | [39m92.620630[39m |
+Adam [    0] loss: 3.4209e+01
+Adam [  299] loss: 6.4530e-01
+BO eval 12 | layers=5 neurons=141 | proxy_loss=6.4530e-01
+| [39m12       [39m | [39m-0.645300[39m | [39m4.7065459[39m | [39m140.75855[39m |
+Adam [    0] loss: 3.1624e+01
+Adam [  299] loss: 9.8171e-01
+BO eval 13 | layers=4 neurons=185 | proxy_loss=9.7863e-01
+| [39m13       [39m | [39m-0.978630[39m | [39m4.4517357[39m | [39m185.25592[39m |
+Adam [    0] loss: 4.4010e+01
+Adam [  299] loss: 7.0133e+00
+BO eval 14 | layers=5 neurons=186 | proxy_loss=7.0133e+00
+| [39m14       [39m | [39m-7.013327[39m | [39m4.6922842[39m | [39m185.79774[39m |
+Adam [    0] loss: 4.7457e+01
+Adam [  299] loss: 6.2035e+00
+BO eval 15 | layers=3 neurons=190 | proxy_loss=6.2035e+00
+| [39m15       [39m | [39m-6.203450[39m | [39m3.4186402[39m | [39m190.09849[39m |
+Adam [    0] loss: 4.0682e+01
+Adam [  299] loss: 6.6847e+00
+BO eval 16 | layers=5 neurons=123 | proxy_loss=6.6847e+00
+| [39m16       [39m | [39m-6.684682[39m | [39m4.6028144[39m | [39m123.27339[39m |
+=================================================
+Best architecture from Bayesian: layers=4, neurons=186
+Adam [    0] loss: 4.4806e+01
+Adam [ 2000] loss: 1.4163e-01
+Adam [ 4000] loss: 1.8839e-01
+Adam [ 6000] loss: 4.0278e-02
+Adam [ 8000] loss: 5.8363e-02
+Adam [10000] loss: 2.5174e-02
+Adam [11999] loss: 1.8187e-02
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_03/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_03/stage_adam/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_03/stage_adam/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_03/stage_adam/advection_time_slices_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_03/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_03/stage_lbfgs/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_03/stage_lbfgs/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_03/stage_lbfgs/advection_time_slices_exact_vs_pred.png
+Selected best stage: lbfgs (rel_l2=3.3836e-02)
+Run time: 789.88 s
+Saved summary: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_03/search_summary.csv
+Starting Bayesian architecture search: beta=1.000
+|   iter    |  target   |  layers   |  neurons  |
+-------------------------------------------------
+Adam [    0] loss: 3.1357e+01
+Adam [  299] loss: 3.2005e-01
+BO eval 01 | layers=4 neurons=186 | proxy_loss=3.2005e-01
+| [39m1        [39m | [39m-0.320054[39m | [39m4.1236203[39m | [39m185.69143[39m |
+Adam [    0] loss: 4.4730e+01
+Adam [  299] loss: 1.5173e+00
+BO eval 02 | layers=5 neurons=141 | proxy_loss=4.7005e-01
+| [39m2        [39m | [39m-0.470054[39m | [39m5.1959818[39m | [39m140.62828[39m |
+Adam [    0] loss: 3.4043e+01
+Adam [  299] loss: 2.8593e+00
+BO eval 03 | layers=3 neurons=84 | proxy_loss=2.8593e+00
+| [39m3        [39m | [39m-2.859327[39m | [39m3.4680559[39m | [39m83.967298[39m |
+Adam [    0] loss: 6.4149e+01
+Adam [  299] loss: 2.7398e+01
+BO eval 04 | layers=3 neurons=175 | proxy_loss=2.7398e+01
+| [39m4        [39m | [39m-27.39814[39m | [39m3.1742508[39m | [39m174.87054[39m |
+Adam [    0] loss: 3.9533e+01
+Adam [  299] loss: 2.3387e+01
+BO eval 05 | layers=4 neurons=186 | proxy_loss=2.3387e+01
+| [39m5        [39m | [39m-23.38744[39m | [39m3.5887031[39m | [39m186.40141[39m |
+Adam [    0] loss: 2.4811e+02
+Adam [  299] loss: 1.5463e+00
+BO eval 06 | layers=5 neurons=141 | proxy_loss=1.5463e+00
+| [39m6        [39m | [39m-1.546274[39m | [39m5.2000133[39m | [39m140.60648[39m |
+Adam [    0] loss: 3.8246e+01
+Adam [  299] loss: 7.2332e-01
+BO eval 07 | layers=5 neurons=150 | proxy_loss=7.2332e-01
+| [39m7        [39m | [39m-0.723318[39m | [39m4.7400300[39m | [39m149.54893[39m |
+Adam [    0] loss: 3.9513e+01
+Adam [  299] loss: 3.8693e-01
+BO eval 08 | layers=5 neurons=141 | proxy_loss=3.8693e-01
+| [39m8        [39m | [39m-0.386932[39m | [39m5.1212451[39m | [39m141.03245[39m |
+Adam [    0] loss: 3.3605e+01
+Adam [  299] loss: 3.9415e-01
+BO eval 09 | layers=6 neurons=141 | proxy_loss=3.9415e-01
+| [39m9        [39m | [39m-0.394146[39m | [39m5.5751664[39m | [39m140.91511[39m |
+Adam [    0] loss: 5.8128e+01
+Adam [  299] loss: 3.9257e-01
+BO eval 10 | layers=6 neurons=92 | proxy_loss=3.9257e-01
+| [39m10       [39m | [39m-0.392571[39m | [39m5.8671966[39m | [39m92.167317[39m |
+Adam [    0] loss: 3.3271e+01
+Adam [  299] loss: 1.3435e+00
+BO eval 11 | layers=4 neurons=93 | proxy_loss=1.3435e+00
+| [39m11       [39m | [39m-1.343480[39m | [39m3.5081882[39m | [39m92.620630[39m |
+Adam [    0] loss: 3.4209e+01
+Adam [  299] loss: 6.4530e-01
+BO eval 12 | layers=5 neurons=141 | proxy_loss=6.4530e-01
+| [39m12       [39m | [39m-0.645300[39m | [39m4.7065459[39m | [39m140.75855[39m |
+Adam [    0] loss: 3.1624e+01
+Adam [  299] loss: 9.8171e-01
+BO eval 13 | layers=4 neurons=185 | proxy_loss=9.7863e-01
+| [39m13       [39m | [39m-0.978630[39m | [39m4.4517357[39m | [39m185.25592[39m |
+Adam [    0] loss: 4.4010e+01
+Adam [  299] loss: 7.0133e+00
+BO eval 14 | layers=5 neurons=186 | proxy_loss=7.0133e+00
+| [39m14       [39m | [39m-7.013327[39m | [39m4.6922842[39m | [39m185.79774[39m |
+Adam [    0] loss: 4.7457e+01
+Adam [  299] loss: 6.2035e+00
+BO eval 15 | layers=3 neurons=190 | proxy_loss=6.2035e+00
+| [39m15       [39m | [39m-6.203450[39m | [39m3.4186402[39m | [39m190.09849[39m |
+Adam [    0] loss: 4.0682e+01
+Adam [  299] loss: 6.6847e+00
+BO eval 16 | layers=5 neurons=123 | proxy_loss=6.6847e+00
+| [39m16       [39m | [39m-6.684682[39m | [39m4.6028144[39m | [39m123.27339[39m |
+=================================================
+Best architecture from Bayesian: layers=4, neurons=186
+Adam [    0] loss: 3.7012e+01
+Adam [ 2000] loss: 1.2195e-01
+Adam [ 4000] loss: 6.6594e-02
+Adam [ 6000] loss: 1.0401e-02
+Adam [ 8000] loss: 4.8489e-03
+Adam [10000] loss: 2.6418e-03
+Adam [11999] loss: 2.1545e-02
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_04/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_04/stage_adam/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_04/stage_adam/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_04/stage_adam/advection_time_slices_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_04/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_04/stage_lbfgs/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_04/stage_lbfgs/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_04/stage_lbfgs/advection_time_slices_exact_vs_pred.png
+Selected best stage: lbfgs (rel_l2=8.1548e-03)
+Run time: 947.39 s
+Saved summary: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_04/search_summary.csv
+Starting Bayesian architecture search: beta=1.000
+|   iter    |  target   |  layers   |  neurons  |
+-------------------------------------------------
+Adam [    0] loss: 3.1357e+01
+Adam [  299] loss: 3.2005e-01
+BO eval 01 | layers=4 neurons=186 | proxy_loss=3.2005e-01
+| [39m1        [39m | [39m-0.320054[39m | [39m4.1236203[39m | [39m185.69143[39m |
+Adam [    0] loss: 4.4730e+01
+Adam [  299] loss: 1.5173e+00
+BO eval 02 | layers=5 neurons=141 | proxy_loss=4.7005e-01
+| [39m2        [39m | [39m-0.470054[39m | [39m5.1959818[39m | [39m140.62828[39m |
+Adam [    0] loss: 3.4043e+01
+Adam [  299] loss: 2.8593e+00
+BO eval 03 | layers=3 neurons=84 | proxy_loss=2.8593e+00
+| [39m3        [39m | [39m-2.859327[39m | [39m3.4680559[39m | [39m83.967298[39m |
+Adam [    0] loss: 6.4149e+01
+Adam [  299] loss: 2.7398e+01
+BO eval 04 | layers=3 neurons=175 | proxy_loss=2.7398e+01
+| [39m4        [39m | [39m-27.39814[39m | [39m3.1742508[39m | [39m174.87054[39m |
+Adam [    0] loss: 3.9533e+01
+Adam [  299] loss: 2.3387e+01
+BO eval 05 | layers=4 neurons=186 | proxy_loss=2.3387e+01
+| [39m5        [39m | [39m-23.38744[39m | [39m3.5887031[39m | [39m186.40141[39m |
+Adam [    0] loss: 2.4811e+02
+Adam [  299] loss: 1.5463e+00
+BO eval 06 | layers=5 neurons=141 | proxy_loss=1.5463e+00
+| [39m6        [39m | [39m-1.546274[39m | [39m5.2000133[39m | [39m140.60648[39m |
+Adam [    0] loss: 3.8246e+01
+Adam [  299] loss: 7.2332e-01
+BO eval 07 | layers=5 neurons=150 | proxy_loss=7.2332e-01
+| [39m7        [39m | [39m-0.723318[39m | [39m4.7400300[39m | [39m149.54893[39m |
+Adam [    0] loss: 3.9513e+01
+Adam [  299] loss: 3.8693e-01
+BO eval 08 | layers=5 neurons=141 | proxy_loss=3.8693e-01
+| [39m8        [39m | [39m-0.386932[39m | [39m5.1212451[39m | [39m141.03245[39m |
+Adam [    0] loss: 3.3605e+01
+Adam [  299] loss: 3.9415e-01
+BO eval 09 | layers=6 neurons=141 | proxy_loss=3.9415e-01
+| [39m9        [39m | [39m-0.394146[39m | [39m5.5751664[39m | [39m140.91511[39m |
+Adam [    0] loss: 5.8128e+01
+Adam [  299] loss: 3.9257e-01
+BO eval 10 | layers=6 neurons=92 | proxy_loss=3.9257e-01
+| [39m10       [39m | [39m-0.392571[39m | [39m5.8671966[39m | [39m92.167317[39m |
+Adam [    0] loss: 3.3271e+01
+Adam [  299] loss: 1.3435e+00
+BO eval 11 | layers=4 neurons=93 | proxy_loss=1.3435e+00
+| [39m11       [39m | [39m-1.343480[39m | [39m3.5081882[39m | [39m92.620630[39m |
+Adam [    0] loss: 3.4209e+01
+Adam [  299] loss: 6.4530e-01
+BO eval 12 | layers=5 neurons=141 | proxy_loss=6.4530e-01
+| [39m12       [39m | [39m-0.645300[39m | [39m4.7065459[39m | [39m140.75855[39m |
+Adam [    0] loss: 3.1624e+01
+Adam [  299] loss: 9.8171e-01
+BO eval 13 | layers=4 neurons=185 | proxy_loss=9.7863e-01
+| [39m13       [39m | [39m-0.978630[39m | [39m4.4517357[39m | [39m185.25592[39m |
+Adam [    0] loss: 4.4010e+01
+Adam [  299] loss: 7.0133e+00
+BO eval 14 | layers=5 neurons=186 | proxy_loss=7.0133e+00
+| [39m14       [39m | [39m-7.013327[39m | [39m4.6922842[39m | [39m185.79774[39m |
+Adam [    0] loss: 4.7457e+01
+Adam [  299] loss: 6.2035e+00
+BO eval 15 | layers=3 neurons=190 | proxy_loss=6.2035e+00
+| [39m15       [39m | [39m-6.203450[39m | [39m3.4186402[39m | [39m190.09849[39m |
+Adam [    0] loss: 4.0682e+01
+Adam [  299] loss: 6.6847e+00
+BO eval 16 | layers=5 neurons=123 | proxy_loss=6.6847e+00
+| [39m16       [39m | [39m-6.684682[39m | [39m4.6028144[39m | [39m123.27339[39m |
+=================================================
+Best architecture from Bayesian: layers=4, neurons=186
+Adam [    0] loss: 3.9533e+01
+Adam [ 2000] loss: 8.5523e-02
+Adam [ 4000] loss: 3.7641e-03
+Adam [ 6000] loss: 1.3227e-03
+Adam [ 8000] loss: 1.0085e-02
+Adam [10000] loss: 1.1792e-03
+Adam [11999] loss: 5.5905e-04
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_05/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_05/stage_adam/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_05/stage_adam/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_05/stage_adam/advection_time_slices_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_05/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_05/stage_lbfgs/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_05/stage_lbfgs/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_05/stage_lbfgs/advection_time_slices_exact_vs_pred.png
+Selected best stage: lbfgs (rel_l2=1.3630e-02)
+Run time: 849.62 s
+Saved summary: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_1.000/run_05/search_summary.csv
+Starting Bayesian architecture search: beta=0.500
+|   iter    |  target   |  layers   |  neurons  |
+-------------------------------------------------
+Adam [    0] loss: 3.1321e+01
+Adam [  299] loss: 2.3275e-01
+BO eval 01 | layers=4 neurons=186 | proxy_loss=2.3275e-01
+| [39m1        [39m | [39m-0.232751[39m | [39m4.1236203[39m | [39m185.69143[39m |
+Adam [    0] loss: 4.4727e+01
+Adam [  299] loss: 3.5389e-01
+BO eval 02 | layers=5 neurons=141 | proxy_loss=3.1694e-01
+| [39m2        [39m | [39m-0.316942[39m | [39m5.1959818[39m | [39m140.62828[39m |
+Adam [    0] loss: 3.3904e+01
+Adam [  299] loss: 1.3371e+00
+BO eval 03 | layers=3 neurons=84 | proxy_loss=1.3371e+00
+| [39m3        [39m | [39m-1.337119[39m | [39m3.4680559[39m | [39m83.967298[39m |
+Adam [    0] loss: 6.4144e+01
+Adam [  299] loss: 2.3999e+01
+BO eval 04 | layers=3 neurons=175 | proxy_loss=2.3999e+01
+| [39m4        [39m | [39m-23.99918[39m | [39m3.1742508[39m | [39m174.87054[39m |
+Adam [    0] loss: 3.9226e+01
+Adam [  299] loss: 3.3074e-01
+BO eval 05 | layers=4 neurons=107 | proxy_loss=3.3074e-01
+| [39m5        [39m | [39m-0.330743[39m | [39m3.6370173[39m | [39m106.58004[39m |
+Adam [    0] loss: 2.4818e+02
+Adam [  299] loss: 3.8814e-01
+BO eval 06 | layers=5 neurons=141 | proxy_loss=3.8814e-01
+| [39m6        [39m | [39m-0.388140[39m | [39m5.1763241[39m | [39m140.60888[39m |
+Adam [    0] loss: 4.2019e+01
+Adam [  299] loss: 3.0429e-01
+BO eval 07 | layers=6 neurons=147 | proxy_loss=3.0429e-01
+| [39m7        [39m | [39m-0.304289[39m | [39m6.0      [39m | [39m146.74004[39m |
+Adam [    0] loss: 3.5994e+01
+Adam [  299] loss: 8.3017e-01
+BO eval 08 | layers=6 neurons=192 | proxy_loss=8.3017e-01
+| [39m8        [39m | [39m-0.830173[39m | [39m6.0      [39m | [39m192.0    [39m |
+Adam [    0] loss: 3.1517e+01
+Adam [  299] loss: 8.9488e-01
+BO eval 09 | layers=4 neurons=98 | proxy_loss=8.9488e-01
+| [39m9        [39m | [39m-0.894876[39m | [39m3.5727130[39m | [39m97.979725[39m |
+Adam [    0] loss: 4.3202e+01
+Adam [  299] loss: 2.6335e-01
+BO eval 10 | layers=6 neurons=115 | proxy_loss=2.6335e-01
+| [39m10       [39m | [39m-0.263351[39m | [39m6.0      [39m | [39m114.69824[39m |
+Adam [    0] loss: 7.9487e+01
+Adam [  299] loss: 3.0649e+00
+BO eval 11 | layers=3 neurons=122 | proxy_loss=3.0649e+00
+| [39m11       [39m | [39m-3.064891[39m | [39m3.0      [39m | [39m122.33140[39m |
+Adam [    0] loss: 5.3678e+01
+Adam [  299] loss: 4.3834e-01
+BO eval 12 | layers=6 neurons=75 | proxy_loss=4.3834e-01
+| [39m12       [39m | [39m-0.438343[39m | [39m6.0      [39m | [39m75.195970[39m |
+Adam [    0] loss: 2.0228e+02
+Adam [  299] loss: 2.9472e+01
+BO eval 13 | layers=3 neurons=68 | proxy_loss=2.9472e+01
+| [39m13       [39m | [39m-29.47229[39m | [39m3.0      [39m | [39m67.968499[39m |
+Adam [    0] loss: 3.4715e+01
+Adam [  299] loss: 2.6544e-01
+BO eval 14 | layers=6 neurons=91 | proxy_loss=2.6523e-01
+| [39m14       [39m | [39m-0.265225[39m | [39m6.0      [39m | [39m91.078519[39m |
+Adam [    0] loss: 3.8111e+01
+Adam [  299] loss: 5.6742e-01
+BO eval 15 | layers=3 neurons=156 | proxy_loss=5.6742e-01
+| [39m15       [39m | [39m-0.567419[39m | [39m3.0      [39m | [39m155.68960[39m |
+Adam [    0] loss: 6.0236e+01
+Adam [  299] loss: 1.2761e+01
+BO eval 16 | layers=6 neurons=162 | proxy_loss=1.2727e+01
+| [39m16       [39m | [39m-12.72666[39m | [39m6.0      [39m | [39m161.72219[39m |
+=================================================
+Best architecture from Bayesian: layers=4, neurons=186
+Adam [    0] loss: 3.1321e+01
+Adam [ 2000] loss: 3.7614e-03
+Adam [ 4000] loss: 6.6092e-04
+Adam [ 6000] loss: 3.2646e-04
+Adam [ 8000] loss: 5.3164e-02
+Adam [10000] loss: 2.8444e-02
+Adam [11999] loss: 3.8613e-03
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_01/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_01/stage_adam/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_01/stage_adam/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_01/stage_adam/advection_time_slices_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_01/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_01/stage_lbfgs/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_01/stage_lbfgs/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_01/stage_lbfgs/advection_time_slices_exact_vs_pred.png
+Selected best stage: lbfgs (rel_l2=2.3306e-03)
+Run time: 675.08 s
+Saved summary: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_01/search_summary.csv
+Starting Bayesian architecture search: beta=0.500
+|   iter    |  target   |  layers   |  neurons  |
+-------------------------------------------------
+Adam [    0] loss: 3.1321e+01
+Adam [  299] loss: 2.3275e-01
+BO eval 01 | layers=4 neurons=186 | proxy_loss=2.3275e-01
+| [39m1        [39m | [39m-0.232751[39m | [39m4.1236203[39m | [39m185.69143[39m |
+Adam [    0] loss: 4.4727e+01
+Adam [  299] loss: 3.5389e-01
+BO eval 02 | layers=5 neurons=141 | proxy_loss=3.1694e-01
+| [39m2        [39m | [39m-0.316942[39m | [39m5.1959818[39m | [39m140.62828[39m |
+Adam [    0] loss: 3.3904e+01
+Adam [  299] loss: 1.3371e+00
+BO eval 03 | layers=3 neurons=84 | proxy_loss=1.3371e+00
+| [39m3        [39m | [39m-1.337119[39m | [39m3.4680559[39m | [39m83.967298[39m |
+Adam [    0] loss: 6.4144e+01
+Adam [  299] loss: 2.3999e+01
+BO eval 04 | layers=3 neurons=175 | proxy_loss=2.3999e+01
+| [39m4        [39m | [39m-23.99918[39m | [39m3.1742508[39m | [39m174.87054[39m |
+Adam [    0] loss: 3.9226e+01
+Adam [  299] loss: 3.3074e-01
+BO eval 05 | layers=4 neurons=107 | proxy_loss=3.3074e-01
+| [39m5        [39m | [39m-0.330743[39m | [39m3.6370173[39m | [39m106.58004[39m |
+Adam [    0] loss: 2.4818e+02
+Adam [  299] loss: 3.8814e-01
+BO eval 06 | layers=5 neurons=141 | proxy_loss=3.8814e-01
+| [39m6        [39m | [39m-0.388140[39m | [39m5.1763241[39m | [39m140.60888[39m |
+Adam [    0] loss: 4.2019e+01
+Adam [  299] loss: 3.0429e-01
+BO eval 07 | layers=6 neurons=147 | proxy_loss=3.0429e-01
+| [39m7        [39m | [39m-0.304289[39m | [39m6.0      [39m | [39m146.74004[39m |
+Adam [    0] loss: 3.5994e+01
+Adam [  299] loss: 8.3017e-01
+BO eval 08 | layers=6 neurons=192 | proxy_loss=8.3017e-01
+| [39m8        [39m | [39m-0.830173[39m | [39m6.0      [39m | [39m192.0    [39m |
+Adam [    0] loss: 3.1517e+01
+Adam [  299] loss: 8.9488e-01
+BO eval 09 | layers=4 neurons=98 | proxy_loss=8.9488e-01
+| [39m9        [39m | [39m-0.894876[39m | [39m3.5727130[39m | [39m97.979725[39m |
+Adam [    0] loss: 4.3202e+01
+Adam [  299] loss: 2.6335e-01
+BO eval 10 | layers=6 neurons=115 | proxy_loss=2.6335e-01
+| [39m10       [39m | [39m-0.263351[39m | [39m6.0      [39m | [39m114.69824[39m |
+Adam [    0] loss: 7.9487e+01
+Adam [  299] loss: 3.0649e+00
+BO eval 11 | layers=3 neurons=122 | proxy_loss=3.0649e+00
+| [39m11       [39m | [39m-3.064891[39m | [39m3.0      [39m | [39m122.33140[39m |
+Adam [    0] loss: 5.3678e+01
+Adam [  299] loss: 4.3834e-01
+BO eval 12 | layers=6 neurons=75 | proxy_loss=4.3834e-01
+| [39m12       [39m | [39m-0.438343[39m | [39m6.0      [39m | [39m75.195970[39m |
+Adam [    0] loss: 2.0228e+02
+Adam [  299] loss: 2.9472e+01
+BO eval 13 | layers=3 neurons=68 | proxy_loss=2.9472e+01
+| [39m13       [39m | [39m-29.47229[39m | [39m3.0      [39m | [39m67.968499[39m |
+Adam [    0] loss: 3.4715e+01
+Adam [  299] loss: 2.6544e-01
+BO eval 14 | layers=6 neurons=91 | proxy_loss=2.6523e-01
+| [39m14       [39m | [39m-0.265225[39m | [39m6.0      [39m | [39m91.078519[39m |
+Adam [    0] loss: 3.8111e+01
+Adam [  299] loss: 5.6742e-01
+BO eval 15 | layers=3 neurons=156 | proxy_loss=5.6742e-01
+| [39m15       [39m | [39m-0.567419[39m | [39m3.0      [39m | [39m155.68960[39m |
+Adam [    0] loss: 6.0236e+01
+Adam [  299] loss: 1.2761e+01
+BO eval 16 | layers=6 neurons=162 | proxy_loss=1.2727e+01
+| [39m16       [39m | [39m-12.72666[39m | [39m6.0      [39m | [39m161.72219[39m |
+=================================================
+Best architecture from Bayesian: layers=4, neurons=186
+Adam [    0] loss: 3.2911e+01
+Adam [ 2000] loss: 1.3702e-01
+Adam [ 4000] loss: 4.5615e-02
+Adam [ 6000] loss: 4.1318e-03
+Adam [ 8000] loss: 3.6454e-03
+Adam [10000] loss: 1.0332e-02
+Adam [11999] loss: 5.1174e-03
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_02/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_02/stage_adam/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_02/stage_adam/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_02/stage_adam/advection_time_slices_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_02/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_02/stage_lbfgs/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_02/stage_lbfgs/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_02/stage_lbfgs/advection_time_slices_exact_vs_pred.png
+Selected best stage: lbfgs (rel_l2=5.1537e-03)
+Run time: 787.82 s
+Saved summary: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_02/search_summary.csv
+Starting Bayesian architecture search: beta=0.500
+|   iter    |  target   |  layers   |  neurons  |
+-------------------------------------------------
+Adam [    0] loss: 3.1321e+01
+Adam [  299] loss: 2.3275e-01
+BO eval 01 | layers=4 neurons=186 | proxy_loss=2.3275e-01
+| [39m1        [39m | [39m-0.232751[39m | [39m4.1236203[39m | [39m185.69143[39m |
+Adam [    0] loss: 4.4727e+01
+Adam [  299] loss: 3.5389e-01
+BO eval 02 | layers=5 neurons=141 | proxy_loss=3.1694e-01
+| [39m2        [39m | [39m-0.316942[39m | [39m5.1959818[39m | [39m140.62828[39m |
+Adam [    0] loss: 3.3904e+01
+Adam [  299] loss: 1.3371e+00
+BO eval 03 | layers=3 neurons=84 | proxy_loss=1.3371e+00
+| [39m3        [39m | [39m-1.337119[39m | [39m3.4680559[39m | [39m83.967298[39m |
+Adam [    0] loss: 6.4144e+01
+Adam [  299] loss: 2.3999e+01
+BO eval 04 | layers=3 neurons=175 | proxy_loss=2.3999e+01
+| [39m4        [39m | [39m-23.99918[39m | [39m3.1742508[39m | [39m174.87054[39m |
+Adam [    0] loss: 3.9226e+01
+Adam [  299] loss: 3.3074e-01
+BO eval 05 | layers=4 neurons=107 | proxy_loss=3.3074e-01
+| [39m5        [39m | [39m-0.330743[39m | [39m3.6370173[39m | [39m106.58004[39m |
+Adam [    0] loss: 2.4818e+02
+Adam [  299] loss: 3.8814e-01
+BO eval 06 | layers=5 neurons=141 | proxy_loss=3.8814e-01
+| [39m6        [39m | [39m-0.388140[39m | [39m5.1763241[39m | [39m140.60888[39m |
+Adam [    0] loss: 4.2019e+01
+Adam [  299] loss: 3.0429e-01
+BO eval 07 | layers=6 neurons=147 | proxy_loss=3.0429e-01
+| [39m7        [39m | [39m-0.304289[39m | [39m6.0      [39m | [39m146.74004[39m |
+Adam [    0] loss: 3.5994e+01
+Adam [  299] loss: 8.3017e-01
+BO eval 08 | layers=6 neurons=192 | proxy_loss=8.3017e-01
+| [39m8        [39m | [39m-0.830173[39m | [39m6.0      [39m | [39m192.0    [39m |
+Adam [    0] loss: 3.1517e+01
+Adam [  299] loss: 8.9488e-01
+BO eval 09 | layers=4 neurons=98 | proxy_loss=8.9488e-01
+| [39m9        [39m | [39m-0.894876[39m | [39m3.5727130[39m | [39m97.979725[39m |
+Adam [    0] loss: 4.3202e+01
+Adam [  299] loss: 2.6335e-01
+BO eval 10 | layers=6 neurons=115 | proxy_loss=2.6335e-01
+| [39m10       [39m | [39m-0.263351[39m | [39m6.0      [39m | [39m114.69824[39m |
+Adam [    0] loss: 7.9487e+01
+Adam [  299] loss: 3.0649e+00
+BO eval 11 | layers=3 neurons=122 | proxy_loss=3.0649e+00
+| [39m11       [39m | [39m-3.064891[39m | [39m3.0      [39m | [39m122.33140[39m |
+Adam [    0] loss: 5.3678e+01
+Adam [  299] loss: 4.3834e-01
+BO eval 12 | layers=6 neurons=75 | proxy_loss=4.3834e-01
+| [39m12       [39m | [39m-0.438343[39m | [39m6.0      [39m | [39m75.195970[39m |
+Adam [    0] loss: 2.0228e+02
+Adam [  299] loss: 2.9472e+01
+BO eval 13 | layers=3 neurons=68 | proxy_loss=2.9472e+01
+| [39m13       [39m | [39m-29.47229[39m | [39m3.0      [39m | [39m67.968499[39m |
+Adam [    0] loss: 3.4715e+01
+Adam [  299] loss: 2.6544e-01
+BO eval 14 | layers=6 neurons=91 | proxy_loss=2.6523e-01
+| [39m14       [39m | [39m-0.265225[39m | [39m6.0      [39m | [39m91.078519[39m |
+Adam [    0] loss: 3.8111e+01
+Adam [  299] loss: 5.6742e-01
+BO eval 15 | layers=3 neurons=156 | proxy_loss=5.6742e-01
+| [39m15       [39m | [39m-0.567419[39m | [39m3.0      [39m | [39m155.68960[39m |
+Adam [    0] loss: 6.0236e+01
+Adam [  299] loss: 1.2761e+01
+BO eval 16 | layers=6 neurons=162 | proxy_loss=1.2727e+01
+| [39m16       [39m | [39m-12.72666[39m | [39m6.0      [39m | [39m161.72219[39m |
+=================================================
+Best architecture from Bayesian: layers=4, neurons=186
+Adam [    0] loss: 4.4809e+01
+Adam [ 2000] loss: 1.2234e-01
+Adam [ 4000] loss: 3.1116e-02
+Adam [ 6000] loss: 2.0811e-02
+Adam [ 8000] loss: 1.1432e-02
+Adam [10000] loss: 7.1155e-03
+Adam [11999] loss: 6.8187e-03
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_03/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_03/stage_adam/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_03/stage_adam/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_03/stage_adam/advection_time_slices_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_03/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_03/stage_lbfgs/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_03/stage_lbfgs/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_03/stage_lbfgs/advection_time_slices_exact_vs_pred.png
+Selected best stage: lbfgs (rel_l2=5.1529e-03)
+Run time: 757.77 s
+Saved summary: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_03/search_summary.csv
+Starting Bayesian architecture search: beta=0.500
+|   iter    |  target   |  layers   |  neurons  |
+-------------------------------------------------
+Adam [    0] loss: 3.1321e+01
+Adam [  299] loss: 2.3275e-01
+BO eval 01 | layers=4 neurons=186 | proxy_loss=2.3275e-01
+| [39m1        [39m | [39m-0.232751[39m | [39m4.1236203[39m | [39m185.69143[39m |
+Adam [    0] loss: 4.4727e+01
+Adam [  299] loss: 3.5389e-01
+BO eval 02 | layers=5 neurons=141 | proxy_loss=3.1694e-01
+| [39m2        [39m | [39m-0.316942[39m | [39m5.1959818[39m | [39m140.62828[39m |
+Adam [    0] loss: 3.3904e+01
+Adam [  299] loss: 1.3371e+00
+BO eval 03 | layers=3 neurons=84 | proxy_loss=1.3371e+00
+| [39m3        [39m | [39m-1.337119[39m | [39m3.4680559[39m | [39m83.967298[39m |
+Adam [    0] loss: 6.4144e+01
+Adam [  299] loss: 2.3999e+01
+BO eval 04 | layers=3 neurons=175 | proxy_loss=2.3999e+01
+| [39m4        [39m | [39m-23.99918[39m | [39m3.1742508[39m | [39m174.87054[39m |
+Adam [    0] loss: 3.9226e+01
+Adam [  299] loss: 3.3074e-01
+BO eval 05 | layers=4 neurons=107 | proxy_loss=3.3074e-01
+| [39m5        [39m | [39m-0.330743[39m | [39m3.6370173[39m | [39m106.58004[39m |
+Adam [    0] loss: 2.4818e+02
+Adam [  299] loss: 3.8814e-01
+BO eval 06 | layers=5 neurons=141 | proxy_loss=3.8814e-01
+| [39m6        [39m | [39m-0.388140[39m | [39m5.1763241[39m | [39m140.60888[39m |
+Adam [    0] loss: 4.2019e+01
+Adam [  299] loss: 3.0429e-01
+BO eval 07 | layers=6 neurons=147 | proxy_loss=3.0429e-01
+| [39m7        [39m | [39m-0.304289[39m | [39m6.0      [39m | [39m146.74004[39m |
+Adam [    0] loss: 3.5994e+01
+Adam [  299] loss: 8.3017e-01
+BO eval 08 | layers=6 neurons=192 | proxy_loss=8.3017e-01
+| [39m8        [39m | [39m-0.830173[39m | [39m6.0      [39m | [39m192.0    [39m |
+Adam [    0] loss: 3.1517e+01
+Adam [  299] loss: 8.9488e-01
+BO eval 09 | layers=4 neurons=98 | proxy_loss=8.9488e-01
+| [39m9        [39m | [39m-0.894876[39m | [39m3.5727130[39m | [39m97.979725[39m |
+Adam [    0] loss: 4.3202e+01
+Adam [  299] loss: 2.6335e-01
+BO eval 10 | layers=6 neurons=115 | proxy_loss=2.6335e-01
+| [39m10       [39m | [39m-0.263351[39m | [39m6.0      [39m | [39m114.69824[39m |
+Adam [    0] loss: 7.9487e+01
+Adam [  299] loss: 3.0649e+00
+BO eval 11 | layers=3 neurons=122 | proxy_loss=3.0649e+00
+| [39m11       [39m | [39m-3.064891[39m | [39m3.0      [39m | [39m122.33140[39m |
+Adam [    0] loss: 5.3678e+01
+Adam [  299] loss: 4.3834e-01
+BO eval 12 | layers=6 neurons=75 | proxy_loss=4.3834e-01
+| [39m12       [39m | [39m-0.438343[39m | [39m6.0      [39m | [39m75.195970[39m |
+Adam [    0] loss: 2.0228e+02
+Adam [  299] loss: 2.9472e+01
+BO eval 13 | layers=3 neurons=68 | proxy_loss=2.9472e+01
+| [39m13       [39m | [39m-29.47229[39m | [39m3.0      [39m | [39m67.968499[39m |
+Adam [    0] loss: 3.4715e+01
+Adam [  299] loss: 2.6544e-01
+BO eval 14 | layers=6 neurons=91 | proxy_loss=2.6523e-01
+| [39m14       [39m | [39m-0.265225[39m | [39m6.0      [39m | [39m91.078519[39m |
+Adam [    0] loss: 3.8111e+01
+Adam [  299] loss: 5.6742e-01
+BO eval 15 | layers=3 neurons=156 | proxy_loss=5.6742e-01
+| [39m15       [39m | [39m-0.567419[39m | [39m3.0      [39m | [39m155.68960[39m |
+Adam [    0] loss: 6.0236e+01
+Adam [  299] loss: 1.2761e+01
+BO eval 16 | layers=6 neurons=162 | proxy_loss=1.2727e+01
+| [39m16       [39m | [39m-12.72666[39m | [39m6.0      [39m | [39m161.72219[39m |
+=================================================
+Best architecture from Bayesian: layers=4, neurons=186
+Adam [    0] loss: 3.7001e+01
+Adam [ 2000] loss: 4.1454e-02
+Adam [ 4000] loss: 6.9790e-02
+Adam [ 6000] loss: 1.6881e-03
+Adam [ 8000] loss: 1.4780e-03
+Adam [10000] loss: 1.1847e-03
+Adam [11999] loss: 3.6353e-02
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_04/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_04/stage_adam/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_04/stage_adam/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_04/stage_adam/advection_time_slices_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_04/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_04/stage_lbfgs/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_04/stage_lbfgs/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_04/stage_lbfgs/advection_time_slices_exact_vs_pred.png
+Selected best stage: lbfgs (rel_l2=5.2245e-03)
+Run time: 823.86 s
+Saved summary: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_04/search_summary.csv
+Starting Bayesian architecture search: beta=0.500
+|   iter    |  target   |  layers   |  neurons  |
+-------------------------------------------------
+Adam [    0] loss: 3.1321e+01
+Adam [  299] loss: 2.3275e-01
+BO eval 01 | layers=4 neurons=186 | proxy_loss=2.3275e-01
+| [39m1        [39m | [39m-0.232751[39m | [39m4.1236203[39m | [39m185.69143[39m |
+Adam [    0] loss: 4.4727e+01
+Adam [  299] loss: 3.5389e-01
+BO eval 02 | layers=5 neurons=141 | proxy_loss=3.1694e-01
+| [39m2        [39m | [39m-0.316942[39m | [39m5.1959818[39m | [39m140.62828[39m |
+Adam [    0] loss: 3.3904e+01
+Adam [  299] loss: 1.3371e+00
+BO eval 03 | layers=3 neurons=84 | proxy_loss=1.3371e+00
+| [39m3        [39m | [39m-1.337119[39m | [39m3.4680559[39m | [39m83.967298[39m |
+Adam [    0] loss: 6.4144e+01
+Adam [  299] loss: 2.3999e+01
+BO eval 04 | layers=3 neurons=175 | proxy_loss=2.3999e+01
+| [39m4        [39m | [39m-23.99918[39m | [39m3.1742508[39m | [39m174.87054[39m |
+Adam [    0] loss: 3.9226e+01
+Adam [  299] loss: 3.3074e-01
+BO eval 05 | layers=4 neurons=107 | proxy_loss=3.3074e-01
+| [39m5        [39m | [39m-0.330743[39m | [39m3.6370173[39m | [39m106.58004[39m |
+Adam [    0] loss: 2.4818e+02
+Adam [  299] loss: 3.8814e-01
+BO eval 06 | layers=5 neurons=141 | proxy_loss=3.8814e-01
+| [39m6        [39m | [39m-0.388140[39m | [39m5.1763241[39m | [39m140.60888[39m |
+Adam [    0] loss: 4.2019e+01
+Adam [  299] loss: 3.0429e-01
+BO eval 07 | layers=6 neurons=147 | proxy_loss=3.0429e-01
+| [39m7        [39m | [39m-0.304289[39m | [39m6.0      [39m | [39m146.74004[39m |
+Adam [    0] loss: 3.5994e+01
+Adam [  299] loss: 8.3017e-01
+BO eval 08 | layers=6 neurons=192 | proxy_loss=8.3017e-01
+| [39m8        [39m | [39m-0.830173[39m | [39m6.0      [39m | [39m192.0    [39m |
+Adam [    0] loss: 3.1517e+01
+Adam [  299] loss: 8.9488e-01
+BO eval 09 | layers=4 neurons=98 | proxy_loss=8.9488e-01
+| [39m9        [39m | [39m-0.894876[39m | [39m3.5727130[39m | [39m97.979725[39m |
+Adam [    0] loss: 4.3202e+01
+Adam [  299] loss: 2.6335e-01
+BO eval 10 | layers=6 neurons=115 | proxy_loss=2.6335e-01
+| [39m10       [39m | [39m-0.263351[39m | [39m6.0      [39m | [39m114.69824[39m |
+Adam [    0] loss: 7.9487e+01
+Adam [  299] loss: 3.0649e+00
+BO eval 11 | layers=3 neurons=122 | proxy_loss=3.0649e+00
+| [39m11       [39m | [39m-3.064891[39m | [39m3.0      [39m | [39m122.33140[39m |
+Adam [    0] loss: 5.3678e+01
+Adam [  299] loss: 4.3834e-01
+BO eval 12 | layers=6 neurons=75 | proxy_loss=4.3834e-01
+| [39m12       [39m | [39m-0.438343[39m | [39m6.0      [39m | [39m75.195970[39m |
+Adam [    0] loss: 2.0228e+02
+Adam [  299] loss: 2.9472e+01
+BO eval 13 | layers=3 neurons=68 | proxy_loss=2.9472e+01
+| [39m13       [39m | [39m-29.47229[39m | [39m3.0      [39m | [39m67.968499[39m |
+Adam [    0] loss: 3.4715e+01
+Adam [  299] loss: 2.6544e-01
+BO eval 14 | layers=6 neurons=91 | proxy_loss=2.6523e-01
+| [39m14       [39m | [39m-0.265225[39m | [39m6.0      [39m | [39m91.078519[39m |
+Adam [    0] loss: 3.8111e+01
+Adam [  299] loss: 5.6742e-01
+BO eval 15 | layers=3 neurons=156 | proxy_loss=5.6742e-01
+| [39m15       [39m | [39m-0.567419[39m | [39m3.0      [39m | [39m155.68960[39m |
+Adam [    0] loss: 6.0236e+01
+Adam [  299] loss: 1.2761e+01
+BO eval 16 | layers=6 neurons=162 | proxy_loss=1.2727e+01
+| [39m16       [39m | [39m-12.72666[39m | [39m6.0      [39m | [39m161.72219[39m |
+=================================================
+Best architecture from Bayesian: layers=4, neurons=186
+Adam [    0] loss: 3.9472e+01
+Adam [ 2000] loss: 9.8830e-03
+Adam [ 4000] loss: 2.0445e-03
+Adam [ 6000] loss: 7.9729e-04
+Adam [ 8000] loss: 4.9044e-04
+Adam [10000] loss: 6.5844e-04
+Adam [11999] loss: 3.9066e-04
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_05/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_05/stage_adam/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_05/stage_adam/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_05/stage_adam/advection_time_slices_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_05/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_05/stage_lbfgs/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_05/stage_lbfgs/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_05/stage_lbfgs/advection_time_slices_exact_vs_pred.png
+Selected best stage: lbfgs (rel_l2=1.1071e-02)
+Run time: 824.14 s
+Saved summary: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_05/search_summary.csv
+Starting Bayesian architecture search: beta=0.100
+|   iter    |  target   |  layers   |  neurons  |
+-------------------------------------------------
+Adam [    0] loss: 3.1317e+01
+Adam [  299] loss: 1.1727e-01
+BO eval 01 | layers=4 neurons=186 | proxy_loss=1.1727e-01
+| [39m1        [39m | [39m-0.117273[39m | [39m4.1236203[39m | [39m185.69143[39m |
+Adam [    0] loss: 4.4725e+01
+Adam [  299] loss: 1.2940e-01
+BO eval 02 | layers=5 neurons=141 | proxy_loss=1.2897e-01
+| [39m2        [39m | [39m-0.128968[39m | [39m5.1959818[39m | [39m140.62828[39m |
+Adam [    0] loss: 3.3828e+01
+Adam [  299] loss: 4.0286e-01
+BO eval 03 | layers=3 neurons=84 | proxy_loss=4.0286e-01
+| [39m3        [39m | [39m-0.402860[39m | [39m3.4680559[39m | [39m83.967298[39m |
+Adam [    0] loss: 6.4142e+01
+Adam [  299] loss: 5.5435e+00
+BO eval 04 | layers=3 neurons=175 | proxy_loss=5.5435e+00
+| [39m4        [39m | [39m-5.543465[39m | [39m3.1742508[39m | [39m174.87054[39m |
+Adam [    0] loss: 3.9188e+01
+Adam [  299] loss: 1.3126e-01
+BO eval 05 | layers=4 neurons=107 | proxy_loss=1.3126e-01
+| [39m5        [39m | [39m-0.131261[39m | [39m3.6370173[39m | [39m106.58004[39m |
+Adam [    0] loss: 2.4827e+02
+Adam [  299] loss: 1.5185e-01
+BO eval 06 | layers=5 neurons=141 | proxy_loss=1.5185e-01
+| [39m6        [39m | [39m-0.151846[39m | [39m5.1747698[39m | [39m140.61076[39m |
+Adam [    0] loss: 3.3951e+01
+Adam [  299] loss: 4.6544e-02
+BO eval 07 | layers=6 neurons=145 | proxy_loss=4.6544e-02
+| [35m7        [39m | [35m-0.046543[39m | [35m6.0      [39m | [35m145.19510[39m |
+Adam [    0] loss: 4.4528e+01
+Adam [  299] loss: 2.0899e-01
+BO eval 08 | layers=5 neurons=192 | proxy_loss=2.0899e-01
+| [39m8        [39m | [39m-0.208994[39m | [39m4.6580122[39m | [39m191.78260[39m |
+Adam [    0] loss: 4.5675e+01
+Adam [  299] loss: 9.9776e-02
+BO eval 09 | layers=4 neurons=100 | proxy_loss=9.9776e-02
+| [39m9        [39m | [39m-0.099776[39m | [39m3.5919112[39m | [39m100.20428[39m |
+Adam [    0] loss: 3.3519e+01
+Adam [  299] loss: 1.6234e-01
+BO eval 10 | layers=4 neurons=94 | proxy_loss=1.6234e-01
+| [39m10       [39m | [39m-0.162336[39m | [39m3.5404048[39m | [39m93.506207[39m |
+Adam [    0] loss: 4.9976e+01
+Adam [  299] loss: 7.4478e-02
+BO eval 11 | layers=6 neurons=113 | proxy_loss=7.4478e-02
+| [39m11       [39m | [39m-0.074477[39m | [39m6.0      [39m | [39m112.58318[39m |
+Adam [    0] loss: 1.5150e+02
+Adam [  299] loss: 2.8337e+01
+BO eval 12 | layers=3 neurons=118 | proxy_loss=2.8337e+01
+| [39m12       [39m | [39m-28.33733[39m | [39m3.0      [39m | [39m117.82518[39m |
+Adam [    0] loss: 2.1215e+02
+Adam [  299] loss: 2.2122e-01
+BO eval 13 | layers=6 neurons=77 | proxy_loss=2.2122e-01
+| [39m13       [39m | [39m-0.221221[39m | [39m6.0      [39m | [39m76.890388[39m |
+Adam [    0] loss: 3.6153e+01
+Adam [  299] loss: 9.8408e-02
+BO eval 14 | layers=3 neurons=70 | proxy_loss=9.8408e-02
+| [39m14       [39m | [39m-0.098407[39m | [39m3.0      [39m | [39m70.185314[39m |
+Adam [    0] loss: 9.2329e+01
+Adam [  299] loss: 1.8011e-01
+BO eval 15 | layers=6 neurons=64 | proxy_loss=1.8011e-01
+| [39m15       [39m | [39m-0.180112[39m | [39m6.0      [39m | [39m64.0     [39m |
+Adam [    0] loss: 5.5290e+01
+Adam [  299] loss: 6.3803e+00
+BO eval 16 | layers=3 neurons=153 | proxy_loss=6.3803e+00
+| [39m16       [39m | [39m-6.380293[39m | [39m3.0      [39m | [39m152.56599[39m |
+=================================================
+Best architecture from Bayesian: layers=6, neurons=145
+Adam [    0] loss: 3.6645e+01
+Adam [ 2000] loss: 4.1109e-03
+Adam [ 4000] loss: 4.2867e-03
+Adam [ 6000] loss: 6.6994e-03
+Adam [ 8000] loss: 5.6394e-03
+Adam [10000] loss: 4.1026e-03
+Adam [11999] loss: 9.7331e-04
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_01/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_01/stage_adam/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_01/stage_adam/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_01/stage_adam/advection_time_slices_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_01/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_01/stage_lbfgs/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_01/stage_lbfgs/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_01/stage_lbfgs/advection_time_slices_exact_vs_pred.png
+Selected best stage: lbfgs (rel_l2=2.6328e-03)
+Run time: 795.27 s
+Saved summary: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_01/search_summary.csv
+Starting Bayesian architecture search: beta=0.100
+|   iter    |  target   |  layers   |  neurons  |
+-------------------------------------------------
+Adam [    0] loss: 3.1317e+01
+Adam [  299] loss: 1.1727e-01
+BO eval 01 | layers=4 neurons=186 | proxy_loss=1.1727e-01
+| [39m1        [39m | [39m-0.117273[39m | [39m4.1236203[39m | [39m185.69143[39m |
+Adam [    0] loss: 4.4725e+01
+Adam [  299] loss: 1.2940e-01
+BO eval 02 | layers=5 neurons=141 | proxy_loss=1.2897e-01
+| [39m2        [39m | [39m-0.128968[39m | [39m5.1959818[39m | [39m140.62828[39m |
+Adam [    0] loss: 3.3828e+01
+Adam [  299] loss: 4.0286e-01
+BO eval 03 | layers=3 neurons=84 | proxy_loss=4.0286e-01
+| [39m3        [39m | [39m-0.402860[39m | [39m3.4680559[39m | [39m83.967298[39m |
+Adam [    0] loss: 6.4142e+01
+Adam [  299] loss: 5.5435e+00
+BO eval 04 | layers=3 neurons=175 | proxy_loss=5.5435e+00
+| [39m4        [39m | [39m-5.543465[39m | [39m3.1742508[39m | [39m174.87054[39m |
+Adam [    0] loss: 3.9188e+01
+Adam [  299] loss: 1.3126e-01
+BO eval 05 | layers=4 neurons=107 | proxy_loss=1.3126e-01
+| [39m5        [39m | [39m-0.131261[39m | [39m3.6370173[39m | [39m106.58004[39m |
+Adam [    0] loss: 2.4827e+02
+Adam [  299] loss: 1.5185e-01
+BO eval 06 | layers=5 neurons=141 | proxy_loss=1.5185e-01
+| [39m6        [39m | [39m-0.151846[39m | [39m5.1747698[39m | [39m140.61076[39m |
+Adam [    0] loss: 3.3951e+01
+Adam [  299] loss: 4.6544e-02
+BO eval 07 | layers=6 neurons=145 | proxy_loss=4.6544e-02
+| [35m7        [39m | [35m-0.046543[39m | [35m6.0      [39m | [35m145.19510[39m |
+Adam [    0] loss: 4.4528e+01
+Adam [  299] loss: 2.0899e-01
+BO eval 08 | layers=5 neurons=192 | proxy_loss=2.0899e-01
+| [39m8        [39m | [39m-0.208994[39m | [39m4.6580122[39m | [39m191.78260[39m |
+Adam [    0] loss: 4.5675e+01
+Adam [  299] loss: 9.9776e-02
+BO eval 09 | layers=4 neurons=100 | proxy_loss=9.9776e-02
+| [39m9        [39m | [39m-0.099776[39m | [39m3.5919112[39m | [39m100.20428[39m |
+Adam [    0] loss: 3.3519e+01
+Adam [  299] loss: 1.6234e-01
+BO eval 10 | layers=4 neurons=94 | proxy_loss=1.6234e-01
+| [39m10       [39m | [39m-0.162336[39m | [39m3.5404048[39m | [39m93.506207[39m |
+Adam [    0] loss: 4.9976e+01
+Adam [  299] loss: 7.4478e-02
+BO eval 11 | layers=6 neurons=113 | proxy_loss=7.4478e-02
+| [39m11       [39m | [39m-0.074477[39m | [39m6.0      [39m | [39m112.58318[39m |
+Adam [    0] loss: 1.5150e+02
+Adam [  299] loss: 2.8337e+01
+BO eval 12 | layers=3 neurons=118 | proxy_loss=2.8337e+01
+| [39m12       [39m | [39m-28.33733[39m | [39m3.0      [39m | [39m117.82518[39m |
+Adam [    0] loss: 2.1215e+02
+Adam [  299] loss: 2.2122e-01
+BO eval 13 | layers=6 neurons=77 | proxy_loss=2.2122e-01
+| [39m13       [39m | [39m-0.221221[39m | [39m6.0      [39m | [39m76.890388[39m |
+Adam [    0] loss: 3.6153e+01
+Adam [  299] loss: 9.8408e-02
+BO eval 14 | layers=3 neurons=70 | proxy_loss=9.8408e-02
+| [39m14       [39m | [39m-0.098407[39m | [39m3.0      [39m | [39m70.185314[39m |
+Adam [    0] loss: 9.2329e+01
+Adam [  299] loss: 1.8011e-01
+BO eval 15 | layers=6 neurons=64 | proxy_loss=1.8011e-01
+| [39m15       [39m | [39m-0.180112[39m | [39m6.0      [39m | [39m64.0     [39m |
+Adam [    0] loss: 5.5290e+01
+Adam [  299] loss: 6.3803e+00
+BO eval 16 | layers=3 neurons=153 | proxy_loss=6.3803e+00
+| [39m16       [39m | [39m-6.380293[39m | [39m3.0      [39m | [39m152.56599[39m |
+=================================================
+Best architecture from Bayesian: layers=6, neurons=145
+Adam [    0] loss: 6.3240e+01
+Adam [ 2000] loss: 9.8879e-03
+Adam [ 4000] loss: 4.8782e-02
+Adam [ 6000] loss: 1.1372e-02
+Adam [ 8000] loss: 1.0104e-02
+Adam [10000] loss: 4.8243e-02
+Adam [11999] loss: 6.9350e-03
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_02/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_02/stage_adam/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_02/stage_adam/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_02/stage_adam/advection_time_slices_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_02/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_02/stage_lbfgs/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_02/stage_lbfgs/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_02/stage_lbfgs/advection_time_slices_exact_vs_pred.png
+Selected best stage: lbfgs (rel_l2=4.2039e-03)
+Run time: 748.51 s
+Saved summary: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_02/search_summary.csv
+Starting Bayesian architecture search: beta=0.100
+|   iter    |  target   |  layers   |  neurons  |
+-------------------------------------------------
+Adam [    0] loss: 3.1317e+01
+Adam [  299] loss: 1.1727e-01
+BO eval 01 | layers=4 neurons=186 | proxy_loss=1.1727e-01
+| [39m1        [39m | [39m-0.117273[39m | [39m4.1236203[39m | [39m185.69143[39m |
+Adam [    0] loss: 4.4725e+01
+Adam [  299] loss: 1.2940e-01
+BO eval 02 | layers=5 neurons=141 | proxy_loss=1.2897e-01
+| [39m2        [39m | [39m-0.128968[39m | [39m5.1959818[39m | [39m140.62828[39m |
+Adam [    0] loss: 3.3828e+01
+Adam [  299] loss: 4.0286e-01
+BO eval 03 | layers=3 neurons=84 | proxy_loss=4.0286e-01
+| [39m3        [39m | [39m-0.402860[39m | [39m3.4680559[39m | [39m83.967298[39m |
+Adam [    0] loss: 6.4142e+01
+Adam [  299] loss: 5.5435e+00
+BO eval 04 | layers=3 neurons=175 | proxy_loss=5.5435e+00
+| [39m4        [39m | [39m-5.543465[39m | [39m3.1742508[39m | [39m174.87054[39m |
+Adam [    0] loss: 3.9188e+01
+Adam [  299] loss: 1.3126e-01
+BO eval 05 | layers=4 neurons=107 | proxy_loss=1.3126e-01
+| [39m5        [39m | [39m-0.131261[39m | [39m3.6370173[39m | [39m106.58004[39m |
+Adam [    0] loss: 2.4827e+02
+Adam [  299] loss: 1.5185e-01
+BO eval 06 | layers=5 neurons=141 | proxy_loss=1.5185e-01
+| [39m6        [39m | [39m-0.151846[39m | [39m5.1747698[39m | [39m140.61076[39m |
+Adam [    0] loss: 3.3951e+01
+Adam [  299] loss: 4.6544e-02
+BO eval 07 | layers=6 neurons=145 | proxy_loss=4.6544e-02
+| [35m7        [39m | [35m-0.046543[39m | [35m6.0      [39m | [35m145.19510[39m |
+Adam [    0] loss: 4.4528e+01
+Adam [  299] loss: 2.0899e-01
+BO eval 08 | layers=5 neurons=192 | proxy_loss=2.0899e-01
+| [39m8        [39m | [39m-0.208994[39m | [39m4.6580122[39m | [39m191.78260[39m |
+Adam [    0] loss: 4.5675e+01
+Adam [  299] loss: 9.9776e-02
+BO eval 09 | layers=4 neurons=100 | proxy_loss=9.9776e-02
+| [39m9        [39m | [39m-0.099776[39m | [39m3.5919112[39m | [39m100.20428[39m |
+Adam [    0] loss: 3.3519e+01
+Adam [  299] loss: 1.6234e-01
+BO eval 10 | layers=4 neurons=94 | proxy_loss=1.6234e-01
+| [39m10       [39m | [39m-0.162336[39m | [39m3.5404048[39m | [39m93.506207[39m |
+Adam [    0] loss: 4.9976e+01
+Adam [  299] loss: 7.4478e-02
+BO eval 11 | layers=6 neurons=113 | proxy_loss=7.4478e-02
+| [39m11       [39m | [39m-0.074477[39m | [39m6.0      [39m | [39m112.58318[39m |
+Adam [    0] loss: 1.5150e+02
+Adam [  299] loss: 2.8337e+01
+BO eval 12 | layers=3 neurons=118 | proxy_loss=2.8337e+01
+| [39m12       [39m | [39m-28.33733[39m | [39m3.0      [39m | [39m117.82518[39m |
+Adam [    0] loss: 2.1215e+02
+Adam [  299] loss: 2.2122e-01
+BO eval 13 | layers=6 neurons=77 | proxy_loss=2.2122e-01
+| [39m13       [39m | [39m-0.221221[39m | [39m6.0      [39m | [39m76.890388[39m |
+Adam [    0] loss: 3.6153e+01
+Adam [  299] loss: 9.8408e-02
+BO eval 14 | layers=3 neurons=70 | proxy_loss=9.8408e-02
+| [39m14       [39m | [39m-0.098407[39m | [39m3.0      [39m | [39m70.185314[39m |
+Adam [    0] loss: 9.2329e+01
+Adam [  299] loss: 1.8011e-01
+BO eval 15 | layers=6 neurons=64 | proxy_loss=1.8011e-01
+| [39m15       [39m | [39m-0.180112[39m | [39m6.0      [39m | [39m64.0     [39m |
+Adam [    0] loss: 5.5290e+01
+Adam [  299] loss: 6.3803e+00
+BO eval 16 | layers=3 neurons=153 | proxy_loss=6.3803e+00
+| [39m16       [39m | [39m-6.380293[39m | [39m3.0      [39m | [39m152.56599[39m |
+=================================================
+Best architecture from Bayesian: layers=6, neurons=145
+Adam [    0] loss: 8.9942e+01
+Adam [ 2000] loss: 5.7398e-03
+Adam [ 4000] loss: 2.0367e-03
+Adam [ 6000] loss: 2.3959e-03
+Adam [ 8000] loss: 2.4984e-03
+Adam [10000] loss: 1.7524e-02
+Adam [11999] loss: 3.3769e-03
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_03/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_03/stage_adam/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_03/stage_adam/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_03/stage_adam/advection_time_slices_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_03/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_03/stage_lbfgs/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_03/stage_lbfgs/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_03/stage_lbfgs/advection_time_slices_exact_vs_pred.png
+Selected best stage: lbfgs (rel_l2=3.3395e-03)
+Run time: 780.35 s
+Saved summary: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_03/search_summary.csv
+Starting Bayesian architecture search: beta=0.100
+|   iter    |  target   |  layers   |  neurons  |
+-------------------------------------------------
+Adam [    0] loss: 3.1317e+01
+Adam [  299] loss: 1.1727e-01
+BO eval 01 | layers=4 neurons=186 | proxy_loss=1.1727e-01
+| [39m1        [39m | [39m-0.117273[39m | [39m4.1236203[39m | [39m185.69143[39m |
+Adam [    0] loss: 4.4725e+01
+Adam [  299] loss: 1.2940e-01
+BO eval 02 | layers=5 neurons=141 | proxy_loss=1.2897e-01
+| [39m2        [39m | [39m-0.128968[39m | [39m5.1959818[39m | [39m140.62828[39m |
+Adam [    0] loss: 3.3828e+01
+Adam [  299] loss: 4.0286e-01
+BO eval 03 | layers=3 neurons=84 | proxy_loss=4.0286e-01
+| [39m3        [39m | [39m-0.402860[39m | [39m3.4680559[39m | [39m83.967298[39m |
+Adam [    0] loss: 6.4142e+01
+Adam [  299] loss: 5.5435e+00
+BO eval 04 | layers=3 neurons=175 | proxy_loss=5.5435e+00
+| [39m4        [39m | [39m-5.543465[39m | [39m3.1742508[39m | [39m174.87054[39m |
+Adam [    0] loss: 3.9188e+01
+Adam [  299] loss: 1.3126e-01
+BO eval 05 | layers=4 neurons=107 | proxy_loss=1.3126e-01
+| [39m5        [39m | [39m-0.131261[39m | [39m3.6370173[39m | [39m106.58004[39m |
+Adam [    0] loss: 2.4827e+02
+Adam [  299] loss: 1.5185e-01
+BO eval 06 | layers=5 neurons=141 | proxy_loss=1.5185e-01
+| [39m6        [39m | [39m-0.151846[39m | [39m5.1747698[39m | [39m140.61076[39m |
+Adam [    0] loss: 3.3951e+01
+Adam [  299] loss: 4.6544e-02
+BO eval 07 | layers=6 neurons=145 | proxy_loss=4.6544e-02
+| [35m7        [39m | [35m-0.046543[39m | [35m6.0      [39m | [35m145.19510[39m |
+Adam [    0] loss: 4.4528e+01
+Adam [  299] loss: 2.0899e-01
+BO eval 08 | layers=5 neurons=192 | proxy_loss=2.0899e-01
+| [39m8        [39m | [39m-0.208994[39m | [39m4.6580122[39m | [39m191.78260[39m |
+Adam [    0] loss: 4.5675e+01
+Adam [  299] loss: 9.9776e-02
+BO eval 09 | layers=4 neurons=100 | proxy_loss=9.9776e-02
+| [39m9        [39m | [39m-0.099776[39m | [39m3.5919112[39m | [39m100.20428[39m |
+Adam [    0] loss: 3.3519e+01
+Adam [  299] loss: 1.6234e-01
+BO eval 10 | layers=4 neurons=94 | proxy_loss=1.6234e-01
+| [39m10       [39m | [39m-0.162336[39m | [39m3.5404048[39m | [39m93.506207[39m |
+Adam [    0] loss: 4.9976e+01
+Adam [  299] loss: 7.4478e-02
+BO eval 11 | layers=6 neurons=113 | proxy_loss=7.4478e-02
+| [39m11       [39m | [39m-0.074477[39m | [39m6.0      [39m | [39m112.58318[39m |
+Adam [    0] loss: 1.5150e+02
+Adam [  299] loss: 2.8337e+01
+BO eval 12 | layers=3 neurons=118 | proxy_loss=2.8337e+01
+| [39m12       [39m | [39m-28.33733[39m | [39m3.0      [39m | [39m117.82518[39m |
+Adam [    0] loss: 2.1215e+02
+Adam [  299] loss: 2.2122e-01
+BO eval 13 | layers=6 neurons=77 | proxy_loss=2.2122e-01
+| [39m13       [39m | [39m-0.221221[39m | [39m6.0      [39m | [39m76.890388[39m |
+Adam [    0] loss: 3.6153e+01
+Adam [  299] loss: 9.8408e-02
+BO eval 14 | layers=3 neurons=70 | proxy_loss=9.8408e-02
+| [39m14       [39m | [39m-0.098407[39m | [39m3.0      [39m | [39m70.185314[39m |
+Adam [    0] loss: 9.2329e+01
+Adam [  299] loss: 1.8011e-01
+BO eval 15 | layers=6 neurons=64 | proxy_loss=1.8011e-01
+| [39m15       [39m | [39m-0.180112[39m | [39m6.0      [39m | [39m64.0     [39m |
+Adam [    0] loss: 5.5290e+01
+Adam [  299] loss: 6.3803e+00
+BO eval 16 | layers=3 neurons=153 | proxy_loss=6.3803e+00
+| [39m16       [39m | [39m-6.380293[39m | [39m3.0      [39m | [39m152.56599[39m |
+=================================================
+Best architecture from Bayesian: layers=6, neurons=145
+Adam [    0] loss: 4.3890e+01
+Adam [ 2000] loss: 2.7675e-03
+Adam [ 4000] loss: 7.4165e-03
+Adam [ 6000] loss: 1.6571e-02
+Adam [ 8000] loss: 1.3002e-03
+Adam [10000] loss: 3.3203e-02
+Adam [11999] loss: 2.0838e-02
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_04/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_04/stage_adam/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_04/stage_adam/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_04/stage_adam/advection_time_slices_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_04/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_04/stage_lbfgs/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_04/stage_lbfgs/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_04/stage_lbfgs/advection_time_slices_exact_vs_pred.png
+Selected best stage: lbfgs (rel_l2=2.8020e-03)
+Run time: 744.63 s
+Saved summary: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_04/search_summary.csv
+Starting Bayesian architecture search: beta=0.100
+|   iter    |  target   |  layers   |  neurons  |
+-------------------------------------------------
+Adam [    0] loss: 3.1317e+01
+Adam [  299] loss: 1.1727e-01
+BO eval 01 | layers=4 neurons=186 | proxy_loss=1.1727e-01
+| [39m1        [39m | [39m-0.117273[39m | [39m4.1236203[39m | [39m185.69143[39m |
+Adam [    0] loss: 4.4725e+01
+Adam [  299] loss: 1.2940e-01
+BO eval 02 | layers=5 neurons=141 | proxy_loss=1.2897e-01
+| [39m2        [39m | [39m-0.128968[39m | [39m5.1959818[39m | [39m140.62828[39m |
+Adam [    0] loss: 3.3828e+01
+Adam [  299] loss: 4.0286e-01
+BO eval 03 | layers=3 neurons=84 | proxy_loss=4.0286e-01
+| [39m3        [39m | [39m-0.402860[39m | [39m3.4680559[39m | [39m83.967298[39m |
+Adam [    0] loss: 6.4142e+01
+Adam [  299] loss: 5.5435e+00
+BO eval 04 | layers=3 neurons=175 | proxy_loss=5.5435e+00
+| [39m4        [39m | [39m-5.543465[39m | [39m3.1742508[39m | [39m174.87054[39m |
+Adam [    0] loss: 3.9188e+01
+Adam [  299] loss: 1.3126e-01
+BO eval 05 | layers=4 neurons=107 | proxy_loss=1.3126e-01
+| [39m5        [39m | [39m-0.131261[39m | [39m3.6370173[39m | [39m106.58004[39m |
+Adam [    0] loss: 2.4827e+02
+Adam [  299] loss: 1.5185e-01
+BO eval 06 | layers=5 neurons=141 | proxy_loss=1.5185e-01
+| [39m6        [39m | [39m-0.151846[39m | [39m5.1747698[39m | [39m140.61076[39m |
+Adam [    0] loss: 3.3951e+01
+Adam [  299] loss: 4.6544e-02
+BO eval 07 | layers=6 neurons=145 | proxy_loss=4.6544e-02
+| [35m7        [39m | [35m-0.046543[39m | [35m6.0      [39m | [35m145.19510[39m |
+Adam [    0] loss: 4.4528e+01
+Adam [  299] loss: 2.0899e-01
+BO eval 08 | layers=5 neurons=192 | proxy_loss=2.0899e-01
+| [39m8        [39m | [39m-0.208994[39m | [39m4.6580122[39m | [39m191.78260[39m |
+Adam [    0] loss: 4.5675e+01
+Adam [  299] loss: 9.9776e-02
+BO eval 09 | layers=4 neurons=100 | proxy_loss=9.9776e-02
+| [39m9        [39m | [39m-0.099776[39m | [39m3.5919112[39m | [39m100.20428[39m |
+Adam [    0] loss: 3.3519e+01
+Adam [  299] loss: 1.6234e-01
+BO eval 10 | layers=4 neurons=94 | proxy_loss=1.6234e-01
+| [39m10       [39m | [39m-0.162336[39m | [39m3.5404048[39m | [39m93.506207[39m |
+Adam [    0] loss: 4.9976e+01
+Adam [  299] loss: 7.4478e-02
+BO eval 11 | layers=6 neurons=113 | proxy_loss=7.4478e-02
+| [39m11       [39m | [39m-0.074477[39m | [39m6.0      [39m | [39m112.58318[39m |
+Adam [    0] loss: 1.5150e+02
+Adam [  299] loss: 2.8337e+01
+BO eval 12 | layers=3 neurons=118 | proxy_loss=2.8337e+01
+| [39m12       [39m | [39m-28.33733[39m | [39m3.0      [39m | [39m117.82518[39m |
+Adam [    0] loss: 2.1215e+02
+Adam [  299] loss: 2.2122e-01
+BO eval 13 | layers=6 neurons=77 | proxy_loss=2.2122e-01
+| [39m13       [39m | [39m-0.221221[39m | [39m6.0      [39m | [39m76.890388[39m |
+Adam [    0] loss: 3.6153e+01
+Adam [  299] loss: 9.8408e-02
+BO eval 14 | layers=3 neurons=70 | proxy_loss=9.8408e-02
+| [39m14       [39m | [39m-0.098407[39m | [39m3.0      [39m | [39m70.185314[39m |
+Adam [    0] loss: 9.2329e+01
+Adam [  299] loss: 1.8011e-01
+BO eval 15 | layers=6 neurons=64 | proxy_loss=1.8011e-01
+| [39m15       [39m | [39m-0.180112[39m | [39m6.0      [39m | [39m64.0     [39m |
+Adam [    0] loss: 5.5290e+01
+Adam [  299] loss: 6.3803e+00
+BO eval 16 | layers=3 neurons=153 | proxy_loss=6.3803e+00
+| [39m16       [39m | [39m-6.380293[39m | [39m3.0      [39m | [39m152.56599[39m |
+=================================================
+Best architecture from Bayesian: layers=6, neurons=145
+Adam [    0] loss: 3.5232e+01
+Adam [ 2000] loss: 2.0715e-02
+Adam [ 4000] loss: 1.0247e-02
+Adam [ 6000] loss: 3.5377e-02
+Adam [ 8000] loss: 2.7470e-02
+Adam [10000] loss: 3.0773e-03
+Adam [11999] loss: 2.3105e-02
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_05/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_05/stage_adam/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_05/stage_adam/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_05/stage_adam/advection_time_slices_exact_vs_pred.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_05/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_05/stage_lbfgs/result_comparison.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_05/stage_lbfgs/advection_heatmap.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_05/stage_lbfgs/advection_time_slices_exact_vs_pred.png
+Selected best stage: lbfgs (rel_l2=8.4185e-03)
+Run time: 777.86 s
+Saved summary: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.100/run_05/search_summary.csv

@@ -1,0 +1,2 @@
+method,stage,seed,rel_l2,run_time_seconds
+naspinn,best:adam,42,1.01271553e-03,919.858747

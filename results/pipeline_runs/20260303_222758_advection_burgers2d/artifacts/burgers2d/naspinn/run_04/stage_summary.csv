@@ -1,0 +1,4 @@
+stage,seed,rel_l2,run_time_seconds
+adam,45,8.48986737e-04,906.483600
+lbfgs,45,4.96061783e-04,914.903229
+best:lbfgs,45,4.96061783e-04,914.903229

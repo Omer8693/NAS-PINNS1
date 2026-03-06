@@ -150,6 +150,7 @@ def parse_args():
     parser.add_argument("--beta-list", type=str, default="1.0,0.5,0.1")
     parser.add_argument("--paper-protocol", action="store_true")
     parser.add_argument("--paper-betas", type=str, default="1.0,0.5,0.1")
+    parser.add_argument("--paper-run-id", type=int, default=None)
     parser.add_argument("--repeats", type=int, default=5)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--save-dir", type=str, default=None)
@@ -189,11 +190,20 @@ def main():
     os.makedirs(args.save_dir, exist_ok=True)
 
     if args.paper_protocol:
+        if args.paper_run_id is not None:
+            raise ValueError("--paper-run-id cannot be used together with --paper-protocol")
         run_paper_protocol(args)
     elif args.multi_beta:
+        if args.paper_run_id is not None:
+            raise ValueError("--paper-run-id cannot be used together with --multi-beta")
         run_multi_beta(args)
     else:
-        run_single_beta(args, beta=args.beta, seed=args.seed, out_dir=args.save_dir)
+        seed = args.seed
+        if args.paper_run_id is not None:
+            if args.paper_run_id < 1:
+                raise ValueError("--paper-run-id must be >= 1")
+            seed = args.seed + args.paper_run_id
+        run_single_beta(args, beta=args.beta, seed=seed, out_dir=args.save_dir)
 
 
 if __name__ == "__main__":

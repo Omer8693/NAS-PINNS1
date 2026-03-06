@@ -1,0 +1,14 @@
+problem,optimizer,best_rel_l2,run_time_seconds,stage_bucket,stage,pipeline_run,repeat,case_type,case_value,paper_beta,run_id,seed,metrics_path
+advection,bayesian,2.33059908e-03,675.082099,overall,best:lbfgs,20260303_222758_advection_burgers2d,,beta,0.500,0.500,01,43,results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/bayesian/paper_beta_0.500/run_01/metrics.csv
+advection,naspinn,2.76397784e-03,518.832903,overall,best:lbfgs,20260303_222758_advection_burgers2d,,beta,0.500,0.500,01,43,results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/naspinn/paper_beta_0.500/run_01/metrics.csv
+advection,nsga2,1.99403607e-03,684.012038,overall,best:lbfgs,20260303_222758_advection_burgers2d,,beta,1.000,1.000,05,47,results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga2/paper_beta_1.000/run_05/metrics.csv
+advection,nsga3,1.91795512e-03,950.358159,overall,best:lbfgs,20260303_222758_advection_burgers2d,,beta,1.000,1.000,01,43,results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/advection/nsga3/paper_beta_1.000/run_01/metrics.csv
+burgers,bayesian,2.62980428e-04,234.367832,overall,best:lbfgs,20260227_202723,rep_01,nu,0.040,,,43,results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/bayesian/nu_0.040/metrics.csv
+burgers,naspinn,2.61996227e-04,832.305551,overall,best:lbfgs,20260227_202723,rep_01,nu,0.070,,,44,results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/naspinn/nu_0.070/metrics.csv
+burgers,nsga2,1.65799763e-04,362.605478,overall,best:lbfgs,20260227_202723,rep_01,nu,0.070,,,44,results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga2/nu_0.070/metrics.csv
+burgers,nsga3,1.73486361e-04,306.104050,overall,best:lbfgs,20260227_202723,rep_01,nu,0.070,,,44,results/pipeline_runs/20260227_202723/artifacts/rep_01/burgers/nsga3/nu_0.070/metrics.csv
+burgers2d,naspinn,4.64833679e-04,966.741040,overall,best:adam,20260303_222758_advection_burgers2d,,run,03,,03,44,results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_03/metrics.csv
+poisson,bayesian,2.18886332e-03,415.098520,best,,20260227_202723,rep_01,domain,annulus,,,46,results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/bayesian/domain_annulus/stage_best/metrics.csv
+poisson,naspinn,2.22549607e-03,529.123190,overall,best:lbfgs,20260227_202723,rep_01,domain,annulus,,,46,results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/naspinn/domain_annulus/metrics.csv
+poisson,nsga2,1.37910922e-03,5807.011666,overall,,20260227_202723,rep_01,domain,rectangular,,,42,results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga2/domain_rectangular/metrics.csv
+poisson,nsga3,8.92217342e-04,2702.507439,best,,20260227_202723,rep_01,domain,rectangular,,,42,results/pipeline_runs/20260227_202723/artifacts/rep_01/poisson/nsga3/domain_rectangular/stage_best/metrics.csv

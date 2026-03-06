@@ -1,0 +1,110 @@
+NAS_PINNs_burgers2d.py --seed 42 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_01
+NAS_PINNs_burgers2d.py --seed 43 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_02
+NAS_PINNs_burgers2d.py --seed 44 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_03
+NAS_PINNs_burgers2d.py --seed 45 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_04
+NAS_PINNs_burgers2d.py --seed 46 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_05
+Adam [    0] loss: 1.2056e+02
+Adam [ 2000] loss: 2.3721e-04
+Adam [ 4000] loss: 3.2283e-04
+Adam [ 6000] loss: 6.9771e-05
+Adam [ 8000] loss: 2.0757e-04
+Adam [10000] loss: 3.9253e-04
+Adam [11999] loss: 2.0746e-05
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_01/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_01/stage_adam/slice_t_0.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_01/stage_adam/slice_t_1.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_01/stage_adam/slice_t_2.00.png
+Relative L2 error (2D Burgers): 1.0127e-03
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_01/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_01/stage_lbfgs/slice_t_0.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_01/stage_lbfgs/slice_t_1.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_01/stage_lbfgs/slice_t_2.00.png
+Relative L2 error (2D Burgers): 1.0139e-03
+Selected best stage: adam (rel_l2=1.0127e-03)
+Run time: 919.86 s
+Adam [    0] loss: 4.7505e+01
+Adam [ 2000] loss: 3.8890e-04
+Adam [ 4000] loss: 1.1333e-03
+Adam [ 6000] loss: 4.9395e-04
+Adam [ 8000] loss: 5.8838e-04
+Adam [10000] loss: 6.3807e-04
+Adam [11999] loss: 1.4854e-05
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_02/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_02/stage_adam/slice_t_0.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_02/stage_adam/slice_t_1.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_02/stage_adam/slice_t_2.00.png
+Relative L2 error (2D Burgers): 7.8366e-04
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_02/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_02/stage_lbfgs/slice_t_0.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_02/stage_lbfgs/slice_t_1.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_02/stage_lbfgs/slice_t_2.00.png
+Relative L2 error (2D Burgers): 7.7771e-04
+Selected best stage: lbfgs (rel_l2=7.7771e-04)
+Run time: 968.60 s
+Adam [    0] loss: 2.9649e+01
+Adam [ 2000] loss: 1.2166e-04
+Adam [ 4000] loss: 6.4262e-05
+Adam [ 6000] loss: 4.8736e-02
+Adam [ 8000] loss: 7.0939e-05
+Adam [10000] loss: 1.5479e-05
+Adam [11999] loss: 1.1520e-05
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_03/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_03/stage_adam/slice_t_0.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_03/stage_adam/slice_t_1.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_03/stage_adam/slice_t_2.00.png
+Relative L2 error (2D Burgers): 4.6483e-04
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_03/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_03/stage_lbfgs/slice_t_0.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_03/stage_lbfgs/slice_t_1.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_03/stage_lbfgs/slice_t_2.00.png
+Relative L2 error (2D Burgers): 4.7981e-04
+Selected best stage: adam (rel_l2=4.6483e-04)
+Run time: 966.74 s
+Adam [    0] loss: 1.5490e+02
+Adam [ 2000] loss: 4.7488e-04
+Adam [ 4000] loss: 6.2153e-02
+Adam [ 6000] loss: 5.8187e-02
+Adam [ 8000] loss: 2.3660e-02
+Adam [10000] loss: 2.2184e-04
+Adam [11999] loss: 5.2812e-05
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_04/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_04/stage_adam/slice_t_0.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_04/stage_adam/slice_t_1.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_04/stage_adam/slice_t_2.00.png
+Relative L2 error (2D Burgers): 8.4899e-04
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_04/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_04/stage_lbfgs/slice_t_0.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_04/stage_lbfgs/slice_t_1.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_04/stage_lbfgs/slice_t_2.00.png
+Relative L2 error (2D Burgers): 4.9606e-04
+Selected best stage: lbfgs (rel_l2=4.9606e-04)
+Run time: 930.49 s
+Adam [    0] loss: 2.1127e+02
+Adam [ 2000] loss: 5.2382e-04
+Adam [ 4000] loss: 2.5463e-04
+Adam [ 6000] loss: 2.4064e-04
+Adam [ 8000] loss: 8.6091e-05
+Adam [10000] loss: 1.5348e-04
+Adam [11999] loss: 2.1989e-05
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_05/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_05/stage_adam/slice_t_0.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_05/stage_adam/slice_t_1.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_05/stage_adam/slice_t_2.00.png
+Relative L2 error (2D Burgers): 6.1142e-04
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_05/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_05/stage_lbfgs/slice_t_0.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_05/stage_lbfgs/slice_t_1.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/naspinn/run_05/stage_lbfgs/slice_t_2.00.png
+Relative L2 error (2D Burgers): 5.8125e-04
+Selected best stage: lbfgs (rel_l2=5.8125e-04)
+Run time: 919.70 s

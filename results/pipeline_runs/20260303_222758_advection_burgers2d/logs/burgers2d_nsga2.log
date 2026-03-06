@@ -2594,3 +2594,8 @@ Adam [  199] loss: 1.1951e-01
     20 |      600 |      9 |  0.0153613070 |             f
 Best architecture from NSGA-II: layers=7, neurons=188
 Adam [    0] loss: 1.0951e+02
+Adam [ 2000] loss: 2.9927e-04
+Adam [ 4000] loss: 1.4388e-04
+Adam [ 6000] loss: 4.3768e-05
+Adam [ 8000] loss: 9.2750e-05
+Adam [10000] loss: 1.9806e-05

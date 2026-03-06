@@ -3,14 +3,14 @@ set -euo pipefail
 
 PYTHON_BIN="${PYTHON_BIN:-python}"
 PROFILE="${PROFILE:-paper_baseline}"     # paper_baseline | ours_fast
-REPEATS="${REPEATS:-5}"
+REPEATS="${REPEATS:-1}"
 SEED="${SEED:-42}"
 BETA_LIST="${BETA_LIST:-1.0,0.5,0.1}"
 FORCE_NEW_RUN="${FORCE_NEW_RUN:-0}"
 REQUIRE_GPU="${REQUIRE_GPU:-1}"          # 1: fail-fast if CUDA unavailable, 0: allow CPU fallback
-RUN_FAMILIES="${RUN_FAMILIES:-advection,burgers2d}"
+RUN_FAMILIES="${RUN_FAMILIES:-burgers2d}"
 ADVECTION_METHODS="${ADVECTION_METHODS:-naspinn,nsga2,nsga3,bayesian}"
-BURGERS2D_METHODS="${BURGERS2D_METHODS:-naspinn,nsga2,nsga3,bayesian}"
+BURGERS2D_METHODS="${BURGERS2D_METHODS:-nsga3,bayesian}"
 
 STAMP="$(date -u +%Y%m%d_%H%M%S)"
 if [[ -z "${RUN_ROOT:-}" ]]; then
@@ -390,29 +390,32 @@ fi
 # Burgers2D (resume per run)
 # ---------------------------------------------------------------------------
 if csv_has "${RUN_FAMILIES}" "burgers2d"; then
-  if csv_has "${BURGERS2D_METHODS}" "naspinn"; then
-    run_burgers2d_remaining \
-      "burgers2d_naspinn" \
-      "NAS_PINNs_burgers2d.py" \
-      "${ARTIFACT_ROOT}/burgers2d/naspinn" \
-      "0" \
-      "0" \
-      "metrics.csv" "run_time.txt"
-  else
-    echo "[SKIP ] burgers2d_naspinn (filtered by BURGERS2D_METHODS)"
-  fi
-
-  if csv_has "${BURGERS2D_METHODS}" "nsga2"; then
-    run_burgers2d_remaining \
-      "burgers2d_nsga2" \
-      "NAS_PINNs_burgers2d_nsga2.py" \
-      "${ARTIFACT_ROOT}/burgers2d/nsga2" \
-      "1" \
-      "1" \
-      "metrics.csv" "run_time.txt" "search_summary.csv"
-  else
-    echo "[SKIP ] burgers2d_nsga2 (filtered by BURGERS2D_METHODS)"
-  fi
+  # Short-run mode: NASPINN and NSGA2 blocks are intentionally commented out.
+  # Uncomment these blocks later if you want to run them again.
+  #
+  # if csv_has "${BURGERS2D_METHODS}" "naspinn"; then
+  #   run_burgers2d_remaining \
+  #     "burgers2d_naspinn" \
+  #     "NAS_PINNs_burgers2d.py" \
+  #     "${ARTIFACT_ROOT}/burgers2d/naspinn" \
+  #     "0" \
+  #     "0" \
+  #     "metrics.csv" "run_time.txt"
+  # else
+  #   echo "[SKIP ] burgers2d_naspinn (filtered by BURGERS2D_METHODS)"
+  # fi
+  #
+  # if csv_has "${BURGERS2D_METHODS}" "nsga2"; then
+  #   run_burgers2d_remaining \
+  #     "burgers2d_nsga2" \
+  #     "NAS_PINNs_burgers2d_nsga2.py" \
+  #     "${ARTIFACT_ROOT}/burgers2d/nsga2" \
+  #     "1" \
+  #     "1" \
+  #     "metrics.csv" "run_time.txt" "search_summary.csv"
+  # else
+  #   echo "[SKIP ] burgers2d_nsga2 (filtered by BURGERS2D_METHODS)"
+  # fi
 
   if csv_has "${BURGERS2D_METHODS}" "nsga3"; then
     run_burgers2d_remaining \

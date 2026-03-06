@@ -3,3 +3,5 @@ NAS_PINNs_burgers2d_nsga3.py --profile paper_baseline --seed 43 --save-dir resul
 NAS_PINNs_burgers2d_nsga3.py --profile paper_baseline --seed 44 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/nsga3/run_03
 NAS_PINNs_burgers2d_nsga3.py --profile paper_baseline --seed 45 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/nsga3/run_04
 NAS_PINNs_burgers2d_nsga3.py --profile paper_baseline --seed 46 --save-dir results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/nsga3/run_05
+Starting NSGA-III architecture search (2D Burgers)
+Adam [    0] loss: 8.2359e+01

@@ -74,3 +74,7 @@ BO eval 16 | layers=4 neurons=149 | proxy_loss=1.1775e-01
 Best architecture from Bayesian: layers=8, neurons=234
 Adam [    0] loss: 2.5712e+01
 Adam [ 2000] loss: 1.5039e-04
+Adam [ 4000] loss: 8.6466e-05
+Adam [ 6000] loss: 6.4160e-04
+Adam [ 8000] loss: 3.8897e-05
+Adam [10000] loss: 8.3736e-05

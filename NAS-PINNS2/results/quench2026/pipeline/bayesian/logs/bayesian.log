@@ -1,0 +1,14 @@
+[2026-03-09 01:54:08] === bayesian run started ===
+[2026-03-09 01:54:08] save_dir=/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian
+[2026-03-09 01:54:08] [search] eval=1 arch=L4_N155 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/search_trials/eval_00001_L4_N155
+[2026-03-09 01:57:28] [search] eval=2 arch=L5_N121 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/search_trials/eval_00002_L5_N121
+[2026-03-09 02:01:00] [search] eval=3 arch=L3_N79 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/search_trials/eval_00003_L3_N79
+[2026-03-09 02:03:02] [search] eval=4 arch=L3_N147 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/search_trials/eval_00004_L3_N147
+[2026-03-09 02:05:37] [search] eval=5 arch=L6_N114 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/search_trials/eval_00005_L6_N114
+[2026-03-09 02:09:35] [search] eval=7 arch=L3_N130 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/search_trials/eval_00007_L3_N130
+[2026-03-09 02:12:02] [search] eval=8 arch=L3_N98 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/search_trials/eval_00008_L3_N98
+[2026-03-09 02:14:14] [search] eval=9 arch=L6_N64 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/search_trials/eval_00009_L6_N64
+[2026-03-09 02:17:28] search done | best_arch=5x121
+[2026-03-09 02:17:28] [final] training arch=L5_N121 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/final/L5_N121
+[2026-03-09 02:29:27] final done | best_stage=adam
+[2026-03-09 02:29:27] === bayesian run completed ===

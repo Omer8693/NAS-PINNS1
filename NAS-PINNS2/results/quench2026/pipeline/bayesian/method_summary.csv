@@ -1,0 +1,2 @@
+method,best_layers,best_neurons,search_best_proxy_loss,search_best_param_count,final_best_stage,final_best_objective,final_run_time_seconds
+bayesian,5,121,148.88018798828125,91167.0,adam,0.027310121804475784,714.9365210849792

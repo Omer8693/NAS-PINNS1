@@ -1,0 +1,39 @@
+{
+  "method": "nsga2",
+  "search_done": true,
+  "final_done": true,
+  "search": {
+    "best_layers": 6,
+    "best_neurons": 132,
+    "best_proxy_loss": 97.24772644042969,
+    "best_param_count": 143283.0,
+    "population_size": 8
+  },
+  "final": {
+    "final_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/final/L6_N132",
+    "best_stage": "lbfgs",
+    "best_objective": 4.310217380523682,
+    "param_count": 143283,
+    "run_time_seconds": 903.7650693077594,
+    "stage_rows": [
+      {
+        "stage": "adam",
+        "objective": "8.331409454345703",
+        "checkpoint": "baseline_model_adam.pth",
+        "selected": "0"
+      },
+      {
+        "stage": "lbfgs",
+        "objective": "4.310217380523682",
+        "checkpoint": "baseline_model_lbfgs.pth",
+        "selected": "1"
+      },
+      {
+        "stage": "pso",
+        "objective": "4584.9853515625",
+        "checkpoint": "baseline_model_pso.pth",
+        "selected": "0"
+      }
+    ]
+  }
+}

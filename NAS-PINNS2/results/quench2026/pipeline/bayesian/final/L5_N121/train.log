@@ -1,0 +1,21 @@
+
+$ /usr/bin/python /home/coder/NAS-PINNS1/NAS-PINNS2/naspinn_baseline_with_quench_2026_data.py --save-dir /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/final/L5_N121 --seed 42 --epochs 1000 --layers 5 --base-neurons 121 --n-time-steps 10 --log-every 100 --adam-lr 0.001 --w-physics 50.0 --w-ic 0.001 --w-bc 1e-18 --w-data 1e-05 --lbfgs-max-iter 50 --lbfgs-col-points 1024 --lbfgs-ic-points 256 --lbfgs-bc-points 256 --lbfgs-time-steps 4 --lbfgs-history-size 20 --lbfgs-line-search strong_wolfe --pso-iters 5 --pso-swarm 8 --pso-span 0.25 --use-pso --force-final
+Baseline NAS-PINN with A356 quenching reference data (2026)
+Loss weights | physics=5.000e+01, ic=1.000e-03, bc=1.000e-18, data=1.000e-05
+Architecture | layers=5, base_neurons=121
+Epoch     0 | Total: 3.4393e+02 | Physics: 2.5441e-01 | Data: 3.0817e+06
+Epoch   100 | Total: 2.7092e+02 | Physics: 5.9072e-03 | Data: 1.4291e+03
+Epoch   200 | Total: 2.1887e+02 | Physics: 3.5283e-02 | Data: 9.5070e+02
+Epoch   300 | Total: 1.4178e+02 | Physics: 4.7567e-02 | Data: 1.0209e+04
+Epoch   400 | Total: 5.7903e+01 | Physics: 1.0036e-01 | Data: 2.6676e+04
+Epoch   500 | Total: 1.3001e+01 | Physics: 8.2657e-02 | Data: 1.0308e+04
+Epoch   600 | Total: 1.3301e+01 | Physics: 2.5593e-01 | Data: 4.3658e+03
+Epoch   700 | Total: 4.3817e-01 | Physics: 7.6808e-03 | Data: 1.4635e+03
+Epoch   800 | Total: 5.5124e-02 | Physics: 7.3967e-04 | Data: 1.0947e+02
+Epoch   900 | Total: 2.8332e-02 | Physics: 3.7687e-04 | Data: 4.0696e+01
+Adam checkpoint saved: /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/final/L5_N121/baseline_model_adam.pth
+Running L-BFGS refinement... (col=1024, ic=256, bc=256, time_steps=4)
+L-BFGS checkpoint saved: /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/final/L5_N121/baseline_model_lbfgs.pth | objective=4.249469e-02
+Running PSO refinement...
+PSO checkpoint saved: /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/final/L5_N121/baseline_model_pso.pth | objective=5.481669e+03
+Training completed. Selected stage: adam | objective=2.731012e-02 | final model: /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/final/L5_N121/baseline_model.pth

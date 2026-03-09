@@ -1,0 +1,5 @@
+method,variant,status,best_layers,best_neurons,param_count,best_stage,best_objective,run_time_seconds,objective_rank,is_winner,final_dir
+baseline,L5_N96,completed,5,96,57942,lbfgs,3.2609121799468994,647.2466388698667,1,1,/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/baseline/L5_N96
+nsga2,,in_progress,,,,,,,,0,
+nsga3,,missing,,,,,,,,0,
+bayesian,,missing,,,,,,,,0,

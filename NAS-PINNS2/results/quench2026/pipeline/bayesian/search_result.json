@@ -1,0 +1,7 @@
+{
+  "best_layers": 5,
+  "best_neurons": 121,
+  "best_proxy_loss": 148.88018798828125,
+  "best_param_count": 91167.0,
+  "population_size": 9
+}

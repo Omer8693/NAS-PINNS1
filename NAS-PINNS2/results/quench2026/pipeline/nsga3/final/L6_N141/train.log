@@ -1,0 +1,21 @@
+
+$ /usr/bin/python /home/coder/NAS-PINNS1/NAS-PINNS2/naspinn_baseline_with_quench_2026_data.py --save-dir /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/final/L6_N141 --seed 42 --epochs 1000 --layers 6 --base-neurons 141 --n-time-steps 10 --log-every 100 --adam-lr 0.001 --w-physics 50.0 --w-ic 0.001 --w-bc 1e-18 --w-data 1e-05 --lbfgs-max-iter 50 --lbfgs-col-points 1024 --lbfgs-ic-points 256 --lbfgs-bc-points 256 --lbfgs-time-steps 4 --lbfgs-history-size 20 --lbfgs-line-search strong_wolfe --pso-iters 5 --pso-swarm 8 --pso-span 0.25 --use-pso --force-final
+Baseline NAS-PINN with A356 quenching reference data (2026)
+Loss weights | physics=5.000e+01, ic=1.000e-03, bc=1.000e-18, data=1.000e-05
+Architecture | layers=6, base_neurons=141
+Epoch     0 | Total: 6.7386e+02 | Physics: 3.4558e-01 | Data: 3.1177e+07
+Epoch   100 | Total: 2.6940e+02 | Physics: 1.1369e-02 | Data: 2.7555e+02
+Epoch   200 | Total: 2.1513e+02 | Physics: 1.3209e-01 | Data: 5.3047e+03
+Epoch   300 | Total: 1.6581e+02 | Physics: 2.7010e-02 | Data: 2.6920e+04
+Epoch   400 | Total: 3.4436e+02 | Physics: 3.6177e+00 | Data: 2.0257e+05
+Epoch   500 | Total: 1.5780e+02 | Physics: 4.1144e-02 | Data: 1.7913e+01
+Epoch   600 | Total: 1.2121e+02 | Physics: 6.6645e-02 | Data: 6.3150e+02
+Epoch   700 | Total: 8.3336e+01 | Physics: 9.2942e-02 | Data: 3.8439e+04
+Epoch   800 | Total: 4.7788e+01 | Physics: 1.9486e-02 | Data: 1.1957e+03
+Epoch   900 | Total: 3.1672e+01 | Physics: 1.2432e-01 | Data: 2.6012e+03
+Adam checkpoint saved: /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/final/L6_N141/baseline_model_adam.pth
+Running L-BFGS refinement... (col=1024, ic=256, bc=256, time_steps=4)
+L-BFGS checkpoint saved: /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/final/L6_N141/baseline_model_lbfgs.pth | objective=5.451701e+00
+Running PSO refinement...
+PSO checkpoint saved: /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/final/L6_N141/baseline_model_pso.pth | objective=8.739528e+03
+Training completed. Selected stage: lbfgs | objective=5.451701e+00 | final model: /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/final/L6_N141/baseline_model.pth

@@ -78,3 +78,19 @@ Adam [ 4000] loss: 8.6466e-05
 Adam [ 6000] loss: 6.4160e-04
 Adam [ 8000] loss: 3.8897e-05
 Adam [10000] loss: 8.3736e-05
+Adam [11999] loss: 2.7620e-05
+
+L-BFGS refinement...
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/bayesian/run_01/stage_adam/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/bayesian/run_01/stage_adam/slice_t_0.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/bayesian/run_01/stage_adam/slice_t_1.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/bayesian/run_01/stage_adam/slice_t_2.00.png
+Relative L2 error (2D Burgers): 7.2002e-04
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/bayesian/run_01/stage_lbfgs/loss_curve.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/bayesian/run_01/stage_lbfgs/slice_t_0.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/bayesian/run_01/stage_lbfgs/slice_t_1.00.png
+Saved plot: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/bayesian/run_01/stage_lbfgs/slice_t_2.00.png
+Relative L2 error (2D Burgers): 6.8054e-04
+Selected best stage: lbfgs (rel_l2=6.8054e-04)
+Run time: 2690.58 s
+Saved summary: results/pipeline_runs/20260303_222758_advection_burgers2d/artifacts/burgers2d/bayesian/run_01/search_summary.csv

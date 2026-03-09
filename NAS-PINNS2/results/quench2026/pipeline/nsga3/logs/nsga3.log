@@ -1,0 +1,46 @@
+[2026-03-08 23:21:10] === nsga3 run started ===
+[2026-03-08 23:21:10] save_dir=/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3
+[2026-03-08 23:21:10] [search] eval=1 arch=L5_N106 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00001_L5_N106
+[2026-03-08 23:24:31] [search] eval=2 arch=L6_N131 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00002_L6_N131
+[2026-03-08 23:28:54] [search] eval=3 arch=L3_N158 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00003_L3_N158
+[2026-03-08 23:31:35] [search] eval=4 arch=L5_N139 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00004_L5_N139
+[2026-03-08 23:35:25] [search] eval=5 arch=L3_N107 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00005_L3_N107
+[2026-03-08 23:37:43] [search] eval=6 arch=L4_N153 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00006_L4_N153
+[2026-03-08 23:41:05] [search] eval=7 arch=L5_N143 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00007_L5_N143
+[2026-03-08 23:45:01] [search] eval=8 arch=L4_N86 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00008_L4_N86
+[2026-03-08 23:47:38] [search] eval=9 arch=L5_N70 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00009_L5_N70
+[2026-03-08 23:50:34] [search] eval=10 arch=L5_N125 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00010_L5_N125
+[2026-03-08 23:54:11] [search] eval=11 arch=L5_N98 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00011_L5_N98
+[2026-03-08 23:57:20] [search] eval=12 arch=L4_N146 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00012_L4_N146
+[2026-03-09 00:00:35] [search] eval=14 arch=L5_N94 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00014_L5_N94
+[2026-03-09 00:03:37] [search] eval=15 arch=L6_N129 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00015_L6_N129
+[2026-03-09 00:07:55] [search] eval=16 arch=L3_N109 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00016_L3_N109
+[2026-03-09 00:10:13] [search] eval=17 arch=L5_N137 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00017_L5_N137
+[2026-03-09 00:14:01] [search] eval=18 arch=L5_N73 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00018_L5_N73
+[2026-03-09 00:17:01] [search] eval=19 arch=L6_N124 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00019_L6_N124
+[2026-03-09 00:21:13] [search] eval=20 arch=L5_N71 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00020_L5_N71
+[2026-03-09 00:24:15] [search] eval=21 arch=L5_N138 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00021_L5_N138
+[2026-03-09 00:28:07] [search] eval=23 arch=L4_N85 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00023_L4_N85
+[2026-03-09 00:30:42] [search] eval=24 arch=L4_N131 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00024_L4_N131
+[2026-03-09 00:33:50] [search] eval=25 arch=L5_N154 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00025_L5_N154
+[2026-03-09 00:37:55] [search] eval=26 arch=L5_N153 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00026_L5_N153
+[2026-03-09 00:42:00] [search] eval=27 arch=L6_N154 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00027_L6_N154
+[2026-03-09 00:46:46] [search] eval=28 arch=L6_N138 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00028_L6_N138
+[2026-03-09 00:51:15] [search] eval=30 arch=L6_N153 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00030_L6_N153
+[2026-03-09 00:56:04] [search] eval=31 arch=L5_N129 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00031_L5_N129
+[2026-03-09 00:59:49] [search] eval=32 arch=L4_N87 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00032_L4_N87
+[2026-03-09 01:02:21] [search] eval=35 arch=L3_N131 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00035_L3_N131
+[2026-03-09 01:04:49] [search] eval=36 arch=L4_N138 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00036_L4_N138
+[2026-03-09 01:08:01] [search] eval=38 arch=L4_N83 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00038_L4_N83
+[2026-03-09 01:10:35] [search] eval=40 arch=L6_N107 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00040_L6_N107
+[2026-03-09 01:14:27] [search] eval=41 arch=L5_N86 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00041_L5_N86
+[2026-03-09 01:17:36] [search] eval=42 arch=L5_N147 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00042_L5_N147
+[2026-03-09 01:21:35] [search] eval=43 arch=L5_N132 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00043_L5_N132
+[2026-03-09 01:25:19] [search] eval=46 arch=L6_N141 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00046_L6_N141
+[2026-03-09 01:29:55] [search] eval=47 arch=L5_N92 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00047_L5_N92
+[2026-03-09 01:33:04] [search] eval=50 arch=L3_N108 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00050_L3_N108
+[2026-03-09 01:35:19] [search] eval=51 arch=L5_N107 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00051_L5_N107
+[2026-03-09 01:38:37] search done | best_arch=6x141
+[2026-03-09 01:38:37] [final] training arch=L6_N141 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/final/L6_N141
+[2026-03-09 01:54:08] final done | best_stage=lbfgs
+[2026-03-09 01:54:08] === nsga3 run completed ===

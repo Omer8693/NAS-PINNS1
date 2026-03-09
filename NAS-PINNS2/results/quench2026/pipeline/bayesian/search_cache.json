@@ -1,0 +1,58 @@
+{
+  "L4_N155": {
+    "status": "ok",
+    "objective": 225.5326385498047,
+    "param_count": 100020.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/search_trials/eval_00001_L4_N155",
+    "eval_idx": 1
+  },
+  "L5_N121": {
+    "status": "ok",
+    "objective": 148.88018798828125,
+    "param_count": 91167.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/search_trials/eval_00002_L5_N121",
+    "eval_idx": 2
+  },
+  "L3_N79": {
+    "status": "ok",
+    "objective": 280.67938232421875,
+    "param_count": 14335.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/search_trials/eval_00003_L3_N79",
+    "eval_idx": 3
+  },
+  "L3_N147": {
+    "status": "ok",
+    "objective": 263.1553649902344,
+    "param_count": 46635.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/search_trials/eval_00004_L3_N147",
+    "eval_idx": 4
+  },
+  "L6_N114": {
+    "status": "ok",
+    "objective": 219.5048828125,
+    "param_count": 107337.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/search_trials/eval_00005_L6_N114",
+    "eval_idx": 5
+  },
+  "L3_N130": {
+    "status": "ok",
+    "objective": 277.3932189941406,
+    "param_count": 36826.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/search_trials/eval_00007_L3_N130",
+    "eval_idx": 7
+  },
+  "L3_N98": {
+    "status": "ok",
+    "objective": 278.1423645019531,
+    "param_count": 21498.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/search_trials/eval_00008_L3_N98",
+    "eval_idx": 8
+  },
+  "L6_N64": {
+    "status": "ok",
+    "objective": 253.9653778076172,
+    "param_count": 34687.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/search_trials/eval_00009_L6_N64",
+    "eval_idx": 9
+  }
+}

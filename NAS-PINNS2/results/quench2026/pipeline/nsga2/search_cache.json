@@ -1,0 +1,247 @@
+{
+  "L5_N106": {
+    "status": "ok",
+    "objective": 220.1051788330078,
+    "param_count": 70332.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00001_L5_N106",
+    "eval_idx": 1
+  },
+  "L6_N131": {
+    "status": "ok",
+    "objective": 109.09535217285156,
+    "param_count": 141150.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00002_L6_N131",
+    "eval_idx": 2
+  },
+  "L3_N158": {
+    "status": "ok",
+    "objective": 260.1800842285156,
+    "param_count": 53598.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00003_L3_N158",
+    "eval_idx": 3
+  },
+  "L5_N139": {
+    "status": "ok",
+    "objective": 176.83567810058594,
+    "param_count": 119733.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00004_L5_N139",
+    "eval_idx": 4
+  },
+  "L3_N107": {
+    "status": "ok",
+    "objective": 273.2150573730469,
+    "param_count": 25395.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00005_L3_N107",
+    "eval_idx": 5
+  },
+  "L4_N153": {
+    "status": "ok",
+    "objective": 185.62477111816406,
+    "param_count": 97506.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00006_L4_N153",
+    "eval_idx": 6
+  },
+  "L5_N143": {
+    "status": "ok",
+    "objective": 126.00312042236328,
+    "param_count": 126609.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00007_L5_N143",
+    "eval_idx": 7
+  },
+  "L4_N86": {
+    "status": "ok",
+    "objective": 218.1191864013672,
+    "param_count": 31779.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00008_L4_N86",
+    "eval_idx": 8
+  },
+  "L3_N156": {
+    "status": "ok",
+    "objective": 245.02853393554688,
+    "param_count": 52296.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00009_L3_N156",
+    "eval_idx": 9
+  },
+  "L5_N107": {
+    "status": "ok",
+    "objective": 212.85858154296875,
+    "param_count": 71637.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00010_L5_N107",
+    "eval_idx": 10
+  },
+  "L3_N113": {
+    "status": "ok",
+    "objective": 272.6670837402344,
+    "param_count": 28173.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00011_L3_N113",
+    "eval_idx": 11
+  },
+  "L5_N136": {
+    "status": "ok",
+    "objective": 193.4898681640625,
+    "param_count": 114702.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00012_L5_N136",
+    "eval_idx": 12
+  },
+  "L4_N87": {
+    "status": "ok",
+    "objective": 238.93418884277344,
+    "param_count": 32496.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00013_L4_N87",
+    "eval_idx": 13
+  },
+  "L3_N106": {
+    "status": "ok",
+    "objective": 255.42642211914062,
+    "param_count": 24946.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00014_L3_N106",
+    "eval_idx": 14
+  },
+  "L6_N122": {
+    "status": "ok",
+    "objective": 172.2248992919922,
+    "param_count": 122673.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00015_L6_N122",
+    "eval_idx": 15
+  },
+  "L5_N104": {
+    "status": "ok",
+    "objective": 213.30125427246094,
+    "param_count": 67758.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00016_L5_N104",
+    "eval_idx": 16
+  },
+  "L4_N106": {
+    "status": "ok",
+    "objective": 229.712646484375,
+    "param_count": 47639.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00017_L4_N106",
+    "eval_idx": 17
+  },
+  "L6_N141": {
+    "status": "ok",
+    "objective": 157.25741577148438,
+    "param_count": 163200.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00020_L6_N141",
+    "eval_idx": 20
+  },
+  "L6_N132": {
+    "status": "ok",
+    "objective": 97.24772644042969,
+    "param_count": 143283.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00021_L6_N132",
+    "eval_idx": 21
+  },
+  "L4_N85": {
+    "status": "ok",
+    "objective": 220.69781494140625,
+    "param_count": 31070.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00022_L4_N85",
+    "eval_idx": 22
+  },
+  "L3_N93": {
+    "status": "ok",
+    "objective": 261.39202880859375,
+    "param_count": 19473.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00023_L3_N93",
+    "eval_idx": 23
+  },
+  "L5_N138": {
+    "status": "ok",
+    "objective": 192.9926300048828,
+    "param_count": 118044.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00024_L5_N138",
+    "eval_idx": 24
+  },
+  "L5_N105": {
+    "status": "ok",
+    "objective": 205.59901428222656,
+    "param_count": 69039.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00025_L5_N105",
+    "eval_idx": 25
+  },
+  "L6_N134": {
+    "status": "ok",
+    "objective": 216.92819213867188,
+    "param_count": 147597.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00026_L6_N134",
+    "eval_idx": 26
+  },
+  "L4_N132": {
+    "status": "ok",
+    "objective": 178.8834991455078,
+    "param_count": 73041.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00027_L4_N132",
+    "eval_idx": 27
+  },
+  "L3_N90": {
+    "status": "ok",
+    "objective": 254.0959014892578,
+    "param_count": 18306.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00028_L3_N90",
+    "eval_idx": 28
+  },
+  "L6_N158": {
+    "status": "ok",
+    "objective": 174.08155822753906,
+    "param_count": 204357.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00031_L6_N158",
+    "eval_idx": 31
+  },
+  "L5_N145": {
+    "status": "ok",
+    "objective": 194.3932647705078,
+    "param_count": 130119.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00032_L5_N145",
+    "eval_idx": 32
+  },
+  "L6_N104": {
+    "status": "ok",
+    "objective": 168.0316925048828,
+    "param_count": 89607.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00033_L6_N104",
+    "eval_idx": 33
+  },
+  "L5_N132": {
+    "status": "ok",
+    "objective": 171.44033813476562,
+    "param_count": 108162.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00034_L5_N132",
+    "eval_idx": 34
+  },
+  "L4_N116": {
+    "status": "ok",
+    "objective": 186.17205810546875,
+    "param_count": 56769.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00036_L4_N116",
+    "eval_idx": 36
+  },
+  "L5_N126": {
+    "status": "ok",
+    "objective": 182.3583984375,
+    "param_count": 98712.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00037_L5_N126",
+    "eval_idx": 37
+  },
+  "L3_N92": {
+    "status": "ok",
+    "objective": 273.1101989746094,
+    "param_count": 19080.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00038_L3_N92",
+    "eval_idx": 38
+  },
+  "L5_N146": {
+    "status": "ok",
+    "objective": 193.13995361328125,
+    "param_count": 131892.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00039_L5_N146",
+    "eval_idx": 39
+  },
+  "L5_N85": {
+    "status": "ok",
+    "objective": 226.80987548828125,
+    "param_count": 45699.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/search_trials/eval_00040_L5_N85",
+    "eval_idx": 40
+  }
+}

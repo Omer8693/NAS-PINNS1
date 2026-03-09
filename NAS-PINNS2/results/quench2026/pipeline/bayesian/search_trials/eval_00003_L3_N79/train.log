@@ -1,0 +1,11 @@
+
+$ /usr/bin/python /home/coder/NAS-PINNS1/NAS-PINNS2/naspinn_baseline_with_quench_2026_data.py --save-dir /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/search_trials/eval_00003_L3_N79 --seed 45 --epochs 300 --layers 3 --base-neurons 79 --n-time-steps 10 --log-every 75 --adam-lr 0.001 --w-physics 50.0 --w-ic 0.001 --w-bc 1e-18 --w-data 1e-05 --lbfgs-max-iter 50 --lbfgs-col-points 1024 --lbfgs-ic-points 256 --lbfgs-bc-points 256 --lbfgs-time-steps 4 --lbfgs-history-size 20 --lbfgs-line-search strong_wolfe --pso-iters 5 --pso-swarm 8 --pso-span 0.25 --skip-lbfgs
+Baseline NAS-PINN with A356 quenching reference data (2026)
+Loss weights | physics=5.000e+01, ic=1.000e-03, bc=1.000e-18, data=1.000e-05
+Architecture | layers=3, base_neurons=79
+Epoch     0 | Total: 4.6408e+03 | Physics: 4.5597e-01 | Data: 3.0038e+08
+Epoch    75 | Total: 2.8902e+02 | Physics: 5.0951e-03 | Data: 3.3068e+02
+Epoch   150 | Total: 2.8628e+02 | Physics: 3.2204e-03 | Data: 8.0904e+00
+Epoch   225 | Total: 2.8378e+02 | Physics: 2.0771e-03 | Data: 2.7134e+01
+Adam checkpoint saved: /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/search_trials/eval_00003_L3_N79/baseline_model_adam.pth
+Training completed. Selected stage: adam | objective=2.806794e+02 | final model: /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/search_trials/eval_00003_L3_N79/baseline_model.pth

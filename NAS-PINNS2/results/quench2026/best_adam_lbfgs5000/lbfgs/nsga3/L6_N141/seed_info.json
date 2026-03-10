@@ -1,0 +1,7 @@
+{
+  "source_trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/search_trials/eval_00046_L6_N141",
+  "seeded_adam_checkpoint": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/best_adam_lbfgs5000/lbfgs/nsga3/L6_N141/baseline_model_adam.pth",
+  "adam_objective": 94.10630798339844,
+  "layers": 6,
+  "neurons": 141
+}

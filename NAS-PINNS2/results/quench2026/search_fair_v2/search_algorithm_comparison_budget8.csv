@@ -1,0 +1,4 @@
+method,status,search_trial_evals,search_population_rows,search_unique_arch_ok,search_unique_arch_failed,search_best_layers,search_best_neurons,search_best_proxy_loss,search_best_param_count,cache_best_layers,cache_best_neurons,cache_best_proxy_loss,cache_best_eval_idx,budget_cut,budget_cut_best_layers,budget_cut_best_neurons,budget_cut_best_proxy_loss,budget_cut_best_eval_idx,budget_cut_best_param_count,final_best_stage,final_best_objective,final_run_time_seconds,proxy_rank,proxy_rank_budget_cut,final_rank,is_proxy_winner,is_proxy_winner_budget_cut,is_final_winner
+nsga2,incomplete,10,5,10,0,6,107,281.83251953125,94758.0,6,107,281.83251953125,10,8,6,131,283.5218200683594,2,141150.0,,,,1,1,,1,1,0
+nsga3,incomplete,8,5,8,0,6,131,283.5218200683594,141150.0,6,131,283.5218200683594,2,8,6,131,283.5218200683594,2,141150.0,,,,3,2,,0,0,0
+bayesian,incomplete,10,10,10,0,6,156,281.9999694824219,199275.0,6,156,281.9999694824219,9,8,6,154,284.4997253417969,8,194257.0,,,,2,3,,0,0,0

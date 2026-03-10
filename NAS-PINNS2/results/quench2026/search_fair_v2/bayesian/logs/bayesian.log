@@ -1,0 +1,15 @@
+[2026-03-09 18:54:34] === bayesian run started ===
+[2026-03-09 18:54:34] save_dir=/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/bayesian
+[2026-03-09 18:54:34] [search] eval=1 arch=L4_N155 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/bayesian/search_trials/eval_00001_L4_N155
+[2026-03-09 18:55:08] [search] eval=2 arch=L5_N121 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/bayesian/search_trials/eval_00002_L5_N121
+[2026-03-09 18:55:46] [search] eval=3 arch=L4_N122 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/bayesian/search_trials/eval_00003_L4_N122
+[2026-03-09 18:56:18] [search] eval=4 arch=L3_N125 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/bayesian/search_trials/eval_00004_L3_N125
+[2026-03-09 18:56:46] [search] eval=5 arch=L3_N119 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/bayesian/search_trials/eval_00005_L3_N119
+[2026-03-09 18:57:13] [search] eval=6 arch=L5_N152 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/bayesian/search_trials/eval_00006_L5_N152
+[2026-03-09 18:57:55] [search] eval=7 arch=L3_N151 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/bayesian/search_trials/eval_00007_L3_N151
+[2026-03-09 18:58:23] [search] eval=8 arch=L6_N154 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/bayesian/search_trials/eval_00008_L6_N154
+[2026-03-09 18:59:11] [search] eval=9 arch=L6_N156 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/bayesian/search_trials/eval_00009_L6_N156
+[2026-03-09 18:59:59] [search] eval=10 arch=L6_N158 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/bayesian/search_trials/eval_00010_L6_N158
+[2026-03-09 19:00:47] search done | best_arch=6x156
+[2026-03-09 19:00:47] final stage skipped by --skip-final
+[2026-03-09 19:00:47] === bayesian run completed ===

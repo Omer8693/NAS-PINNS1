@@ -1,0 +1,12 @@
+{
+  "method": "bayesian",
+  "search_done": true,
+  "final_done": false,
+  "search": {
+    "best_layers": 6,
+    "best_neurons": 156,
+    "best_proxy_loss": 281.9999694824219,
+    "best_param_count": 199275.0,
+    "population_size": 10
+  }
+}

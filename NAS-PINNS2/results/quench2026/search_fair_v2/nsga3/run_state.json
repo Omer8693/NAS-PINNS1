@@ -1,0 +1,12 @@
+{
+  "method": "nsga3",
+  "search_done": true,
+  "final_done": false,
+  "search": {
+    "best_layers": 6,
+    "best_neurons": 131,
+    "best_proxy_loss": 283.5218200683594,
+    "best_param_count": 141150.0,
+    "population_size": 5
+  }
+}

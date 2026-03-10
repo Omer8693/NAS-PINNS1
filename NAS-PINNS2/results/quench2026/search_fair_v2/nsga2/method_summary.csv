@@ -1,0 +1,2 @@
+method,best_layers,best_neurons,search_best_proxy_loss,search_best_param_count,final_best_stage,final_best_objective,final_run_time_seconds
+nsga2,6,107,281.83251953125,94758.0,,,

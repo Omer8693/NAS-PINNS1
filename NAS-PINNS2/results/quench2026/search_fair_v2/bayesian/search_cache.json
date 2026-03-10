@@ -1,0 +1,72 @@
+{
+  "L4_N155": {
+    "status": "ok",
+    "objective": 287.2059326171875,
+    "param_count": 100020.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/bayesian/search_trials/eval_00001_L4_N155",
+    "eval_idx": 1
+  },
+  "L5_N121": {
+    "status": "ok",
+    "objective": 286.18719482421875,
+    "param_count": 91167.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/bayesian/search_trials/eval_00002_L5_N121",
+    "eval_idx": 2
+  },
+  "L4_N122": {
+    "status": "ok",
+    "objective": 285.9018859863281,
+    "param_count": 62631.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/bayesian/search_trials/eval_00003_L4_N122",
+    "eval_idx": 3
+  },
+  "L3_N125": {
+    "status": "ok",
+    "objective": 292.9676208496094,
+    "param_count": 34161.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/bayesian/search_trials/eval_00004_L3_N125",
+    "eval_idx": 4
+  },
+  "L3_N119": {
+    "status": "ok",
+    "objective": 288.7599182128906,
+    "param_count": 31095.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/bayesian/search_trials/eval_00005_L3_N119",
+    "eval_idx": 5
+  },
+  "L5_N152": {
+    "status": "ok",
+    "objective": 286.46392822265625,
+    "param_count": 142782.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/bayesian/search_trials/eval_00006_L5_N152",
+    "eval_idx": 6
+  },
+  "L3_N151": {
+    "status": "ok",
+    "objective": 288.982421875,
+    "param_count": 49111.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/bayesian/search_trials/eval_00007_L3_N151",
+    "eval_idx": 7
+  },
+  "L6_N154": {
+    "status": "ok",
+    "objective": 284.4997253417969,
+    "param_count": 194257.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/bayesian/search_trials/eval_00008_L6_N154",
+    "eval_idx": 8
+  },
+  "L6_N156": {
+    "status": "ok",
+    "objective": 281.9999694824219,
+    "param_count": 199275.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/bayesian/search_trials/eval_00009_L6_N156",
+    "eval_idx": 9
+  },
+  "L6_N158": {
+    "status": "ok",
+    "objective": 285.4059143066406,
+    "param_count": 204357.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/bayesian/search_trials/eval_00010_L6_N158",
+    "eval_idx": 10
+  }
+}

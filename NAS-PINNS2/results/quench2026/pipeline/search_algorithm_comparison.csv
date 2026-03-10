@@ -1,0 +1,4 @@
+method,status,search_trial_evals,search_population_rows,search_unique_arch_ok,search_unique_arch_failed,search_best_layers,search_best_neurons,search_best_proxy_loss,search_best_param_count,cache_best_layers,cache_best_neurons,cache_best_proxy_loss,final_best_stage,final_best_objective,final_run_time_seconds,proxy_rank,final_rank,is_proxy_winner,is_final_winner
+nsga2,completed,35,8,35,0,6,132,97.24772644042969,143283.0,6,132,97.24772644042969,lbfgs,4.310217380523682,903.7650693077594,2,2,0,0
+nsga3,completed,40,7,40,0,6,141,94.10630798339844,163200.0,6,141,94.10630798339844,lbfgs,5.451700687408447,926.456865593791,1,3,1,0
+bayesian,completed,8,9,8,0,5,121,148.88018798828125,91167.0,5,121,148.88018798828125,adam,0.027310121804475784,714.9365210849792,3,1,0,1

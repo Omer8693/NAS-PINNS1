@@ -1,5 +1,5 @@
 method,variant,status,best_layers,best_neurons,param_count,best_stage,best_objective,run_time_seconds,objective_rank,is_winner,final_dir
-baseline,L5_N96,completed,5,96,57942,lbfgs,3.2609121799468994,647.2466388698667,1,1,/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/baseline/L5_N96
-nsga2,,in_progress,,,,,,,,0,
-nsga3,,missing,,,,,,,,0,
-bayesian,,missing,,,,,,,,0,
+baseline,L5_N96,completed,5,96,57942,lbfgs,3.2609121799468994,647.2466388698667,2,0,/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/baseline/L5_N96
+nsga2,,completed,6,132,143283,lbfgs,4.310217380523682,903.7650693077594,3,0,/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga2/final/L6_N132
+nsga3,,completed,6,141,163200,lbfgs,5.451700687408447,926.456865593791,4,0,/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/nsga3/final/L6_N141
+bayesian,,completed,5,121,91167,adam,0.027310121804475784,714.9365210849792,1,1,/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/final/L5_N121

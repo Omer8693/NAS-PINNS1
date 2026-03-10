@@ -1,0 +1,21 @@
+{
+  "methods": {
+    "nsga2": {
+      "completed": true,
+      "error": ""
+    },
+    "nsga3": {
+      "completed": true,
+      "error": ""
+    },
+    "bayesian": {
+      "completed": true,
+      "error": ""
+    }
+  },
+  "completed": [
+    "nsga2",
+    "nsga3",
+    "bayesian"
+  ]
+}

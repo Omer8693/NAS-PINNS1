@@ -1,0 +1,7 @@
+{
+  "source_trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline/bayesian/search_trials/eval_00002_L5_N121",
+  "seeded_adam_checkpoint": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/best_adam_lbfgs5000/pso/bayesian/L5_N121/baseline_model_adam.pth",
+  "adam_objective": 148.88018798828125,
+  "layers": 5,
+  "neurons": 121
+}

@@ -1,0 +1,58 @@
+{
+  "L5_N106": {
+    "status": "ok",
+    "objective": 287.80902099609375,
+    "param_count": 70332.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga3/search_trials/eval_00001_L5_N106",
+    "eval_idx": 1
+  },
+  "L6_N131": {
+    "status": "ok",
+    "objective": 283.5218200683594,
+    "param_count": 141150.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga3/search_trials/eval_00002_L6_N131",
+    "eval_idx": 2
+  },
+  "L3_N158": {
+    "status": "ok",
+    "objective": 288.4184875488281,
+    "param_count": 53598.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga3/search_trials/eval_00003_L3_N158",
+    "eval_idx": 3
+  },
+  "L5_N139": {
+    "status": "ok",
+    "objective": 285.5269775390625,
+    "param_count": 119733.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga3/search_trials/eval_00004_L5_N139",
+    "eval_idx": 4
+  },
+  "L3_N107": {
+    "status": "ok",
+    "objective": 290.4950256347656,
+    "param_count": 25395.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga3/search_trials/eval_00005_L3_N107",
+    "eval_idx": 5
+  },
+  "L5_N131": {
+    "status": "ok",
+    "objective": 286.0657043457031,
+    "param_count": 106557.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga3/search_trials/eval_00007_L5_N131",
+    "eval_idx": 7
+  },
+  "L6_N135": {
+    "status": "ok",
+    "objective": 284.9642028808594,
+    "param_count": 149778.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga3/search_trials/eval_00008_L6_N135",
+    "eval_idx": 8
+  },
+  "L3_N110": {
+    "status": "ok",
+    "objective": 290.28912353515625,
+    "param_count": 26766.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga3/search_trials/eval_00010_L3_N110",
+    "eval_idx": 10
+  }
+}

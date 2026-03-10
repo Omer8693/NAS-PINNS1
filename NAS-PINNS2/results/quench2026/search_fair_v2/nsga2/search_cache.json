@@ -1,0 +1,72 @@
+{
+  "L5_N106": {
+    "status": "ok",
+    "objective": 287.80902099609375,
+    "param_count": 70332.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga2/search_trials/eval_00001_L5_N106",
+    "eval_idx": 1
+  },
+  "L6_N131": {
+    "status": "ok",
+    "objective": 283.5218200683594,
+    "param_count": 141150.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga2/search_trials/eval_00002_L6_N131",
+    "eval_idx": 2
+  },
+  "L3_N158": {
+    "status": "ok",
+    "objective": 288.4184875488281,
+    "param_count": 53598.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga2/search_trials/eval_00003_L3_N158",
+    "eval_idx": 3
+  },
+  "L5_N139": {
+    "status": "ok",
+    "objective": 285.5269775390625,
+    "param_count": 119733.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga2/search_trials/eval_00004_L5_N139",
+    "eval_idx": 4
+  },
+  "L3_N107": {
+    "status": "ok",
+    "objective": 290.4950256347656,
+    "param_count": 25395.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga2/search_trials/eval_00005_L3_N107",
+    "eval_idx": 5
+  },
+  "L4_N106": {
+    "status": "ok",
+    "objective": 286.4210510253906,
+    "param_count": 47639.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga2/search_trials/eval_00006_L4_N106",
+    "eval_idx": 6
+  },
+  "L3_N134": {
+    "status": "ok",
+    "objective": 289.8393249511719,
+    "param_count": 39030.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga2/search_trials/eval_00007_L3_N134",
+    "eval_idx": 7
+  },
+  "L5_N127": {
+    "status": "ok",
+    "objective": 288.84735107421875,
+    "param_count": 100257.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga2/search_trials/eval_00008_L5_N127",
+    "eval_idx": 8
+  },
+  "L5_N122": {
+    "status": "ok",
+    "objective": 286.34466552734375,
+    "param_count": 92652.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga2/search_trials/eval_00009_L5_N122",
+    "eval_idx": 9
+  },
+  "L6_N107": {
+    "status": "ok",
+    "objective": 281.83251953125,
+    "param_count": 94758.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga2/search_trials/eval_00010_L6_N107",
+    "eval_idx": 10
+  }
+}

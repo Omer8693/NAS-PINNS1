@@ -1,0 +1,15 @@
+[2026-03-09 18:43:58] === nsga2 run started ===
+[2026-03-09 18:43:58] save_dir=/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga2
+[2026-03-09 18:43:58] [search] eval=1 arch=L5_N106 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga2/search_trials/eval_00001_L5_N106
+[2026-03-09 18:44:35] [search] eval=2 arch=L6_N131 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga2/search_trials/eval_00002_L6_N131
+[2026-03-09 18:45:18] [search] eval=3 arch=L3_N158 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga2/search_trials/eval_00003_L3_N158
+[2026-03-09 18:45:47] [search] eval=4 arch=L5_N139 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga2/search_trials/eval_00004_L5_N139
+[2026-03-09 18:46:27] [search] eval=5 arch=L3_N107 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga2/search_trials/eval_00005_L3_N107
+[2026-03-09 18:46:53] [search] eval=6 arch=L4_N106 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga2/search_trials/eval_00006_L4_N106
+[2026-03-09 18:47:24] [search] eval=7 arch=L3_N134 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga2/search_trials/eval_00007_L3_N134
+[2026-03-09 18:47:52] [search] eval=8 arch=L5_N127 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga2/search_trials/eval_00008_L5_N127
+[2026-03-09 18:48:31] [search] eval=9 arch=L5_N122 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga2/search_trials/eval_00009_L5_N122
+[2026-03-09 18:49:09] [search] eval=10 arch=L6_N107 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/search_fair_v2/nsga2/search_trials/eval_00010_L6_N107
+[2026-03-09 18:49:52] search done | best_arch=6x107
+[2026-03-09 18:49:52] final stage skipped by --skip-final
+[2026-03-09 18:49:52] === nsga2 run completed ===

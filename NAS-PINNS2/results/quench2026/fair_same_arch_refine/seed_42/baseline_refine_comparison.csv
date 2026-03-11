@@ -1,0 +1,4 @@
+variant,adam_obj,lbfgs_obj,pso_obj,best_stage,best_obj
+baseline_original,8.331409454345703,,,adam,8.331409454345703
+baseline_from_adam_lbfgs5000,8.331409454345703,0.020804118365049362,,lbfgs,0.020804118365049362
+baseline_from_adam_pso,8.331409454345703,,4584.9853515625,adam,8.331409454345703

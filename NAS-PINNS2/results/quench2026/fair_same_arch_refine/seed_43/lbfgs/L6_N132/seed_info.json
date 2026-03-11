@@ -1,0 +1,5 @@
+{
+  "source_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/fair_same_arch/seed_43/L6_N132",
+  "seed_checkpoint": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/fair_same_arch_refine/seed_43/lbfgs/L6_N132/baseline_model_adam.pth",
+  "seed_adam_objective": 46.27019500732422
+}

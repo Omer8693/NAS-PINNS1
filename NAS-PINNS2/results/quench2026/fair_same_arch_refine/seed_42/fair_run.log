@@ -1,0 +1,20 @@
+$ /usr/bin/python /home/coder/NAS-PINNS1/NAS-PINNS2/naspinn_baseline_with_quench_2026_data.py --save-dir /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/fair_same_arch/seed_42/L6_N132 --seed 42 --epochs 1000 --layers 6 --base-neurons 132 --n-time-steps 10 --log-every 100 --adam-lr 0.001 --w-physics 50.0 --w-ic 0.001 --w-bc 1e-18 --w-data 1e-05 --skip-lbfgs --force-final
+Baseline NAS-PINN with A356 quenching reference data (2026)
+Loss weights | physics=5.000e+01, ic=1.000e-03, bc=1.000e-18, data=1.000e-05
+Architecture | layers=6, base_neurons=132
+Epoch     0 | Total: 3.3443e+02 | Physics: 7.3720e-01 | Data: 2.2625e+05
+Epoch   100 | Total: 2.7031e+02 | Physics: 1.5459e-02 | Data: 4.8504e+03
+Epoch   200 | Total: 2.2433e+02 | Physics: 1.4787e-01 | Data: 6.5283e+03
+Epoch   300 | Total: 1.8725e+02 | Physics: 6.7823e-01 | Data: 1.8624e+05
+Epoch   400 | Total: 8.9413e+01 | Physics: 3.8341e-01 | Data: 3.4051e+03
+Epoch   500 | Total: 1.3510e+02 | Physics: 6.8103e-02 | Data: 3.5427e+04
+Epoch   600 | Total: 9.5682e+01 | Physics: 2.4753e-02 | Data: 6.9095e+00
+Epoch   700 | Total: 6.5938e+01 | Physics: 7.2222e-02 | Data: 1.7275e+03
+Epoch   800 | Total: 3.7892e+01 | Physics: 3.4565e-02 | Data: 7.0680e+03
+Epoch   900 | Total: 1.6778e+01 | Physics: 1.6144e-02 | Data: 8.9044e+03
+Adam checkpoint saved: /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/fair_same_arch/seed_42/L6_N132/baseline_model_adam.pth
+Training completed. Selected stage: adam | objective=8.331409e+00 | final model: /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/fair_same_arch/seed_42/L6_N132/baseline_model.pth
+$ /usr/bin/python /home/coder/NAS-PINNS1/NAS-PINNS2/quench2026_baseline_adam_refine.py --source-dir /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/fair_same_arch/seed_42/L6_N132 --output-root /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/fair_same_arch_refine/seed_42 --seed 42 --lbfgs-max-iter 5000 --run
+LBFGS command: /usr/bin/python /home/coder/NAS-PINNS1/NAS-PINNS2/naspinn_baseline_with_quench_2026_data.py --save-dir /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/fair_same_arch_refine/seed_42/lbfgs/L6_N132 --seed 42 --epochs 1000 --layers 6 --base-neurons 132 --n-time-steps 10 --log-every 100 --adam-lr 0.001 --w-physics 50.0 --w-ic 0.001 --w-bc 1e-18 --w-data 1e-05 --lbfgs-max-iter 5000 --lbfgs-col-points 1024 --lbfgs-ic-points 256 --lbfgs-bc-points 256 --lbfgs-time-steps 4 --lbfgs-history-size 20 --lbfgs-line-search strong_wolfe --pso-iters 5 --pso-swarm 8 --pso-span 0.25 --force-final
+PSO command:   /usr/bin/python /home/coder/NAS-PINNS1/NAS-PINNS2/naspinn_baseline_with_quench_2026_data.py --save-dir /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/fair_same_arch_refine/seed_42/pso/L6_N132 --seed 42 --epochs 1000 --layers 6 --base-neurons 132 --n-time-steps 10 --log-every 100 --adam-lr 0.001 --w-physics 50.0 --w-ic 0.001 --w-bc 1e-18 --w-data 1e-05 --lbfgs-max-iter 5000 --lbfgs-col-points 1024 --lbfgs-ic-points 256 --lbfgs-bc-points 256 --lbfgs-time-steps 4 --lbfgs-history-size 20 --lbfgs-line-search strong_wolfe --pso-iters 5 --pso-swarm 8 --pso-span 0.25 --force-final --skip-lbfgs --use-pso
+Comparison table: /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/fair_same_arch_refine/seed_42/baseline_refine_comparison.csv

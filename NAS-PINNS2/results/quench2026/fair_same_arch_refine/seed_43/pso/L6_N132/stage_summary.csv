@@ -1,0 +1,3 @@
+stage,objective,checkpoint,selected
+adam,46.27019500732422,baseline_model_adam.pth,1
+pso,4939.18896484375,baseline_model_pso.pth,0

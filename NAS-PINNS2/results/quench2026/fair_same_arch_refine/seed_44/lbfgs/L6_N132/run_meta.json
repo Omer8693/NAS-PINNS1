@@ -1,0 +1,8 @@
+{
+  "layers": 6,
+  "base_neurons": 132,
+  "param_count": 143283,
+  "best_stage": "lbfgs",
+  "best_objective": 0.016497893258929253,
+  "run_time_seconds": 1439.3196224570274
+}

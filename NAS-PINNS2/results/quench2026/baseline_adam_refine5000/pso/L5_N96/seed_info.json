@@ -1,0 +1,5 @@
+{
+  "source_dir": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/baseline/L5_N96",
+  "seed_checkpoint": "/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/baseline_adam_refine5000/pso/L5_N96/baseline_model_adam.pth",
+  "seed_adam_objective": 19.5635929107666
+}

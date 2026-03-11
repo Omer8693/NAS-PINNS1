@@ -336,10 +336,149 @@ def build_runtime_table(results_root: Path) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def load_fair_same_arch_tables(results_root: Path) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    fair_dir = results_root / "fair_same_arch_refine"
+    per_seed_paths = sorted(fair_dir.glob("L*_N*_per_seed.csv"))
+    agg_paths = sorted(fair_dir.glob("L*_N*_aggregate_mean_std.csv"))
+
+    per_seed_all: List[pd.DataFrame] = []
+    agg_all: List[pd.DataFrame] = []
+
+    for p in per_seed_paths:
+        df = read_csv(p)
+        if df.empty:
+            continue
+        df["arch"] = p.name.replace("_per_seed.csv", "")
+        per_seed_all.append(df)
+
+    for p in agg_paths:
+        df = read_csv(p)
+        if df.empty:
+            continue
+        df["arch"] = p.name.replace("_aggregate_mean_std.csv", "")
+        agg_all.append(df)
+
+    per_seed_df = pd.concat(per_seed_all, ignore_index=True) if per_seed_all else pd.DataFrame()
+    agg_df = pd.concat(agg_all, ignore_index=True) if agg_all else pd.DataFrame()
+    return per_seed_df, agg_df
+
+
+def append_fair_runtime_rows(runtime_df: pd.DataFrame, fair_per_seed_df: pd.DataFrame) -> pd.DataFrame:
+    if fair_per_seed_df.empty:
+        return runtime_df
+    rows: List[Dict] = []
+    for _, row in fair_per_seed_df.iterrows():
+        seed = int(row["seed"])
+        arch = str(row["arch"])
+        layers = int(row.get("layers", np.nan))
+        neurons = int(row.get("neurons", np.nan))
+        rows.extend(
+            [
+                {
+                    "group": "fair_same_arch",
+                    "scenario": f"fair_seed{seed}_adam",
+                    "method": "fixed_arch",
+                    "run_dir": "",
+                    "layers": layers,
+                    "neurons": neurons,
+                    "param_count": np.nan,
+                    "best_stage": "adam",
+                    "best_objective": float(row["adam_obj"]),
+                    "run_time_seconds": float(row["adam_runtime_s"]),
+                    "arch": arch,
+                },
+                {
+                    "group": "fair_same_arch",
+                    "scenario": f"fair_seed{seed}_lbfgs",
+                    "method": "fixed_arch",
+                    "run_dir": "",
+                    "layers": layers,
+                    "neurons": neurons,
+                    "param_count": np.nan,
+                    "best_stage": "lbfgs",
+                    "best_objective": float(row["lbfgs_obj"]),
+                    "run_time_seconds": float(row["lbfgs_runtime_s"]),
+                    "arch": arch,
+                },
+                {
+                    "group": "fair_same_arch",
+                    "scenario": f"fair_seed{seed}_pso",
+                    "method": "fixed_arch",
+                    "run_dir": "",
+                    "layers": layers,
+                    "neurons": neurons,
+                    "param_count": np.nan,
+                    "best_stage": "pso",
+                    "best_objective": float(row["pso_obj"]),
+                    "run_time_seconds": float(row["pso_runtime_s"]),
+                    "arch": arch,
+                },
+            ]
+        )
+    add_df = pd.DataFrame(rows)
+    if runtime_df.empty:
+        return add_df
+    # Align columns and append.
+    for col in runtime_df.columns:
+        if col not in add_df.columns:
+            add_df[col] = np.nan
+    for col in add_df.columns:
+        if col not in runtime_df.columns:
+            runtime_df[col] = np.nan
+    return pd.concat([runtime_df, add_df[runtime_df.columns]], ignore_index=True)
+
+
+def plot_fair_same_arch_objective(per_seed_df: pd.DataFrame, out_png: Path) -> None:
+    if per_seed_df.empty:
+        return
+    rows: List[Dict] = []
+    for _, row in per_seed_df.iterrows():
+        rows.append({"seed": int(row["seed"]), "stage": "adam", "objective": float(row["adam_obj"])})
+        rows.append({"seed": int(row["seed"]), "stage": "lbfgs", "objective": float(row["lbfgs_obj"])})
+        rows.append({"seed": int(row["seed"]), "stage": "pso", "objective": float(row["pso_obj"])})
+    df = pd.DataFrame(rows)
+
+    fig, ax = plt.subplots(figsize=(7.8, 4.8))
+    stage_order = ["adam", "lbfgs", "pso"]
+    data = [df[df["stage"] == s]["objective"].to_numpy(dtype=float) for s in stage_order]
+    ax.boxplot(data, tick_labels=stage_order, showmeans=True)
+    ax.set_yscale("log")
+    ax.set_ylabel("objective (log scale)")
+    ax.set_title("Fair Same-Arch: Objective Distribution Across Seeds")
+    ax.grid(alpha=0.25)
+    fig.tight_layout()
+    fig.savefig(out_png, dpi=180)
+    plt.close(fig)
+
+
+def plot_fair_same_arch_runtime(per_seed_df: pd.DataFrame, out_png: Path) -> None:
+    if per_seed_df.empty:
+        return
+    stage_cols = {
+        "adam": "adam_runtime_s",
+        "lbfgs": "lbfgs_runtime_s",
+        "pso": "pso_runtime_s",
+    }
+    stages = list(stage_cols.keys())
+    means = [float(per_seed_df[stage_cols[s]].astype(float).mean()) for s in stages]
+    stds = [float(per_seed_df[stage_cols[s]].astype(float).std()) for s in stages]
+
+    fig, ax = plt.subplots(figsize=(7.8, 4.8))
+    ax.bar(stages, means, yerr=stds, capsize=5)
+    ax.set_ylabel("runtime (seconds)")
+    ax.set_title("Fair Same-Arch: Runtime Mean±Std Across Seeds")
+    ax.grid(alpha=0.25, axis="y")
+    fig.tight_layout()
+    fig.savefig(out_png, dpi=180)
+    plt.close(fig)
+
+
 def write_markdown_report(
     out_md: Path,
     quality_df: pd.DataFrame,
     runtime_df: pd.DataFrame,
+    fair_per_seed_df: pd.DataFrame,
+    fair_agg_df: pd.DataFrame,
     out_dir: Path,
 ) -> None:
     lines: List[str] = []
@@ -355,6 +494,11 @@ def write_markdown_report(
     lines.append(f"- `plots/search_pareto_cloud.png`")
     lines.append(f"- `plots/runtime_vs_objective.png`")
     lines.append(f"- `plots/adam_convergence_curves.png`")
+    if not fair_per_seed_df.empty:
+        lines.append(f"- `tables/fair_same_arch_per_seed.csv`")
+        lines.append(f"- `tables/fair_same_arch_aggregate.csv`")
+        lines.append(f"- `plots/fair_same_arch_objective_boxplot.png`")
+        lines.append(f"- `plots/fair_same_arch_runtime_bar.png`")
     lines.append("")
 
     if not quality_df.empty:
@@ -372,6 +516,15 @@ def write_markdown_report(
     if not runtime_df.empty:
         lines.append("## Runtime Table")
         lines.append(runtime_df.to_markdown(index=False))
+        lines.append("")
+
+    if not fair_per_seed_df.empty:
+        lines.append("## Fair Same-Architecture (Strict) Per-Seed")
+        lines.append(fair_per_seed_df.to_markdown(index=False))
+        lines.append("")
+    if not fair_agg_df.empty:
+        lines.append("## Fair Same-Architecture Aggregate")
+        lines.append(fair_agg_df.to_markdown(index=False))
         lines.append("")
 
     lines.append("## Note")
@@ -424,6 +577,20 @@ def main():
 
     # 4) Runtime summary + scatter
     runtime_df = build_runtime_table(results_root)
+
+    # 4b) Fair same-arch strict tables (if available)
+    fair_per_seed_df, fair_agg_df = load_fair_same_arch_tables(results_root)
+    if not fair_per_seed_df.empty:
+        fair_per_seed_df = fair_per_seed_df.copy()
+        fair_per_seed_df["seed"] = pd.to_numeric(fair_per_seed_df["seed"], errors="coerce").astype("Int64")
+        fair_per_seed_df.to_csv(table_dir / "fair_same_arch_per_seed.csv", index=False)
+        runtime_df = append_fair_runtime_rows(runtime_df, fair_per_seed_df)
+        plot_fair_same_arch_objective(fair_per_seed_df, plot_dir / "fair_same_arch_objective_boxplot.png")
+        plot_fair_same_arch_runtime(fair_per_seed_df, plot_dir / "fair_same_arch_runtime_bar.png")
+
+    if not fair_agg_df.empty:
+        fair_agg_df.to_csv(table_dir / "fair_same_arch_aggregate.csv", index=False)
+
     if not runtime_df.empty:
         runtime_df["best_objective"] = pd.to_numeric(runtime_df["best_objective"], errors="coerce")
         runtime_df["run_time_seconds"] = pd.to_numeric(runtime_df["run_time_seconds"], errors="coerce")
@@ -436,7 +603,7 @@ def main():
 
     # 6) Markdown report
     report_md = out_dir / "report.md"
-    write_markdown_report(report_md, quality_df, runtime_df, out_dir)
+    write_markdown_report(report_md, quality_df, runtime_df, fair_per_seed_df, fair_agg_df, out_dir)
 
     print(f"Report pack written: {out_dir}")
     print(f"Tables: {table_dir}")

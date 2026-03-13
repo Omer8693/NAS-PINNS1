@@ -138,3 +138,5 @@
 [2026-03-13 06:59:37] [search] eval=358 arch=L5_N77 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga2/search_trials/eval_00358_L5_N77
 [2026-03-13 07:04:16] search done | best=6x97
 [2026-03-13 07:04:16] [final] training L6_N97 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga2/final/L6_N97
+[2026-03-13 08:39:32] final done | best_stage=lbfgs
+[2026-03-13 08:39:32] === nsga2 run completed ===

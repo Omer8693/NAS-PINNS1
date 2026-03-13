@@ -18,3 +18,14 @@ Epoch  2750 | Total: 1.5670e+02 | Physics: 5.5931e-02 | Data: 3.1597e+00
 Epoch  3000 | Total: 1.4987e+02 | Physics: 8.7708e-02 | Data: 4.7095e+00
 Epoch  3250 | Total: 1.3792e+02 | Physics: 4.5591e-02 | Data: 4.7734e+00
 Epoch  3500 | Total: 1.3197e+02 | Physics: 3.7801e-02 | Data: 3.5044e+02
+Epoch  3750 | Total: 1.2287e+02 | Physics: 9.2222e-02 | Data: 5.6889e+01
+Epoch  4000 | Total: 1.1553e+02 | Physics: 4.9929e-02 | Data: 4.3218e+02
+Epoch  4250 | Total: 1.0109e+02 | Physics: 4.0526e-02 | Data: 2.2414e+01
+Epoch  4500 | Total: 1.1145e+02 | Physics: 4.4243e-01 | Data: 1.5518e+01
+Epoch  4750 | Total: 8.1336e+01 | Physics: 2.0777e-02 | Data: 1.4175e+01
+Adam checkpoint saved: /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga2/final/L6_N97/baseline_model_adam.pth
+Running L-BFGS refinement... (col=2048, ic=512, bc=512, time_steps=4)
+L-BFGS checkpoint saved: /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga2/final/L6_N97/baseline_model_lbfgs.pth | objective=1.436151e+00
+Running PSO refinement...
+PSO checkpoint saved: /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga2/final/L6_N97/baseline_model_pso.pth | objective=1.722409e+04
+Training completed. Selected stage: lbfgs | objective=1.436151e+00 | final model: /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga2/final/L6_N97/baseline_model.pth

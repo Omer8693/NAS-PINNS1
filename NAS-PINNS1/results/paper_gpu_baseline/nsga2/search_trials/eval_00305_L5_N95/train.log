@@ -7,3 +7,5 @@ Epoch     0 | Total: 7.3628e+02 | Physics: 9.7808e-01 | Data: 3.2758e+04
 Epoch    75 | Total: 2.8944e+02 | Physics: 2.4059e-02 | Data: 3.8938e+01
 Epoch   150 | Total: 2.8567e+02 | Physics: 1.3347e-02 | Data: 3.9819e+01
 Epoch   225 | Total: 2.8148e+02 | Physics: 1.8768e-02 | Data: 3.3532e+01
+Adam checkpoint saved: /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga2/search_trials/eval_00305_L5_N95/baseline_model_adam.pth
+Training completed. Selected stage: adam | objective=2.774342e+02 | final model: /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga2/search_trials/eval_00305_L5_N95/baseline_model.pth

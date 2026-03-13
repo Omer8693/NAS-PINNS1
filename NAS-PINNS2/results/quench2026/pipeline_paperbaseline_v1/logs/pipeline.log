@@ -1,0 +1,2 @@
+[2026-03-12 10:21:11] Pipeline start | methods=['nsga2', 'nsga3', 'bayesian']
+[2026-03-12 10:21:11] [nsga2] starting

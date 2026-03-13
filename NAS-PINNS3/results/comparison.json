@@ -1,0 +1,11 @@
+{
+  "nsga2": {
+    "error": "element 0 of tensors does not require grad and does not have a grad_fn"
+  },
+  "nsga3": {
+    "error": "element 0 of tensors does not require grad and does not have a grad_fn"
+  },
+  "bayesian": {
+    "error": "element 0 of tensors does not require grad and does not have a grad_fn"
+  }
+}

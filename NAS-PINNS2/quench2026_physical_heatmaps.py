@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate physical error heatmaps: |T_pred-T_ref| and |u_pred-u_ref|."""
+"""Generate fair physical error metrics and heatmaps for quench2026."""
 
 import argparse
 import importlib.util
@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 import matplotlib.pyplot as plt
+from matplotlib.colors import TwoSlopeNorm
 import numpy as np
 import pandas as pd
 import torch
@@ -34,13 +35,13 @@ def ensure_dir(path: Path) -> None:
 
 
 def infer_checkpoint(run_dir: Path, best_stage: Optional[str]) -> Path:
-    if (run_dir / "baseline_model.pth").exists():
-        return run_dir / "baseline_model.pth"
+    # Prefer explicit best-stage checkpoint when available.
     if best_stage:
         stage_ckpt = run_dir / f"baseline_model_{best_stage}.pth"
         if stage_ckpt.exists():
             return stage_ckpt
-    # fallback
+    if (run_dir / "baseline_model.pth").exists():
+        return run_dir / "baseline_model.pth"
     for name in ("baseline_model_lbfgs.pth", "baseline_model_adam.pth", "baseline_model_pso.pth"):
         p = run_dir / name
         if p.exists():
@@ -59,11 +60,10 @@ def scenario_dirs(results_root: Path) -> Dict[str, Path]:
 
 
 def build_temperature_heatmap_arrays(
-    baseline_mod,
     model,
     ref: Dict[str, torch.Tensor],
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    # Reference temp points are built as nested loops: depth outer, time inner.
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    # Fair set: paper reference temperature points only (depth-time grid).
     x = ref["x_temp"]
     y = ref["y_temp"]
     t = ref["t_temp"]
@@ -82,39 +82,33 @@ def build_temperature_heatmap_arrays(
     n_y = len(uniq_y)
     n_t = len(uniq_t)
 
-    # Data ordering from build_quench_reference_data: for each depth, iterate time.
+    # build_quench_reference_data iterates depth outer, time inner.
     pred_m = pred_np.reshape(n_y, n_t)
     tgt_m = tgt_np.reshape(n_y, n_t)
     err_m = err_np.reshape(n_y, n_t)
     return uniq_y, uniq_t, pred_m, tgt_m, err_m
 
 
-def build_displacement_heatmap_arrays(
-    baseline_mod,
+def build_displacement_x0_arrays(
     model,
     ref: Dict[str, torch.Tensor],
-    x_grid_size: int = 81,
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    # Reference uy is available on layer y points at x=0, t=t_max.
-    y_layers = ref["y_disp"].detach().cpu().numpy().reshape(-1)
+    # Fair set: paper displacement references only (x=0, t=t_max, layer points).
+    x_ref = ref["x_disp"]  # all zeros
+    y_ref = ref["y_disp"]
+    t_ref = ref["t_disp"]
     uy_ref = ref["target_uy"].detach().cpu().numpy().reshape(-1)
 
-    x_min = float(baseline_mod.x_min)
-    x_max = float(baseline_mod.x_max)
-    t_max = float(baseline_mod.t_max)
-    x_grid = np.linspace(x_min, x_max, x_grid_size, dtype=np.float32)
-
-    X, Y = np.meshgrid(x_grid, y_layers)
-    T = np.full_like(X, t_max, dtype=np.float32)
-    inp = np.stack([X.reshape(-1), Y.reshape(-1), T.reshape(-1)], axis=1)
-    inp_t = torch.tensor(inp, dtype=torch.float32, device=baseline_mod.device)
-
     with torch.no_grad():
-        pred = model(inp_t)[:, 2:3]  # uy
-    uy_pred = pred.detach().cpu().numpy().reshape(len(y_layers), len(x_grid))
-    uy_ref_m = np.repeat(uy_ref[:, None], len(x_grid), axis=1)
-    err_m = np.abs(uy_pred - uy_ref_m)
-    return x_grid, y_layers, uy_pred, uy_ref_m, err_m
+        pred = model(torch.cat([x_ref, y_ref, t_ref], dim=1))[:, 2:3]  # uy
+    uy_pred = pred.detach().cpu().numpy().reshape(-1)
+
+    y_layers = y_ref.detach().cpu().numpy().reshape(-1)
+    x_axis = np.array([float(x_ref[0].item())], dtype=np.float32)
+    uy_pred_m = uy_pred.reshape(len(y_layers), 1)
+    uy_ref_m = uy_ref.reshape(len(y_layers), 1)
+    err_m = np.abs(uy_pred_m - uy_ref_m)
+    return x_axis, y_layers, uy_pred_m, uy_ref_m, err_m
 
 
 def save_heatmap(
@@ -126,22 +120,38 @@ def save_heatmap(
     title: str,
     out_png: Path,
     cmap: str = "inferno",
+    vmin: Optional[float] = None,
+    vmax: Optional[float] = None,
+    center: Optional[float] = None,
+    cbar_label: str = "absolute error",
 ) -> None:
     fig, ax = plt.subplots(figsize=(8.2, 4.8))
-    im = ax.imshow(matrix, aspect="auto", origin="lower", cmap=cmap)
+    norm = None
+    if center is not None and vmin is not None and vmax is not None and (vmax > vmin):
+        norm = TwoSlopeNorm(vmin=vmin, vcenter=center, vmax=vmax)
+    if norm is not None:
+        im = ax.imshow(matrix, aspect="auto", origin="lower", cmap=cmap, norm=norm)
+    else:
+        im = ax.imshow(matrix, aspect="auto", origin="lower", cmap=cmap, vmin=vmin, vmax=vmax)
     cbar = fig.colorbar(im, ax=ax)
-    cbar.set_label("absolute error")
+    cbar.set_label(cbar_label)
 
     ax.set_title(title)
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
 
-    # Sparse ticks for readability.
-    if len(x_ticks) > 1:
+    if len(x_ticks) == 1:
+        ax.set_xticks([0])
+        ax.set_xticklabels([f"{x_ticks[0]:.2f}"])
+    elif len(x_ticks) > 1:
         x_idx = np.linspace(0, len(x_ticks) - 1, min(8, len(x_ticks))).astype(int)
         ax.set_xticks(x_idx)
         ax.set_xticklabels([f"{x_ticks[i]:.2f}" for i in x_idx], rotation=20)
-    if len(y_ticks) > 1:
+
+    if len(y_ticks) == 1:
+        ax.set_yticks([0])
+        ax.set_yticklabels([f"{y_ticks[0]:.3f}"])
+    elif len(y_ticks) > 1:
         y_idx = np.arange(len(y_ticks))
         ax.set_yticks(y_idx)
         ax.set_yticklabels([f"{y_ticks[i]:.3f}" for i in y_idx])
@@ -184,6 +194,22 @@ def parse_args():
     return parser.parse_args()
 
 
+def finite_range(vals: np.ndarray) -> Tuple[float, float]:
+    lo = float(np.min(vals))
+    hi = float(np.max(vals))
+    if hi <= lo:
+        eps = 1e-12 if lo == 0.0 else abs(lo) * 1e-6
+        return lo - eps, hi + eps
+    return lo, hi
+
+
+def to_float(v: object) -> float:
+    try:
+        return float(v)  # type: ignore[arg-type]
+    except (TypeError, ValueError):
+        return float("nan")
+
+
 def main():
     args = parse_args()
     repo_root = Path(__file__).resolve().parent
@@ -198,6 +224,7 @@ def main():
     selected = [s.strip() for s in str(args.scenarios).split(",") if s.strip()]
     scenario_map = scenario_dirs(results_root)
 
+    scenario_outputs: Dict[str, Dict[str, object]] = {}
     summary_rows: List[Dict] = []
 
     for scenario in selected:
@@ -213,7 +240,7 @@ def main():
 
         layers = int(meta.get("layers"))
         neurons = int(meta.get("base_neurons"))
-        best_stage = meta.get("best_stage")
+        best_stage = str(meta.get("best_stage", "")).strip().lower() or None
         ckpt = infer_checkpoint(run_dir, best_stage)
 
         model = baseline_mod.NAS_PINN(layers=layers, base_neurons=neurons).to(baseline_mod.device)
@@ -221,11 +248,71 @@ def main():
         model.load_state_dict(state)
         model.eval()
 
+        y_vals, t_vals, t_pred, t_ref, t_err = build_temperature_heatmap_arrays(model, ref)
+        x_vals, y_layers, u_pred, u_ref_m, u_err = build_displacement_x0_arrays(model, ref)
+
+        t_mae = float(np.mean(t_err))
+        t_rmse = float(np.sqrt(np.mean((t_pred - t_ref) ** 2)))
+        u_mae = float(np.mean(u_err))
+        u_rmse = float(np.sqrt(np.mean((u_pred - u_ref_m) ** 2)))
+
+        scenario_outputs[scenario] = {
+            "run_dir": run_dir,
+            "layers": layers,
+            "neurons": neurons,
+            "best_stage": best_stage,
+            "best_objective": to_float(meta.get("best_objective")),
+            "checkpoint": ckpt,
+            "t_vals": t_vals,
+            "y_vals": y_vals,
+            "t_err": t_err,
+            "t_pred": t_pred,
+            "t_ref": t_ref,
+            "x_vals": x_vals,
+            "y_layers": y_layers,
+            "u_err": u_err,
+            "u_pred": u_pred,
+            "u_ref": u_ref_m,
+            "temp_mae": t_mae,
+            "temp_rmse": t_rmse,
+            "disp_mae": u_mae,
+            "disp_rmse": u_rmse,
+        }
+        print(
+            f"[ok] {scenario} | temp_mae={t_mae:.4e} disp_mae={u_mae:.4e} "
+            f"(disp scope: x=0 reference only)"
+        )
+
+    if not scenario_outputs:
+        print("[done] no scenarios were processed.")
+        return
+
+    temp_all = np.concatenate([np.asarray(v["t_err"]).reshape(-1) for v in scenario_outputs.values()])
+    disp_all = np.concatenate([np.asarray(v["u_err"]).reshape(-1) for v in scenario_outputs.values()])
+    temp_vmin, temp_vmax = finite_range(temp_all)
+    disp_vmin, disp_vmax = finite_range(disp_all)
+
+    baseline_key = "baseline_original" if "baseline_original" in scenario_outputs else next(iter(scenario_outputs))
+    base_t_err = np.asarray(scenario_outputs[baseline_key]["t_err"])
+    base_u_err = np.asarray(scenario_outputs[baseline_key]["u_err"])
+
+    temp_delta_max = 0.0
+    disp_delta_max = 0.0
+    for out in scenario_outputs.values():
+        t_delta = np.asarray(out["t_err"]) - base_t_err
+        u_delta = np.asarray(out["u_err"]) - base_u_err
+        temp_delta_max = max(temp_delta_max, float(np.max(np.abs(t_delta))))
+        disp_delta_max = max(disp_delta_max, float(np.max(np.abs(u_delta))))
+    temp_delta_max = max(temp_delta_max, 1e-12)
+    disp_delta_max = max(disp_delta_max, 1e-12)
+
+    for scenario, out in scenario_outputs.items():
         scenario_dir = out_root / scenario
         ensure_dir(scenario_dir)
 
-        # Temperature error heatmap over (time, y-depth) reference grid.
-        y_vals, t_vals, t_pred, t_ref, t_err = build_temperature_heatmap_arrays(baseline_mod, model, ref)
+        t_err = np.asarray(out["t_err"])
+        t_vals = np.asarray(out["t_vals"])
+        y_vals = np.asarray(out["y_vals"])
         write_matrix_csv(
             matrix=t_err,
             x_axis=t_vals,
@@ -241,13 +328,17 @@ def main():
             y_ticks=y_vals,
             x_label="time (s)",
             y_label="y (model coord)",
-            title=f"{scenario} | |T_pred - T_ref|",
+            title=f"{scenario} | |T_pred - T_ref| (shared scale)",
             out_png=scenario_dir / "temp_error_heatmap.png",
             cmap="magma",
+            vmin=temp_vmin,
+            vmax=temp_vmax,
+            cbar_label="absolute temperature error (degC)",
         )
 
-        # Displacement error heatmap over (x, y-layer) with layer ref broadcast over x.
-        x_vals, y_layers, u_pred, u_ref_m, u_err = build_displacement_heatmap_arrays(baseline_mod, model, ref)
+        u_err = np.asarray(out["u_err"])
+        x_vals = np.asarray(out["x_vals"])
+        y_layers = np.asarray(out["y_layers"])
         write_matrix_csv(
             matrix=u_err,
             x_axis=x_vals,
@@ -261,69 +352,124 @@ def main():
             matrix=u_err,
             x_ticks=x_vals,
             y_ticks=y_layers,
-            x_label="x (model coord)",
+            x_label="x (reference uses x=0 only)",
             y_label="y layer",
-            title=f"{scenario} | |u_pred - u_ref| (uy)",
+            title=f"{scenario} | |uy_pred - uy_ref| at x=0 (shared scale)",
             out_png=scenario_dir / "disp_error_heatmap.png",
             cmap="viridis",
+            vmin=disp_vmin,
+            vmax=disp_vmax,
+            cbar_label="absolute displacement error (m)",
         )
 
-        # Summary metrics
-        t_mae = float(np.mean(t_err))
-        t_rmse = float(np.sqrt(np.mean((t_pred - t_ref) ** 2)))
-        u_mae = float(np.mean(u_err))
-        u_rmse = float(np.sqrt(np.mean((u_pred - u_ref_m) ** 2)))
+        t_delta = t_err - base_t_err
+        write_matrix_csv(
+            matrix=t_delta,
+            x_axis=t_vals,
+            y_axis=y_vals,
+            x_name="time_s",
+            y_name="y_coord",
+            value_name="delta_temp_error_vs_baseline",
+            out_csv=scenario_dir / "temp_error_delta_vs_baseline_grid.csv",
+        )
+        save_heatmap(
+            matrix=t_delta,
+            x_ticks=t_vals,
+            y_ticks=y_vals,
+            x_label="time (s)",
+            y_label="y (model coord)",
+            title=f"{scenario} - {baseline_key} | delta temp abs-error",
+            out_png=scenario_dir / "temp_error_delta_vs_baseline_heatmap.png",
+            cmap="coolwarm",
+            vmin=-temp_delta_max,
+            vmax=temp_delta_max,
+            center=0.0,
+            cbar_label="delta abs error vs baseline (degC)",
+        )
+
+        u_delta = u_err - base_u_err
+        write_matrix_csv(
+            matrix=u_delta,
+            x_axis=x_vals,
+            y_axis=y_layers,
+            x_name="x_coord",
+            y_name="y_layer",
+            value_name="delta_disp_error_vs_baseline",
+            out_csv=scenario_dir / "disp_error_delta_vs_baseline_grid.csv",
+        )
+        save_heatmap(
+            matrix=u_delta,
+            x_ticks=x_vals,
+            y_ticks=y_layers,
+            x_label="x (reference uses x=0 only)",
+            y_label="y layer",
+            title=f"{scenario} - {baseline_key} | delta disp abs-error",
+            out_png=scenario_dir / "disp_error_delta_vs_baseline_heatmap.png",
+            cmap="coolwarm",
+            vmin=-disp_delta_max,
+            vmax=disp_delta_max,
+            center=0.0,
+            cbar_label="delta abs error vs baseline (m)",
+        )
+
         summary_rows.append(
             {
                 "scenario": scenario,
-                "run_dir": str(run_dir.resolve()),
-                "layers": layers,
-                "neurons": neurons,
-                "checkpoint": str(ckpt.resolve()),
-                "best_stage": best_stage,
-                "best_objective": float(meta.get("best_objective")),
-                "temp_mae": t_mae,
-                "temp_rmse": t_rmse,
-                "disp_mae": u_mae,
-                "disp_rmse": u_rmse,
+                "run_dir": str(Path(out["run_dir"]).resolve()),
+                "layers": int(out["layers"]),
+                "neurons": int(out["neurons"]),
+                "checkpoint": str(Path(out["checkpoint"]).resolve()),
+                "best_stage": out["best_stage"],
+                "best_objective": float(out["best_objective"]),
+                "temp_mae": float(out["temp_mae"]),
+                "temp_rmse": float(out["temp_rmse"]),
+                "disp_mae": float(out["disp_mae"]),
+                "disp_rmse": float(out["disp_rmse"]),
+                "temp_metric_scope": "paper_temp_reference_grid",
+                "disp_metric_scope": "paper_disp_reference_x0_only",
             }
         )
-        print(f"[ok] {scenario} | temp_mae={t_mae:.4e} disp_mae={u_mae:.4e}")
 
-    if summary_rows:
-        summary_df = pd.DataFrame(summary_rows).sort_values(["temp_mae", "disp_mae"], ascending=True).reset_index(drop=True)
-        # Accuracy-like score (objective-based inverse error score) for ranking in report tables.
-        temp_best = float(summary_df["temp_mae"].min())
-        disp_best = float(summary_df["disp_mae"].min())
-        summary_df["temp_score_pct"] = (temp_best / summary_df["temp_mae"] * 100.0).round(3)
-        summary_df["disp_score_pct"] = (disp_best / summary_df["disp_mae"] * 100.0).round(3)
-        summary_df["combined_score_pct"] = (
-            0.5 * summary_df["temp_score_pct"] + 0.5 * summary_df["disp_score_pct"]
-        ).round(3)
-        summary_df.to_csv(out_root / "physical_accuracy_summary.csv", index=False)
+    summary_df = pd.DataFrame(summary_rows)
+    baseline_row = summary_df[summary_df["scenario"] == baseline_key]
+    if not baseline_row.empty:
+        base_temp_mae = float(baseline_row.iloc[0]["temp_mae"])
+        base_disp_mae = float(baseline_row.iloc[0]["disp_mae"])
+        summary_df["temp_vs_baseline_pct"] = (summary_df["temp_mae"] / base_temp_mae * 100.0).round(3)
+        summary_df["disp_vs_baseline_pct"] = (summary_df["disp_mae"] / base_disp_mae * 100.0).round(3)
 
-        # Quick bar charts for summary
-        fig, ax = plt.subplots(figsize=(8.8, 4.8))
-        ax.bar(summary_df["scenario"], summary_df["temp_mae"])
-        ax.set_yscale("log")
-        ax.set_ylabel("temp_mae (log)")
-        ax.set_title("Temperature MAE by Scenario")
-        ax.tick_params(axis="x", rotation=20)
-        fig.tight_layout()
-        fig.savefig(out_root / "temp_mae_bar.png", dpi=180)
-        plt.close(fig)
+    temp_best = float(summary_df["temp_mae"].min())
+    disp_best = float(summary_df["disp_mae"].min())
+    summary_df["temp_score_pct"] = (temp_best / summary_df["temp_mae"] * 100.0).round(3)
+    summary_df["disp_score_pct"] = (disp_best / summary_df["disp_mae"] * 100.0).round(3)
+    summary_df["combined_score_pct"] = (
+        0.5 * summary_df["temp_score_pct"] + 0.5 * summary_df["disp_score_pct"]
+    ).round(3)
+    summary_df = summary_df.sort_values(["combined_score_pct", "disp_mae"], ascending=[False, True]).reset_index(drop=True)
+    summary_df.to_csv(out_root / "physical_accuracy_summary.csv", index=False)
 
-        fig, ax = plt.subplots(figsize=(8.8, 4.8))
-        ax.bar(summary_df["scenario"], summary_df["disp_mae"])
-        ax.set_yscale("log")
-        ax.set_ylabel("disp_mae (log)")
-        ax.set_title("Displacement MAE by Scenario")
-        ax.tick_params(axis="x", rotation=20)
-        fig.tight_layout()
-        fig.savefig(out_root / "disp_mae_bar.png", dpi=180)
-        plt.close(fig)
+    fig, ax = plt.subplots(figsize=(9.2, 4.8))
+    ax.bar(summary_df["scenario"], summary_df["temp_mae"])
+    ax.set_yscale("log")
+    ax.set_ylabel("temp_mae (log)")
+    ax.set_title("Temperature MAE (fair ref grid) by Scenario")
+    ax.tick_params(axis="x", rotation=20)
+    fig.tight_layout()
+    fig.savefig(out_root / "temp_mae_bar.png", dpi=180)
+    plt.close(fig)
+
+    fig, ax = plt.subplots(figsize=(9.2, 4.8))
+    ax.bar(summary_df["scenario"], summary_df["disp_mae"])
+    ax.set_yscale("log")
+    ax.set_ylabel("disp_mae (log)")
+    ax.set_title("Displacement MAE at x=0 (fair ref points) by Scenario")
+    ax.tick_params(axis="x", rotation=20)
+    fig.tight_layout()
+    fig.savefig(out_root / "disp_mae_bar.png", dpi=180)
+    plt.close(fig)
 
     print(f"Physical heatmaps written: {out_root}")
+    print(f"Baseline for delta heatmaps: {baseline_key}")
 
 
 if __name__ == "__main__":

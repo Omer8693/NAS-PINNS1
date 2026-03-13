@@ -1,0 +1,3 @@
+[2026-03-12 10:21:11] === nsga2 run started ===
+[2026-03-12 10:21:11] save_dir=/home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline_paperbaseline_v1/nsga2
+[2026-03-12 10:21:11] [search] eval=1 arch=L5_N106 -> /home/coder/NAS-PINNS1/NAS-PINNS2/results/quench2026/pipeline_paperbaseline_v1/nsga2/search_trials/eval_00001_L5_N106

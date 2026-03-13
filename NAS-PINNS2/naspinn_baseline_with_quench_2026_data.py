@@ -154,14 +154,26 @@ def _depth_to_y(depth_m):
     # Map Fig. 7 depth [0, 0.9] m onto model y-domain [y_min, y_max]
     return y_min + (depth_m / 0.9) * (y_max - y_min)
 
-def build_quench_reference_data():
-    """Build reference points from paper figures (approximate digitization)."""
+def build_quench_reference_data(temp_ref_t0_mode: str = "align_ic"):
+    """Build reference points from paper figures.
+
+    temp_ref_t0_mode:
+      - align_ic: force t=0 temperature reference to solution-treatment temperature (IC-consistent)
+      - drop: exclude t=0 temperature reference points
+      - keep: keep synthetic digitized t=0 points as-is
+    """
     # Fig. 7 synthetic digitization used in this project (same trend as time.py)
     x_temp, y_temp, t_temp, target_temp = [], [], [], []
     for depth in FIG7_DEPTH_M:
         y_val = _depth_to_y(depth)
         for t_val in FIG7_TIME_S:
-            temp_val = 60.0 + 35.0 * (1.0 - np.exp(-t_val / 10.0)) + 5.0 * depth
+            t_scalar = float(t_val)
+            if t_scalar == 0.0 and temp_ref_t0_mode == "drop":
+                continue
+            if t_scalar == 0.0 and temp_ref_t0_mode == "align_ic":
+                temp_val = float(T_SOLUTION_TREATMENT)
+            else:
+                temp_val = 60.0 + 35.0 * (1.0 - np.exp(-t_scalar / 10.0)) + 5.0 * float(depth)
             x_temp.append(0.0)
             y_temp.append(y_val)
             t_temp.append(t_val)
@@ -680,7 +692,7 @@ def train_baseline(args):
     optimizer = optim.Adam(model.parameters(), lr=args.adam_lr)
 
     points = sample_points()
-    reference_data = build_quench_reference_data()
+    reference_data = build_quench_reference_data(temp_ref_t0_mode=str(args.temp_ref_t0_mode))
     history = []
     stage_rows = []
 
@@ -928,7 +940,14 @@ if __name__ == "__main__":
     parser.add_argument("--w-physics", type=float, default=50.0, help="Weight for physics loss (increased)")
     parser.add_argument("--w-ic", type=float, default=1e-3, help="Weight for initial condition loss (decreased)")
     parser.add_argument("--w-bc", type=float, default=1e-18, help="Weight for boundary loss (decreased)")
-    parser.add_argument("--w-data", type=float, default=1e-5, help="Weight for data loss from paper references (decreased)")
+    parser.add_argument("--w-data", type=float, default=1e-2, help="Weight for data loss from paper references")
+    parser.add_argument(
+        "--temp-ref-t0-mode",
+        type=str,
+        default="align_ic",
+        choices=["align_ic", "drop", "keep"],
+        help="How to handle t=0 temperature reference points",
+    )
     args = parser.parse_args()
 
     torch.manual_seed(args.seed)

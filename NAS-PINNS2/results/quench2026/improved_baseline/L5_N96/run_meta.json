@@ -1,0 +1,14 @@
+{
+  "layers": 5,
+  "base_neurons": 96,
+  "param_count": 57942,
+  "best_stage": "lbfgs",
+  "best_objective": 21.008846282958984,
+  "best_score": 21.114096953035997,
+  "best_temp_mae": 9.770025253295898,
+  "best_disp_mae": 0.00020118399697821587,
+  "stage_score_w_temp": 0.25,
+  "stage_score_w_disp": 0.25,
+  "phase1_epochs": 1200,
+  "run_time_seconds": 1886.2677126675844
+}

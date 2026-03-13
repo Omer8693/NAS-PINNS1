@@ -1,0 +1,2 @@
+stage,objective,score,temp_mae,disp_mae,temp_norm,disp_norm,checkpoint,selected
+adam,199330.09375,200588.78091797765,85.10053253173828,6.240293025970459,2.253873704395583,5032.494798206228,baseline_model_adam.pth,1

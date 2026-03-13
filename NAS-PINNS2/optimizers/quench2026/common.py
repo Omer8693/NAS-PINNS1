@@ -115,6 +115,7 @@ def baseline_cmd(
     w_ic: float,
     w_bc: float,
     w_data: float,
+    temp_ref_t0_mode: str,
     skip_lbfgs: bool,
     use_pso: bool,
     lbfgs_max_iter: int,
@@ -156,6 +157,8 @@ def baseline_cmd(
         str(w_bc),
         "--w-data",
         str(w_data),
+        "--temp-ref-t0-mode",
+        str(temp_ref_t0_mode),
         "--lbfgs-max-iter",
         str(lbfgs_max_iter),
         "--lbfgs-col-points",
@@ -219,6 +222,7 @@ def evaluate_architecture(
         w_ic=float(args.w_ic),
         w_bc=float(args.w_bc),
         w_data=float(args.w_data),
+        temp_ref_t0_mode=str(args.temp_ref_t0_mode),
         skip_lbfgs=True,
         use_pso=False,
         lbfgs_max_iter=int(args.lbfgs_max_iter),
@@ -294,6 +298,7 @@ def run_final_training(args, method_dir: Path, best_layers: int, best_neurons: i
         w_ic=float(args.w_ic),
         w_bc=float(args.w_bc),
         w_data=float(args.w_data),
+        temp_ref_t0_mode=str(args.temp_ref_t0_mode),
         skip_lbfgs=bool(args.skip_lbfgs_final),
         use_pso=bool(args.use_pso_final),
         lbfgs_max_iter=int(args.lbfgs_max_iter),
@@ -447,4 +452,5 @@ def add_shared_args(parser: argparse.ArgumentParser, default_save_dir: str) -> N
     parser.add_argument("--w-physics", type=float, default=50.0)
     parser.add_argument("--w-ic", type=float, default=1e-3)
     parser.add_argument("--w-bc", type=float, default=1e-18)
-    parser.add_argument("--w-data", type=float, default=1e-5)
+    parser.add_argument("--w-data", type=float, default=1e-2)
+    parser.add_argument("--temp-ref-t0-mode", type=str, default="align_ic", choices=["align_ic", "drop", "keep"])

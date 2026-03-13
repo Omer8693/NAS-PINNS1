@@ -1,0 +1,20 @@
+{
+  "n_input": 3,
+  "n_output": 1,
+  "n_layers": 6,
+  "neurons": [
+    236,
+    229,
+    180,
+    35,
+    253,
+    249
+  ],
+  "activation": "tanh",
+  "residual": false,
+  "objectives": {
+    "l2": 0.768217146396637,
+    "time_s": 4.711245775222778,
+    "n_params": 175555.99999999997
+  }
+}

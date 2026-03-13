@@ -122,7 +122,8 @@ def parse_args():
     parser.add_argument("--w-physics", type=float, default=50.0)
     parser.add_argument("--w-ic", type=float, default=1e-3)
     parser.add_argument("--w-bc", type=float, default=1e-18)
-    parser.add_argument("--w-data", type=float, default=1e-5)
+    parser.add_argument("--w-data", type=float, default=1e-2)
+    parser.add_argument("--temp-ref-t0-mode", type=str, default="align_ic", choices=["align_ic", "drop", "keep"])
     return parser.parse_args()
 
 

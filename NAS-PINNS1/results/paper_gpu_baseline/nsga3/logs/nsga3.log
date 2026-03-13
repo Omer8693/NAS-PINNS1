@@ -9,3 +9,12 @@
 [2026-03-13 09:03:32] [search] eval=8 arch=L4_N86 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00008_L4_N86
 [2026-03-13 09:06:05] [search] eval=9 arch=L5_N70 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00009_L5_N70
 [2026-03-13 09:09:06] [search] eval=10 arch=L5_N125 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00010_L5_N125
+[2026-03-13 09:12:47] [search] eval=11 arch=L5_N98 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00011_L5_N98
+[2026-03-13 09:16:01] [search] eval=12 arch=L6_N150 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00012_L6_N150
+[2026-03-13 09:20:46] [search] eval=13 arch=L5_N83 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00013_L5_N83
+[2026-03-13 09:23:52] [search] eval=14 arch=L4_N68 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00014_L4_N68
+[2026-03-13 09:26:21] [search] eval=15 arch=L3_N130 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00015_L3_N130
+[2026-03-13 09:28:51] [search] eval=16 arch=L5_N157 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00016_L5_N157
+[2026-03-13 09:32:59] [search] eval=17 arch=L4_N100 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00017_L4_N100
+[2026-03-13 09:35:44] [search] eval=18 arch=L4_N82 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00018_L4_N82
+[2026-03-13 09:38:20] [search] eval=19 arch=L3_N110 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00019_L3_N110

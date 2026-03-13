@@ -1,0 +1,8 @@
+{
+  "layers": 6,
+  "base_neurons": 85,
+  "param_count": 60328,
+  "best_stage": "adam",
+  "best_objective": 274.6616516113281,
+  "run_time_seconds": 210.9178078006953
+}

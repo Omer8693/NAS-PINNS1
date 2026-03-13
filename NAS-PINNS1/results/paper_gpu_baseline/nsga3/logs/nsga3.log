@@ -1,2 +1,11 @@
 [2026-03-13 08:39:32] === nsga3 run started ===
 [2026-03-13 08:39:32] [search] eval=1 arch=L5_N106 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00001_L5_N106
+[2026-03-13 08:42:53] [search] eval=2 arch=L6_N131 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00002_L6_N131
+[2026-03-13 08:47:17] [search] eval=3 arch=L3_N158 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00003_L3_N158
+[2026-03-13 08:49:57] [search] eval=4 arch=L5_N139 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00004_L5_N139
+[2026-03-13 08:53:52] [search] eval=5 arch=L3_N107 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00005_L3_N107
+[2026-03-13 08:56:09] [search] eval=6 arch=L4_N153 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00006_L4_N153
+[2026-03-13 08:59:34] [search] eval=7 arch=L5_N143 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00007_L5_N143
+[2026-03-13 09:03:32] [search] eval=8 arch=L4_N86 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00008_L4_N86
+[2026-03-13 09:06:05] [search] eval=9 arch=L5_N70 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00009_L5_N70
+[2026-03-13 09:09:06] [search] eval=10 arch=L5_N125 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00010_L5_N125

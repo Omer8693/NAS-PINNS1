@@ -1,0 +1,65 @@
+{
+  "L5_N106": {
+    "status": "ok",
+    "objective": 278.2359313964844,
+    "param_count": 70332.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00001_L5_N106",
+    "eval_idx": 1
+  },
+  "L6_N131": {
+    "status": "ok",
+    "objective": 243.05149841308594,
+    "param_count": 141150.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00002_L6_N131",
+    "eval_idx": 2
+  },
+  "L3_N158": {
+    "status": "ok",
+    "objective": 281.29833984375,
+    "param_count": 53598.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00003_L3_N158",
+    "eval_idx": 3
+  },
+  "L5_N139": {
+    "status": "ok",
+    "objective": 277.2375183105469,
+    "param_count": 119733.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00004_L5_N139",
+    "eval_idx": 4
+  },
+  "L3_N107": {
+    "status": "ok",
+    "objective": 285.5605773925781,
+    "param_count": 25395.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00005_L3_N107",
+    "eval_idx": 5
+  },
+  "L4_N153": {
+    "status": "ok",
+    "objective": 271.3124694824219,
+    "param_count": 97506.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00006_L4_N153",
+    "eval_idx": 6
+  },
+  "L5_N143": {
+    "status": "ok",
+    "objective": 261.65411376953125,
+    "param_count": 126609.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00007_L5_N143",
+    "eval_idx": 7
+  },
+  "L4_N86": {
+    "status": "ok",
+    "objective": 271.39697265625,
+    "param_count": 31779.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00008_L4_N86",
+    "eval_idx": 8
+  },
+  "L5_N70": {
+    "status": "ok",
+    "objective": 286.58270263671875,
+    "param_count": 31344.0,
+    "trial_dir": "/home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00009_L5_N70",
+    "eval_idx": 9
+  }
+}

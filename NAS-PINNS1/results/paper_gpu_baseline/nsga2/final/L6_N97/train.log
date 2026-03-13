@@ -5,3 +5,9 @@ Loss weights | physics=5.000e+01, ic=1.000e-03, bc=1.000e-18, data=1.000e-02
 Architecture | layers=6, base_neurons=97
 Epoch     0 | Total: 2.1596e+06 | Physics: 3.4545e-01 | Data: 2.1589e+08
 Epoch   250 | Total: 2.9807e+02 | Physics: 2.6714e-02 | Data: 2.6934e+03
+Epoch   500 | Total: 2.3545e+02 | Physics: 2.5894e-02 | Data: 2.6576e+01
+Epoch   750 | Total: 1.9256e+02 | Physics: 1.4021e-02 | Data: 3.6558e+00
+Epoch  1000 | Total: 1.5235e+02 | Physics: 2.2760e-02 | Data: 5.9462e+01
+Epoch  1250 | Total: 1.1696e+02 | Physics: 1.5107e-02 | Data: 8.4910e+01
+Epoch  1500 | Total: 4.9610e+02 | Physics: 3.8627e+00 | Data: 1.1793e+04
+Epoch  1750 | Total: 1.8626e+02 | Physics: 1.5569e-01 | Data: 4.2493e+00

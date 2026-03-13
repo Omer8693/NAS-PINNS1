@@ -2,3 +2,409 @@ nohup: ignoring input
 posx and posy should be finite values
 posx and posy should be finite values
 posx and posy should be finite values
+posx and posy should be finite values
+posx and posy should be finite values
+posx and posy should be finite values
+[PhysicsModel] Device: cuda
+
+#######################################################
+  Running NSGA2 ...
+#######################################################
+
+#######################################################
+  Experiment: NSGA2
+  Adam epochs: 3000  |  L-BFGS: True  |  PSO: True
+#######################################################
+
+[Step 1/4] Architecture Search (NSGA2) ...
+
+====================================================
+  NSGA-II Architecture Search
+  Population: 20  |  Generations: 30  |  Max Layers: 7
+====================================================
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       20 |      4 |             - |             -
+     2 |       40 |      7 |  0.2136789263 |             f
+     3 |       60 |     16 |  0.0207750186 |         ideal
+     4 |       80 |     11 |  0.1756779196 |         ideal
+     5 |      100 |     14 |  0.4376047556 |         nadir
+     6 |      120 |     20 |  0.0154527180 |         ideal
+     7 |      140 |     17 |  0.1971950674 |         ideal
+     8 |      160 |     20 |  0.0436882567 |         ideal
+     9 |      180 |     20 |  0.0036525660 |         nadir
+    10 |      200 |     20 |  0.0830810732 |         ideal
+    11 |      220 |     20 |  0.0213750185 |             f
+    12 |      240 |     20 |  0.0142104784 |             f
+    13 |      260 |     20 |  0.0145985099 |             f
+    14 |      280 |     20 |  0.0074327042 |             f
+    15 |      300 |     20 |  0.0189574208 |             f
+    16 |      320 |     20 |  0.0361347157 |         ideal
+    17 |      340 |     20 |  0.0122019110 |         nadir
+    18 |      360 |     20 |  0.0130769370 |         nadir
+    19 |      380 |     20 |  0.0845887882 |         nadir
+    20 |      400 |     20 |  0.0203058897 |             f
+    21 |      420 |     20 |  0.0082415305 |             f
+    22 |      440 |     20 |  0.0056086549 |         ideal
+    23 |      460 |     20 |  0.0094607038 |             f
+    24 |      480 |     20 |  0.000000E+00 |             f
+    25 |      500 |     20 |  0.0016359835 |             f
+    26 |      520 |     20 |  0.0127358375 |             f
+    27 |      540 |     20 |  0.0093677184 |         ideal
+    28 |      560 |     20 |  0.0166590613 |         nadir
+    29 |      580 |     20 |  0.0153691867 |             f
+    30 |      600 |     20 |  0.0078852610 |             f
+
+  NSGA-II done: 1683.1s  |  Pareto front: 20 solutions
+
+  NAS done: 1683.1s
+  Best architecture: layers=6  neurons=[248, 204, 183, 29, 248, 204]  act=tanh  residual=False
+
+[Step 2/4] Full Training (Adam 3000 epochs) ...
+
+────────────────────────────────────────────────
+  ADAM TRAINING  (3000 epochs)
+────────────────────────────────────────────────
+  Epoch    500 | Loss: 1.9202e+06 | L2: 6.7092e-01 | LR: 1.00e-03 | 7s
+  Epoch   1000 | Loss: 1.2314e+06 | L2: 4.2455e-01 | LR: 9.00e-04 | 15s
+  Epoch   1500 | Loss: 8.2546e+05 | L2: 3.7343e-01 | LR: 9.00e-04 | 22s
+  Epoch   2000 | Loss: 8.0489e+05 | L2: 3.7344e-01 | LR: 8.10e-04 | 29s
+  Epoch   2500 | Loss: 8.1708e+05 | L2: 3.7344e-01 | LR: 8.10e-04 | 37s
+  Epoch   3000 | Loss: 8.1402e+05 | L2: 3.7344e-01 | LR: 7.29e-04 | 44s
+  → Best model restored (loss=8.0489e+05)
+  Adam complete: 44.1s
+
+  Adam final L2: 3.7344e-01
+
+────────────────────────────────────────────────
+  L-BFGS FINE-TUNING  (100 steps)
+────────────────────────────────────────────────
+  Step   10 | Loss: 8.1488e+05 | L2: 3.7347e-01
+  Step   20 | Loss: 7.9056e+05 | L2: 3.7344e-01
+  Step   30 | Loss: 8.2164e+05 | L2: 3.7344e-01
+  Step   40 | Loss: nan | L2: nan
+  Step   50 | Loss: nan | L2: nan
+  Step   60 | Loss: nan | L2: nan
+  Step   70 | Loss: nan | L2: nan
+  Step   80 | Loss: nan | L2: nan
+  Step   90 | Loss: nan | L2: nan
+  Step  100 | Loss: nan | L2: nan
+  L-BFGS complete: 250.5s
+
+  L-BFGS final L2: nan
+
+────────────────────────────────────────────────
+  PSO FINE-TUNING  (50 steps, 20 particles)
+  Search dim: 153080  |  perturb_scale: 0.01
+────────────────────────────────────────────────
+  Initial best loss: 8.2152e+05
+  Step    5 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   10 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   15 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   20 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   25 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   30 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   35 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   40 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   45 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   50 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  PSO complete: 132.8s  |  Final best loss: 8.2152e+05
+
+  PSO final L2: 3.7344e-01
+
+====================================================
+  TRAINING SUMMARY
+====================================================
+  Phase        |     L2 Error |   Time (s) |    Δ vs Adam
+  ──────────────────────────────────────────────────
+  Adam         |   3.7344e-01 |       44.1 |     baseline
+  Adam+LBFGS   |          nan |      250.5 |         +nan
+  Adam+PSO     |   3.7344e-01 |      132.8 |  +1.3411e-06
+====================================================
+  Best phase: PSO
+====================================================
+  Model saved: results/nsga2/model.pt
+
+[Step 3/4] Generating plots ...
+  [Plots saved] → results/nsga2/
+
+[Step 4/4] Baseline comparison (Mortensen 2026) ...
+
+───────────────────────────────────────────────────────
+  Karşılaştırma: fig17_ht / Bottom
+───────────────────────────────────────────────────────
+  Metrik               |         PINN |  FEM (Paper)
+  ────────────────────────────────────────────────
+  MAE (mm)             |       0.0314 |       0.0296
+  RMSE (mm)            |       0.0386 |       0.0331
+  Max Error (mm)       |       0.0765 |       0.0500
+  R²                   |       0.9985 |            ─
+───────────────────────────────────────────────────────
+  [Grafik] results/nsga2/PINN_NSGA2_fig17_ht_Bottom_comparison.png kaydedildi
+
+  Results saved: results/nsga2_results.json
+
+#######################################################
+  Running NSGA3 ...
+#######################################################
+
+#######################################################
+  Experiment: NSGA3
+  Adam epochs: 3000  |  L-BFGS: True  |  PSO: True
+#######################################################
+
+[Step 1/4] Architecture Search (NSGA3) ...
+
+====================================================
+  NSGA-III Architecture Search
+  Population: 20  |  Generations: 30
+====================================================
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       20 |      3 |             - |             -
+     2 |       40 |      5 |  0.0725897008 |         ideal
+     3 |       60 |      3 |  0.0118869975 |         ideal
+     4 |       80 |      3 |  0.1661128756 |         ideal
+     5 |      100 |      4 |  0.1943651235 |         ideal
+     6 |      120 |      6 |  0.0238337899 |         ideal
+     7 |      140 |      6 |  0.0358041991 |         ideal
+     8 |      160 |      6 |  0.0474385948 |             f
+     9 |      180 |      6 |  0.0906326816 |         ideal
+    10 |      200 |      6 |  0.000000E+00 |             f
+    11 |      220 |      7 |  0.0946272882 |         ideal
+    12 |      240 |      7 |  0.1124780662 |         ideal
+    13 |      260 |      7 |  0.0787782009 |         nadir
+    14 |      280 |      7 |  0.0348093798 |             f
+    15 |      300 |      7 |  0.000000E+00 |             f
+    16 |      320 |      7 |  0.000000E+00 |             f
+    17 |      340 |      7 |  0.0067269331 |             f
+    18 |      360 |      7 |  0.000000E+00 |             f
+    19 |      380 |      7 |  0.000000E+00 |             f
+    20 |      400 |      7 |  0.000000E+00 |             f
+    21 |      420 |      7 |  0.0177034589 |             f
+    22 |      440 |      7 |  0.0112690788 |             f
+    23 |      460 |      7 |  0.000000E+00 |             f
+    24 |      480 |      7 |  0.0725840304 |         ideal
+    25 |      500 |      7 |  0.0305313907 |             f
+    26 |      520 |      7 |  0.0516380402 |         ideal
+    27 |      540 |      7 |  0.000000E+00 |             f
+    28 |      560 |      8 |  0.0051604489 |             f
+    29 |      580 |      6 |  0.0081526716 |         ideal
+    30 |      600 |      7 |  0.0031139666 |         ideal
+
+  NSGA-III done: 1869.6s  |  Pareto front: 7 solutions
+
+  NAS done: 1869.6s
+  Best architecture: layers=6  neurons=[73, 225, 188, 25, 249, 240]  act=tanh  residual=False
+
+[Step 2/4] Full Training (Adam 3000 epochs) ...
+
+────────────────────────────────────────────────
+  ADAM TRAINING  (3000 epochs)
+────────────────────────────────────────────────
+  Epoch    500 | Loss: 1.9125e+06 | L2: 6.6777e-01 | LR: 1.00e-03 | 7s
+  Epoch   1000 | Loss: 1.0303e+06 | L2: 3.9036e-01 | LR: 9.00e-04 | 14s
+  Epoch   1500 | Loss: 8.2547e+05 | L2: 3.7343e-01 | LR: 9.00e-04 | 22s
+  Epoch   2000 | Loss: 8.0490e+05 | L2: 3.7343e-01 | LR: 8.10e-04 | 29s
+  Epoch   2500 | Loss: 8.1713e+05 | L2: 3.7344e-01 | LR: 8.10e-04 | 36s
+  Epoch   3000 | Loss: 8.1406e+05 | L2: 3.7344e-01 | LR: 7.29e-04 | 43s
+  → Best model restored (loss=8.0490e+05)
+  Adam complete: 43.4s
+
+  Adam final L2: 3.7343e-01
+
+────────────────────────────────────────────────
+  L-BFGS FINE-TUNING  (100 steps)
+────────────────────────────────────────────────
+  Step   10 | Loss: 8.1488e+05 | L2: 3.7347e-01
+  Step   20 | Loss: nan | L2: nan
+  Step   30 | Loss: nan | L2: nan
+  Step   40 | Loss: nan | L2: nan
+  Step   50 | Loss: nan | L2: nan
+  Step   60 | Loss: nan | L2: nan
+  Step   70 | Loss: nan | L2: nan
+  Step   80 | Loss: nan | L2: nan
+  Step   90 | Loss: nan | L2: nan
+  Step  100 | Loss: nan | L2: nan
+  L-BFGS complete: 297.0s
+
+  L-BFGS final L2: nan
+
+────────────────────────────────────────────────
+  PSO FINE-TUNING  (50 steps, 20 particles)
+  Search dim: 130870  |  perturb_scale: 0.01
+────────────────────────────────────────────────
+  Initial best loss: 8.2152e+05
+  Step    5 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   10 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   15 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   20 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   25 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   30 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   35 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   40 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   45 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   50 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  PSO complete: 130.3s  |  Final best loss: 8.2152e+05
+
+  PSO final L2: 3.7344e-01
+
+====================================================
+  TRAINING SUMMARY
+====================================================
+  Phase        |     L2 Error |   Time (s) |    Δ vs Adam
+  ──────────────────────────────────────────────────
+  Adam         |   3.7343e-01 |       43.4 |     baseline
+  Adam+LBFGS   |          nan |      297.0 |         +nan
+  Adam+PSO     |   3.7344e-01 |      130.3 |  -6.0201e-06
+====================================================
+  Best phase: PSO
+====================================================
+  Model saved: results/nsga3/model.pt
+
+[Step 3/4] Generating plots ...
+  [Plots saved] → results/nsga3/
+
+[Step 4/4] Baseline comparison (Mortensen 2026) ...
+
+───────────────────────────────────────────────────────
+  Karşılaştırma: fig17_ht / Bottom
+───────────────────────────────────────────────────────
+  Metrik               |         PINN |  FEM (Paper)
+  ────────────────────────────────────────────────
+  MAE (mm)             |       0.0314 |       0.0296
+  RMSE (mm)            |       0.0386 |       0.0331
+  Max Error (mm)       |       0.0765 |       0.0500
+  R²                   |       0.9985 |            ─
+───────────────────────────────────────────────────────
+  [Grafik] results/nsga3/PINN_NSGA3_fig17_ht_Bottom_comparison.png kaydedildi
+
+  Results saved: results/nsga3_results.json
+
+#######################################################
+  Running BAYESIAN ...
+#######################################################
+
+#######################################################
+  Experiment: BAYESIAN
+  Adam epochs: 3000  |  L-BFGS: True  |  PSO: True
+#######################################################
+
+[Step 1/4] Architecture Search (BAYESIAN) ...
+
+====================================================
+  Bayesian Optimization Architecture Search
+  n_calls: 30  |  n_initial: 10
+====================================================
+  → New best: L2=0.989801  arch=[60, 203, 159, 123, 40, 126]
+  → New best: L2=0.980621  arch=[189]
+  → New best: L2=0.972998  arch=[146, 157, 248, 162, 82]
+  → New best: L2=0.931414  arch=[131, 200, 244, 178, 218, 58, 72]
+  → New best: L2=0.917774  arch=[254, 212, 256, 137, 16, 196, 64]
+  → New best: L2=0.829575  arch=[223, 198, 256, 121, 16, 112, 164]
+  → New best: L2=0.798030  arch=[256, 220, 256, 90, 16, 256, 198]
+  → New best: L2=0.743641  arch=[256, 256, 256, 124, 16, 256, 256]
+
+  Bayesian done: 148.9s  |  Best L2: 0.743641
+  Best arch: [256, 256, 256, 124, 16, 256, 256]  act=tanh
+
+  NAS done: 148.9s
+  Best architecture: layers=7  neurons=[256, 256, 256, 124, 16, 256, 256]  act=tanh  residual=False
+
+[Step 2/4] Full Training (Adam 3000 epochs) ...
+
+────────────────────────────────────────────────
+  ADAM TRAINING  (3000 epochs)
+────────────────────────────────────────────────
+  Epoch    500 | Loss: 1.7216e+06 | L2: 5.8959e-01 | LR: 1.00e-03 | 9s
+  Epoch   1000 | Loss: 8.1358e+05 | L2: 3.7427e-01 | LR: 9.00e-04 | 17s
+  Epoch   1500 | Loss: 8.2545e+05 | L2: 3.7343e-01 | LR: 9.00e-04 | 25s
+  Epoch   2000 | Loss: 8.0491e+05 | L2: 3.7344e-01 | LR: 8.10e-04 | 34s
+  Epoch   2500 | Loss: 8.1710e+05 | L2: 3.7344e-01 | LR: 8.10e-04 | 42s
+  Epoch   3000 | Loss: 8.1404e+05 | L2: 3.7344e-01 | LR: 7.29e-04 | 50s
+  → Best model restored (loss=8.0491e+05)
+  Adam complete: 50.0s
+
+  Adam final L2: 3.7344e-01
+
+────────────────────────────────────────────────
+  L-BFGS FINE-TUNING  (100 steps)
+────────────────────────────────────────────────
+  Step   10 | Loss: 8.1487e+05 | L2: 3.7347e-01
+  Step   20 | Loss: 7.9049e+05 | L2: 3.7344e-01
+  Step   30 | Loss: 8.2168e+05 | L2: 3.7343e-01
+  Step   40 | Loss: 8.2227e+05 | L2: 3.7343e-01
+  Step   50 | Loss: 8.1405e+05 | L2: 3.7344e-01
+  Step   60 | Loss: 8.0933e+05 | L2: 3.7344e-01
+  Step   70 | Loss: 8.1409e+05 | L2: 3.7344e-01
+  Step   80 | Loss: 8.3199e+05 | L2: 3.7344e-01
+  Step   90 | Loss: 8.0747e+05 | L2: 3.7344e-01
+  Step  100 | Loss: 8.2914e+05 | L2: 3.7344e-01
+  L-BFGS complete: 33.4s
+
+  L-BFGS final L2: 3.7344e-01
+
+────────────────────────────────────────────────
+  PSO FINE-TUNING  (50 steps, 20 particles)
+  Search dim: 236877  |  perturb_scale: 0.01
+────────────────────────────────────────────────
+  Initial best loss: 8.2152e+05
+  Step    5 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   10 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   15 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   20 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   25 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   30 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   35 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   40 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   45 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  Step   50 | Best Loss: 8.2152e+05 | L2: 3.7344e-01
+  PSO complete: 143.8s  |  Final best loss: 8.2152e+05
+
+  PSO final L2: 3.7344e-01
+
+====================================================
+  TRAINING SUMMARY
+====================================================
+  Phase        |     L2 Error |   Time (s) |    Δ vs Adam
+  ──────────────────────────────────────────────────
+  Adam         |   3.7344e-01 |       50.0 |     baseline
+  Adam+LBFGS   |   3.7344e-01 |       33.4 |  +6.6757e-06
+  Adam+PSO     |   3.7344e-01 |      143.8 |  +3.3081e-06
+====================================================
+  Best phase: LBFGS
+====================================================
+  Model saved: results/bayesian/model.pt
+
+[Step 3/4] Generating plots ...
+  [Plots saved] → results/bayesian/
+
+[Step 4/4] Baseline comparison (Mortensen 2026) ...
+
+───────────────────────────────────────────────────────
+  Karşılaştırma: fig17_ht / Bottom
+───────────────────────────────────────────────────────
+  Metrik               |         PINN |  FEM (Paper)
+  ────────────────────────────────────────────────
+  MAE (mm)             |       0.0314 |       0.0296
+  RMSE (mm)            |       0.0386 |       0.0331
+  Max Error (mm)       |       0.0765 |       0.0500
+  R²                   |       0.9985 |            ─
+───────────────────────────────────────────────────────
+  [Grafik] results/bayesian/PINN_BAYESIAN_fig17_ht_Bottom_comparison.png kaydedildi
+
+  Results saved: results/bayesian_results.json
+
+======================================================================
+  FULL COMPARISON TABLE
+======================================================================
+  Optimizer    |    Adam L2 |   LBFGS L2 |     PSO L2 |    FEM MAE |   PINN MAE |  Skip%
+  ────────────────────────────────────────────────────────────────────
+  nsga2        | 3.7344e-01 |        nan | 3.7344e-01 |     0.0296 |     0.0314 |   0.0%
+  nsga3        | 3.7343e-01 |        nan | 3.7344e-01 |     0.0296 |     0.0314 |   0.0%
+  bayesian     | 3.7344e-01 | 3.7344e-01 | 3.7344e-01 |     0.0296 |     0.0314 |   0.0%
+======================================================================
+
+  Comparison saved: results/comparison.json

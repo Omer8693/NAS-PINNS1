@@ -1,0 +1,65 @@
+{
+  "optimizer": "bayesian",
+  "best_config": {
+    "n_input": 3,
+    "n_output": 1,
+    "n_layers": 7,
+    "neurons": [
+      256,
+      256,
+      256,
+      124,
+      16,
+      256,
+      256
+    ],
+    "activation": "tanh",
+    "residual": false
+  },
+  "nas_time_s": 148.8787009716034,
+  "adam_epochs": 3000,
+  "temporal_skip": {
+    "total_steps": 20,
+    "visited": 0,
+    "skipped": 0,
+    "efficiency_pct": 0.0,
+    "visited_times": [],
+    "skipped_times": []
+  },
+  "train_results": {
+    "adam": {
+      "phase": "adam",
+      "epochs": 3000,
+      "final_loss": 814036.8125,
+      "train_time": 50.0392792224884,
+      "final_l2": 0.3734431862831116
+    },
+    "lbfgs": {
+      "phase": "lbfgs",
+      "steps": 100,
+      "final_loss": 829135.625,
+      "train_time": 33.39418363571167,
+      "final_l2": 0.37343651056289673
+    },
+    "pso": {
+      "phase": "pso",
+      "steps": 50,
+      "particles": 20,
+      "final_loss": 821524.625,
+      "train_time": 143.75766897201538,
+      "final_l2": 0.37343987822532654
+    }
+  },
+  "baseline_metrics": {
+    "dataset": "fig17_ht",
+    "layer": "Bottom",
+    "n_points": 24,
+    "PINN_MAE_mm": 0.03139228694833518,
+    "PINN_RMSE_mm": 0.038584858409082226,
+    "PINN_MaxErr_mm": 0.0765312097863119,
+    "PINN_R2": 0.9985088723426845,
+    "FEM_MAE": 0.02958333333333334,
+    "FEM_RMSE": 0.03310337344340203,
+    "FEM_MaxErr": 0.050000000000000266
+  }
+}

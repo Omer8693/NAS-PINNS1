@@ -1,0 +1,96 @@
+01:19:53 | Level 3 hybrid pipeline started — device=cuda
+01:19:53 | threshold=0.1  max_skip=4  n_steps=20
+01:19:53 | Optimizers: ['bayesian', 'nsga2', 'nsga3']
+01:19:53 | 
+============================================================
+01:19:53 | Optimizer : BAYESIAN
+01:19:53 | Config    : L=5 N=151 act=relu
+01:19:53 | ============================================================
+01:19:59 |   t=  1.5s | fem  | residual=0.1685 | T_mean=538.6C
+01:20:04 |   t=  3.0s | fem  | residual=0.1773 | T_mean=537.3C
+01:20:09 |   t=  4.5s | pinn | residual=0.0558 | T_mean=488.4C
+01:20:14 |   t=  6.0s | fem  | residual=0.1061 | T_mean=534.6C
+01:20:19 |   t=  7.5s | pinn | residual=0.0618 | T_mean=501.6C
+01:20:24 |   t=  9.0s | pinn | residual=0.0632 | T_mean=488.5C
+01:20:29 |   t= 10.5s | pinn | residual=0.0587 | T_mean=495.4C
+01:20:34 |   t= 12.0s | pinn | residual=0.0387 | T_mean=481.4C
+01:20:39 |   t= 13.5s | fem  | residual=0.0175 | T_mean=527.9C
+01:20:44 |   t= 15.0s | pinn | residual=0.0578 | T_mean=514.5C
+01:20:49 |   t= 16.5s | pinn | residual=0.0427 | T_mean=517.1C
+01:20:54 |   t= 18.0s | pinn | residual=0.0525 | T_mean=498.3C
+01:21:00 |   t= 19.5s | pinn | residual=0.0431 | T_mean=496.2C
+01:21:05 |   t= 21.0s | fem  | residual=0.0197 | T_mean=521.2C
+01:21:10 |   t= 22.5s | fem  | residual=0.1010 | T_mean=519.9C
+01:21:15 |   t= 24.0s | pinn | residual=0.0467 | T_mean=509.4C
+01:21:20 |   t= 25.5s | pinn | residual=0.0184 | T_mean=512.5C
+01:21:24 |   t= 27.0s | pinn | residual=0.0124 | T_mean=511.0C
+01:21:30 |   t= 28.5s | pinn | residual=0.0463 | T_mean=502.0C
+01:21:35 |   t= 30.0s | fem  | residual=0.0177 | T_mean=513.4C
+01:21:35 | Hybrid done: 101.6s | FEM=7 PINN=13 skip_rate=65.0%
+01:21:35 |   RESULT bayesian | FEM=7 PINN=13 skip_rate=65.0% time=101.6s | T_final=513.4C
+01:21:35 | 
+============================================================
+01:21:35 | Optimizer : NSGA2
+01:21:35 | Config    : L=3 N=153 act=tanh
+01:21:35 | ============================================================
+01:21:39 |   t=  1.5s | pinn | residual=0.0180 | T_mean=386.5C
+01:21:44 |   t=  3.0s | pinn | residual=0.0149 | T_mean=299.1C
+01:21:49 |   t=  4.5s | pinn | residual=0.0117 | T_mean=241.1C
+01:21:53 |   t=  6.0s | pinn | residual=0.0057 | T_mean=218.1C
+01:21:58 |   t=  7.5s | fem  | residual=0.0041 | T_mean=533.2C
+01:22:02 |   t=  9.0s | pinn | residual=0.0018 | T_mean=453.0C
+01:22:06 |   t= 10.5s | pinn | residual=0.0041 | T_mean=433.2C
+01:22:10 |   t= 12.0s | pinn | residual=0.0029 | T_mean=427.4C
+01:22:15 |   t= 13.5s | pinn | residual=0.0024 | T_mean=422.4C
+01:22:19 |   t= 15.0s | fem  | residual=0.0018 | T_mean=526.5C
+01:22:23 |   t= 16.5s | pinn | residual=0.0135 | T_mean=467.8C
+01:22:27 |   t= 18.0s | pinn | residual=0.0056 | T_mean=464.6C
+01:22:31 |   t= 19.5s | pinn | residual=0.0034 | T_mean=460.9C
+01:22:36 |   t= 21.0s | pinn | residual=0.0042 | T_mean=449.2C
+01:22:40 |   t= 22.5s | fem  | residual=0.0036 | T_mean=519.9C
+01:22:44 |   t= 24.0s | pinn | residual=0.0026 | T_mean=493.7C
+01:22:48 |   t= 25.5s | pinn | residual=0.0037 | T_mean=485.6C
+01:22:52 |   t= 27.0s | pinn | residual=0.0031 | T_mean=474.5C
+01:22:57 |   t= 28.5s | pinn | residual=0.0027 | T_mean=470.8C
+01:23:01 |   t= 30.0s | fem  | residual=0.0022 | T_mean=513.4C
+01:23:01 | Hybrid done: 85.8s | FEM=4 PINN=16 skip_rate=80.0%
+01:23:01 |   RESULT    nsga2 | FEM=4 PINN=16 skip_rate=80.0% time=85.8s | T_final=513.4C
+01:23:01 | 
+============================================================
+01:23:01 | Optimizer : NSGA3
+01:23:01 | Config    : L=3 N=75 act=tanh
+01:23:01 | ============================================================
+01:23:05 |   t=  1.5s | pinn | residual=0.0089 | T_mean=373.3C
+01:23:09 |   t=  3.0s | pinn | residual=0.0044 | T_mean=283.2C
+01:23:14 |   t=  4.5s | pinn | residual=0.0053 | T_mean=227.0C
+01:23:18 |   t=  6.0s | pinn | residual=0.0067 | T_mean=201.2C
+01:23:22 |   t=  7.5s | fem  | residual=0.0042 | T_mean=533.2C
+01:23:26 |   t=  9.0s | pinn | residual=0.0034 | T_mean=435.8C
+01:23:31 |   t= 10.5s | pinn | residual=0.0083 | T_mean=421.5C
+01:23:35 |   t= 12.0s | pinn | residual=0.0045 | T_mean=425.8C
+01:23:39 |   t= 13.5s | pinn | residual=0.0032 | T_mean=423.7C
+01:23:43 |   t= 15.0s | fem  | residual=0.0024 | T_mean=526.5C
+01:23:47 |   t= 16.5s | pinn | residual=0.0068 | T_mean=456.6C
+01:23:51 |   t= 18.0s | pinn | residual=0.0029 | T_mean=449.3C
+01:23:55 |   t= 19.5s | pinn | residual=0.0039 | T_mean=431.7C
+01:23:59 |   t= 21.0s | pinn | residual=0.0018 | T_mean=433.9C
+01:24:03 |   t= 22.5s | fem  | residual=0.0020 | T_mean=519.9C
+01:24:07 |   t= 24.0s | pinn | residual=0.0070 | T_mean=477.3C
+01:24:11 |   t= 25.5s | pinn | residual=0.0039 | T_mean=476.6C
+01:24:15 |   t= 27.0s | pinn | residual=0.0035 | T_mean=465.6C
+01:24:19 |   t= 28.5s | pinn | residual=0.0032 | T_mean=468.6C
+01:24:23 |   t= 30.0s | fem  | residual=0.0026 | T_mean=513.4C
+01:24:23 | Hybrid done: 82.3s | FEM=4 PINN=16 skip_rate=80.0%
+01:24:23 |   RESULT    nsga3 | FEM=4 PINN=16 skip_rate=80.0% time=82.3s | T_final=513.4C
+01:24:23 | 
+======================================================================
+01:24:23 |   LEVEL 3 — Three Optimizer Comparison
+01:24:23 | ======================================================================
+01:24:23 |  optimizer | fem_steps | pinn_steps | skip_% | T_final_C |  time_s
+01:24:23 | ------------------------------------------------------------------
+01:24:23 |   bayesian |         7 |         13 |   65.0 |     513.4 |   101.6
+01:24:23 |      nsga2 |         4 |         16 |   80.0 |     513.4 |    85.8
+01:24:23 |      nsga3 |         4 |         16 |   80.0 |     513.4 |    82.3
+01:24:23 | 
+Saved: results/thr0.1_skip4/level3_results.json
+01:24:23 | Log  : results/thr0.1_skip4/run.log

@@ -4,3 +4,8 @@ Baseline NAS-PINN with A356 quenching reference data (2026)
 Loss weights | physics=5.000e+01, ic=1.000e-03, bc=1.000e-18, data=1.000e-02
 Architecture | layers=5, base_neurons=84
 Epoch     0 | Total: 9.3780e+03 | Physics: 5.6113e-01 | Data: 8.8782e+05
+Epoch    75 | Total: 2.9104e+02 | Physics: 3.6580e-02 | Data: 2.4879e+02
+Epoch   150 | Total: 2.8291e+02 | Physics: 2.2635e-02 | Data: 7.7579e+00
+Epoch   225 | Total: 2.7746e+02 | Physics: 1.4482e-02 | Data: 2.9104e+01
+Adam checkpoint saved: /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00047_L5_N84/baseline_model_adam.pth
+Training completed. Selected stage: adam | objective=2.702453e+02 | final model: /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga3/search_trials/eval_00047_L5_N84/baseline_model.pth

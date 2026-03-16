@@ -1,0 +1,52 @@
+23:18:01 | Level 4 Distortion Pipeline
+23:18:01 | Level 3 JSON : ../level3_hybrid_fem/results/thr0.1_skip20/level3_results.json
+23:18:01 | FEM mesh     : 20x10 Q4 elements  (231 nodes, 462 DOF)
+23:18:01 | Domain       : 1.3m x 0.6m
+23:18:01 | T profile    : gradient  (gradient_frac=0.15)
+23:18:01 | Optimizers   : ['bayesian', 'nsga2', 'nsga3']
+23:18:01 | 
+23:18:01 | Assembling stiffness matrix ...
+23:18:02 |   K matrix ready — size=462x462  (0.1s)
+23:18:02 | 
+23:18:02 | ============================================================
+23:18:02 | Optimizer : BAYESIAN
+23:18:02 | ============================================================
+23:18:02 |   T_mean(final) = 470.5 degC
+23:18:02 |   T_field : min=402.9C  max=538.1C  deltaT=135.2C
+23:18:02 |   Solving FEM (K*u = f_th) ...
+23:18:02 |   CG solver done — 0.04s
+23:18:02 |   max |u| = 2.5524 mm
+23:18:02 |   CMM max delta = 2.4503 mm  mean delta = 1.6662 mm
+23:18:02 |   RESULT bayesian | max_delta=2.4503mm  MAE_FEM=1.5946mm  time=0.1s
+23:18:02 | ============================================================
+23:18:02 | Optimizer : NSGA2
+23:18:02 | ============================================================
+23:18:02 |   T_mean(final) = 398.1 degC
+23:18:02 |   T_field : min=341.3C  max=454.8C  deltaT=113.4C
+23:18:02 |   Solving FEM (K*u = f_th) ...
+23:18:02 |   CG solver done — 0.04s
+23:18:02 |   max |u| = 4.8361 mm
+23:18:02 |   CMM max delta = 4.5076 mm  mean delta = 2.8119 mm
+23:18:02 |   RESULT    nsga2 | max_delta=4.5076mm  MAE_FEM=2.6476mm  time=0.1s
+23:18:02 | ============================================================
+23:18:02 | Optimizer : NSGA3
+23:18:02 | ============================================================
+23:18:02 |   T_mean(final) = 277.6 degC
+23:18:02 |   T_field : min=239.0C  max=316.3C  deltaT=77.3C
+23:18:02 |   Solving FEM (K*u = f_th) ...
+23:18:02 |   CG solver done — 0.04s
+23:18:02 |   max |u| = 8.8106 mm
+23:18:02 |   CMM max delta = 8.0424 mm  mean delta = 4.7355 mm
+23:18:02 |   RESULT    nsga3 | max_delta=8.0424mm  MAE_FEM=4.5421mm  time=0.1s
+23:18:02 | 
+23:18:02 | ======================================================================
+23:18:02 |   LEVEL 4 — Distortion Comparison Table
+23:18:02 | ======================================================================
+23:18:02 |  optimizer | T_final_C | max_d_mm | mean_d_mm |  MAE_FEM |  MAE_meas
+23:18:02 | --------------------------------------------------------------------
+23:18:02 |   bayesian |     470.5 |   2.4503 |    1.6662 |   1.5946 |    1.7112
+23:18:02 |      nsga2 |     398.1 |   4.5076 |    2.8119 |   2.6476 |    2.7434
+23:18:02 |      nsga3 |     277.6 |   8.0424 |    4.7355 |   4.5421 |    4.6379
+23:18:02 | 
+Saved: results/level4_distortion.json
+23:18:02 | Log  : results/run.log

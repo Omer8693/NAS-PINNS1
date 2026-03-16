@@ -1,0 +1,82 @@
+{
+  "problem": "quenching",
+  "optimizer": "nsga3",
+  "time_mode": "full",
+  "fixed_skip": 2,
+  "best_config": {
+    "n_input": 3,
+    "n_output": 1,
+    "n_layers": 3,
+    "neurons": [
+      75,
+      75,
+      75
+    ],
+    "activation": "tanh",
+    "residual": false,
+    "objectives": {
+      "l2": 0.9066933393478394,
+      "n_params": 11776.0
+    }
+  },
+  "nas_time_s": 1608.6114416122437,
+  "adam_epochs": 20000,
+  "lbfgs_max_iter": null,
+  "lbfgs_history_size": null,
+  "lbfgs_tolerance_grad": null,
+  "lbfgs_tolerance_change": null,
+  "pso_steps": null,
+  "pso_particles": null,
+  "temporal_skip": {
+    "mode": "full",
+    "total_steps": 20,
+    "visited": 20,
+    "skipped": 0,
+    "efficiency_pct": 0.0,
+    "visited_times": [
+      0.0,
+      1.5789473684210527,
+      3.1578947368421053,
+      4.7368421052631575,
+      6.315789473684211,
+      7.894736842105264,
+      9.473684210526315,
+      11.052631578947368,
+      12.631578947368421,
+      14.210526315789474,
+      15.789473684210527,
+      17.36842105263158,
+      18.94736842105263,
+      20.526315789473685,
+      22.105263157894736,
+      23.68421052631579,
+      25.263157894736842,
+      26.842105263157894,
+      28.42105263157895,
+      30.0
+    ],
+    "skipped_times": []
+  },
+  "train_results": {
+    "adam": {
+      "phase": "adam",
+      "epochs": 20000,
+      "final_loss": 3.7740187644958496,
+      "train_time": 213.96305871009827,
+      "final_l2": 0.5277618169784546
+    }
+  },
+  "paper_baseline": {
+    "status": "comparison_complete",
+    "time_mode": "full",
+    "fixed_skip": 2,
+    "thermal_metrics": {
+      "L2_rel": 0.5129152032783663,
+      "MAE_C": 270.3124435668519,
+      "RMSE_C": 270.458584473362,
+      "R2": -1042.143478840577,
+      "MaxErr_C": 278.2478779649489
+    },
+    "distortion_note": "FEM distortion data (Fig 17/18) exported as reference. PINN distortion comparison requires coupling with a mechanical model."
+  }
+}

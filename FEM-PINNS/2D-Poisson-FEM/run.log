@@ -1,0 +1,61 @@
+cuda
+Start comparing to GT 100
+Average solution time 0.9998568773269654
+Average evaluation time 0.0017003774642944335
+Average accuracy: 0.0019101342160341545
+Last CG iterations: 2724
+Last CG residual: 9.897881314059373e-11
+Start comparing to GT 200
+Average solution time 1.3019979000091553
+Average evaluation time 0.00016853809356689453
+Average accuracy: 0.0004753784686738062
+Last CG iterations: 3629
+Last CG residual: 9.979841240043911e-11
+Start comparing to GT 300
+Average solution time 1.8408448457717896
+Average evaluation time 0.00019423961639404298
+Average accuracy: 0.000212239052489261
+Last CG iterations: 4703
+Last CG residual: 9.958500696598549e-11
+Start comparing to GT 400
+Average solution time 1.8327475786209106
+Average evaluation time 0.0001725435256958008
+Average accuracy: 0.00011884492511481188
+Last CG iterations: 5000
+Last CG residual: 1.1364384771100088e-08
+Start comparing to GT 500
+Average solution time 1.8586317300796509
+Average evaluation time 0.0001861095428466797
+Average accuracy: 7.640942898695255e-05
+Last CG iterations: 5000
+Last CG residual: 4.7016546630360265e-07
+Start comparing to GT 600
+Average solution time 1.8526464700698853
+Average evaluation time 0.00019464492797851562
+Average accuracy: 5.281301856689239e-05
+Last CG iterations: 5000
+Last CG residual: 6.946334944913175e-06
+Start comparing to GT 700
+Average solution time 2.0740867853164673
+Average evaluation time 0.00017342567443847656
+Average accuracy: 3.8945020564729126e-05
+Last CG iterations: 5000
+Last CG residual: 1.423671954052392e-05
+Start comparing to GT 800
+Average solution time 2.4129897356033325
+Average evaluation time 0.00017888545989990233
+Average accuracy: 3.0414526447823334e-05
+Last CG iterations: 5000
+Last CG residual: 0.0006754003846982823
+Start comparing to GT 900
+Average solution time 2.8488248348236085
+Average evaluation time 0.00017402172088623046
+Average accuracy: 2.5819843809141447e-05
+Last CG iterations: 5000
+Last CG residual: 0.0006147140215211036
+Start comparing to GT 1000
+Average solution time 3.296144652366638
+Average evaluation time 0.0001746654510498047
+Average accuracy: 2.0628683248954277e-05
+Last CG iterations: 5000
+Last CG residual: 0.001593788806038577

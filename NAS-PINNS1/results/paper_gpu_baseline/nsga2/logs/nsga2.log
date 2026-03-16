@@ -140,3 +140,7 @@
 [2026-03-13 07:04:16] [final] training L6_N97 -> /home/coder/NAS-PINNS1/NAS-PINNS1/results/paper_gpu_baseline/nsga2/final/L6_N97
 [2026-03-13 08:39:32] final done | best_stage=lbfgs
 [2026-03-13 08:39:32] === nsga2 run completed ===
+[2026-03-13 22:21:22] === nsga2 run started ===
+[2026-03-13 22:21:22] search already done, using cached state
+[2026-03-13 22:21:22] final already done
+[2026-03-13 22:21:22] === nsga2 run completed ===

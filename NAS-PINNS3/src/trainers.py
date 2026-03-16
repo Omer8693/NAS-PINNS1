@@ -2,29 +2,24 @@
 Training Module — Adam + L-BFGS + PSO
 =======================================
 Eğitim sırası (3 faz):
-  Phase 1 : Adam            — bulk eğitim, tüm epoch'ların büyük kısmı
+  Phase 1 : Adam            — bulk eğitim
   Phase 2 : L-BFGS          — Adam ağırlıklarından başlar, Quasi-Newton ince ayarı
   Phase 3 : PSO             — Adam ağırlıklarından başlar (bağımsız), global arama
 
 L-BFGS ve PSO BAĞIMSIZDIR:
   - İkisi de adam_state'ten başlar (PSO, L-BFGS sonrası değil)
   - Bu sayede hangisinin Adam'ı daha iyi iyileştirdiği test edilir
-  - Karşılaştırma: Adam vs Adam+LBFGS vs Adam+PSO
-
-PSO özelliği:
-  - Ağırlıkları düzleştirilmiş numpy vektörü olarak temsil eder
-  - Adam çözümü etrafında küçük pertürbasyonla parçacık bulutunu başlatır
-  - GPU'da torch ile eval — büyük ağlarda pyswarms'tan daha verimli
 """
 
+import time
+from copy import deepcopy
+from typing import Callable, Dict, Optional
+
+import numpy as np
 import torch
 import torch.nn as nn
-import numpy as np
-import time
-from typing import Dict, Callable, Optional
-from copy import deepcopy
 
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+from src.config import DEVICE
 
 
 # ─────────────────────────────────────────────────────────────
@@ -36,9 +31,9 @@ class AdamTrainer:
     Adam optimizer ile PINN eğitimi.
 
     Özellikler:
-      - StepLR öğrenme hızı düşüşü (her step_size epoch'ta gamma ile çarp)
-      - Gradient clipping (max_norm=1.0) — patlayan gradient'ları önler
-      - En iyi model kaydı (early stopping yok, ama en düşük kayıp saklanır)
+      - StepLR öğrenme hızı düşüşü
+      - Gradient clipping (max_norm=1.0)
+      - En iyi model kaydı
     """
 
     def __init__(self,
@@ -56,7 +51,6 @@ class AdamTrainer:
             self.optimizer, step_size=lr_decay_step, gamma=lr_decay_gamma)
 
     def train_step(self, batch: dict) -> dict:
-        """Tek eğitim adımı — forward + backward + clip + step."""
         self.model.train()
         self.optimizer.zero_grad()
         loss, details = self.loss_fn(self.model, batch)
@@ -71,12 +65,6 @@ class AdamTrainer:
               n_epochs:    int = 5000,
               print_every: int = 500,
               val_fn:      Optional[Callable] = None) -> Dict:
-        """
-        n_epochs boyunca Adam eğitimi.
-
-        get_batch(epoch) → her epoch yeni kollokasiyon batch'i döndürür.
-        val_fn(model)    → L2 hatasını döndürür (baseline ile karşılaştırma için).
-        """
         print(f"\n{'─'*48}")
         print(f"  ADAM TRAINING  ({n_epochs} epochs)")
         print(f"{'─'*48}")
@@ -90,11 +78,13 @@ class AdamTrainer:
             details = self.train_step(batch)
             self.history["loss"].append(details["L_total"])
 
+            if hasattr(get_batch, "set_residual"):
+                get_batch.set_residual(details.get("L_physics", float("inf")))
+
             if epoch % print_every == 0:
                 l2 = val_fn(self.model) if val_fn else 0.0
                 self.history["l2"].append({"epoch": epoch, "l2": l2})
 
-                # En iyi modeli sakla
                 if details["L_total"] < best_loss:
                     best_loss  = details["L_total"]
                     best_state = deepcopy(self.model.state_dict())
@@ -104,7 +94,6 @@ class AdamTrainer:
                       f"| L2: {l2:.4e} | LR: {self.scheduler.get_last_lr()[0]:.2e} "
                       f"| {elapsed:.0f}s")
 
-        # En iyi ağırlıkları geri yükle
         if best_state is not None:
             self.model.load_state_dict(best_state)
             print(f"  → Best model restored (loss={best_loss:.4e})")
@@ -126,79 +115,95 @@ class AdamTrainer:
 
 class LBFGSFinetuner:
     """
-    Adam sonrası L-BFGS ile hassas ince ayar (fine-tuning).
+    Adam sonrası L-BFGS ile hassas ince ayar — NAS-PINNS1 parametreleri.
 
-    L-BFGS: sınırlı bellek Quasi-Newton yöntemi.
-    Adam'ın düz bölgeye getirdiği çözümden Strong Wolfe ile optimize eder.
-
-    Avantaj:
-      - Birinci dereceden yöntemlere göre çok daha hızlı yakınsama
-      - Loss yüzeyi yerel olarak kuadratik ise mükemmel performans
-
-    Kısıt:
-      - Büyük ağlarda bellek yoğun (history_size ile sınırlandırılır)
-      - closure() pattern zorunlu — her adımda loss yeniden hesaplanır
+    NAS-PINNS1 (cfg.py) referans değerleri:
+      lr=1.0, max_iter=5000, history_size=20, line_search=strong_wolfe
     """
 
     def __init__(self,
-                 model:        nn.Module,
-                 loss_fn:      Callable,
-                 lr:           float = 1.0,
-                 max_iter:     int   = 100,
-                 history_size: int   = 50):
+                 model:            nn.Module,
+                 loss_fn:          Callable,
+                 max_iter:         int   = 5000,
+                 history_size:     int   = 20,
+                 tolerance_grad:   float = 1e-7,
+                 tolerance_change: float = 1e-9):
         self.model   = model
         self.loss_fn = loss_fn
         self.history = {"loss": [], "phase": "lbfgs"}
+        self._max_iter         = max_iter
+        self._history_size     = history_size
+        self._tolerance_grad   = tolerance_grad
+        self._tolerance_change = tolerance_change
 
+        # lr=1.0 — strong_wolfe line search adım boyutunu yönetiyor
         self.optimizer = torch.optim.LBFGS(
             model.parameters(),
-            lr             = lr,
-            max_iter       = max_iter,
-            history_size   = history_size,
-            line_search_fn = "strong_wolfe",   # Armijo + Wolfe koşulları
+            lr               = 1.0,
+            max_iter         = max_iter,
+            history_size     = history_size,
+            tolerance_grad   = tolerance_grad,
+            tolerance_change = tolerance_change,
+            line_search_fn   = "strong_wolfe",
         )
 
     def finetune(self,
                  get_batch: Callable,
-                 n_steps:   int = 50,
+                 n_steps:   int = 1,
                  val_fn:    Optional[Callable] = None) -> Dict:
         """
-        n_steps L-BFGS adımı. Her adımda closure ile loss yeniden hesaplanır.
-        Adam'dan başlar — full_training_pipeline bunu garantiler.
+        Sabit batch üzerinde tek L-BFGS step() çağrısı.
+        İçeride max_iter iterasyona kadar strong_wolfe ile optimize eder.
         """
         print(f"\n{'─'*48}")
-        print(f"  L-BFGS FINE-TUNING  ({n_steps} steps)")
+        print(f"  L-BFGS FINE-TUNING  (max_iter={self._max_iter}, single step)")
         print(f"{'─'*48}")
 
-        t0 = time.time()
+        t0    = time.time()
+        batch = get_batch(0)   # Sabit batch: closure hep aynı noktaları kullanır
+        final_loss = None
 
-        for step in range(1, n_steps + 1):
-            batch = get_batch(step)
+        def closure():
+            nonlocal final_loss
+            self.optimizer.zero_grad()
+            loss, _ = self.loss_fn(self.model, batch)
+            loss.backward()
+            val = loss.item()
+            if np.isfinite(val):
+                self.history["loss"].append(val)
+                final_loss = val
+            return loss
 
-            def closure():
-                self.optimizer.zero_grad()
-                loss, _ = self.loss_fn(self.model, batch)
-                loss.backward()
-                return loss
-
-            loss_val = self.optimizer.step(closure)
-
-            if isinstance(loss_val, torch.Tensor):
-                loss_val = loss_val.item()
-            self.history["loss"].append(loss_val)
-
-            if step % 10 == 0:
-                l2 = val_fn(self.model) if val_fn else 0.0
-                print(f"  Step {step:4d} | Loss: {loss_val:.4e} | L2: {l2:.4e}")
+        try:
+            self.optimizer.step(closure)
+        except Exception as exc:
+            print(f"  [L-BFGS] step() raised: {exc}")
 
         total_time = time.time() - t0
-        print(f"  L-BFGS complete: {total_time:.1f}s")
+        iters_done = len(self.history["loss"])
+        # DÜZELTİLDİ: `if best_loss` → `if best_loss is not None`
+        # Önceki kod loss=0.0 için yanlış "no valid loss" yazıyordu
+        best_loss  = min(self.history["loss"]) if self.history["loss"] else None
+        l2_after   = val_fn(self.model) if val_fn else None
+
+        if best_loss is not None:
+            print(f"  L-BFGS complete: {total_time:.1f}s  |  "
+                  f"iters={iters_done}  |  best_loss={best_loss:.4e}")
+        else:
+            print(f"  L-BFGS complete: {total_time:.1f}s  |  iters={iters_done}  |  no valid loss")
+        if l2_after is not None:
+            print(f"  L-BFGS final L2: {l2_after:.4e}")
+
         return {
-            "phase":      "lbfgs",
-            "steps":      n_steps,
-            "final_loss": self.history["loss"][-1] if self.history["loss"] else None,
-            "train_time": total_time,
-            "history":    self.history,
+            "phase":             "lbfgs",
+            "steps":             iters_done,
+            "requested_max_iter": self._max_iter,
+            "history_size":      self._history_size,
+            "tolerance_grad":    self._tolerance_grad,
+            "tolerance_change":  self._tolerance_change,
+            "final_loss":        best_loss,
+            "train_time":        total_time,
+            "history":           self.history,
         }
 
 
@@ -212,20 +217,10 @@ class PSOFinetuner:
 
     PSO L-BFGS'TEN BAĞIMSIZ ÇALIŞIR — adam_state'ten başlar.
 
-    Neden PSO?
-      - L-BFGS yerel minimum'a takılabilir; PSO global arama yapar
-      - Adam'ın bulduğu bölgenin etrafında parçacık bulutu oluşturur
-      - Yerel minimum'dan kaçış için pertürbasyon ölçeği ayarlanabilir
-
-    Torch tabanlı GPU implementasyonu:
-      - Ağırlıklar düzleştirilmiş numpy vektörü olarak temsil edilir
-      - Her parçacık eval'i: model'e yükle → forward → loss hesapla
-      - no_grad ile hızlandırılmış değerlendirme
-
     Hiper-parametreler (PSO standartları):
-      w  = 0.7   : atalet katsayısı (momentum)
-      c1 = 1.5   : bilişsel katsayı (kendi en iyisine çekim)
-      c2 = 1.5   : sosyal katsayı   (küresel en iyiye çekim)
+      w  = 0.7  : atalet katsayısı
+      c1 = 1.5  : bilişsel katsayı
+      c2 = 1.5  : sosyal katsayı
     """
 
     def __init__(self,
@@ -235,7 +230,7 @@ class PSOFinetuner:
                  w:             float = 0.7,
                  c1:            float = 1.5,
                  c2:            float = 1.5,
-                 perturb_scale: float = 0.01):   # pertürbasyon: Adam çözümünün %1'i
+                 perturb_scale: float = 0.1):
         self.model         = model
         self.loss_fn       = loss_fn
         self.n_particles   = n_particles
@@ -245,18 +240,22 @@ class PSOFinetuner:
         self.perturb_scale = perturb_scale
         self.history       = {"loss": [], "phase": "pso"}
 
-        # Adam ağırlıklarını düzleştirilmiş numpy vektörüne al
         self.base_params = self._get_flat_params()
         self.n_dims      = len(self.base_params)
 
+        # Adaptif perturb_scale: büyük ağlarda gürültüyü azalt
+        if self.n_dims > 20_000:
+            effective = perturb_scale * np.sqrt(1_000 / self.n_dims)
+            print(f"  [PSO] Large network ({self.n_dims:,} dim): perturb_scale "
+                  f"{perturb_scale:.4f} → {effective:.6f}")
+            self.perturb_scale = effective
+
     def _get_flat_params(self) -> np.ndarray:
-        """Model ağırlıklarını tek boyutlu numpy vektörüne dönüştür."""
         return np.concatenate([
             p.data.cpu().numpy().flatten() for p in self.model.parameters()
         ])
 
     def _set_flat_params(self, flat: np.ndarray):
-        """Düzleştirilmiş vektörü model parametrelerine yükle."""
         offset = 0
         for p in self.model.parameters():
             size = p.numel()
@@ -267,15 +266,12 @@ class PSOFinetuner:
             offset += size
 
     def _eval_loss(self, batch: dict) -> float:
-        """Mevcut model ağırlıklarıyla batch kaybını hesapla.
-        not_grad kullanılmaz — PDE rezidüeli autograd.grad gerektirir."""
         self.model.eval()
         with torch.enable_grad():
             loss, _ = self.loss_fn(self.model, batch)
         return float(loss.item())
 
     def _model_copy_with(self, params: np.ndarray) -> nn.Module:
-        """Verilen ağırlıklarla modelin derin kopyasını oluştur (val_fn için)."""
         m = deepcopy(self.model)
         offset = 0
         for p in m.parameters():
@@ -291,11 +287,6 @@ class PSOFinetuner:
                  get_batch: Callable,
                  n_steps:   int = 30,
                  val_fn:    Optional[Callable] = None) -> Dict:
-        """
-        PSO ile n_steps iterasyon.
-        Parçacık bulutu Adam çözümü etrafında başlatılır.
-        En iyi global pozisyon her iterasyonda güncellenir.
-        """
         print(f"\n{'─'*48}")
         print(f"  PSO FINE-TUNING  ({n_steps} steps, {self.n_particles} particles)")
         print(f"  Search dim: {self.n_dims}  |  perturb_scale: {self.perturb_scale}")
@@ -303,7 +294,6 @@ class PSOFinetuner:
 
         t0 = time.time()
 
-        # Parçacık başlatma: Adam çözümü etrafında Gaussian pertürbasyon
         positions  = (np.random.randn(self.n_particles, self.n_dims) *
                       self.perturb_scale + self.base_params)
         velocities = np.zeros((self.n_particles, self.n_dims))
@@ -313,10 +303,8 @@ class PSOFinetuner:
         gbest_pos  = self.base_params.copy()
         gbest_loss = float("inf")
 
-        # Sabit batch: PSO değerlendirmesinde aynı kollokasiyon noktaları kullanılır
         batch = get_batch(0)
 
-        # İlk değerlendirme — her parçacık için başlangıç kaybı
         for i in range(self.n_particles):
             self._set_flat_params(positions[i])
             lv = self._eval_loss(batch)
@@ -327,12 +315,10 @@ class PSOFinetuner:
 
         print(f"  Initial best loss: {gbest_loss:.4e}")
 
-        # PSO ana döngüsü
         for step in range(1, n_steps + 1):
             r1 = np.random.rand(self.n_particles, self.n_dims)
             r2 = np.random.rand(self.n_particles, self.n_dims)
 
-            # Hız güncelleme: atalet + bilişsel + sosyal
             velocities = (self.w  * velocities +
                           self.c1 * r1 * (pbest_pos - positions) +
                           self.c2 * r2 * (gbest_pos - positions))
@@ -354,7 +340,6 @@ class PSOFinetuner:
                 l2 = val_fn(self._model_copy_with(gbest_pos)) if val_fn else 0.0
                 print(f"  Step {step:4d} | Best Loss: {gbest_loss:.4e} | L2: {l2:.4e}")
 
-        # En iyi global pozisyonu modele yükle
         self._set_flat_params(gbest_pos)
 
         total_time = time.time() - t0
@@ -373,32 +358,29 @@ class PSOFinetuner:
 # Bölüm 4 — Tam Eğitim Pipeline'ı
 # ─────────────────────────────────────────────────────────────
 
-def full_training_pipeline(model:         nn.Module,
-                            loss_fn:       Callable,
-                            get_batch:     Callable,
-                            val_fn:        Callable,
-                            adam_epochs:   int   = 5000,
-                            lbfgs_steps:   int   = 100,
-                            pso_steps:     int   = 50,
-                            pso_particles: int   = 20,
-                            adam_lr:       float = 1e-3,
-                            run_lbfgs:     bool  = True,
-                            run_pso:       bool  = True) -> Dict:
+def full_training_pipeline(model:                  nn.Module,
+                            loss_fn:               Callable,
+                            get_batch:             Callable,
+                            val_fn:                Callable,
+                            adam_epochs:           int   = 5000,
+                            lbfgs_max_iter:        int   = 5000,
+                            lbfgs_history_size:    int   = 20,
+                            lbfgs_tolerance_grad:  float = 1e-7,
+                            lbfgs_tolerance_change: float = 1e-9,
+                            pso_steps:             int   = 50,
+                            pso_particles:         int   = 20,
+                            adam_lr:               float = 1e-3,
+                            run_lbfgs:             bool  = False,
+                            run_pso:               bool  = False) -> Dict:
     """
-    Tam eğitim sırası ve sonuç özeti.
-
-    Akış:
-      Adam  →  adam_state kaydedilir
+    Tam eğitim sırası:
+      Adam → adam_state kaydedilir
       adam_state → L-BFGS  (bağımsız)
       adam_state → PSO      (bağımsız, L-BFGS sonrası değil)
-
-    Bu yapı sayesinde:
-      - Üç sonuç da karşılaştırılabilir temel (Adam) üzerinden değerlendirilir
-      - En iyi optimizer seçimi adil bir karşılaştırmayla yapılabilir
     """
     results = {}
 
-    # ── Faz 1: Adam ──────────────────────────────────────────
+    # ── Faz 1: Adam
     adam = AdamTrainer(model, loss_fn, lr=adam_lr)
     results["adam"] = adam.train(get_batch, adam_epochs, val_fn=val_fn)
 
@@ -406,43 +388,69 @@ def full_training_pipeline(model:         nn.Module,
     results["adam"]["final_l2"] = l2_adam
     print(f"\n  Adam final L2: {l2_adam:.4e}")
 
-    # Adam ağırlıklarını sakla — L-BFGS ve PSO buradan başlar
     adam_state = deepcopy(model.state_dict())
 
-    # ── Faz 2: L-BFGS ────────────────────────────────────────
+    # ── Faz 2: L-BFGS (Adam'dan bağımsız)
+    # NOT: L-BFGS frozen (full-domain) batch kullanır — TemporalSkip pencereleri
+    # Hessian tahmini tutarsız yapar; freeze ile tam domain'e geç.
+    lbfgs_state = None
     if run_lbfgs:
-        model.load_state_dict(adam_state)    # Adam noktasına geri dön
-        lbfgs = LBFGSFinetuner(model, loss_fn)
-        results["lbfgs"] = lbfgs.finetune(get_batch, lbfgs_steps, val_fn=val_fn)
+        model.load_state_dict(adam_state)
+        if hasattr(get_batch, "freeze"):
+            get_batch.freeze()
+        lbfgs = LBFGSFinetuner(
+            model, loss_fn,
+            max_iter         = lbfgs_max_iter,
+            history_size     = lbfgs_history_size,
+            tolerance_grad   = lbfgs_tolerance_grad,
+            tolerance_change = lbfgs_tolerance_change,
+        )
+        results["lbfgs"] = lbfgs.finetune(get_batch, val_fn=val_fn)
+        if hasattr(get_batch, "unfreeze"):
+            get_batch.unfreeze()
         l2_lbfgs = val_fn(model)
+        if not np.isfinite(l2_lbfgs):
+            print(f"  [Warning] L-BFGS L2={l2_lbfgs}, restoring Adam weights")
+            model.load_state_dict(adam_state)
+            l2_lbfgs = l2_adam
         results["lbfgs"]["final_l2"] = l2_lbfgs
-        print(f"\n  L-BFGS final L2: {l2_lbfgs:.4e}")
         lbfgs_state = deepcopy(model.state_dict())
+        print(f"\n  L-BFGS final L2: {l2_lbfgs:.4e}")
 
-    # ── Faz 3: PSO (Adam'dan bağımsız) ───────────────────────
+    # ── Faz 3: PSO (Adam'dan bağımsız)
+    pso_state = None
     if run_pso:
-        model.load_state_dict(adam_state)    # Adam noktasına geri dön (PSO bağımsız)
+        model.load_state_dict(adam_state)
+        if hasattr(get_batch, "freeze"):
+            get_batch.freeze()
         pso = PSOFinetuner(model, loss_fn, n_particles=pso_particles)
         results["pso"] = pso.finetune(get_batch, pso_steps, val_fn=val_fn)
+        if hasattr(get_batch, "unfreeze"):
+            get_batch.unfreeze()
         l2_pso = val_fn(model)
+        if not np.isfinite(l2_pso):
+            print(f"  [Warning] PSO L2={l2_pso}, restoring Adam weights")
+            model.load_state_dict(adam_state)
+            l2_pso = l2_adam
         results["pso"]["final_l2"] = l2_pso
+        pso_state = deepcopy(model.state_dict())
         print(f"\n  PSO final L2: {l2_pso:.4e}")
 
-    # En iyi modeli tekrar yükle (PSO veya L-BFGS'ten hangisi daha iyiyse)
-    if run_lbfgs and run_pso:
-        if results["lbfgs"]["final_l2"] <= results["pso"]["final_l2"]:
-            model.load_state_dict(lbfgs_state)
-            best_phase = "lbfgs"
-        else:
-            # PSO ağırlıkları zaten model'de
-            best_phase = "pso"
-    elif run_lbfgs:
-        model.load_state_dict(lbfgs_state)
-        best_phase = "lbfgs"
-    else:
-        best_phase = "adam"
+    # En iyi fazı seç
+    candidates = {"adam": (l2_adam, adam_state)}
+    if run_lbfgs and lbfgs_state is not None:
+        l2_l = results["lbfgs"].get("final_l2", float("nan"))
+        if np.isfinite(l2_l):
+            candidates["lbfgs"] = (l2_l, lbfgs_state)
+    if run_pso and pso_state is not None:
+        l2_p = results["pso"].get("final_l2", float("nan"))
+        if np.isfinite(l2_p):
+            candidates["pso"] = (l2_p, pso_state)
 
-    # ── Özet Tablosu ─────────────────────────────────────────
+    best_phase, (best_l2, best_state) = min(candidates.items(), key=lambda kv: kv[1][0])
+    model.load_state_dict(best_state)
+
+    # Özet tablosu
     print(f"\n{'='*52}")
     print(f"  TRAINING SUMMARY")
     print(f"{'='*52}")
@@ -450,14 +458,20 @@ def full_training_pipeline(model:         nn.Module,
     print(f"  {'─'*50}")
     print(f"  {'Adam':<12} | {l2_adam:>12.4e} | "
           f"{results['adam']['train_time']:>10.1f} | {'baseline':>12}")
-    if run_lbfgs:
-        delta = l2_adam - results['lbfgs']['final_l2']
-        print(f"  {'Adam+LBFGS':<12} | {results['lbfgs']['final_l2']:>12.4e} | "
-              f"{results['lbfgs']['train_time']:>10.1f} | {delta:>+12.4e}")
-    if run_pso:
-        delta = l2_adam - results['pso']['final_l2']
-        print(f"  {'Adam+PSO':<12} | {results['pso']['final_l2']:>12.4e} | "
-              f"{results['pso']['train_time']:>10.1f} | {delta:>+12.4e}")
+    if run_lbfgs and "lbfgs" in results:
+        l2_l  = results['lbfgs']['final_l2']
+        delta = l2_adam - l2_l if np.isfinite(l2_l) else float('nan')
+        l2_str = f"{l2_l:>12.4e}" if np.isfinite(l2_l) else "         NaN"
+        d_str  = f"{delta:>+12.4e}" if np.isfinite(delta) else "         NaN"
+        print(f"  {'Adam+LBFGS':<12} | {l2_str} | "
+              f"{results['lbfgs']['train_time']:>10.1f} | {d_str}")
+    if run_pso and "pso" in results:
+        l2_p  = results['pso']['final_l2']
+        delta = l2_adam - l2_p if np.isfinite(l2_p) else float('nan')
+        l2_str = f"{l2_p:>12.4e}" if np.isfinite(l2_p) else "         NaN"
+        d_str  = f"{delta:>+12.4e}" if np.isfinite(delta) else "         NaN"
+        print(f"  {'Adam+PSO':<12} | {l2_str} | "
+              f"{results['pso']['train_time']:>10.1f} | {d_str}")
     print(f"{'='*52}")
     print(f"  Best phase: {best_phase.upper()}")
     print(f"{'='*52}")

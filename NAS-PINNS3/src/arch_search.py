@@ -1,108 +1,86 @@
 """
-Architecture Search — NAS-PINN'den Evrimsel Optimizasyona Geçiş
-================================================================
-Kaynak: Wang & Zhong (2023) NAS-PINN — DARTS tabanlı mimari arama.
+arch_search.py — Ortak NAS Altyapısı
+======================================
+Tüm optimizasyon yöntemleri (NSGA-II, NSGA-III, Bayesian) tarafından
+paylaşılan temel bileşenler:
+  - decode_x_to_config : optimizasyon vektörü → mimari sözlüğü
+  - evaluate_architecture: hızlı proxy eğitimi ve sonuç döndürme
+  - PINNArchProblem    : pymoo problem sınıfı (NSGA-II ve III için ortak)
 
-Bu projede DARTS'ın YERİNE kullanılan yöntemler:
-  1. NSGA-II  — hız + doğruluk + model boyutu, çok amaçlı Pareto cephesi
-  2. NSGA-III — referans noktalı çok amaçlı, 3+ amaç için NSGA-II'den üstün
-  3. Bayesian Optimization — Gaussian Process, az değerlendirme ile etkin arama
+Her optimizer kendi dosyasındadır:
+  src/opt_nsga2.py    → NSGA-II
+  src/opt_nsga3.py    → NSGA-III
+  src/opt_bayesian.py → Bayesian Optimization
 
-Amaç fonksiyonları (3 boyutlu Pareto):
-  f1: Validation L2 hatası    → minimize
-  f2: Eğitim süresi [s]       → minimize
-  f3: Parametre sayısı        → minimize (kompaktlık)
-
-Karar değişkenleri (mimari):
-  n_layers   : [1, 7]         — gizli katman sayısı
-  neurons[i] : [16, 256]      — her katmanın nöron sayısı (bağımsız)
-  activation : {tanh, sin, swish}
-  residual   : {True, False}
+NAS-PINNS1 referansı:
+  Arama uzayı: layers [3,6], neurons [64,160]  (cfg.py)
+  Proxy epochs: 300
+  Fail penalty: 1e30
 """
 
-import torch
-import numpy as np
 import time
-import json
-import os
-from typing import List, Dict, Callable, Optional
-from copy import deepcopy
+from typing import Callable, Dict
 
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+import numpy as np
 
-# ── Opsiyonel bağımlılıklar — kurulu değilse uyarı ver ─────
+from src.config import LAYERS_MIN, LAYERS_MAX, NEURONS_MIN, NEURONS_MAX
+
+# pymoo ElementwiseProblem — sadece NSGA için gerekli
 try:
     from pymoo.core.problem import ElementwiseProblem
-    from pymoo.algorithms.moo.nsga2 import NSGA2
-    from pymoo.algorithms.moo.nsga3 import NSGA3
-    from pymoo.util.ref_dirs import get_reference_directions
-    from pymoo.operators.crossover.sbx import SBX
-    from pymoo.operators.mutation.pm import PM
-    from pymoo.operators.sampling.rnd import FloatRandomSampling
-    from pymoo.operators.repair.rounding import RoundingRepair
-    from pymoo.optimize import minimize as pymoo_minimize
     PYMOO_AVAILABLE = True
 except ImportError:
+    ElementwiseProblem = object   # tip ipucu için yer tutucu
     PYMOO_AVAILABLE = False
-    print("[WARNING] pymoo not found. Install: pip install pymoo")
-
-try:
-    from skopt import gp_minimize
-    from skopt.space import Integer
-    SKOPT_AVAILABLE = True
-except ImportError:
-    SKOPT_AVAILABLE = False
-    print("[WARNING] scikit-optimize not found. Install: pip install scikit-optimize")
 
 
 # ─────────────────────────────────────────────────────────────
-# Bölüm 1 — Kodlama / Çözme Fonksiyonları
+# Bölüm 1 — Kodlama / Çözme (NAS-PINNS1: 2 karar değişkeni)
 # ─────────────────────────────────────────────────────────────
 
-def decode_x_to_config(x:          np.ndarray,
-                        max_layers: int = 7,
-                        n_input:    int = 3,
-                        n_output:   int = 1) -> dict:
+_ACTIVATIONS = ["tanh", "sin", "swish", "relu", "gelu"]  # indeks 0-4
+
+def decode_x_to_config(x: np.ndarray,
+                        n_input:  int = 3,
+                        n_output: int = 1) -> dict:
     """
-    Optimizasyon vektörünü (sürekli) mimari konfigürasyonuna çevir.
+    3-değişkenli optimizasyon vektörünü mimari konfigürasyonuna çevir.
 
-    Vektör biçimi:
-      x[0]          : n_layers  ∈ [1, max_layers]
-      x[1..max_l]   : neurons[i] ∈ [16, 256]
-      x[max_l+1]    : act_idx ∈ {0:tanh, 1:sin, 2:swish}
-      x[max_l+2]    : residual ∈ {0, 1}
+    Arama uzayı:
+      x[0] : layers     ∈ [LAYERS_MIN,  LAYERS_MAX]   — gizli katman sayısı
+      x[1] : neurons    ∈ [NEURONS_MIN, NEURONS_MAX]  — her katmanda aynı nöron
+      x[2] : activation ∈ [0, 4]                       — aktivasyon fonksiyonu
+               0=tanh, 1=sin, 2=swish, 3=relu, 4=gelu
 
-    NSGA ve Bayesian Optimization aynı vektör biçimini kullanır —
-    bu sayede karşılaştırma tutarlı olur.
+    Not: aktivasyon PINN performansını büyük ölçüde etkiler;
+         sin aktivasyon bu quenching problemi için tanh'dan ~2-4× daha iyi sonuç verir.
     """
-    n_layers = int(np.clip(round(x[0]), 1, max_layers))
-    neurons  = [int(np.clip(round(x[1 + i]), 16, 256)) for i in range(n_layers)]
-    act_idx  = int(np.clip(round(x[1 + max_layers]), 0, 2))
-    act_map  = {0: "tanh", 1: "sin", 2: "swish"}
-    residual = bool(round(x[2 + max_layers]) > 0.5)
-
+    layers  = int(np.clip(round(float(x[0])), LAYERS_MIN, LAYERS_MAX))
+    neurons = int(np.clip(round(float(x[1])), NEURONS_MIN, NEURONS_MAX))
+    act_idx = int(np.clip(round(float(x[2])), 0, len(_ACTIVATIONS) - 1)) if len(x) > 2 else 0
+    activation = _ACTIVATIONS[act_idx]
     return {
         "n_input":    n_input,
         "n_output":   n_output,
-        "n_layers":   n_layers,
-        "neurons":    neurons,
-        "activation": act_map[act_idx],
-        "residual":   residual,
+        "n_layers":   layers,
+        "neurons":    [neurons] * layers,
+        "activation": activation,
+        "residual":   False,
     }
 
 
 # ─────────────────────────────────────────────────────────────
-# Bölüm 2 — Mimari Değerlendirme (Arama Sırasında Hızlı Eğitim)
+# Bölüm 2 — Proxy Değerlendirme (NAS-PINNS1: proxy_epochs=300)
 # ─────────────────────────────────────────────────────────────
 
-def evaluate_architecture(config:           dict,
-                           train_fn:         Callable,
-                           n_epochs_search:  int = 300) -> Dict:
+def evaluate_architecture(config:          dict,
+                           train_fn:        Callable,
+                           n_epochs_search: int = 300) -> Dict:
     """
-    Verilen mimariyi hızlı eğit (300 epoch) ve değerlendirme metriklerini döndür.
+    Mimariyi hızlı proxy eğitimiyle değerlendir.
 
+    NAS-PINNS1 proxy_fail_penalty=1e30 — hata durumunda büyük ceza.
     train_fn: (config, n_epochs) → (l2_error, n_params)
-    Hata durumunda kötü metrik döndürür (ceza değerleri) — arama çökmez.
     """
     try:
         t0 = time.time()
@@ -117,7 +95,7 @@ def evaluate_architecture(config:           dict,
     except Exception as e:
         print(f"  [EvalError] {e}")
         return {
-            "l2_error":   1.0,
+            "l2_error":   1e30,   # NAS-PINNS1: proxy_fail_penalty
             "train_time": 9999.0,
             "n_params":   9999.0,
             "config":     config,
@@ -130,207 +108,46 @@ def evaluate_architecture(config:           dict,
 
 class PINNArchProblem(ElementwiseProblem):
     """
-    NSGA-II / NSGA-III için 3-amaçlı sürekli optimizasyon problemi.
+    NSGA-II / NSGA-III için 2-değişkenli, 2-amaçlı problem.
 
-    Her birey bir mimari konfigürasyona karşılık gelir.
-    Değerlendirme sonuçları önbelleklenir — aynı mimari iki kez eğitilmez.
+    NAS-PINNS1 ile hizalanmış:
+      - 2 karar değişkeni: [layers, neurons]
+      - 2 amaç: L2 hatası + parametre sayısı
+      - Önbellekleme: aynı (L,N) çifti iki kez eğitilmez
     """
 
-    def __init__(self, train_fn: Callable, max_layers: int = 7, n_epochs: int = 300):
-        self.train_fn   = train_fn
-        self.max_layers = max_layers
-        self.n_epochs   = n_epochs
-        self.eval_cache = {}   # tekrar eden değerlendirmeleri önlemek için
+    def __init__(self,
+                 train_fn:       Callable,
+                 n_epochs:       int = 300,
+                 n_input:        int = 3,
+                 n_output:       int = 1,
+                 objective_mode: str = "balanced"):
+        self.train_fn       = train_fn
+        self.n_epochs       = n_epochs
+        self.eval_cache     = {}   # "L{l}_N{n}" → result dict
+        self.n_input        = n_input
+        self.n_output       = n_output
+        self.objective_mode = objective_mode
 
-        # Karar değişkeni sınırları: [n_layers, n0..n6, act_idx, residual]
-        n_var = 1 + max_layers + 2
-        xl = np.array([1]         + [16]  * max_layers + [0, 0], dtype=float)
-        xu = np.array([max_layers] + [256] * max_layers + [2, 1], dtype=float)
-
-        super().__init__(n_var=n_var, n_obj=3, n_ieq_constr=0, xl=xl, xu=xu)
+        xl = np.array([LAYERS_MIN,  NEURONS_MIN, 0.0], dtype=float)
+        xu = np.array([LAYERS_MAX, NEURONS_MAX, 4.0], dtype=float)
+        super().__init__(n_var=3, n_obj=2, n_ieq_constr=0, xl=xl, xu=xu)
 
     def _evaluate(self, x, out, *args, **kwargs):
-        config = decode_x_to_config(x, self.max_layers)
-        key    = json.dumps(config, sort_keys=True)
+        layers  = int(np.clip(round(float(x[0])), LAYERS_MIN, LAYERS_MAX))
+        neurons = int(np.clip(round(float(x[1])), NEURONS_MIN, NEURONS_MAX))
+        act_idx = int(np.clip(round(float(x[2])), 0, 4))
+        key = f"L{layers}_N{neurons}_A{act_idx}"   # aktivasyon dahil önbellekleme
 
-        # Önbellek kontrolü
         if key in self.eval_cache:
             res = self.eval_cache[key]
         else:
+            config = decode_x_to_config(x, self.n_input, self.n_output)
             res = evaluate_architecture(config, self.train_fn, self.n_epochs)
             self.eval_cache[key] = res
 
-        # 3 amaç: L2 hatası, eğitim süresi, parametre sayısı (normalleştirilmiş)
-        out["F"] = [
-            res["l2_error"],
-            res["train_time"],
-            res["n_params"] / 1e4,
-        ]
-
-
-# ─────────────────────────────────────────────────────────────
-# Bölüm 4 — NSGA-II
-# ─────────────────────────────────────────────────────────────
-
-def run_nsga2(train_fn:   Callable,
-              pop_size:   int = 20,
-              n_gen:      int = 30,
-              max_layers: int = 7,
-              n_epochs:   int = 300,
-              seed:       int = 42) -> List[dict]:
-    """
-    NSGA-II ile PINN mimari arama.
-
-    Operatörler:
-      SBX crossover (prob=0.9, eta=15) + PM mutation (eta=20) + RoundingRepair
-    Döndürür: L2 hatasına göre sıralanmış Pareto optimal mimari listesi.
-    """
-    if not PYMOO_AVAILABLE:
-        raise ImportError("pymoo required: pip install pymoo")
-
-    print(f"\n{'='*52}")
-    print(f"  NSGA-II Architecture Search")
-    print(f"  Population: {pop_size}  |  Generations: {n_gen}  |  Max Layers: {max_layers}")
-    print(f"{'='*52}")
-
-    problem   = PINNArchProblem(train_fn, max_layers, n_epochs)
-    algorithm = NSGA2(
-        pop_size          = pop_size,
-        sampling          = FloatRandomSampling(),
-        crossover         = SBX(prob=0.9, eta=15, repair=RoundingRepair()),
-        mutation          = PM(eta=20,    repair=RoundingRepair()),
-        eliminate_duplicates = True,
-    )
-
-    t0     = time.time()
-    result = pymoo_minimize(problem, algorithm, ("n_gen", n_gen), seed=seed, verbose=True)
-    elapsed = time.time() - t0
-
-    print(f"\n  NSGA-II done: {elapsed:.1f}s  |  Pareto front: {len(result.X)} solutions")
-
-    # Pareto konfigürasyonlarını L2'ye göre sırala
-    pareto = []
-    for x, f in zip(result.X, result.F):
-        cfg = decode_x_to_config(x, max_layers)
-        cfg["objectives"] = {"l2": float(f[0]), "time_s": float(f[1]),
-                              "n_params": float(f[2] * 1e4)}
-        pareto.append(cfg)
-    pareto.sort(key=lambda c: c["objectives"]["l2"])
-    return pareto
-
-
-# ─────────────────────────────────────────────────────────────
-# Bölüm 5 — NSGA-III
-# ─────────────────────────────────────────────────────────────
-
-def run_nsga3(train_fn:   Callable,
-              pop_size:   int = 20,
-              n_gen:      int = 30,
-              max_layers: int = 7,
-              n_epochs:   int = 300,
-              seed:       int = 42) -> List[dict]:
-    """
-    NSGA-III ile PINN mimari arama.
-
-    3 amaç için Das-Dennis referans noktaları (n_partitions=4 → 15 nokta).
-    3 veya daha fazla amaçta NSGA-II'ye göre daha dengeli Pareto dağılımı sağlar.
-    """
-    if not PYMOO_AVAILABLE:
-        raise ImportError("pymoo required: pip install pymoo")
-
-    print(f"\n{'='*52}")
-    print(f"  NSGA-III Architecture Search")
-    print(f"  Population: {pop_size}  |  Generations: {n_gen}")
-    print(f"{'='*52}")
-
-    # Das-Dennis referans yönleri: 3 amaç, n_partitions=4 → C(4+3-1,3-1)=15 nokta
-    ref_dirs  = get_reference_directions("das-dennis", 3, n_partitions=4)
-
-    problem   = PINNArchProblem(train_fn, max_layers, n_epochs)
-    algorithm = NSGA3(
-        ref_dirs             = ref_dirs,
-        pop_size             = pop_size,
-        sampling             = FloatRandomSampling(),
-        crossover            = SBX(prob=0.9, eta=15, repair=RoundingRepair()),
-        mutation             = PM(eta=20,    repair=RoundingRepair()),
-        eliminate_duplicates = True,
-    )
-
-    t0     = time.time()
-    result = pymoo_minimize(problem, algorithm, ("n_gen", n_gen), seed=seed, verbose=True)
-    elapsed = time.time() - t0
-
-    print(f"\n  NSGA-III done: {elapsed:.1f}s  |  Pareto front: {len(result.X)} solutions")
-
-    pareto = []
-    for x, f in zip(result.X, result.F):
-        cfg = decode_x_to_config(x, max_layers)
-        cfg["objectives"] = {"l2": float(f[0]), "time_s": float(f[1]),
-                              "n_params": float(f[2] * 1e4)}
-        pareto.append(cfg)
-    pareto.sort(key=lambda c: c["objectives"]["l2"])
-    return pareto
-
-
-# ─────────────────────────────────────────────────────────────
-# Bölüm 6 — Bayesian Optimization
-# ─────────────────────────────────────────────────────────────
-
-def run_bayesian(train_fn:   Callable,
-                 n_calls:    int = 30,
-                 n_initial:  int = 10,
-                 max_layers: int = 7,
-                 n_epochs:   int = 300,
-                 seed:       int = 42) -> dict:
-    """
-    Gaussian Process tabanlı Bayesian Optimization.
-    scikit-optimize kütüphanesini kullanır.
-
-    Avantaj: NSGA'ya kıyasla çok daha az fonksiyon değerlendirmesiyle iyi sonuç.
-    Tek amaç (L2 hatası) minimize edilir — hız ve parametre sayısı kısıt değil.
-
-    n_initial: rasgele başlangıç noktaları (GP için prior oluşturur)
-    n_calls:   toplam değerlendirme sayısı (n_initial dahil)
-    """
-    if not SKOPT_AVAILABLE:
-        raise ImportError("scikit-optimize required: pip install scikit-optimize")
-
-    print(f"\n{'='*52}")
-    print(f"  Bayesian Optimization Architecture Search")
-    print(f"  n_calls: {n_calls}  |  n_initial: {n_initial}")
-    print(f"{'='*52}")
-
-    # Arama uzayı: tamsayı değişkenler
-    space = (
-        [Integer(1, max_layers, name="n_layers")] +
-        [Integer(16, 256, name=f"n{i}") for i in range(max_layers)] +
-        [Integer(0, 2, name="act_idx"),
-         Integer(0, 1, name="residual")]
-    )
-
-    best = {"l2": float("inf"), "config": None}
-
-    def objective(x_list):
-        config  = decode_x_to_config(np.array(x_list, dtype=float), max_layers)
-        res     = evaluate_architecture(config, train_fn, n_epochs)
-        if res["l2_error"] < best["l2"]:
-            best["l2"]     = res["l2_error"]
-            best["config"] = deepcopy(config)
-            print(f"  → New best: L2={res['l2_error']:.6f}  arch={config['neurons']}")
-        return res["l2_error"]
-
-    t0     = time.time()
-    result = gp_minimize(
-        func             = objective,
-        dimensions       = space,
-        n_calls          = n_calls,
-        n_initial_points = n_initial,
-        random_state     = seed,
-        verbose          = False,
-    )
-    elapsed = time.time() - t0
-
-    best_config = decode_x_to_config(np.array(result.x, dtype=float), max_layers)
-    print(f"\n  Bayesian done: {elapsed:.1f}s  |  Best L2: {result.fun:.6f}")
-    print(f"  Best arch: {best_config['neurons']}  act={best_config['activation']}")
-    return best_config
+        if self.objective_mode == "l2_only":
+            out["F"] = [res["l2_error"], 0.0]
+        else:
+            # NAS-PINNS1: [proxy_loss, param_count]
+            out["F"] = [res["l2_error"], res["n_params"] / 1e4]

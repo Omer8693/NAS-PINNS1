@@ -1,7 +1,7 @@
 """
 baseline_data.py
 ================
-Mortensen et al. (2026) paper'ından manuel olarak çıkarılan
+baseline_paper et al. [2026] paper'ından manuel olarak çıkarılan
 tüm sayısal veriler.
 
 KAYNAK: "Mitigating distortions in cast automotive subframes:
@@ -10,8 +10,8 @@ KAYNAK: "Mitigating distortions in cast automotive subframes:
          doi:10.1007/s00170-026-17515-w
 
 NASIL KULLANILIR:
-    from src.baseline_data import MortensenBaseline
-    bl = MortensenBaseline()
+    from src.baseline_data import BaselinePaper
+    bl = BaselinePaper()
     df = bl.get("fig15_ac_distortion")
     bl.compare_with_pinn(pinn_predictions, dataset="fig17_ht")
 
@@ -38,10 +38,10 @@ import matplotlib.patches as mpatches
 
 # ─────────────────────────────────────────────────────────────
 # 1. TABLO 1 – A356 Akış Gerilmesi Parametreleri
-#    Kaynak: Table 1, Mortensen 2026 (DOĞRUDAN TABLO)
+#    Kaynak: Table 1, baseline_paper [2026] (DOĞRUDAN TABLO)
 # ─────────────────────────────────────────────────────────────
 TABLE1_A356 = {
-    "description": "A356 empirical flow stress parameters (Table 1, Mortensen 2026)",
+    "description": "A356 empirical flow stress parameters (Table 1, baseline_paper [2026])",
     "source":      "Table 1",
     "columns":     ["Temp_C", "F_MPa", "n", "m"],
     "data": [
@@ -62,10 +62,10 @@ TABLE1_A356 = {
 
 # ─────────────────────────────────────────────────────────────
 # 2. TABLO 2 – Deplasman-Rijitlik İlişkisi
-#    Kaynak: Table 2, Mortensen 2026 (DOĞRUDAN TABLO)
+#    Kaynak: Table 2, baseline_paper [2026] (DOĞRUDAN TABLO)
 # ─────────────────────────────────────────────────────────────
 TABLE2_STIFFNESS = {
-    "description": "Displacement vs stiffness for air-gap boundary (Table 2, Mortensen 2026)",
+    "description": "Displacement vs stiffness for air-gap boundary (Table 2, baseline_paper [2026])",
     "source":      "Table 2",
     "columns":     ["displacement_m", "stiffness_Pa_per_m"],
     "data": [
@@ -89,7 +89,7 @@ TABLE2_STIFFNESS = {
 #    Birim: mm, pozitif = CAD'dan dışarı, negatif = içeri
 # ─────────────────────────────────────────────────────────────
 FIG15_AC_DISTORTION = {
-    "description": "As-cast distortions: measured vs simulated (Fig 15, Mortensen 2026)",
+    "description": "As-cast distortions: measured vs simulated (Fig 15, baseline_paper [2026])",
     "source":      "Fig 15",
     "unit":        "mm",
     "note":        "Manuel bar chart okuma, tolerans ±0.05mm",
@@ -117,7 +117,7 @@ FIG15_AC_DISTORTION = {
 #    Kaynak: Fig 16, bar chart (GT1..GT9 noktaları)
 # ─────────────────────────────────────────────────────────────
 FIG16_CREEP_DISTORTION = {
-    "description": "HT distortions (creep only, air cooling) (Fig 16, Mortensen 2026)",
+    "description": "HT distortions (creep only, air cooling) (Fig 16, baseline_paper [2026])",
     "source":      "Fig 16",
     "unit":        "mm",
     "points":      ["GT1","GT2","GT3","GT4","GT5","GT6","GT7","GT8","GT9"],
@@ -135,7 +135,7 @@ FIG16_CREEP_DISTORTION = {
 #    3 katman: Bottom (yeşil), Middle (turuncu), Top (gri)
 # ─────────────────────────────────────────────────────────────
 FIG17_HT_QUENCH_3LAYER = {
-    "description": "HT quenching distortions, 3-layer rack, first trials (Fig 17-18, Mortensen 2026)",
+    "description": "HT quenching distortions, 3-layer rack, first trials (Fig 17-18, baseline_paper [2026])",
     "source":      "Fig 17 (measured) + Fig 18 (simulated)",
     "unit":        "mm",
     "points": ["L1206","R2206","LS01","RS01","LS13","RS13",
@@ -188,10 +188,10 @@ FIG17_HT_QUENCH_3LAYER = {
 #    Toplam distorsiyon ~1mm'ye düştü
 # ─────────────────────────────────────────────────────────────
 FIG19_HT_OPTIMIZED_5LAYER = {
-    "description": "HT quenching distortions, optimized 5-layer rack (Fig 19-20, Mortensen 2026)",
+    "description": "HT quenching distortions, optimized 5-layer rack (Fig 19-20, baseline_paper [2026])",
     "source":      "Fig 19 (measured) + Fig 20 (simulated)",
     "unit":        "mm",
-    "note":        "Optimize edilmiş raf: distorsiyon ~1mm'ye düşmüş",
+    "note":        "Optimized rack: distortion reduced to ~1mm",
     "points": ["L1206","R2206","LS01","RS01","LS13","RS13",
                "LA518","RA518","LA525","RA525","LA537","RA537",
                "LA538","RA538","LA550","LA551","LS35","RS35",
@@ -211,7 +211,7 @@ FIG19_HT_OPTIMIZED_5LAYER = {
 #    MP1..MP6, MP24..MP31
 # ─────────────────────────────────────────────────────────────
 FIG21_CROSSMEMBER_6LAYER = {
-    "description": "Cross-member CMM distortions, 6-layer rack (Fig 21-22, Mortensen 2026)",
+    "description": "Cross-member CMM distortions, 6-layer rack (Fig 21-22, baseline_paper [2026])",
     "source":      "Fig 21 (measured) + Fig 22 (simulated)",
     "unit":        "mm",
     "points":      ["MP1","MP2","MP3","MP4","MP5","MP6","MP24","MP25","MP26","MP27","MP28","MP31"],
@@ -232,7 +232,7 @@ FIG21_CROSSMEMBER_6LAYER = {
 #    0-30 saniye, 12 kanal
 # ─────────────────────────────────────────────────────────────
 FIG7_WATER_TEMP = {
-    "description": "Water tank temperature vs time, 12 channels (Fig 7, Mortensen 2026)",
+    "description": "Water tank temperature vs time, 12 channels (Fig 7, baseline_paper [2026])",
     "source":      "Fig 7",
     "unit":        "°C",
     "time_s":      [0, 2, 4, 6, 8, 10, 12, 15, 18, 20, 22, 25, 28, 30],
@@ -249,7 +249,7 @@ FIG7_WATER_TEMP = {
 # 9. PROSES PARAMETRELER (metin'den çıkarılan)
 # ─────────────────────────────────────────────────────────────
 PROCESS_PARAMS = {
-    "description": "Key process parameters from Mortensen 2026",
+    "description": "Key process parameters from baseline_paper [2026]",
     "solution_heat_treatment_temp_C": 540,
     "quenching_medium": "water",
     "T_water_initial_C": 20,
@@ -275,13 +275,13 @@ PROCESS_PARAMS = {
 # BASELINE SINIFI – Ana arayüz
 # ─────────────────────────────────────────────────────────────
 
-class MortensenBaseline:
+class BaselinePaper:
     """
-    Mortensen et al. (2026) paper'ından çıkarılan tüm verileri
+    baseline_paper et al. [2026] paper'ından çıkarılan tüm verileri
     yönetir ve PINN tahminleriyle karşılaştırma yapar.
 
     Kullanım:
-        bl = MortensenBaseline()
+        bl = BaselinePaper()
         bl.summary()
         bl.plot_baseline("fig17_ht")
         metrics = bl.compare_with_pinn(pinn_preds, "fig17_ht", layer="Bottom")
@@ -302,17 +302,31 @@ class MortensenBaseline:
 
     def get(self, name: str) -> dict:
         if name not in self.DATASETS:
-            raise KeyError(f"Dataset '{name}' bulunamadı. Mevcut: {list(self.DATASETS.keys())}")
+            raise KeyError(f"Dataset '{name}' not found. Available: {list(self.DATASETS.keys())}")
         return self.DATASETS[name]
 
     def summary(self):
         print("\n" + "="*60)
-        print("  Mortensen (2026) Baseline Veri Envanteri")
+        print("  Baseline Paper [2026] Data Inventory")
         print("="*60)
         for k, v in self.DATASETS.items():
             desc = v.get("description", "")[:55]
             print(f"  {k:<22} | {desc}")
         print("="*60)
+
+    def list_layers(self, dataset: str) -> list:
+        """Return measured layer names available in a dataset."""
+        ds = self.get(dataset)
+        layers = []
+        for key in ds.keys():
+            if key.startswith("Measured_"):
+                layers.append(key.replace("Measured_", ""))
+        if not layers:
+            if "AC_Measured" in ds:
+                return ["AC"]
+            if "Measured" in ds:
+                return ["Measured"]
+        return layers
 
     # ── Karşılaştırma metriklerini hesapla ──────────────────
 
@@ -340,13 +354,13 @@ class MortensenBaseline:
             if not candidates:
                 candidates = [k for k in ds.keys() if k == "AC_Measured" or k == "Measured"]
             if not candidates:
-                raise ValueError(f"Ölçüm anahtarı bulunamadı. Mevcut: {[k for k in ds.keys() if 'Measured' in k or 'AC_' in k]}")
+                raise ValueError(f"Measurement key not found. Available: {[k for k in ds.keys() if 'Measured' in k or 'AC_' in k]}")
             key_measured = candidates[0]
 
         measured = np.array(ds[key_measured])
 
         if len(pinn_predictions) != len(measured):
-            raise ValueError(f"Boyut uyumsuzluğu: PINN={len(pinn_predictions)}, Baseline={len(measured)}")
+            raise ValueError(f"Dimension mismatch: PINN={len(pinn_predictions)}, Baseline={len(measured)}")
 
         diff = pinn_predictions - measured
         mae  = np.mean(np.abs(diff))
@@ -386,7 +400,7 @@ class MortensenBaseline:
 
     def _print_comparison_table(self, result: dict):
         print(f"\n{'─'*55}")
-        print(f"  Karşılaştırma: {result['dataset']} / {result['layer']}")
+        print(f"  Comparison: {result['dataset']} / {result['layer']}")
         print(f"{'─'*55}")
         print(f"  {'Metrik':<20} | {'PINN':>12} | {'FEM (Paper)':>12}")
         print(f"  {'─'*48}")
@@ -416,6 +430,59 @@ class MortensenBaseline:
         elif dataset == "table1_a356":
             self._plot_a356_params(ds, save_path)
 
+    def export_reference_bundle(self, save_path: str) -> Dict:
+        """
+        Export the real paper reference layers used by the quenching study.
+
+        This creates baseline plots and a manifest JSON so every optimizer run
+        carries the same reference package.
+        """
+        os.makedirs(save_path, exist_ok=True)
+        datasets = {
+            "fig7_water_temp": self.get("fig7_water_temp"),
+            "fig17_ht": self.get("fig17_ht"),
+            "fig19_optimized": self.get("fig19_optimized"),
+            "fig21_crossmember": self.get("fig21_crossmember"),
+        }
+
+        self.plot_baseline("fig7_water_temp", save_path)
+        self.plot_baseline("fig17_ht", save_path)
+        self.plot_baseline("fig19_optimized", save_path)
+
+        manifest = {
+            "datasets": {
+                "fig7_water_temp": {
+                    "type": "time_series",
+                    "time_s": datasets["fig7_water_temp"]["time_s"],
+                    "channels": [k for k in datasets["fig7_water_temp"].keys() if k.startswith("Channel_")],
+                },
+                "fig17_ht": {
+                    "type": "distortion_layers",
+                    "layers": self.list_layers("fig17_ht"),
+                    "points": datasets["fig17_ht"]["points"],
+                },
+                "fig19_optimized": {
+                    "type": "distortion_layers",
+                    "layers": self.list_layers("fig19_optimized"),
+                    "points": datasets["fig19_optimized"]["points"],
+                },
+                "fig21_crossmember": {
+                    "type": "distortion_layers",
+                    "layers": self.list_layers("fig21_crossmember"),
+                    "points": datasets["fig21_crossmember"]["points"],
+                },
+            }
+        }
+
+        manifest_path = os.path.join(save_path, "reference_manifest.json")
+        with open(manifest_path, "w", encoding="utf-8") as f:
+            json.dump(manifest, f, indent=2)
+        return {
+            "reference_dir": save_path,
+            "manifest_path": manifest_path,
+            "datasets": manifest["datasets"],
+        }
+
     def plot_comparison(self,
                          pinn_predictions: np.ndarray,
                          dataset: str = "fig17_ht",
@@ -440,7 +507,7 @@ class MortensenBaseline:
 
         fig, axes = plt.subplots(2, 2, figsize=(16, 10))
         fig.suptitle(
-            f"Comparison: {optimizer_name} vs FEM (Mortensen 2026) vs Measurement\n"
+            f"Comparison: {optimizer_name} vs FEM (baseline_paper [2026]) vs Measurement\n"
             f"Dataset: {dataset}  |  Layer: {layer}",
             fontsize=13, fontweight="bold"
         )
@@ -451,7 +518,7 @@ class MortensenBaseline:
         # ── Panel 1: Bar Karşılaştırma ────────────────────
         ax = axes[0, 0]
         ax.bar(x_idx - width, measured,     width, label="Measurement (Paper)",   color=colors["Measured"], alpha=0.85)
-        ax.bar(x_idx,         simulated,    width, label="FEM (Mortensen)", color=colors["FEM"],      alpha=0.85)
+        ax.bar(x_idx,         simulated,    width, label="FEM (baseline_paper)", color=colors["FEM"],      alpha=0.85)
         ax.bar(x_idx + width, pinn_predictions, width, label=f"{optimizer_name}", color=colors["PINN"], alpha=0.85)
         ax.axhline(0, color="black", linewidth=0.8, linestyle="--")
         ax.set_xticks(x_idx[::2])
@@ -495,7 +562,7 @@ class MortensenBaseline:
         fem_rmse  = np.sqrt(np.mean(fem_err**2))
 
         table_data = [
-            ["Metric", "FEM (Mortensen)", optimizer_name, "Gain"],
+            ["Metric", "FEM (baseline_paper)", optimizer_name, "Gain"],
             ["MAE [mm]",  f"{fem_mae:.4f}",  f"{pinn_mae:.4f}",
              f"{'↓' if pinn_mae < fem_mae else '↑'}{abs(pinn_mae-fem_mae):.4f}"],
             ["RMSE [mm]", f"{fem_rmse:.4f}", f"{pinn_rmse:.4f}",
@@ -505,18 +572,21 @@ class MortensenBaseline:
              f"{np.max(np.abs(pinn_err)):.4f}", "─"],
         ]
         col_widths = [0.28, 0.25, 0.25, 0.22]
-        row_colors = [["#1565C0"]*4] + [["#F5F5F5", "#E3F2FD", "#FFEBEE", "#F9FBE7"]] * (len(table_data)-1)
-        tbl = ax.table(cellText=table_data, cellLoc="center", loc="center",
-                       colWidths=col_widths)
+        # BUG FIX: loc="center" tablo sınırları dışına taşabilir → tablo görünmez.
+        # bbox=[left, bottom, width, height] eksen koordinatlarında kesin konumlama.
+        tbl = ax.table(cellText=table_data, cellLoc="center",
+                       colWidths=col_widths, bbox=[0.0, 0.05, 1.0, 0.88])
         tbl.auto_set_font_size(False); tbl.set_fontsize(10)
         for (r, c), cell in tbl.get_celld().items():
+            cell.set_edgecolor("#BDBDBD")
             if r == 0:
                 cell.set_facecolor("#1565C0")
                 cell.set_text_props(color="white", fontweight="bold")
             elif r % 2 == 1:
                 cell.set_facecolor("#F5F5F5")
-        tbl.scale(1, 2.0)
-        ax.set_title("Comparison Summary", fontweight="bold", fontsize=11)
+            else:
+                cell.set_facecolor("#FFFFFF")
+        ax.set_title("Comparison Summary", fontweight="bold", fontsize=11, pad=4)
 
         plt.tight_layout()
         os.makedirs(save_path, exist_ok=True)
@@ -572,7 +642,7 @@ class MortensenBaseline:
             if k.startswith("Channel"):
                 ax.plot(t, v, marker="o", markersize=4, label=k, linewidth=1.5)
         ax.set_xlabel("Time [s]"); ax.set_ylabel("Water Temperature [°C]")
-        ax.set_title("Water Tank Temperature (Fig 7, Mortensen 2026)")
+        ax.set_title("Water Tank Temperature (Fig 7, baseline_paper [2026])")
         ax.legend(fontsize=9, ncol=2); ax.grid(True, alpha=0.3)
         ax.set_ylim(58, 97)
         plt.tight_layout()
@@ -590,7 +660,7 @@ class MortensenBaseline:
         axes[2].plot(T, m, "g^-", linewidth=2); axes[2].set_title("m(T)")
         for ax in axes:
             ax.set_xlabel("T [°C]"); ax.grid(True, alpha=0.3)
-        fig.suptitle("A356 Flow Stress Parameters (Table 1, Mortensen 2026)", fontweight="bold")
+        fig.suptitle("A356 Flow Stress Parameters (Table 1, baseline_paper [2026])", fontweight="bold")
         plt.tight_layout()
         if save_path:
             os.makedirs(save_path, exist_ok=True)
@@ -612,7 +682,7 @@ class MortensenBaseline:
 # Test / Demo
 # ─────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    bl = MortensenBaseline()
+    bl = BaselinePaper()
     bl.summary()
 
     # Tüm baseline grafiklerini çiz
@@ -631,4 +701,4 @@ if __name__ == "__main__":
     metrics = bl.compare_with_pinn(fake_pinn, "fig17_ht", layer="Bottom")
     bl.plot_comparison(fake_pinn, "fig17_ht", layer="Bottom",
                        optimizer_name="PINN_NSGA2", save_path="results/baseline")
-    print("\nDemo tamamlandı.")
+    print("\nDemo complete.")

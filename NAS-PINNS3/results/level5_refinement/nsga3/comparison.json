@@ -1,0 +1,45 @@
+{
+  "optimizer": "nsga3",
+  "architecture": {
+    "n_input": 3,
+    "n_output": 1,
+    "n_layers": 3,
+    "neurons": [
+      75,
+      75,
+      75
+    ],
+    "activation": "tanh",
+    "residual": false,
+    "objectives": {
+      "l2": 0.9066933393478394,
+      "n_params": 11776.0
+    }
+  },
+  "n_params": 11776,
+  "level1_adam_only": {
+    "L2_rel": 0.5129152032783663,
+    "MAE_C": 270.3124435668519,
+    "MaxErr_C": 278.2478779649489,
+    "adam_epochs": 20000
+  },
+  "level5_adam_lbfgs": {
+    "L2_rel": 0.25861950935921124,
+    "MAE_C": 136.36152455178495,
+    "MaxErr_C": 140.02227783203125,
+    "adam_l2": 0.2742055058479309,
+    "lbfgs_l2_before": 0.2742055058479309,
+    "lbfgs_l2_after": 0.2742055058479309,
+    "lbfgs_loss_before": NaN,
+    "lbfgs_loss_after": NaN,
+    "lbfgs_iters": 0,
+    "adam_time_s": 213.94020223617554,
+    "lbfgs_time_s": 0.0
+  },
+  "training_config": {
+    "adam_epochs": 20000,
+    "adam_lr": 0.001,
+    "lbfgs_config": {},
+    "batch_sizes": {}
+  }
+}

@@ -12,18 +12,17 @@ Bu modül, FEM yerine PINN ile çözülecek denklemleri içerir:
   3. Viskoplastik akış      (A356 — Eq. 6)
   4. Momentum dengesi       (Eq. 5)
   5. Zaman atlama           (TemporalSkipScheduler — projenin ana yeniliği)
-
-GPU desteği: torch.cuda (otomatik cihaz seçimi)
 """
 
-import torch
 import numpy as np
+import torch
 from typing import Dict, Optional
 
-# Cihaz seçimi: GPU varsa kullan, yoksa CPU'ya düş
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print(f"[PhysicsModel] Device: {DEVICE}")
-
+from src.config import (
+    DEVICE,
+    K_THERMAL, RHO_CP, RHO_AL,
+    BETA_THERMAL, T_COHERENCY, T_HARDENING, GS_COHERENCY,
+)
 
 # ─────────────────────────────────────────────────────────────
 # Bölüm 1 — A356 Malzeme Parametreleri  (Table 1, Mortensen 2026)
@@ -48,11 +47,6 @@ A356_M = torch.tensor(
     [0.0, 0.0, 0.0, 0.006, 0.016, 0.04, 0.1, 0.15, 0.19, 0.22, 0.25, 0.277],
     dtype=torch.float32, device=DEVICE
 )
-
-# Fiziksel sabitler — Mortensen paper'dan alınan değerler
-T0_HARDENING = 420.0   # [°C] — work hardening'in başladığı sıcaklık
-T_SOLUTION   = 540.0   # [°C] — solution heat treatment (kohezyon) sıcaklığı
-GS_COHERENCY = 0.9     # [-]  — mushy zone → fully solid geçiş eşiği
 
 
 def interp_material_param(T: torch.Tensor, param: torch.Tensor) -> torch.Tensor:
@@ -103,6 +97,10 @@ class WaterQuenchHTC:
 
         Girdi : T_surface, T_water — °C cinsinden tensörler
         Çıktı : h — W/m²K cinsinden, [100, 1e5] aralığında sınırlandırılmış
+
+        DÜZELTİLDİ: Film boiling Stefan-Boltzmann formülünde T_surface da
+        Kelvin'e çevrilmeli. Eskiden: T_surface**4 (yanlış — °C idi)
+        Yeni:    (T_surface + 273.15)**4  (doğru — Kelvin)
         """
         delta_T_sub = self.T_sat - T_water.clamp(max=self.T_sat)
         dT          = (T_surface - T_water).clamp(min=0.1)
@@ -122,7 +120,10 @@ class WaterQuenchHTC:
         h_tr     = h_chf * (1 - alpha_tr) + 200.0 * alpha_tr
 
         # Bölge 4: film boiling — Stefan-Boltzmann radyasyonu + buhar iletimi
-        h_fb = 200.0 + 5e-9 * (T_surface ** 4 - (T_water + 273) ** 4) / (
+        # HATA DÜZELTİLDİ: °C → Kelvin dönüşümü eklendi (T_surface + 273.15)
+        T_s_K = T_surface + 273.15
+        T_w_K = T_water   + 273.15
+        h_fb = 200.0 + 5e-9 * (T_s_K ** 4 - T_w_K ** 4) / (
             T_surface - T_water + 1.0)
 
         # Sıcaklık bölgesine göre doğru katsayıyı seç
@@ -139,8 +140,8 @@ class WaterQuenchHTC:
 
 def heat_equation_residual(net_out: torch.Tensor,
                             coords:  torch.Tensor,
-                            k:       float = 150.0,   # [W/mK]   — Al ısıl iletkenliği
-                            rho_cp:  float = 2.4e6    # [J/m³K]  — hacimsel ısı kapasitesi
+                            k:       float = K_THERMAL,
+                            rho_cp:  float = RHO_CP,
                             ) -> torch.Tensor:
     """
     Isı denklemi rezidüeli  [Eq. içi fizik kısıtı]:
@@ -175,15 +176,12 @@ def heat_equation_residual(net_out: torch.Tensor,
 
 
 def thermal_strain_residual(T:      torch.Tensor,
-                             T_coh:  float = 540.0,       # [°C] — kohezyon sıcaklığı
-                             beta_T: float = 2.34e-5       # [1/K] — Al termal genleşme
+                             T_coh:  float = T_COHERENCY,
+                             beta_T: float = BETA_THERMAL,
                              ) -> torch.Tensor:
     """
     Termal gerinim rezidüeli  (Eq. 3, Mortensen 2026):
         εT = -1/3 · βT · (T - T_coh)
-
-    Sabit βT varsayımı altında integral kapalı forma düşürülmüştür.
-    Çok bileşenli termal genleşme için beta_T sıcaklığa bağlı da yapılabilir.
     """
     return -1.0 / 3.0 * beta_T * (T - T_coh)
 
@@ -199,7 +197,6 @@ def viscoplastic_residual(sigma_eff: torch.Tensor,
         σ̄ = F(T) · (φ₀ + φ)^n(T) · (ε̇ᵖ)^m(T)
 
     Table 1'den sıcaklığa bağlı interpolasyonla alınan F, n, m kullanılır.
-    Bauschinger etkisi dahil edilmemiştir (Mortensen ile aynı varsayım).
     """
     F = interp_material_param(T, A356_F)
     n = interp_material_param(T, A356_N)
@@ -210,14 +207,12 @@ def viscoplastic_residual(sigma_eff: torch.Tensor,
 
 
 def momentum_balance_residual(sigma_grad: torch.Tensor,
-                               rho: float = 2700.0,   # [kg/m³] — Al yoğunluğu
-                               g:   float = 9.81      # [m/s²]  — yerçekimi
+                               rho: float = RHO_AL,
+                               g:   float = 9.81
                                ) -> torch.Tensor:
     """
     Momentum denge denklemi  (Eq. 5, Mortensen 2026):
-        ∇·σ + ρg = 0   (fully solid bölge — mushy zone sonrası)
-
-    Yerçekimi yükü z-yönüne uygulanır.
+        ∇·σ + ρg = 0   (fully solid bölge)
     """
     gravity        = torch.zeros_like(sigma_grad)
     gravity[:, -1] = -rho * g
@@ -239,50 +234,38 @@ class TemporalSkipScheduler:
       - Quenching başlangıcında yüksek gradyan → atlama yapma, küçük adımlarla ilerle
       - Termal denge yakınında düşük gradyan  → max_skip kadar adım atla
       - Kriter: son_rezidüel < skip_threshold → bir sonraki zaman dilimine atla
-
-    Örnek karşılaştırma:
-      FEM (Mortensen) : t = 0, 1.5, 3.0, ..., 30.0  → 20 adım
-      Bu model         : t = 0,     3.0,  7.5,  30.0 →  4 adım  (%80 tasarruf)
     """
 
     def __init__(self,
                  t_start:         float,
                  t_end:           float,
-                 n_initial_steps: int   = 20,     # başlangıç uniform ızgara sayısı
-                 skip_threshold:  float = 1e-4,   # atlama tetikleyen rezidüel eşiği
-                 max_skip:        int   = 5):      # bir seferde atlanabilecek maks. adım
+                 n_initial_steps: int   = 20,
+                 skip_threshold:  float = 1e-4,
+                 max_skip:        int   = 5):
         self.t_start        = t_start
         self.t_end          = t_end
         self.skip_threshold = skip_threshold
         self.max_skip       = max_skip
 
-        # Mortensen ile karşılaştırılabilir başlangıç ızgarası
         self.t_full      = np.linspace(t_start, t_end, n_initial_steps)
-        self.visited     = []      # ziyaret edilen zaman noktaları
-        self.skipped     = []      # atlanan zaman noktaları
+        self.visited     = []
+        self.skipped     = []
         self.current_idx = 0
 
     def next_timestep(self, last_residual: Optional[float] = None) -> Optional[float]:
         """
         Bir sonraki zaman noktasını döndür.
-
-        last_residual: önceki adımdaki fizik rezidüelinin ortalama değeri.
-        Eşik altındaysa birden fazla adım atlanır.
         None döndürmesi: tüm zaman adımları tükendi, eğitim bitti.
         """
         if self.current_idx >= len(self.t_full):
             return None
 
-        # Atlama kararı — yalnızca rezidüel eşik altındaysa
         if last_residual is not None and last_residual < self.skip_threshold:
             skip = min(self.max_skip, len(self.t_full) - self.current_idx - 1)
             if skip > 1:
                 for s in range(1, skip):
                     self.skipped.append(float(self.t_full[self.current_idx + s]))
                 self.current_idx += skip
-                print(f"  [TemporalSkip] {skip-1} step(s) skipped → "
-                      f"t={self.t_full[self.current_idx]:.2f}s  "
-                      f"(residual={last_residual:.2e})")
 
         t = float(self.t_full[self.current_idx])
         self.visited.append(t)
@@ -290,10 +273,7 @@ class TemporalSkipScheduler:
         return t
 
     def get_stats(self) -> Dict:
-        """
-        Zaman atlama istatistiklerini sözlük olarak döndür.
-        main.py'de temporal_skip_stats.png için kullanılır.
-        """
+        """Zaman atlama istatistiklerini döndür."""
         total     = len(self.t_full)
         n_visited = len(self.visited)
         n_skipped = len(self.skipped)
@@ -307,7 +287,7 @@ class TemporalSkipScheduler:
         }
 
     def reset(self):
-        """Zamanlayıcıyı sıfırla — yeni eğitim turu başlatmak için kullanılır."""
+        """Zamanlayıcıyı sıfırla — yeni eğitim turu için."""
         self.visited     = []
         self.skipped     = []
         self.current_idx = 0

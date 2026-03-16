@@ -1,0 +1,306 @@
+[2026-03-15 23:02:25 UTC] 2D Poisson full run started
+Script dir : /home/coder/NAS-PINNS1/FEM-PINNS
+Python bin : python
+Master log : /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-RunAll/run_all.log
+
+============================================================
+[2026-03-15 23:02:25 UTC] START FEM
+Command: python FEM_2D_Poisson.py
+============================================================
+cuda
+Start comparing to GT 100
+Average solution time 0.9998568773269654
+Average evaluation time 0.0017003774642944335
+Average accuracy: 0.0019101342160341545
+Last CG iterations: 2724
+Last CG residual: 9.897881314059373e-11
+Start comparing to GT 200
+Average solution time 1.3019979000091553
+Average evaluation time 0.00016853809356689453
+Average accuracy: 0.0004753784686738062
+Last CG iterations: 3629
+Last CG residual: 9.979841240043911e-11
+Start comparing to GT 300
+Average solution time 1.8408448457717896
+Average evaluation time 0.00019423961639404298
+Average accuracy: 0.000212239052489261
+Last CG iterations: 4703
+Last CG residual: 9.958500696598549e-11
+Start comparing to GT 400
+Average solution time 1.8327475786209106
+Average evaluation time 0.0001725435256958008
+Average accuracy: 0.00011884492511481188
+Last CG iterations: 5000
+Last CG residual: 1.1364384771100088e-08
+Start comparing to GT 500
+Average solution time 1.8586317300796509
+Average evaluation time 0.0001861095428466797
+Average accuracy: 7.640942898695255e-05
+Last CG iterations: 5000
+Last CG residual: 4.7016546630360265e-07
+Start comparing to GT 600
+Average solution time 1.8526464700698853
+Average evaluation time 0.00019464492797851562
+Average accuracy: 5.281301856689239e-05
+Last CG iterations: 5000
+Last CG residual: 6.946334944913175e-06
+Start comparing to GT 700
+Average solution time 2.0740867853164673
+Average evaluation time 0.00017342567443847656
+Average accuracy: 3.8945020564729126e-05
+Last CG iterations: 5000
+Last CG residual: 1.423671954052392e-05
+Start comparing to GT 800
+Average solution time 2.4129897356033325
+Average evaluation time 0.00017888545989990233
+Average accuracy: 3.0414526447823334e-05
+Last CG iterations: 5000
+Last CG residual: 0.0006754003846982823
+Start comparing to GT 900
+Average solution time 2.8488248348236085
+Average evaluation time 0.00017402172088623046
+Average accuracy: 2.5819843809141447e-05
+Last CG iterations: 5000
+Last CG residual: 0.0006147140215211036
+Start comparing to GT 1000
+Average solution time 3.296144652366638
+Average evaluation time 0.0001746654510498047
+Average accuracy: 2.0628683248954277e-05
+Last CG iterations: 5000
+Last CG residual: 0.001593788806038577
+[2026-03-15 23:05:55 UTC] DONE  FEM
+
+============================================================
+[2026-03-15 23:05:55 UTC] START PINN
+Command: python PINN_2D_Poisson.py
+============================================================
+/usr/local/lib/python3.12/dist-packages/torch/autograd/graph.py:825: UserWarning: Attempting to run cuBLAS, but there was no current CUDA context! Attempting to set the primary context... (Triggered internally at /opt/pytorch/pytorch/aten/src/ATen/cuda/CublasHandlePool.cpp:135.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+cuda
+Adam training time: 133.24289441108704
+Starting L-BFGS Optimisation
+Adam training time: 138.03206539154053
+Starting L-BFGS Optimisation
+Adam training time: 132.64860725402832
+Starting L-BFGS Optimisation
+Adam training time: 132.5816090106964
+Starting L-BFGS Optimisation
+Adam training time: 132.9397885799408
+Starting L-BFGS Optimisation
+Adam training time: 134.79997420310974
+Starting L-BFGS Optimisation
+Adam training time: 135.36812543869019
+Starting L-BFGS Optimisation
+Adam training time: 132.91500115394592
+Starting L-BFGS Optimisation
+Adam training time: 132.93268060684204
+Starting L-BFGS Optimisation
+Adam training time: 131.32608294487
+Starting L-BFGS Optimisation
+Adam training time: 133.23225474357605
+Starting L-BFGS Optimisation
+Adam training time: 132.94894456863403
+Starting L-BFGS Optimisation
+Adam training time: 135.614413022995
+Starting L-BFGS Optimisation
+Adam training time: 131.40641474723816
+Starting L-BFGS Optimisation
+Adam training time: 131.8842921257019
+Starting L-BFGS Optimisation
+Adam training time: 137.5139820575714
+Starting L-BFGS Optimisation
+Adam training time: 132.26257181167603
+Starting L-BFGS Optimisation
+Adam training time: 133.06739711761475
+Starting L-BFGS Optimisation
+Adam training time: 133.2673192024231
+Starting L-BFGS Optimisation
+Adam training time: 135.0734782218933
+Starting L-BFGS Optimisation
+Adam training time: 177.65811395645142
+Starting L-BFGS Optimisation
+Adam training time: 177.49622917175293
+Starting L-BFGS Optimisation
+Adam training time: 176.73620414733887
+Starting L-BFGS Optimisation
+Adam training time: 173.74845814704895
+Starting L-BFGS Optimisation
+Adam training time: 180.2443916797638
+Starting L-BFGS Optimisation
+Adam training time: 174.59587025642395
+Starting L-BFGS Optimisation
+Adam training time: 174.4514434337616
+Starting L-BFGS Optimisation
+Adam training time: 175.12558388710022
+Starting L-BFGS Optimisation
+Adam training time: 175.26165103912354
+Starting L-BFGS Optimisation
+Adam training time: 174.39994144439697
+Starting L-BFGS Optimisation
+Adam training time: 176.9925365447998
+Starting L-BFGS Optimisation
+Adam training time: 178.6082899570465
+Starting L-BFGS Optimisation
+Adam training time: 177.48766160011292
+Starting L-BFGS Optimisation
+Adam training time: 185.57003808021545
+Starting L-BFGS Optimisation
+Adam training time: 177.8815793991089
+Starting L-BFGS Optimisation
+Adam training time: 181.65609860420227
+Starting L-BFGS Optimisation
+Adam training time: 183.1544759273529
+Starting L-BFGS Optimisation
+Adam training time: 184.83970761299133
+Starting L-BFGS Optimisation
+Adam training time: 193.91980695724487
+Starting L-BFGS Optimisation
+Adam training time: 177.04972958564758
+Starting L-BFGS Optimisation
+Adam training time: 216.0416703224182
+Starting L-BFGS Optimisation
+Adam training time: 221.85085892677307
+Starting L-BFGS Optimisation
+Adam training time: 238.93974328041077
+Starting L-BFGS Optimisation
+Adam training time: 244.38337349891663
+Starting L-BFGS Optimisation
+Adam training time: 235.16685438156128
+Starting L-BFGS Optimisation
+Adam training time: 236.60623168945312
+Starting L-BFGS Optimisation
+Adam training time: 216.48451924324036
+Starting L-BFGS Optimisation
+Adam training time: 226.12234663963318
+Starting L-BFGS Optimisation
+Adam training time: 220.97497510910034
+Starting L-BFGS Optimisation
+Adam training time: 216.16240000724792
+Starting L-BFGS Optimisation
+Adam training time: 220.48665761947632
+Starting L-BFGS Optimisation
+Adam training time: 225.8051495552063
+Starting L-BFGS Optimisation
+Adam training time: 218.08014273643494
+Starting L-BFGS Optimisation
+Adam training time: 219.09955310821533
+Starting L-BFGS Optimisation
+Adam training time: 223.96982765197754
+Starting L-BFGS Optimisation
+Adam training time: 217.80136632919312
+Starting L-BFGS Optimisation
+Adam training time: 218.33788132667542
+Starting L-BFGS Optimisation
+Adam training time: 218.75195479393005
+Starting L-BFGS Optimisation
+Adam training time: 219.86213040351868
+Starting L-BFGS Optimisation
+Adam training time: 219.22193884849548
+Starting L-BFGS Optimisation
+Adam training time: 270.83999276161194
+Starting L-BFGS Optimisation
+Adam training time: 257.2537851333618
+Starting L-BFGS Optimisation
+Adam training time: 258.2130477428436
+Starting L-BFGS Optimisation
+Adam training time: 266.8138747215271
+Starting L-BFGS Optimisation
+Adam training time: 259.7319929599762
+Starting L-BFGS Optimisation
+Adam training time: 256.21187829971313
+Starting L-BFGS Optimisation
+Adam training time: 258.1022880077362
+Starting L-BFGS Optimisation
+Adam training time: 261.16908979415894
+Starting L-BFGS Optimisation
+Adam training time: 279.32579708099365
+Starting L-BFGS Optimisation
+Adam training time: 259.4414939880371
+Starting L-BFGS Optimisation
+Adam training time: 259.8986768722534
+Starting L-BFGS Optimisation
+Adam training time: 259.3519332408905
+Starting L-BFGS Optimisation
+Adam training time: 262.8840823173523
+Starting L-BFGS Optimisation
+Adam training time: 264.41853380203247
+Starting L-BFGS Optimisation
+Adam training time: 262.7704734802246
+Starting L-BFGS Optimisation
+Adam training time: 259.2788681983948
+Starting L-BFGS Optimisation
+Adam training time: 284.82736802101135
+Starting L-BFGS Optimisation
+Adam training time: 266.7227213382721
+Starting L-BFGS Optimisation
+Adam training time: 272.5100107192993
+Starting L-BFGS Optimisation
+Adam training time: 270.25932574272156
+Starting L-BFGS Optimisation
+Adam training time: 300.9130828380585
+Starting L-BFGS Optimisation
+Adam training time: 299.3692183494568
+Starting L-BFGS Optimisation
+Adam training time: 304.59107851982117
+Starting L-BFGS Optimisation
+Adam training time: 300.2578227519989
+Starting L-BFGS Optimisation
+Adam training time: 299.33497858047485
+Starting L-BFGS Optimisation
+Adam training time: 302.86406350135803
+Starting L-BFGS Optimisation
+Adam training time: 299.874623298645
+Starting L-BFGS Optimisation
+Adam training time: 305.5173764228821
+Starting L-BFGS Optimisation
+Adam training time: 297.91654777526855
+Starting L-BFGS Optimisation
+Adam training time: 305.1989176273346
+Starting L-BFGS Optimisation
+Adam training time: 303.5317635536194
+Starting L-BFGS Optimisation
+Adam training time: 308.87100052833557
+Starting L-BFGS Optimisation
+Adam training time: 301.10322093963623
+Starting L-BFGS Optimisation
+Adam training time: 303.0436062812805
+Starting L-BFGS Optimisation
+Adam training time: 302.26873540878296
+Starting L-BFGS Optimisation
+Adam training time: 319.3789095878601
+Starting L-BFGS Optimisation
+Adam training time: 303.6299524307251
+Starting L-BFGS Optimisation
+Adam training time: 301.97175121307373
+Starting L-BFGS Optimisation
+Adam training time: 301.6015634536743
+Starting L-BFGS Optimisation
+Adam training time: 303.0617525577545
+Starting L-BFGS Optimisation
+Adam training time: 305.1326744556427
+Starting L-BFGS Optimisation
+Adam training time: 309.24121499061584
+Starting L-BFGS Optimisation
+Adam training time: 309.3080186843872
+Starting L-BFGS Optimisation
+Adam training time: 300.9184617996216
+Starting L-BFGS Optimisation
+Adam training time: 303.1970887184143
+Starting L-BFGS Optimisation
+Adam training time: 317.48120164871216
+Starting L-BFGS Optimisation
+Adam training time: 312.16903805732727
+Starting L-BFGS Optimisation
+Adam training time: 309.1824679374695
+Starting L-BFGS Optimisation
+Adam training time: 305.0345287322998
+Starting L-BFGS Optimisation
+Adam training time: 303.2766327857971
+Starting L-BFGS Optimisation
+{'arch': {0: [20, 1], 1: [60, 1], 2: [20, 20, 1], 3: [60, 60, 1], 4: [20, 20, 20, 1], 5: [60, 60, 60, 1], 6: [20, 20, 20, 20, 1], 7: [60, 60, 60, 60, 1], 8: [20, 20, 20, 20, 20, 1], 9: [60, 60, 60, 60, 60, 1], 10: [120, 120, 120, 120, 120, 1]}, 'times_adam': {0: 133.6786828994751, 1: 133.62710676193237, 2: 175.9717887163162, 3: 181.71599242687225, 4: 227.2732973098755, 5: 220.14166023731232, 6: 262.710324048996, 7: 266.29219937324524, 8: 301.58377096652987, 9: 304.84622559547427, 10: 307.4941327810287}, 'times_lbfgs': {0: 11.043475651741028, 1: 18.15723922252655, 2: 10.379161643981934, 3: 4.832609963417053, 4: 28.929367589950562, 5: 19.054935216903687, 6: 11.974241995811463, 7: 9.740189719200135, 8: 21.17519791126251, 9: 12.085495591163635, 10: 19.278785991668702}, 'times_total': {0: 144.72288053035737, 1: 151.78502683639528, 2: 186.35163259506226, 3: 186.54935071468353, 4: 256.20358469486234, 5: 239.19728276729583, 6: 274.6852340221405, 7: 276.03311185836793, 8: 322.7596688508987, 9: 316.93241341114043, 10: 326.77361979484556}, 'times_eval': {0: 0.0003192424774169922, 1: 0.0004103899002075195, 2: 0.00027077198028564454, 3: 0.0006838560104370118, 4: 0.0002815485000610352, 5: 0.0009869575500488282, 6: 0.0002994060516357422, 7: 0.0012753009796142578, 8: 0.0003337860107421875, 9: 0.0015732765197753907, 10: 0.0018408536911010743}, 'l2_rel': {0: 0.1413787305355072, 1: 0.0802726298570633, 2: 0.0547921396791935, 3: 0.11223646253347397, 4: 0.025894436985254288, 5: 0.017559271305799484, 6: 0.04925017058849335, 7: 0.011155063286423683, 8: 0.013746760785579681, 9: 0.006256911437958479, 10: 0.00562419556081295}, 'var': {0: 0.0, 1: 0.0, 2: 0.0, 3: 0.0, 4: 0.0, 5: 0.0, 6: 0.0, 7: 0.0, 8: 0.0, 9: 0.0, 10: 0.0}}
+[2026-03-16 06:33:17 UTC] DONE  PINN
+
+============================================================
+[2026-03-16 06:33:17 UTC] START NAS_PINN
+Command: python NAS_PINN_2D_Poisson.py
+============================================================

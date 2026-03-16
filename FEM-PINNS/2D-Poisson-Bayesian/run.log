@@ -1,0 +1,72 @@
+cuda
+Starting Bayesian architecture search...
+|   iter    |  target   |    m0     |    m1     |    m2     |    m3     |
+-------------------------------------------------------------------------
+/usr/local/lib/python3.12/dist-packages/torch/autograd/graph.py:825: UserWarning: Attempting to run cuBLAS, but there was no current CUDA context! Attempting to set the primary context... (Triggered internally at /opt/pytorch/pytorch/aten/src/ATen/cuda/CublasHandlePool.cpp:135.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+BO eval masks=[1, 2, 1, 0] proxy_loss=1.2755e-03
+| [39m1        [39m | [39m-0.001275[39m | [39m1.1786600[39m | [39m2.1223470[39m | [39m0.7660831[39m | [39m0.2716014[39m |
+BO eval masks=[3, 3, 3, 2] proxy_loss=1.3763e-03
+| [39m2        [39m | [39m-0.001376[39m | [39m3.1479418[39m | [39m2.6253340[39m | [39m2.5500835[39m | [39m2.3024115[39m |
+BO eval masks=[0, 1, 4, 0] proxy_loss=5.2633e-03
+| [39m3        [39m | [39m-0.005263[39m | [39m0.1562516[39m | [39m1.4312544[39m | [39m3.7827327[39m | [39m0.2401787[39m |
+BO eval masks=[3, 4, 0, 3] proxy_loss=2.2175e-03
+| [39m4        [39m | [39m-0.002217[39m | [39m3.4561684[39m | [39m3.5091621[39m | [39m0.2047746[39m | [39m2.6096744[39m |
+BO eval masks=[1, 2, 1, 1] proxy_loss=1.6202e-03
+| [39m5        [39m | [39m-0.001620[39m | [39m1.4805068[39m | [39m2.0681218[39m | [39m1.2935477[39m | [39m0.9515868[39m |
+BO eval masks=[3, 1, 0, 0] proxy_loss=7.2762e-04
+| [35m6        [39m | [35m-0.000727[39m | [35m3.3508570[39m | [35m1.3222375[39m | [35m0.0      [39m | [35m0.0      [39m |
+BO eval masks=[4, 0, 1, 2] proxy_loss=1.1369e-03
+| [39m7        [39m | [39m-0.001136[39m | [39m4.0      [39m | [39m0.0      [39m | [39m0.5985625[39m | [39m2.3915845[39m |
+BO eval masks=[4, 0, 4, 4] proxy_loss=1.1827e-03
+| [39m8        [39m | [39m-0.001182[39m | [39m4.0      [39m | [39m0.0      [39m | [39m3.9590077[39m | [39m4.0      [39m |
+BO eval masks=[1, 0, 0, 4] proxy_loss=2.2841e-03
+| [39m9        [39m | [39m-0.002284[39m | [39m0.9070207[39m | [39m0.0      [39m | [39m0.0      [39m | [39m4.0      [39m |
+BO eval masks=[4, 0, 2, 0] proxy_loss=1.3517e-03
+| [39m10       [39m | [39m-0.001351[39m | [39m4.0      [39m | [39m0.0      [39m | [39m1.9630216[39m | [39m0.0      [39m |
+BO eval masks=[4, 4, 4, 4] proxy_loss=6.6303e-04
+| [35m11       [39m | [35m-0.000663[39m | [35m4.0      [39m | [35m4.0      [39m | [35m4.0      [39m | [35m4.0      [39m |
+BO eval masks=[4, 4, 2, 0] proxy_loss=1.3119e-03
+| [39m12       [39m | [39m-0.001311[39m | [39m4.0      [39m | [39m4.0      [39m | [39m2.1357079[39m | [39m0.0      [39m |
+BO eval masks=[2, 4, 4, 4] proxy_loss=2.2795e-03
+| [39m13       [39m | [39m-0.002279[39m | [39m1.5134264[39m | [39m4.0      [39m | [39m4.0      [39m | [39m4.0      [39m |
+BO eval masks=[2, 0, 0, 0] proxy_loss=8.6535e-04
+| [39m14       [39m | [39m-0.000865[39m | [39m1.7511586[39m | [39m0.0      [39m | [39m0.0      [39m | [39m0.0      [39m |
+BO eval masks=[4, 4, 4, 2] proxy_loss=6.5257e-04
+| [35m15       [39m | [35m-0.000652[39m | [35m4.0      [39m | [35m4.0      [39m | [35m4.0      [39m | [35m1.8294000[39m |
+BO eval masks=[0, 4, 0, 0] proxy_loss=1.5192e-03
+| [39m16       [39m | [39m-0.001519[39m | [39m0.0      [39m | [39m4.0      [39m | [39m0.0      [39m | [39m0.0      [39m |
+=========================================================================
+Best mask indices : [4, 4, 4, 2]
+Best neuron widths: [110, 110, 110, 70]
+Best proxy loss   : 0.0006525686476379633
+[    0] PDE=1.9423e-02  BC_D=4.6928e-04  BC_N=1.7591e-03  OUTER=1.3970e-05
+[ 1000] PDE=1.4625e-04  BC_D=6.4169e-06  BC_N=1.0976e-04  OUTER=2.9252e-05
+[ 2000] PDE=1.1488e-04  BC_D=3.0998e-05  BC_N=5.9564e-05  OUTER=3.5922e-05
+[ 3000] PDE=8.1443e-05  BC_D=2.6929e-06  BC_N=1.8625e-05  OUTER=1.1075e-05
+[ 4000] PDE=7.6219e-05  BC_D=1.3166e-05  BC_N=4.9956e-05  OUTER=5.7332e-06
+[ 5000] PDE=7.0220e-05  BC_D=3.1839e-06  BC_N=2.0658e-05  OUTER=8.9211e-07
+[ 6000] PDE=6.4810e-05  BC_D=3.3225e-06  BC_N=1.4911e-05  OUTER=1.0459e-06
+[ 7000] PDE=6.3040e-05  BC_D=1.2359e-05  BC_N=1.0934e-05  OUTER=4.1401e-06
+[ 8000] PDE=5.8194e-05  BC_D=8.7421e-06  BC_N=4.7760e-05  OUTER=3.4964e-06
+[ 9000] PDE=4.9750e-05  BC_D=7.2229e-06  BC_N=1.5479e-05  OUTER=8.0783e-07
+[10000] PDE=5.1780e-05  BC_D=2.3224e-05  BC_N=1.6261e-05  OUTER=1.3956e-05
+[11000] PDE=4.4349e-05  BC_D=1.0405e-05  BC_N=2.3115e-05  OUTER=5.4525e-06
+[11999] PDE=4.2563e-05  BC_D=4.9218e-06  BC_N=8.2228e-06  OUTER=0.0000e+00
+
+Starting L-BFGS refinement...
+
+============================================================
+DISCRETE BAYESIAN / NAS-PINN ARCHITECTURE
+============================================================
+Layer  1 | neurons=110 | mode=skip   | skip=0.5032 | active=0.4911
+Layer  2 | neurons=110 | mode=skip   | skip=0.5008 | active=0.4841
+Layer  3 | neurons=110 | mode=skip   | skip=0.4946 | active=0.4772
+Layer  4 | neurons= 70 | mode=skip   | skip=0.4810 | active=0.4507
+============================================================
+
+Adam time   : 295.7535 s
+L-BFGS time : 36.7314 s
+Eval time   : 0.0044 s
+Total time  : 452.5685 s
+Relative L2 : 3.40136252e-02

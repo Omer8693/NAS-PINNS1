@@ -1,0 +1,62 @@
+{
+    "best_masks": [
+        3,
+        2,
+        0,
+        2
+    ],
+    "best_widths": [
+        90,
+        70,
+        30,
+        70
+    ],
+    "times_adam": 297.3080484867096,
+    "times_lbfgs": 37.085575103759766,
+    "times_total": 2445.163032054901,
+    "times_eval": 0.004241228103637695,
+    "l2_rel": 0.019508786499500275,
+    "arch": [
+        {
+            "layer": 1,
+            "neurons": 90,
+            "skip_prob": 0.49976885318756104,
+            "active_prob": 0.49340224266052246,
+            "mode": "skip"
+        },
+        {
+            "layer": 2,
+            "neurons": 70,
+            "skip_prob": 0.5034366250038147,
+            "active_prob": 0.4952341616153717,
+            "mode": "skip"
+        },
+        {
+            "layer": 3,
+            "neurons": 30,
+            "skip_prob": 0.5007961392402649,
+            "active_prob": 0.49160224199295044,
+            "mode": "skip"
+        },
+        {
+            "layer": 4,
+            "neurons": 70,
+            "skip_prob": 0.4943259060382843,
+            "active_prob": 0.46945783495903015,
+            "mode": "skip"
+        }
+    ],
+    "mask_levels": [
+        30,
+        50,
+        70,
+        90,
+        110
+    ],
+    "base_neurons": 110,
+    "num_hidden_layers": 4,
+    "proxy_epochs": 300,
+    "adam_epochs": 12000,
+    "n_gen": 12,
+    "ref_partitions": 23
+}

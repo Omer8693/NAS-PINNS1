@@ -1,0 +1,32 @@
+cuda
+[    0] PDE=1.9884e-02  BC_D=1.0247e-03  BC_N=7.4210e-04  OUTER=4.0545e-04
+[ 1000] PDE=1.6287e-04  BC_D=1.6217e-06  BC_N=1.5525e-04  OUTER=1.2436e-05
+[ 2000] PDE=1.1234e-04  BC_D=1.8281e-05  BC_N=3.8907e-05  OUTER=2.3270e-05
+[ 3000] PDE=9.1034e-05  BC_D=4.4056e-06  BC_N=2.8482e-05  OUTER=7.8064e-07
+[ 4000] PDE=8.7215e-05  BC_D=9.2360e-06  BC_N=2.0471e-05  OUTER=3.8614e-06
+[ 5000] PDE=7.6654e-05  BC_D=5.2173e-06  BC_N=2.4478e-05  OUTER=2.4601e-06
+[ 6000] PDE=6.7664e-05  BC_D=3.9718e-06  BC_N=1.4353e-05  OUTER=7.9783e-07
+[ 7000] PDE=5.4128e-05  BC_D=1.6349e-05  BC_N=1.3054e-05  OUTER=1.4517e-05
+[ 8000] PDE=3.1530e-05  BC_D=3.8802e-06  BC_N=1.5422e-05  OUTER=1.0848e-06
+[ 9000] PDE=2.0596e-05  BC_D=6.4474e-06  BC_N=8.3711e-06  OUTER=3.3573e-06
+[10000] PDE=2.3120e-05  BC_D=1.2071e-05  BC_N=3.1692e-05  OUTER=1.7451e-05
+[11000] PDE=1.5703e-05  BC_D=3.7991e-06  BC_N=5.8284e-06  OUTER=1.0395e-06
+[11999] PDE=1.7580e-05  BC_D=3.4888e-06  BC_N=4.6261e-06  OUTER=0.0000e+00
+
+Starting L-BFGS refinement...
+
+============================================================
+DISCRETE NAS-PINN ARCHITECTURE
+============================================================
+Layer  1 | skip   | neurons= 50 | skip=0.5015 | active=0.4944
+Layer  2 | skip   | neurons= 30 | skip=0.5063 | active=0.4923
+Layer  3 | active | neurons= 50 | skip=0.4907 | active=0.4965
+Layer  4 | active | neurons=110 | skip=0.4931 | active=0.4972
+Layer  5 | skip   | neurons=  1 | skip=0.4941 | active=0.4912
+============================================================
+
+Adam time   : 805.5905 s
+L-BFGS time : 85.6679 s
+Eval time   : 0.0076 s
+Total time  : 892.3716 s
+Relative L2 : 4.32215557e-02

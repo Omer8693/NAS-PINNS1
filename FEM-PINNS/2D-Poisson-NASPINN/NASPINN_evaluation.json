@@ -1,0 +1,53 @@
+{
+    "times_adam": 805.5905115604401,
+    "times_lbfgs": 85.66792392730713,
+    "times_total": 892.3716230392456,
+    "times_eval": 0.0075643062591552734,
+    "l2_rel": 0.04322155565023422,
+    "arch": [
+        {
+            "layer": 1,
+            "connection": "skip",
+            "neurons": 50,
+            "skip_prob": 0.5015236139297485,
+            "active_prob": 0.49440714716911316
+        },
+        {
+            "layer": 2,
+            "connection": "skip",
+            "neurons": 30,
+            "skip_prob": 0.5063377022743225,
+            "active_prob": 0.49226632714271545
+        },
+        {
+            "layer": 3,
+            "connection": "active",
+            "neurons": 50,
+            "skip_prob": 0.4907330274581909,
+            "active_prob": 0.4965403378009796
+        },
+        {
+            "layer": 4,
+            "connection": "active",
+            "neurons": 110,
+            "skip_prob": 0.49306583404541016,
+            "active_prob": 0.4971948564052582
+        },
+        {
+            "layer": 5,
+            "connection": "skip",
+            "neurons": 1,
+            "skip_prob": 0.4940910041332245,
+            "active_prob": 0.49116310477256775
+        }
+    ],
+    "mask_levels": [
+        30,
+        50,
+        70,
+        90,
+        110
+    ],
+    "num_layers": 5,
+    "base_neurons": 110
+}

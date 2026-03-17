@@ -1,0 +1,74 @@
+Results root : /home/coder/NAS-PINNS1/FEM-PINNS
+Output dir   : /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison
+[OK] FEM       mesh=1000 | relL2=2.06286832e-05
+[OK] PINN      arch=[120, 120, 120, 120, 120, 1] | relL2=5.62419556e-03
+[OK] NAS-PINN  learned_arch | relL2=4.32215557e-02
+[OK] NSGA-II   widths=[90, 70, 30, 70] | relL2=1.95087865e-02
+[OK] NSGA-III  widths=[90, 70, 30, 70] | relL2=1.95087865e-02
+[OK] Bayesian  widths=[110, 110, 110, 70] | relL2=3.40136252e-02
+
+Saved figures:
+  /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/poisson_exact_prediction_comparison.png
+  /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/poisson_l2_error_heatmaps.png
+  /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/poisson_rel_l2_bar.png
+
+Saved summary: /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/visualization_summary.json
+Results root : /home/coder/NAS-PINNS1/FEM-PINNS
+Output dir   : /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison
+[OK] FEM       mesh=1000 | relL2=2.06286832e-05
+[OK] PINN      arch=[120, 120, 120, 120, 120, 1] | relL2=5.62419556e-03
+[OK] NAS-PINN  learned_arch | relL2=4.32215557e-02
+[OK] NSGA-II   widths=[90, 70, 30, 70] | relL2=1.95087865e-02
+[OK] NSGA-III  widths=[90, 70, 30, 70] | relL2=1.95087865e-02
+[OK] Bayesian  widths=[110, 110, 110, 70] | relL2=3.40136252e-02
+
+Removed legacy figures:
+  /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/poisson_exact_prediction_comparison.png
+  /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/poisson_l2_error_heatmaps.png
+  /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/poisson_rel_l2_bar.png
+
+Saved figure:
+  /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/poisson_comparison_single_figure.png
+  /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/poisson_comparison_single_figure.pdf
+
+Saved summary: /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/visualization_summary.json
+Results root : /home/coder/NAS-PINNS1/FEM-PINNS
+Output dir   : /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison
+[OK] FEM       mesh=1000 | relL2=2.06286832e-05
+[OK] PINN      arch=[120, 120, 120, 120, 120, 1] | relL2=5.62419556e-03
+[OK] NAS-PINN  learned_arch | relL2=4.32215557e-02
+[OK] NSGA-II   widths=[90, 70, 30, 70] | relL2=1.95087865e-02
+[OK] NSGA-III  widths=[90, 70, 30, 70] | relL2=1.95087865e-02
+[SKIP] nsga2_pymoo  Missing data for nsga2_pymoo: /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-NSGA2-Pymoo/NSGA2_Pymoo_evaluation.json
+[SKIP] nsga3_pymoo  Missing data for nsga3_pymoo: /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-NSGA3-Pymoo/NSGA3_Pymoo_evaluation.json
+[OK] Bayesian  widths=[110, 110, 110, 70] | relL2=3.40136252e-02
+
+Removed legacy figures:
+  /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/poisson_comparison_single_figure.png
+  /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/poisson_comparison_single_figure.pdf
+
+Saved figure:
+  /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/poisson_comparison_single_figure.png
+  /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/poisson_comparison_single_figure.pdf
+
+Saved summary: /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/visualization_summary.json
+Results root : /home/coder/NAS-PINNS1/FEM-PINNS
+Output dir   : /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison
+[OK] FEM       mesh=1000 | relL2=2.06286832e-05
+[OK] PINN      arch=[120, 120, 120, 120, 120, 1] | relL2=5.62419556e-03
+[OK] NAS-PINN  learned_arch | relL2=4.32215557e-02
+[OK] NSGA-II   widths=[90, 70, 30, 70] | relL2=1.95087865e-02
+[OK] NSGA-III  widths=[90, 70, 30, 70] | relL2=1.95087865e-02
+[OK] NSGA-II (local pymoo) widths=[90, 70, 30, 70] | relL2=1.95087865e-02
+[OK] NSGA-III (local pymoo) widths=[90, 70, 30, 70] | relL2=1.95087865e-02
+[OK] Bayesian  widths=[110, 110, 110, 70] | relL2=3.40136252e-02
+
+Removed legacy figures:
+  /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/poisson_comparison_single_figure.png
+  /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/poisson_comparison_single_figure.pdf
+
+Saved figure:
+  /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/poisson_comparison_single_figure.png
+  /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/poisson_comparison_single_figure.pdf
+
+Saved summary: /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/visualization_summary.json

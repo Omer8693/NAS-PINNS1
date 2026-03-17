@@ -1,0 +1,50 @@
+{
+  "lshape/bayesian": {
+    "domain": "lshape",
+    "optimizer": "bayesian",
+    "best_arch": {
+      "val": 0.044425152242183685,
+      "n_layers": 5,
+      "neurons": 100,
+      "activation": "gelu"
+    },
+    "n_params": 40801,
+    "final_l2": 0.027729,
+    "final_mae": 0.023718,
+    "has_exact": false,
+    "search_s": 236.8,
+    "train_s": 74.2
+  },
+  "lshape/nsga2": {
+    "domain": "lshape",
+    "optimizer": "nsga2",
+    "best_arch": {
+      "val": 0.1787378042936325,
+      "n_layers": 3,
+      "neurons": 128,
+      "activation": "tanh"
+    },
+    "n_params": 33537,
+    "final_l2": 0.028468,
+    "final_mae": 0.024433,
+    "has_exact": false,
+    "search_s": 292.9,
+    "train_s": 46.9
+  },
+  "lshape/nsga3": {
+    "domain": "lshape",
+    "optimizer": "nsga3",
+    "best_arch": {
+      "val": 0.15881691873073578,
+      "n_layers": 2,
+      "neurons": 100,
+      "activation": "tanh"
+    },
+    "n_params": 10501,
+    "final_l2": 0.031956,
+    "final_mae": 0.027359,
+    "has_exact": false,
+    "search_s": 280.6,
+    "train_s": 39.0
+  }
+}

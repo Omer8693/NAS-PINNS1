@@ -1,0 +1,52 @@
+cuda
+Starting local-pymoo NSGA-II architecture search...
+/usr/local/lib/python3.12/dist-packages/torch/autograd/graph.py:825: UserWarning: Attempting to run cuBLAS, but there was no current CUDA context! Attempting to set the primary context... (Triggered internally at /opt/pytorch/pytorch/aten/src/ATen/cuda/CublasHandlePool.cpp:135.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+==========================================================
+n_gen  |  n_eval  | n_nds  |      eps      |   indicator  
+==========================================================
+     1 |       24 |      6 |             - |             -
+     2 |       48 |     15 |  0.0019115295 |             f
+     3 |       72 |     16 |  0.0364954916 |             f
+     4 |       96 |     23 |  0.0766331658 |         ideal
+     5 |      120 |     13 |  0.1652190984 |         ideal
+     6 |      144 |     21 |  0.0052588686 |             f
+     7 |      168 |     24 |  0.000000E+00 |             f
+     8 |      192 |     24 |  0.000000E+00 |             f
+     9 |      216 |     24 |  0.000000E+00 |             f
+    10 |      240 |     24 |  0.0076493362 |             f
+    11 |      264 |     24 |  0.000000E+00 |             f
+    12 |      288 |     24 |  0.000000E+00 |             f
+Best mask indices : [3, 2, 0, 2]
+Best neuron widths: [90, 70, 30, 70]
+Proxy objectives  : [0.0005337480106391013, 11011.0]
+[    0] PDE=1.8823e-02  BC_D=9.8068e-04  BC_N=6.4450e-04  OUTER=1.3601e-04
+[ 1000] PDE=1.3073e-04  BC_D=5.4114e-06  BC_N=7.4659e-05  OUTER=3.7529e-06
+[ 2000] PDE=8.7441e-05  BC_D=4.6185e-06  BC_N=2.7916e-05  OUTER=1.8364e-06
+[ 3000] PDE=7.3498e-05  BC_D=4.5168e-06  BC_N=2.1654e-05  OUTER=2.3711e-06
+[ 4000] PDE=6.4324e-05  BC_D=1.7416e-05  BC_N=1.7511e-05  OUTER=1.0860e-05
+[ 5000] PDE=5.5071e-05  BC_D=6.0982e-06  BC_N=4.8269e-05  OUTER=1.0318e-05
+[ 6000] PDE=3.9447e-05  BC_D=6.5199e-06  BC_N=1.3469e-05  OUTER=3.2955e-06
+[ 7000] PDE=3.1791e-05  BC_D=1.1266e-05  BC_N=6.4301e-05  OUTER=4.2427e-06
+[ 8000] PDE=2.2684e-05  BC_D=4.8640e-06  BC_N=1.2695e-05  OUTER=8.7270e-07
+[ 9000] PDE=2.1986e-05  BC_D=7.0355e-06  BC_N=3.1566e-05  OUTER=3.7400e-06
+[10000] PDE=1.9888e-05  BC_D=6.2187e-06  BC_N=6.2710e-06  OUTER=4.5482e-06
+[11000] PDE=2.3549e-05  BC_D=1.0131e-05  BC_N=9.1654e-06  OUTER=6.7709e-06
+[11999] PDE=1.8739e-05  BC_D=4.5708e-06  BC_N=4.5408e-06  OUTER=0.0000e+00
+
+Starting L-BFGS refinement...
+
+============================================================
+LOCAL PYMOO NSGA-II / NAS-PINN ARCHITECTURE
+============================================================
+Layer  1 | neurons= 90 | mode=skip   | skip=0.4998 | active=0.4934
+Layer  2 | neurons= 70 | mode=skip   | skip=0.5034 | active=0.4952
+Layer  3 | neurons= 30 | mode=skip   | skip=0.5008 | active=0.4916
+Layer  4 | neurons= 70 | mode=skip   | skip=0.4943 | active=0.4695
+============================================================
+
+Adam time   : 291.5481 s
+L-BFGS time : 88.1207 s
+Eval time   : 0.0043 s
+Total time  : 2446.9833 s
+Relative L2 : 1.95087865e-02

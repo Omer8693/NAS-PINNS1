@@ -33,6 +33,16 @@ EXPERIMENT_SPECS = {
         "file_name": "NSGA3_evaluation.json",
         "kind": "single",
     },
+    "nsga2_pymoo": {
+        "dir_name": "2D-Poisson-NSGA2-Pymoo",
+        "file_name": "NSGA2_Pymoo_evaluation.json",
+        "kind": "single",
+    },
+    "nsga3_pymoo": {
+        "dir_name": "2D-Poisson-NSGA3-Pymoo",
+        "file_name": "NSGA3_Pymoo_evaluation.json",
+        "kind": "single",
+    },
     "bayesian": {
         "dir_name": "2D-Poisson-Bayesian",
         "file_name": "Bayesian_evaluation.json",

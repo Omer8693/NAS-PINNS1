@@ -19,3 +19,51 @@ Saved CSV    : /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/comparison
 Saved JSON   : /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/comparison_summary.json
 Saved detail : /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/comparison_details.json
 Saved log    : /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/comparison.log
+Results root : /home/coder/NAS-PINNS1/FEM-PINNS
+Output dir   : /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison
+[OK] fem      best=mesh=1000 rel_l2=2.06286832e-05 total=3.2963193178176877
+[OK] pinn     best=arch=[120, 120, 120, 120, 120, 1] rel_l2=5.62419556e-03 total=326.77361979484556
+[OK] naspinn  best=learned_arch rel_l2=4.32215557e-02 total=892.3716230392456
+[OK] nsga2    best=widths=[90, 70, 30, 70] rel_l2=1.95087865e-02 total=2416.9011969566345
+[OK] nsga3    best=widths=[90, 70, 30, 70] rel_l2=1.95087865e-02 total=2445.163032054901
+[MISSING] nsga2_pymoo: expected /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-NSGA2-Pymoo/NSGA2_Pymoo_evaluation.json
+[MISSING] nsga3_pymoo: expected /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-NSGA3-Pymoo/NSGA3_Pymoo_evaluation.json
+[OK] bayesian best=widths=[110, 110, 110, 70] rel_l2=3.40136252e-02 total=452.56845259666443
+
+Ranking by relative L2:
+ 1. fem      2.06286832e-05 | mesh=1000
+ 2. pinn     5.62419556e-03 | arch=[120, 120, 120, 120, 120, 1]
+ 3. nsga2    1.95087865e-02 | widths=[90, 70, 30, 70]
+ 4. nsga3    1.95087865e-02 | widths=[90, 70, 30, 70]
+ 5. bayesian 3.40136252e-02 | widths=[110, 110, 110, 70]
+ 6. naspinn  4.32215557e-02 | learned_arch
+
+Saved CSV    : /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/comparison_summary.csv
+Saved JSON   : /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/comparison_summary.json
+Saved detail : /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/comparison_details.json
+Saved log    : /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/comparison.log
+Results root : /home/coder/NAS-PINNS1/FEM-PINNS
+Output dir   : /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison
+[OK] fem      best=mesh=1000 rel_l2=2.06286832e-05 total=3.2963193178176877
+[OK] pinn     best=arch=[120, 120, 120, 120, 120, 1] rel_l2=5.62419556e-03 total=326.77361979484556
+[OK] naspinn  best=learned_arch rel_l2=4.32215557e-02 total=892.3716230392456
+[OK] nsga2    best=widths=[90, 70, 30, 70] rel_l2=1.95087865e-02 total=2416.9011969566345
+[OK] nsga3    best=widths=[90, 70, 30, 70] rel_l2=1.95087865e-02 total=2445.163032054901
+[OK] nsga2_pymoo best=widths=[90, 70, 30, 70] rel_l2=1.95087865e-02 total=2446.9832711219788
+[OK] nsga3_pymoo best=widths=[90, 70, 30, 70] rel_l2=1.95087865e-02 total=2418.934044599533
+[OK] bayesian best=widths=[110, 110, 110, 70] rel_l2=3.40136252e-02 total=452.56845259666443
+
+Ranking by relative L2:
+ 1. fem      2.06286832e-05 | mesh=1000
+ 2. pinn     5.62419556e-03 | arch=[120, 120, 120, 120, 120, 1]
+ 3. nsga2    1.95087865e-02 | widths=[90, 70, 30, 70]
+ 4. nsga3    1.95087865e-02 | widths=[90, 70, 30, 70]
+ 5. nsga2_pymoo 1.95087865e-02 | widths=[90, 70, 30, 70]
+ 6. nsga3_pymoo 1.95087865e-02 | widths=[90, 70, 30, 70]
+ 7. bayesian 3.40136252e-02 | widths=[110, 110, 110, 70]
+ 8. naspinn  4.32215557e-02 | learned_arch
+
+Saved CSV    : /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/comparison_summary.csv
+Saved JSON   : /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/comparison_summary.json
+Saved detail : /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/comparison_details.json
+Saved log    : /home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/comparison.log

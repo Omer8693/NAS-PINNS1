@@ -62,6 +62,36 @@
             "rank": 4
         },
         {
+            "method": "nsga2_pymoo",
+            "config_key": "best",
+            "config_label": "widths=[90, 70, 30, 70]",
+            "rel_l2": 0.019508786499500275,
+            "times_adam": 291.54809069633484,
+            "times_lbfgs": 88.12070345878601,
+            "times_solve": null,
+            "times_eval": 0.004321575164794922,
+            "times_total": 2446.9832711219788,
+            "notes": "",
+            "result_dir": "/home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-NSGA2-Pymoo",
+            "source_file": "/home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-NSGA2-Pymoo/NSGA2_Pymoo_evaluation.json",
+            "rank": 5
+        },
+        {
+            "method": "nsga3_pymoo",
+            "config_key": "best",
+            "config_label": "widths=[90, 70, 30, 70]",
+            "rel_l2": 0.019508786499500275,
+            "times_adam": 292.4754328727722,
+            "times_lbfgs": 38.42311692237854,
+            "times_solve": null,
+            "times_eval": 0.004651069641113281,
+            "times_total": 2418.934044599533,
+            "notes": "",
+            "result_dir": "/home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-NSGA3-Pymoo",
+            "source_file": "/home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-NSGA3-Pymoo/NSGA3_Pymoo_evaluation.json",
+            "rank": 6
+        },
+        {
             "method": "bayesian",
             "config_key": "best",
             "config_label": "widths=[110, 110, 110, 70]",
@@ -74,7 +104,7 @@
             "notes": "",
             "result_dir": "/home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Bayesian",
             "source_file": "/home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Bayesian/Bayesian_evaluation.json",
-            "rank": 5
+            "rank": 7
         },
         {
             "method": "naspinn",
@@ -89,7 +119,7 @@
             "notes": "",
             "result_dir": "/home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-NASPINN",
             "source_file": "/home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-NASPINN/NASPINN_evaluation.json",
-            "rank": 6
+            "rank": 8
         }
     ]
 }

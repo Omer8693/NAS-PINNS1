@@ -1,0 +1,72 @@
+{
+    "results_root": "/home/coder/NAS-PINNS1/FEM-PINNS",
+    "output_dir": "/home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison",
+    "figures": {
+        "single_figure_png": "/home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/poisson_comparison_single_figure.png",
+        "single_figure_pdf": "/home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/poisson_comparison_single_figure.pdf"
+    },
+    "removed_legacy_files": [
+        "/home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/poisson_comparison_single_figure.png",
+        "/home/coder/NAS-PINNS1/FEM-PINNS/2D-Poisson-Comparison/poisson_comparison_single_figure.pdf"
+    ],
+    "missing_methods": [],
+    "selected_methods": [
+        {
+            "method": "fem",
+            "display_name": "FEM",
+            "config_key": "1000",
+            "config_label": "mesh=1000",
+            "rel_l2": 2.0628683248954277e-05
+        },
+        {
+            "method": "pinn",
+            "display_name": "PINN",
+            "config_key": "10",
+            "config_label": "arch=[120, 120, 120, 120, 120, 1]",
+            "rel_l2": 0.00562419556081295
+        },
+        {
+            "method": "naspinn",
+            "display_name": "NAS-PINN",
+            "config_key": "best",
+            "config_label": "learned_arch",
+            "rel_l2": 0.04322155565023422
+        },
+        {
+            "method": "nsga2",
+            "display_name": "NSGA-II",
+            "config_key": "best",
+            "config_label": "widths=[90, 70, 30, 70]",
+            "rel_l2": 0.019508786499500275
+        },
+        {
+            "method": "nsga3",
+            "display_name": "NSGA-III",
+            "config_key": "best",
+            "config_label": "widths=[90, 70, 30, 70]",
+            "rel_l2": 0.019508786499500275
+        },
+        {
+            "method": "nsga2_pymoo",
+            "display_name": "NSGA-II (local pymoo)",
+            "config_key": "best",
+            "config_label": "widths=[90, 70, 30, 70]",
+            "rel_l2": 0.019508786499500275
+        },
+        {
+            "method": "nsga3_pymoo",
+            "display_name": "NSGA-III (local pymoo)",
+            "config_key": "best",
+            "config_label": "widths=[90, 70, 30, 70]",
+            "rel_l2": 0.019508786499500275
+        },
+        {
+            "method": "bayesian",
+            "display_name": "Bayesian",
+            "config_key": "best",
+            "config_label": "widths=[110, 110, 110, 70]",
+            "rel_l2": 0.03401362523436546
+        }
+    ],
+    "note": "The figure uses pointwise squared error for the heatmaps and relative L2 for the ranking panel."
+}

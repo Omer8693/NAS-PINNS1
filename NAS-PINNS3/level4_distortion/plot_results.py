@@ -1,14 +1,14 @@
 """
-plot_results.py — Level 4 Distortion Görselleştirme
-=====================================================
-level4_distortion.json dosyasını okur, dört grafik üretir:
+plot_results.py — Level 4 Distortion Visualization
+====================================================
+Reads level4_distortion.json and generates four figures:
 
-  Fig 1: CMM nokta distortion bar chart — üç optimizer karşılaştırması
-  Fig 2: u_x ve u_y bileşenleri ayrı subplotlar
-  Fig 3: T_final vs max_delta scatter — optimizer performansı
-  Fig 4: CMM nokta distortion haritası
+  Fig 1: CMM point distortion bar chart — three-optimizer comparison
+  Fig 2: u_x and u_y displacement components in separate subplots
+  Fig 3: T_final vs max_delta scatter — optimizer performance map
+  Fig 4: CMM point distortion map on the domain
 
-Kullanım:
+Usage:
     python plot_results.py
     python plot_results.py --input results/level4_distortion.json --out results/
 """
@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import numpy as np
 
-# Her optimizer için renk/stil — Level 2/3 ile tutarlı
+# Color / style per optimizer — consistent with Level 2/3
 STYLE = {
     "bayesian": {"color": "#2196F3", "label": "Bayesian [5×151 relu]"},
     "nsga2":    {"color": "#F44336", "label": "NSGA-II  [3×153 tanh]"},
@@ -34,11 +34,11 @@ def load_results(path: str) -> dict:
         return json.load(f)
 
 
-# ── Fig 1: CMM nokta distortion bar chart ────────────────────────────────────
+# ── Fig 1: CMM point distortion bar chart ────────────────────────────────────
 
 def plot_cmm_distortion(data: dict, out_dir: str) -> None:
     """
-    Her CMM noktasında üç optimizer'ın |δ| değerleri — yığılmamış bar grubu.
+    |δ| values at each CMM point for three optimizers — ungrouped bar chart.
     """
     valid = {k: v for k, v in data.items() if "error" not in v}
     if not valid:
@@ -65,7 +65,7 @@ def plot_cmm_distortion(data: dict, out_dir: str) -> None:
                label=style["label"],
                color=style["color"], alpha=0.85, edgecolor="white")
 
-    # Paper Fig17 (measured) ve Fig18 (FEM modelling) — mutlak değer olarak çiz
+    # Paper Fig17 (measured) and Fig18 (FEM modelling) — plot as absolute values
     paper_fem  = [abs(p["paper_fem_mm"])  for p in valid[opt_names[0]]["per_point"]]
     paper_meas = [abs(p["paper_meas_mm"]) for p in valid[opt_names[0]]["per_point"]]
     if any(v != 0 for v in paper_meas):
@@ -95,11 +95,11 @@ def plot_cmm_distortion(data: dict, out_dir: str) -> None:
     print(f"Saved: {out_path}")
 
 
-# ── Fig 2: u_x ve u_y bileşenleri ────────────────────────────────────────────
+# ── Fig 2: u_x and u_y displacement components ───────────────────────────────
 
 def plot_displacement_components(data: dict, out_dir: str) -> None:
     """
-    CMM noktalarında u_x (horizontal) ve u_y (vertical) bileşenleri.
+    u_x (horizontal) and u_y (vertical) displacement components at CMM points.
     """
     valid = {k: v for k, v in data.items() if "error" not in v}
     if not valid:
@@ -148,7 +148,7 @@ def plot_displacement_components(data: dict, out_dir: str) -> None:
 
 def plot_temperature_vs_distortion(data: dict, out_dir: str) -> None:
     """
-    T_final (ortalama) vs max CMM distortion — optimizer pozisyon haritası.
+    T_final (mean) vs max CMM distortion — optimizer position map.
     """
     valid = {k: v for k, v in data.items() if "error" not in v}
     if not valid:
@@ -181,12 +181,11 @@ def plot_temperature_vs_distortion(data: dict, out_dir: str) -> None:
     print(f"Saved: {out_path}")
 
 
-# ── Fig 4: CMM nokta haritası ─────────────────────────────────────────────────
+# ── Fig 4: CMM point map on domain ──────────────────────────────────────────
 
 def plot_cmm_map(data: dict, out_dir: str) -> None:
     """
-    CMM noktalarını domain üzerinde yerleştir,
-    renk kodlu |δ| büyüklükleri göster.
+    Place CMM points on the domain and show color-coded |δ| magnitudes.
     """
     valid = {k: v for k, v in data.items() if "error" not in v}
     if not valid:
@@ -201,7 +200,7 @@ def plot_cmm_map(data: dict, out_dir: str) -> None:
     fig.suptitle("Level 4 — CMM Point Distortion Map",
                  fontsize=12, fontweight="bold")
 
-    # Tüm optimizer'lardaki maksimum δ — renk skalası için
+    # Maximum δ across all optimizers — for color scale
     vmax = max(
         max(p["delta_mm"] for p in v["per_point"])
         for v in valid.values()
@@ -214,7 +213,7 @@ def plot_cmm_map(data: dict, out_dir: str) -> None:
         ys     = [p["y_m"]      for p in pts]
         deltas = [p["delta_mm"] for p in pts]
 
-        # Domain dikdörtgeni
+        # Domain rectangle
         rect = plt.Rectangle((0, 0), 1.3, 0.6, fill=False,
                               edgecolor="gray", linewidth=2, linestyle="--")
         ax.add_patch(rect)
@@ -242,7 +241,7 @@ def plot_cmm_map(data: dict, out_dir: str) -> None:
     print(f"Saved: {out_path}")
 
 
-# ── Giriş noktası ─────────────────────────────────────────────────────────────
+# ── Entry point ───────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Level 4 — Distortion Visualization")

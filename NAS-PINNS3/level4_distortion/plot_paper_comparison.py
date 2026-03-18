@@ -1,16 +1,16 @@
 """
-plot_paper_comparison.py — Paper Fig17/18 Stili Karşılaştırma Grafikleri
-=========================================================================
-Paper'daki gibi işaretli (signed) distortion bar chart üretir.
-Bayesian PINN tahminini Fig17 (ölçülen) ve Fig18 (FEM) ile yan yana gösterir.
+plot_paper_comparison.py — Paper Fig17/18 Style Comparison Charts
+==================================================================
+Generates signed distortion bar charts as in the baseline paper.
+Shows Bayesian PINN predictions alongside Fig17 (measured) and Fig18 (FEM).
 
-Çıktılar:
-  Fig 1: paper_comparison_signed.png  — signed bar chart (paper stili)
-  Fig 2: paper_comparison_abs.png     — mutlak değer + hata barları
-  Fig 3: paper_mae_summary.png        — tüm optimizer'lar için MAE özeti
-  all_results_summary.json            — Level 1-4 + paper verileri tek JSON'da
+Outputs:
+  Fig 1: paper_comparison_signed.png  — signed bar chart (paper style)
+  Fig 2: paper_comparison_abs.png     — absolute values + error bars
+  Fig 3: paper_mae_summary.png        — MAE summary for all optimizers
+  all_results_summary.json            — Level 1-4 + paper data in one JSON
 
-Kullanım:
+Usage:
     python plot_paper_comparison.py
     python plot_paper_comparison.py --out results/
 """
@@ -23,7 +23,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import numpy as np
 
-# ── Paper verileri (Fig17/18 bar chart'tan manuel okuma, ±0.05 mm) ────────────
+# ── Paper data (manually digitized from Fig17/18 bar charts, ±0.05 mm) ───────
 
 CMM_LABELS = [
     "L1206", "R2206", "LS01",  "RS01",  "LS13",  "RS13",
@@ -48,12 +48,12 @@ PAPER_FEM = np.array([
     +0.95, +0.95, -0.30, -0.25, -0.90, +0.55,
 ])
 
-# Renk şeması — paper'a yakın
-COL_MEAS  = "#2E7D32"   # koyu yeşil — ölçülen
-COL_FEM   = "#E65100"   # turuncu    — FEM modelleme
-COL_BAYES = "#1565C0"   # mavi       — Bayesian PINN
-COL_NSGA2 = "#C62828"   # kırmızı    — NSGA-II PINN
-COL_NSGA3 = "#6A1B9A"   # mor        — NSGA-III PINN
+# Color scheme — close to the paper
+COL_MEAS  = "#2E7D32"   # dark green  — measured
+COL_FEM   = "#E65100"   # orange      — FEM modelling
+COL_BAYES = "#1565C0"   # blue        — Bayesian PINN
+COL_NSGA2 = "#C62828"   # red         — NSGA-II PINN
+COL_NSGA3 = "#6A1B9A"   # purple      — NSGA-III PINN
 
 
 def load_level4(json_path: str) -> dict:
@@ -61,18 +61,18 @@ def load_level4(json_path: str) -> dict:
         return json.load(f)
 
 
-# ── Fig 1: Paper stili işaretli bar chart ─────────────────────────────────────
+# ── Fig 1: Paper-style signed bar chart ──────────────────────────────────────
 
 def plot_paper_style(l4_data: dict, out_dir: str) -> None:
     """
-    Fig17 / Fig18 stili: y-ekseninde işaretli distortion, x-ekseninde CMM noktaları.
-    Gösterilen: Paper Measured | Paper FEM | Bayesian PINN (en iyi)
-    Bayesian PINN değerleri işaretsiz (|δ|) olduğundan ayrı panel olarak eklenir.
+    Fig17 / Fig18 style: signed distortion on y-axis, CMM points on x-axis.
+    Shows: Paper Measured | Paper FEM | Bayesian PINN (best)
+    Bayesian PINN values are unsigned (|δ|) so they are shown in a separate panel.
     """
     x = np.arange(len(CMM_LABELS))
     bar_w = 0.25
 
-    # Bayesian PINN değerleri — mutlak (yön bilinmiyor)
+    # Bayesian PINN values — unsigned (direction unknown)
     bayes_pts   = l4_data.get("bayesian", {}).get("per_point", [])
     bayes_delta = np.array([p["delta_mm"] for p in bayes_pts]) if bayes_pts else np.zeros(24)
 
@@ -84,7 +84,7 @@ def plot_paper_style(l4_data: dict, out_dir: str) -> None:
         fontsize=13, fontweight="bold"
     )
 
-    # ── Panel 1: Paper Measured + Paper FEM (işaretli, paper stili) ──────────
+    # ── Panel 1: Paper Measured + Paper FEM (signed, paper style) ────────────
     ax1.bar(x - bar_w, PAPER_MEAS, bar_w,
             color=COL_MEAS, alpha=0.9, label="Fig17 Measured (Experimental)")
     ax1.bar(x,          PAPER_FEM,  bar_w,
@@ -100,12 +100,12 @@ def plot_paper_style(l4_data: dict, out_dir: str) -> None:
     ax1.legend(fontsize=10, loc="upper right")
     ax1.grid(True, axis="y", alpha=0.3)
 
-    # Paper FEM vs Ölçülen fark çizgisi
+    # Paper FEM vs Measured difference lines
     for i in range(len(CMM_LABELS)):
         ax1.plot([x[i], x[i]], [PAPER_MEAS[i], PAPER_FEM[i]],
                  color="gray", linewidth=0.8, alpha=0.5, zorder=2)
 
-    # ── Panel 2: PINN |δ| — tüm optimizer'lar ────────────────────────────────
+    # ── Panel 2: PINN |δ| — all optimizers ──────────────────────────────────
     for k, (opt, col, label) in enumerate([
         ("bayesian", COL_BAYES, "Bayesian [5×151 relu]"),
         ("nsga2",    COL_NSGA2, "NSGA-II  [3×153 tanh]"),
@@ -119,7 +119,7 @@ def plot_paper_style(l4_data: dict, out_dir: str) -> None:
         ax2.bar(x + offset, vals, bar_w * 0.8,
                 color=col, alpha=0.85, label=label, edgecolor="white")
 
-    # Paper mutlak değer referans çizgisi
+    # Paper absolute value reference lines
     ax2.plot(x, np.abs(PAPER_MEAS), "k-",  linewidth=1.8, marker="o",
              markersize=4, label="Paper Measured |δ|", zorder=10)
     ax2.plot(x, np.abs(PAPER_FEM),  "k--", linewidth=1.3, marker="s",
@@ -143,12 +143,12 @@ def plot_paper_style(l4_data: dict, out_dir: str) -> None:
     print(f"Saved: {out_path}")
 
 
-# ── Fig 2: MAE özeti — tüm optimizer'lar ─────────────────────────────────────
+# ── Fig 2: MAE summary — all optimizers ──────────────────────────────────────
 
 def plot_mae_summary(l4_data: dict, out_dir: str) -> None:
     """
-    Her optimizer için MAE (vs Fig17 Measured ve vs Fig18 FEM) bar chart.
-    Paper kendi iç MAE (FEM vs Measured = 0.179 mm) referans çizgi olarak gösterilir.
+    MAE bar chart per optimizer (vs Fig17 Measured and vs Fig18 FEM).
+    Paper's internal MAE (FEM vs Measured = 0.179 mm) shown as reference line.
     """
     opts   = []
     maes_m = []
@@ -179,12 +179,12 @@ def plot_mae_summary(l4_data: dict, out_dir: str) -> None:
                    color=colors[:len(opts)], alpha=0.45,
                    hatch="///", label="MAE vs Fig18 FEM")
 
-    # Paper iç MAE referansı
+    # Paper internal MAE reference
     paper_internal_mae = 0.179
     ax.axhline(paper_internal_mae, color="black", linestyle="--", linewidth=1.8,
                label=f"Paper FEM vs Measured MAE = {paper_internal_mae:.3f} mm")
 
-    # Değer etiketleri
+    # Value labels
     for bar in list(bars1) + list(bars2):
         h = bar.get_height()
         ax.text(bar.get_x() + bar.get_width()/2, h + 0.03,
@@ -204,12 +204,12 @@ def plot_mae_summary(l4_data: dict, out_dir: str) -> None:
     print(f"Saved: {out_path}")
 
 
-# ── Fig 3: Nokta bazlı hata grafiği (Bayesian) ───────────────────────────────
+# ── Fig 3: Point-wise error scatter (Bayesian) ───────────────────────────────
 
 def plot_pointwise_error(l4_data: dict, out_dir: str) -> None:
     """
-    Bayesian PINN |δ| vs Paper Measured işaretli distortion — scatter + identity line.
-    Her nokta bir CMM ölçümü; iyi tahmin → eğriye yakın.
+    Bayesian PINN |δ| vs Paper Measured signed distortion — scatter + identity line.
+    Each point is a CMM measurement; good prediction → near the diagonal.
     """
     pts = l4_data.get("bayesian", {}).get("per_point", [])
     if not pts:
@@ -225,12 +225,12 @@ def plot_pointwise_error(l4_data: dict, out_dir: str) -> None:
     sc = ax.scatter(pap_abs, pinn_vals, c=np.arange(len(CMM_LABELS)),
                     cmap="tab20", s=90, zorder=5)
 
-    # İdeal çizgi (1:1)
+    # Ideal line (1:1)
     lim = max(pap_abs.max(), pinn_vals.max()) * 1.05
     ax.plot([0, lim], [0, lim], "k--", linewidth=1.5, label="Ideal (PINN = Paper)", alpha=0.6)
     ax.plot([0, lim], [0, lim * 2], "r:",  linewidth=1.0, label="2× overestimate", alpha=0.4)
 
-    # Etiketler
+    # Labels
     for i, lbl in enumerate(CMM_LABELS):
         ax.annotate(lbl, (pap_abs[i], pinn_vals[i]),
                     fontsize=6, ha="left", va="bottom", alpha=0.7)
@@ -256,13 +256,13 @@ def plot_pointwise_error(l4_data: dict, out_dir: str) -> None:
     print(f"Saved: {out_path}")
 
 
-# ── Tüm sonuçları birleştiren özet JSON ──────────────────────────────────────
+# ── Summary JSON combining all results ───────────────────────────────────────
 
 def save_summary_json(l4_data: dict, out_dir: str) -> None:
     """
-    Level 1-4 sonuçlarını + paper referansı tek JSON dosyasında birleştirir.
+    Combines Level 1-4 results + paper reference into a single JSON file.
     """
-    # Level 1 (run2 sabit değerler)
+    # Level 1 (run2 fixed values)
     level1 = {
         "description": "Single-shot global PINN — NAS (run2, 20k Adam)",
         "bayesian": {"arch": "5x151_relu", "L2_rel": 0.076, "MAE_C": 39.1,
@@ -284,7 +284,7 @@ def save_summary_json(l4_data: dict, out_dir: str) -> None:
                      "runtime_s": 74.3, "speedup_vs_skip1": "2.1x"},
     }
 
-    # Level 3 (thr=0.1, skip20 — agresif)
+    # Level 3 (thr=0.1, skip20 — aggressive)
     level3_skip20 = {
         "description": "Hybrid FEM+PINN — adaptive skip (threshold=0.1, max_skip=20)",
         "bayesian": {"fem_steps": 1, "pinn_steps": 19, "skip_pct": 95.0,
@@ -322,7 +322,7 @@ def save_summary_json(l4_data: dict, out_dir: str) -> None:
             "MAE_vs_FEM":      float(np.mean(np.abs(pinn_vals - np.abs(PAPER_FEM)))),
         }
 
-    # Paper referans
+    # Paper reference
     paper = {
         "source": "baseline_paper [2026], Fig17 (Experimental) and Fig18 (Modelling)",
         "layer": "Bottom",
@@ -361,7 +361,7 @@ def save_summary_json(l4_data: dict, out_dir: str) -> None:
     return summary
 
 
-# ── Giriş noktası ─────────────────────────────────────────────────────────────
+# ── Entry point ───────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

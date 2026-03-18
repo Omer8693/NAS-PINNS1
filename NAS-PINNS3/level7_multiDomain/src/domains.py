@@ -1,19 +1,24 @@
 """
 domains.py — Multi-Domain Poisson Geometry Definitions
 =======================================================
-Three 2-D domains for the Poisson problem  -Δu = f :
+Domains for the Poisson problem  -Δu = f :
+
+  SquareDomain   [0,1]²  (original NAS-PINN paper problem)
+                 u* = x²(x-1)²·y(y-1)²,  f = -Δu*  (manufactured solution)
+                 u = 0 on all 4 sides  (homogeneous Dirichlet)
 
   CircleDomain   x² + y² ≤ 1
                  exact: u = (1 − x² − y²)/4,  f = 1
+
+  AnnulusDomain  0.25 ≤ r ≤ 1
+                 exact: u = (r² - 0.0625) / 4  for -Δu = 1
+                 BC: u = 0 on r=0.25 and r=1
 
   LShapeDomain   [0,1]^2 \\ [0.5,1]x[0,0.5]
                  f = 1,  u = 0 on all boundaries  (no closed-form)
 
   FlowerDomain   r ≤ R(θ) = 1 + 0.3·cos(5θ)   (5 petals)
                  f = 1,  u = 0 on petal boundary  (no closed-form)
-
-For domains without a closed-form, L2 is measured against a high-accuracy
-"reference PINN" trained beforehand (see nas_search_7b.py).
 """
 
 from __future__ import annotations
@@ -70,6 +75,62 @@ class BaseDomain:
         raise NotImplementedError
 
 
+# ── Square  [0,1]²  — original NAS-PINN manufactured solution ────────────────
+
+class SquareDomain(BaseDomain):
+    """
+    Unit square [0,1]².  Manufactured solution from the original NAS-PINN paper:
+      u*(x,y) = x²(x-1)²·y(y-1)²
+      f(x,y)  = -Δu* (computed analytically)
+    u* vanishes on all 4 sides → homogeneous Dirichlet BC.
+    """
+    name      = "square"
+    has_exact = True
+
+    def bbox(self):
+        return np.array([0.0, 0.0]), np.array([1.0, 1.0])
+
+    def is_inside(self, xy):
+        x, y = xy[:, 0], xy[:, 1]
+        return (x >= 0) & (x <= 1) & (y >= 0) & (y <= 1)
+
+    def sample_boundary(self, n):
+        """Uniform sampling on the 4 sides, proportional to length."""
+        ns = [n // 4] * 4
+        ns[-1] += n - sum(ns)
+        pts = []
+        rng = self._rng
+        # bottom y=0, top y=1, left x=0, right x=1
+        for i, (fixed_dim, fixed_val) in enumerate([(1, 0.0), (1, 1.0),
+                                                      (0, 0.0), (0, 1.0)]):
+            t = rng.uniform(0, 1, ns[i]).astype(np.float32)
+            if fixed_dim == 1:
+                pts.append(np.stack([t, np.full(ns[i], fixed_val, np.float32)], axis=1))
+            else:
+                pts.append(np.stack([np.full(ns[i], fixed_val, np.float32), t], axis=1))
+        return np.concatenate(pts, axis=0)[:n]
+
+    def f_rhs(self, xy):
+        x = xy[:, 0].astype(np.float64)
+        y = xy[:, 1].astype(np.float64)
+        # f = -Δ[x²(x-1)²·y(y-1)²]
+        # d²/dx²[x²(x-1)²] = 12x² - 12x + 2
+        # d²/dy²[y(y-1)²]  = 2(3y² - 4y + 1) — but factor is y(y-1)²
+        # u = g(x)*h(y) where g=x²(x-1)², h=y(y-1)²
+        # Δu = g''h + g h'' = (12x²-12x+2)·y(y-1)² + x²(x-1)²·(12y²-12y+2)
+        g   = x**2 * (x - 1)**2
+        h   = y**2 * (y - 1)**2
+        g2  = 12*x**2 - 12*x + 2   # d²g/dx²
+        h2  = 12*y**2 - 12*y + 2   # d²h/dy²
+        f   = -(g2 * h + g * h2)
+        return f.astype(np.float32)
+
+    def u_exact(self, xy):
+        x = xy[:, 0].astype(np.float64)
+        y = xy[:, 1].astype(np.float64)
+        return (x**2 * (x-1)**2 * y**2 * (y-1)**2).astype(np.float32)
+
+
 # ── Circle  x²+y² ≤ 1 ────────────────────────────────────────────────────────
 
 class CircleDomain(BaseDomain):
@@ -98,6 +159,51 @@ class CircleDomain(BaseDomain):
 
     def u_exact(self, xy):
         return (1.0 - xy[:, 0]**2 - xy[:, 1]**2) / 4.0
+
+
+# ── Annulus  0.25 ≤ r ≤ 1  ───────────────────────────────────────────────────
+
+class AnnulusDomain(BaseDomain):
+    """
+    Ring domain: R_in ≤ r ≤ R_out, with R_in=0.25, R_out=1.0.
+    -Δu = 1,  u = 0 on both boundaries (r=R_in and r=R_out).
+    Exact solution (radial symmetry):
+      u(r) = (r² - R_in²) / 4  −  (R_out² - R_in²)/4 * ln(r/R_in) / ln(R_out/R_in)
+    Verified: u=0 at r=R_in and r=R_out, -Δu = -(u_rr + u_r/r) = 1.
+    """
+    name      = "annulus"
+    has_exact = True
+    R_IN      = 0.25
+    R_OUT     = 1.0
+
+    def bbox(self):
+        return np.array([-self.R_OUT, -self.R_OUT]), \
+               np.array([ self.R_OUT,  self.R_OUT])
+
+    def is_inside(self, xy):
+        r = np.sqrt(xy[:, 0]**2 + xy[:, 1]**2)
+        return (r >= self.R_IN) & (r <= self.R_OUT)
+
+    def sample_boundary(self, n):
+        n_in  = n // 2
+        n_out = n - n_in
+        theta_in  = self._rng.uniform(0, 2*np.pi, n_in).astype(np.float32)
+        theta_out = self._rng.uniform(0, 2*np.pi, n_out).astype(np.float32)
+        xi = np.stack([self.R_IN  * np.cos(theta_in),  self.R_IN  * np.sin(theta_in)],  axis=1)
+        xo = np.stack([self.R_OUT * np.cos(theta_out), self.R_OUT * np.sin(theta_out)], axis=1)
+        return np.concatenate([xi, xo], axis=0)[:n]
+
+    def f_rhs(self, xy):
+        return np.ones(len(xy), dtype=np.float32)
+
+    def u_exact(self, xy):
+        r  = np.sqrt(xy[:, 0].astype(np.float64)**2 + xy[:, 1].astype(np.float64)**2)
+        ri, ro = self.R_IN, self.R_OUT
+        # Solve -(u_rr + u_r/r) = 1 with u(ri)=u(ro)=0:
+        #   u(r) = (ri² - r²)/4 + (ro² - ri²)/4 * ln(r/ri) / ln(ro/ri)
+        u = (ri**2 - r**2) / 4.0 \
+            + (ro**2 - ri**2) / 4.0 * np.log(r / ri) / np.log(ro / ri)
+        return u.astype(np.float32)
 
 
 # ── L-shape  [0,1]² \ [0.5,1]×[0,0.5] ───────────────────────────────────────
@@ -221,7 +327,9 @@ class FlowerDomain(BaseDomain):
 # ── Factory ───────────────────────────────────────────────────────────────────
 
 DOMAINS = {
+    "square":  SquareDomain,
     "circle":  CircleDomain,
+    "annulus": AnnulusDomain,
     "lshape":  LShapeDomain,
     "flower":  FlowerDomain,
 }

@@ -1,12 +1,12 @@
 """
-plot_results.py — Level 2 Skip Karşılaştırma Grafikleri
-=========================================================
-results/skip_table.json dosyasını okur, iki grafik üretir:
+plot_results.py — Level 2 Skip Comparison Charts
+=================================================
+Reads results/skip_table.json and generates two figures:
 
-  Fig 1: skip vs L2_rel — üç optimizer karşılaştırması
-  Fig 2: skip vs MAE (°C) — üç optimizer karşılaştırması
+  Fig 1: skip vs L2_rel — three-optimizer comparison
+  Fig 2: skip vs MAE (°C) — three-optimizer comparison
 
-Kullanım:
+Usage:
     python plot_results.py
     python plot_results.py --input results/skip_table.json --out results/
 """
@@ -19,14 +19,14 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import numpy as np
 
-# Her optimizer için renk ve marker
+# Color and marker style per optimizer
 STYLE = {
     "bayesian": {"color": "#2196F3", "marker": "o", "linestyle": "-",  "label": "Bayesian [5×151 relu]"},
     "nsga2":    {"color": "#F44336", "marker": "s", "linestyle": "--", "label": "NSGA-II  [3×153 tanh]"},
     "nsga3":    {"color": "#4CAF50", "marker": "^", "linestyle": ":",  "label": "NSGA-III [3×75  tanh]"},
 }
 
-# Level 1 referans çizgisi — run2 sonuçları
+# Level 1 reference lines — run2 results
 LEVEL1_REF = {
     "bayesian": {"l2": 0.076, "mae": 39.1},
     "nsga2":    {"l2": 0.252, "mae": 132.6},
@@ -41,10 +41,10 @@ def load_results(path: str) -> dict:
 
 def plot_skip_comparison(data: dict, out_dir: str) -> None:
     """
-    İki yan yana grafik:
-      Sol : skip vs L2_rel
-      Sağ : skip vs MAE (°C)
-    Her optimizere ait Level 1 referansı kesikli yatay çizgi olarak gösterilir.
+    Two side-by-side figures:
+      Left : skip vs L2_rel
+      Right: skip vs MAE (°C)
+    Level 1 reference shown as dash-dot horizontal lines per optimizer.
     """
     fig, axes = plt.subplots(1, 2, figsize=(13, 5))
     fig.suptitle("Level 2 — Time-Stepping PINN: Skip vs Accuracy\n"
@@ -59,7 +59,7 @@ def plot_skip_comparison(data: dict, out_dir: str) -> None:
         l2s    = [r["l2_rel"]  for r in rows]
         maes   = [r["mae_C"]   for r in rows]
 
-        # Level 2 çizgisi
+        # Level 2 lines
         ax_l2.plot(skips, l2s,  marker=style["marker"], color=style["color"],
                    linestyle=style["linestyle"], linewidth=2, markersize=8,
                    label=style.get("label", opt_name))
@@ -67,13 +67,13 @@ def plot_skip_comparison(data: dict, out_dir: str) -> None:
                     linestyle=style["linestyle"], linewidth=2, markersize=8,
                     label=style.get("label", opt_name))
 
-        # Level 1 referans yatay çizgisi
+        # Level 1 reference horizontal line
         ref = LEVEL1_REF.get(opt_name)
         if ref:
             ax_l2.axhline(ref["l2"],  color=style["color"], linestyle="-.", alpha=0.4, linewidth=1)
             ax_mae.axhline(ref["mae"], color=style["color"], linestyle="-.", alpha=0.4, linewidth=1)
 
-    # Sol grafik: L2_rel
+    # Left panel: L2_rel
     ax_l2.set_xlabel("Skip (every N-th time step)", fontsize=11)
     ax_l2.set_ylabel("L2 Relative Error", fontsize=11)
     ax_l2.set_title("L2_rel vs Skip", fontsize=11)
@@ -84,7 +84,7 @@ def plot_skip_comparison(data: dict, out_dir: str) -> None:
     ax_l2.grid(True, alpha=0.3)
     ax_l2.yaxis.set_major_formatter(ticker.FormatStrFormatter("%.2f"))
 
-    # Sağ grafik: MAE
+    # Right panel: MAE
     ax_mae.set_xlabel("Skip (every N-th time step)", fontsize=11)
     ax_mae.set_ylabel("MAE (°C)", fontsize=11)
     ax_mae.set_title("MAE vs Skip", fontsize=11)
@@ -103,8 +103,8 @@ def plot_skip_comparison(data: dict, out_dir: str) -> None:
 
 def plot_runtime_bar(data: dict, out_dir: str) -> None:
     """
-    Her optimizer × skip kombinasyonu için runtime bar grafiği.
-    Daha fazla adım atlamak ne kadar zaman kazandırıyor?
+    Runtime bar chart for each optimizer × skip combination.
+    Shows how much time is saved by skipping more FEM steps.
     """
     fig, ax = plt.subplots(figsize=(11, 5))
     fig.suptitle("Level 2 — Runtime vs Skip (seconds)", fontsize=12, fontweight="bold")
@@ -123,7 +123,7 @@ def plot_runtime_bar(data: dict, out_dir: str) -> None:
         bars = ax.bar(x + offset, runtimes, bar_width,
                       label=style.get("label", opt_name),
                       color=style["color"], alpha=0.85, edgecolor="white")
-        # Bar üstüne değer yaz
+        # Value labels on top of bars
         for bar, val in zip(bars, runtimes):
             ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 1,
                     f"{val:.0f}s", ha="center", va="bottom", fontsize=8)

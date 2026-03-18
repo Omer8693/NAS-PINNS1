@@ -28,7 +28,7 @@ sys.path.insert(0, str(_ROOT))
 
 from level7_multiDomain.src.nas_search_7b import run_one
 
-DOMAINS    = ["circle", "lshape", "flower"]
+DOMAINS    = ["square", "circle", "annulus", "lshape", "flower"]
 OPTIMIZERS = ["bayesian", "nsga2", "nsga3"]
 
 OUT_DIR = _ROOT / "results" / "level7b"
@@ -36,7 +36,8 @@ OUT_DIR = _ROOT / "results" / "level7b"
 
 def parse_args():
     p = argparse.ArgumentParser(description="Level 7B — Multi-Domain Poisson NAS")
-    p.add_argument("--domain",    default="all", choices=["all"] + DOMAINS)
+    p.add_argument("--domain",    default="all", choices=["all"] + DOMAINS,
+                   nargs="+", metavar="DOMAIN")
     p.add_argument("--optimizer", default="all", choices=["all"] + OPTIMIZERS)
     p.add_argument("--n_calls",   type=int, default=20,
                    help="Bayesian: total evaluations")
@@ -76,7 +77,8 @@ def print_summary(all_results: dict):
 
 def main():
     args = parse_args()
-    domains    = DOMAINS    if args.domain    == "all" else [args.domain]
+    raw = args.domain
+    domains    = DOMAINS    if raw == ["all"] or raw == "all" else (raw if isinstance(raw, list) else [raw])
     optimizers = OPTIMIZERS if args.optimizer == "all" else [args.optimizer]
 
     print("\n" + "=" * 70)

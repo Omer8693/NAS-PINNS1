@@ -11,8 +11,8 @@
   "final_l2": 0.176382,
   "final_mae": 0.162776,
   "has_exact": false,
-  "search_s": 198.5,
-  "train_s": 24.8,
+  "search_s": 195.7,
+  "train_s": 24.0,
   "loss_history": [
     1.00671017,
     1.01811218,

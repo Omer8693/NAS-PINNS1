@@ -154,31 +154,25 @@ def train(model:    PoissonNet,
 
         loss_hist.append(float(loss))
 
-        # Validation every 200 epochs
+        # Validation every 200 epochs — always use PDE residual during
+        # training/search so NAS can differentiate architectures even before
+        # the model has converged.  Final L2 vs exact is computed separately
+        # in run_one() after training completes.
         if epoch % 200 == 0 or epoch == n_epochs:
             model.eval()
+            eps = 1e-3
+            xy_v = torch.tensor(xy_val_np, device=DEVICE)
+            dx   = torch.tensor([[eps, 0.0]], device=DEVICE)
+            dy   = torch.tensor([[0.0, eps]], device=DEVICE)
             with torch.no_grad():
-                u_pred = model(xy_val).squeeze().cpu().numpy()
-            if domain.has_exact:
-                u_ref = domain.u_exact(xy_val_np)
-                l2 = float(np.linalg.norm(u_pred - u_ref) /
-                            (np.linalg.norm(u_ref) + 1e-12))
-            else:
-                # Without exact: PDE residual via finite differences
-                # RMS of (Δu_pred + f) — lower = better PDE satisfaction
-                eps = 1e-3
-                xy_v  = torch.tensor(xy_val_np, device=DEVICE)
-                dx    = torch.tensor([[eps, 0.0]], device=DEVICE)
-                dy    = torch.tensor([[0.0, eps]], device=DEVICE)
-                with torch.no_grad():
-                    u_c  = model(xy_v)
-                    u_px = model(xy_v + dx); u_mx = model(xy_v - dx)
-                    u_py = model(xy_v + dy); u_my = model(xy_v - dy)
-                lap = (u_px + u_mx + u_py + u_my - 4.0 * u_c) / (eps ** 2)
-                f_v = torch.tensor(domain.f_rhs(xy_val_np),
-                                   device=DEVICE).unsqueeze(1)
-                residual = lap + f_v          # should be 0 when -Δu = f
-                l2 = float(torch.sqrt(torch.mean(residual ** 2)))
+                u_c  = model(xy_v)
+                u_px = model(xy_v + dx); u_mx = model(xy_v - dx)
+                u_py = model(xy_v + dy); u_my = model(xy_v - dy)
+            lap  = (u_px + u_mx + u_py + u_my - 4.0 * u_c) / (eps ** 2)
+            f_v  = torch.tensor(domain.f_rhs(xy_val_np),
+                                device=DEVICE).unsqueeze(1)
+            residual = lap + f_v     # should be 0 when -Δu = f
+            l2 = float(torch.sqrt(torch.mean(residual ** 2)))
 
             val_l2_hist.append((epoch, l2))
             if verbose:
@@ -214,7 +208,8 @@ def eval_on_grid(model:  PoissonNet,
 
     inside = domain.is_inside(xy_flat)
 
-    xy_t = torch.tensor(xy_flat, device=DEVICE)
+    model_device = next(model.parameters()).device
+    xy_t = torch.tensor(xy_flat, device=model_device)
     with torch.no_grad():
         u_flat = model(xy_t).squeeze().cpu().numpy()
 

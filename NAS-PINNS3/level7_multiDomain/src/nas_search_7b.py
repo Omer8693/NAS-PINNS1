@@ -211,7 +211,12 @@ def run_one(domain_name: str, optimizer: str,
     print(f"\n  Final training: {FINAL_EPOCHS} epochs...")
     model = _build_model(best_cfg["n_layers"], best_cfg["neurons"],
                           best_cfg["activation"])
-    train_res = train(model, domain, n_epochs=FINAL_EPOCHS, seed=seed, verbose=True)
+    # Optimizer-specific seed: ensures two optimizers finding the same arch
+    # still produce distinct (non-identical) training runs.
+    # Use a fixed offset table (not hash()) — Python randomizes string hashes per process.
+    _OPT_OFFSET = {"bayesian": 0, "nsga2": 137, "nsga3": 271}
+    opt_seed = seed + _OPT_OFFSET.get(optimizer, 0)
+    train_res = train(model, domain, n_epochs=FINAL_EPOCHS, seed=opt_seed, verbose=True)
 
     final_val = train_res["final_val"]
     print(f"\n  Final val={final_val:.5f}  ({train_res['elapsed_s']:.1f}s)")

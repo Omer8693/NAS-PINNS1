@@ -1,14 +1,14 @@
 """
-plot_results.py — Level 3 Hibrit FEM+PINN Grafikleri
-======================================================
-results/level3_results.json dosyasını okur, dört grafik üretir:
+plot_results.py — Level 3 Hybrid FEM+PINN Visualization
+=========================================================
+Reads results/level3_results.json and generates four figures:
 
-  Fig 1: T_mean vs t — üç optimizer için sıcaklık profili
-  Fig 2: FEM / PINN adım dağılımı — bar grafiği
-  Fig 3: PDE rezidü vs t — adaptif karar eşiği görünümü
-  Fig 4: Distortion vs CMM nokta — Fig17 karşılaştırma taslağı
+  Fig 1: T_mean vs t — temperature profile for three optimizers
+  Fig 2: FEM / PINN step distribution — bar chart
+  Fig 3: PDE residual vs t — adaptive decision threshold view
+  Fig 4: Distortion vs CMM point — Fig17 comparison sketch
 
-Kullanım:
+Usage:
     python plot_results.py
     python plot_results.py --input results/level3_results.json --out results/
 """
@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import numpy as np
 
-# Her optimizer için renk ve stil — Level 2 ile aynı
+# Color and style per optimizer — consistent with Level 2
 STYLE = {
     "bayesian": {"color": "#2196F3", "marker": "o", "linestyle": "-",
                  "label": "Bayesian [5×151 relu]"},
@@ -39,14 +39,14 @@ def load_results(path: str) -> dict:
 
 def plot_temperature_profile(data: dict, threshold: float, out_dir: str) -> None:
     """
-    Fig 1: Her adımda T_mean — FEM adımları işaretli, PINN adımları boş.
-    Analitik referans kesik çizgi olarak eklenir.
+    Fig 1: T_mean at each step — FEM steps marked with diamonds, PINN steps unfilled.
+    Analytical reference shown as a dashed line.
     """
     fig, ax = plt.subplots(figsize=(12, 5))
     fig.suptitle("Level 3 — Temperature Profile: Hybrid FEM + PINN",
                  fontsize=12, fontweight="bold")
 
-    # Analitik referans
+    # Analytical reference
     t_ref = np.linspace(0, 30, 200)
     T_ref = 20 + 520 * np.exp(-1.75e-3 * t_ref)
     ax.plot(t_ref, T_ref, "k--", linewidth=1.5, alpha=0.5, label="Analytical ref (α=1.75e-3)")
@@ -58,11 +58,11 @@ def plot_temperature_profile(data: dict, threshold: float, out_dir: str) -> None
         T_means = np.array(hist["T_means"])
         sources = hist["sources"]
 
-        # Ana çizgi
+        # Main line
         ax.plot(times, T_means, color=style["color"], linestyle=style["linestyle"],
                 linewidth=1.8, alpha=0.7, label=style.get("label", opt_name))
 
-        # FEM adımlarını büyük marker ile işaretle
+        # Mark FEM steps with large diamond markers
         fem_t = [times[i] for i, s in enumerate(sources) if "fem" in s]
         fem_T = [T_means[i] for i, s in enumerate(sources) if "fem" in s]
         ax.scatter(fem_t, fem_T, color=style["color"], marker="D",
@@ -74,7 +74,7 @@ def plot_temperature_profile(data: dict, threshold: float, out_dir: str) -> None
     ax.legend(fontsize=9)
     ax.grid(True, alpha=0.3)
 
-    # Legend ek açıklama
+    # Extra legend entry
     diamond = mpatches.Patch(color="gray", label="◆ = FEM anchor step")
     handles, labels = ax.get_legend_handles_labels()
     ax.legend(handles + [diamond], labels + ["◆ = FEM anchor step"], fontsize=9)
@@ -88,7 +88,7 @@ def plot_temperature_profile(data: dict, threshold: float, out_dir: str) -> None
 
 def plot_step_distribution(data: dict, out_dir: str) -> None:
     """
-    Fig 2: Her optimizer için FEM / PINN adım sayısı yığılı bar grafiği.
+    Fig 2: Stacked bar chart of FEM / PINN step counts per optimizer.
     """
     fig, ax = plt.subplots(figsize=(8, 5))
     fig.suptitle("Level 3 — FEM vs PINN Step Distribution",
@@ -105,7 +105,7 @@ def plot_step_distribution(data: dict, out_dir: str) -> None:
     bars_pinn = ax.bar(x, pinn_counts, bar_w, label="PINN steps", color="#64B5F6", alpha=0.9,
                        bottom=fem_counts)
 
-    # Değerleri bar içine yaz
+    # Write counts inside bars
     for bar, val in zip(bars_fem, fem_counts):
         if val > 0:
             ax.text(bar.get_x() + bar.get_width() / 2, val / 2, str(val),
@@ -115,7 +115,7 @@ def plot_step_distribution(data: dict, out_dir: str) -> None:
             ax.text(bar.get_x() + bar.get_width() / 2, f + p / 2, str(p),
                     ha="center", va="center", fontsize=11, fontweight="bold", color="white")
 
-    # Skip rate etiketi
+    # Skip rate label
     for i, o in enumerate(opt_names):
         skip_pct = data[o]["run_summary"]["skip_rate_pct"]
         total    = fem_counts[i] + pinn_counts[i]
@@ -137,8 +137,8 @@ def plot_step_distribution(data: dict, out_dir: str) -> None:
 
 def plot_residual_trace(data: dict, threshold: float, out_dir: str) -> None:
     """
-    Fig 3: PDE rezidü vs zaman — adaptif atlama eşiği gösterilir.
-    Eşiğin üstündeki noktalar FEM, altındakiler PINN.
+    Fig 3: PDE residual vs time — adaptive skip threshold shown.
+    Points above threshold use FEM; points below use PINN.
     """
     fig, axes = plt.subplots(1, len(data), figsize=(14, 4), sharey=True)
     fig.suptitle(f"Level 3 — PDE Residual vs Time  (threshold={threshold})",
@@ -147,16 +147,16 @@ def plot_residual_trace(data: dict, threshold: float, out_dir: str) -> None:
     for ax, (opt_name, res) in zip(axes, data.items()):
         style     = STYLE.get(opt_name, {})
         hist      = res["history"]
-        times     = np.array(hist["times"][1:])   # t=0 rezidüsü yok
+        times     = np.array(hist["times"][1:])   # no residual at t=0
         residuals = np.array(hist["residuals"][1:])
         sources   = hist["sources"][1:]
 
-        # Renk kodlu scatter: kırmızı=FEM, mavi=PINN
+        # Color-coded scatter: red=FEM, blue=PINN
         colors = ["#E53935" if "fem" in s else "#1E88E5" for s in sources]
         ax.scatter(times, residuals, c=colors, s=40, zorder=5, alpha=0.8)
         ax.plot(times, residuals, color=style["color"], linewidth=1, alpha=0.4)
 
-        # Eşik çizgisi
+        # Threshold line
         ax.axhline(threshold, color="orange", linestyle="--", linewidth=1.5,
                    label=f"threshold={threshold}")
 
@@ -166,7 +166,7 @@ def plot_residual_trace(data: dict, threshold: float, out_dir: str) -> None:
 
     axes[0].set_ylabel("PDE Residual (normalized)", fontsize=10)
 
-    # Ortak legend
+    # Shared legend
     fem_patch  = mpatches.Patch(color="#E53935", label="FEM step")
     pinn_patch = mpatches.Patch(color="#1E88E5", label="PINN step")
     thr_line   = plt.Line2D([0], [0], color="orange", linestyle="--", label=f"threshold={threshold}")
@@ -182,8 +182,8 @@ def plot_residual_trace(data: dict, threshold: float, out_dir: str) -> None:
 
 def plot_distortion_cmm(data: dict, out_dir: str) -> None:
     """
-    Fig 4: CMM nokta distortion — üç optimizer karşılaştırması.
-    Paper FEM / measured verisi eklenince güncellenir.
+    Fig 4: CMM point distortion — three-optimizer comparison.
+    Will be updated once paper FEM / measured data is loaded.
     """
     fig, ax = plt.subplots(figsize=(14, 5))
     fig.suptitle("Level 3 — Distortion at CMM Points (Fig17 comparison)",
@@ -212,7 +212,7 @@ def plot_distortion_cmm(data: dict, out_dir: str) -> None:
     ax.grid(True, axis="y", alpha=0.3)
     ax.axhline(0, color="black", linewidth=0.8)
 
-    # Uyarı notu — placeholder veri
+    # Warning note — placeholder data
     ax.text(0.01, 0.97,
             "Note: paper FEM/measured data not yet loaded — distortion is first-order estimate only",
             transform=ax.transAxes, fontsize=8, color="gray", va="top")
@@ -227,19 +227,19 @@ def plot_distortion_cmm(data: dict, out_dir: str) -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Level 3 — Visualize results")
     parser.add_argument("--input",     default=None,
-                        help="level3_results.json yolu (varsayilan: --dir/level3_results.json)")
+                        help="path to level3_results.json (default: --dir/level3_results.json)")
     parser.add_argument("--dir",       default="results/thr0.1_skip4",
-                        help="Sonuc klasoru (hem input hem output icin)")
+                        help="Results directory (used for both input and output)")
     parser.add_argument("--threshold", type=float, default=0.1)
     args = parser.parse_args()
 
-    # --input verilmemişse --dir'den türet
+    # Derive input path from --dir if --input not provided
     if args.input is None:
         args.input = f"{args.dir}/level3_results.json"
     args.out = args.dir
 
     if not Path(args.input).exists():
-        print(f"ERROR: {args.input} bulunamadi. Once main_level3.py calistir.")
+        print(f"ERROR: {args.input} not found. Run main_level3.py first.")
         exit(1)
 
     data = load_results(args.input)

@@ -1,13 +1,13 @@
 """
-plot_results.py — Level 1 Single-Shot NAS-PINN Görselleştirme
-==============================================================
-results/run2/comparison.json dosyasını okur, üç grafik üretir:
+plot_results.py — Level 1 Single-Shot NAS-PINN Visualization
+=============================================================
+Reads results/run2/comparison.json and generates three figures:
 
-  Fig 1: L2_rel ve MAE — üç optimizer bar karşılaştırması
-  Fig 2: NAS + train runtime (süresi)
-  Fig 3: Paper FEM distortion (Fig17/18) ile PINN termal hata özeti
+  Fig 1: L2_rel and MAE — grouped bar comparison for three optimizers
+  Fig 2: NAS + training runtime
+  Fig 3: Paper FEM distortion (Fig17/18) vs PINN thermal error summary
 
-Kullanım:
+Usage:
     python level1_single_shot/plot_results.py
     python level1_single_shot/plot_results.py --results_dir results/run2 --out results/run2/plots
 """
@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import numpy as np
 
-# Optimizer renk ve stil — diğer levellarla tutarlı
+# Optimizer color and style — consistent with other levels
 STYLE = {
     "bayesian": {"color": "#2196F3", "label": "Bayesian\n5×151 relu"},
     "nsga2":    {"color": "#F44336", "label": "NSGA-II\n3×153 tanh"},
@@ -29,10 +29,10 @@ STYLE = {
 
 
 def load_comparison(results_dir: str) -> dict:
-    """Comparison JSON dosyasını oku — run2/comparison.json."""
+    """Read comparison JSON — run2/comparison.json."""
     p = Path(results_dir) / "comparison.json"
     if not p.exists():
-        # Bireysel results.json dosyalarından oku
+        # Fall back to individual results.json files
         data = {}
         for opt in ["bayesian", "nsga2", "nsga3"]:
             rp = Path(results_dir) / "quenching" / opt / "results.json"
@@ -44,11 +44,11 @@ def load_comparison(results_dir: str) -> dict:
         return json.load(f)
 
 
-# ── Fig 1: L2_rel ve MAE karşılaştırması ─────────────────────────────────────
+# ── Fig 1: L2_rel and MAE comparison ─────────────────────────────────────────
 
 def plot_accuracy(data: dict, out_dir: str) -> None:
     """
-    L2_rel (sol eksen) ve MAE_C (sağ eksen) — üç optimizer için grouped bar.
+    L2_rel and MAE_C — grouped bar chart for three optimizers.
     """
     opts   = [o for o in ["bayesian", "nsga2", "nsga3"] if o in data]
     x      = np.arange(len(opts))
@@ -109,7 +109,7 @@ def plot_accuracy(data: dict, out_dir: str) -> None:
 
 def plot_runtime(data: dict, out_dir: str) -> None:
     """
-    Yığılı bar: NAS süresi + Adam eğitim süresi.
+    Stacked bar: NAS search time + Adam training time.
     """
     opts   = [o for o in ["bayesian", "nsga2", "nsga3"] if o in data]
     x      = np.arange(len(opts))
@@ -144,11 +144,11 @@ def plot_runtime(data: dict, out_dir: str) -> None:
     print(f"Saved: {out_path}")
 
 
-# ── Fig 3: Özet tablo grafiği ─────────────────────────────────────────────────
+# ── Fig 3: Summary table figure ───────────────────────────────────────────────
 
 def plot_summary_table(data: dict, out_dir: str) -> None:
     """
-    Metin tablosu olarak özet grafik.
+    Summary as a text table figure.
     """
     opts = [o for o in ["bayesian", "nsga2", "nsga3"] if o in data]
 
@@ -217,11 +217,11 @@ def plot_summary_table(data: dict, out_dir: str) -> None:
     print(f"Saved: {out_path}")
 
 
-# ── Sonuçları JSON olarak kaydet ─────────────────────────────────────────────
+# ── Save results as JSON ──────────────────────────────────────────────────────
 
 def save_level1_json(data: dict, out_dir: str) -> None:
     """
-    Level 1 sonuçlarını temiz JSON formatında kaydet.
+    Save Level 1 results in clean JSON format.
     """
     summary = {}
     for opt, res in data.items():
@@ -251,7 +251,7 @@ def save_level1_json(data: dict, out_dir: str) -> None:
     print(f"Saved: {out_path}")
 
 
-# ── Giriş noktası ─────────────────────────────────────────────────────────────
+# ── Entry point ───────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

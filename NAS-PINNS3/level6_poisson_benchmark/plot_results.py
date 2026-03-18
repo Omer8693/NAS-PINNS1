@@ -295,7 +295,7 @@ def plot_summary_table(l5: dict, out_dir: Path) -> None:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Figure 5 & 6 — Temperature heatmaps  (ısı haritaları)
+# Figure 5 & 6 — Temperature heatmaps
 # ──────────────────────────────────────────────────────────────────────────────
 
 LEVEL1_DIR = _ROOT / "results" / "run2"

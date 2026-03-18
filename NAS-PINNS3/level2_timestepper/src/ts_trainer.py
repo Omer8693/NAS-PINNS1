@@ -133,14 +133,15 @@ def train_window(model: TimeStepperPINN,
                  n_epochs: int = 500,
                  lr: float = 1e-3,
                  lr_min: float = 0.0,
+                 lbfgs_iters: int = 0,
                  device: torch.device = torch.device("cpu")) -> tuple:
     """
     Single time window [t_start, t_end] training.
 
     T_prev_fn(x, y) → tensor(N,1): previous step temperature (teacher forcing).
 
-    lr_min > 0 : cosine annealing LR from lr → lr_min over n_epochs (recommended)
-    lr_min = 0 : fixed LR (original behavior)
+    lr_min > 0    : cosine annealing LR from lr → lr_min over n_epochs
+    lbfgs_iters>0 : L-BFGS refinement after Adam (Level 5 idea applied per window)
     """
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     scheduler = (
@@ -177,6 +178,33 @@ def train_window(model: TimeStepperPINN,
             history["ic"].append(loss_ic.item())
             history["bc"].append(loss_bc.item())
             history["total"].append(loss.item())
+
+    # ── L-BFGS refinement phase (Level 5 idea applied per window) ────────────
+    if lbfgs_iters > 0:
+        x_f = torch.rand(n_domain, 1, device=device) * X_MAX
+        y_f = torch.rand(n_domain, 1, device=device) * Y_MAX
+        t_f = torch.rand(n_domain, 1, device=device) * dt
+        T_prev_f     = T_prev_fn(x_f, y_f).detach()
+        T_prev_mean_f = float(T_prev_f.mean().item())
+
+        lbfgs_opt = torch.optim.LBFGS(
+            model.parameters(),
+            max_iter=lbfgs_iters,
+            tolerance_grad=1e-7,
+            tolerance_change=1e-9,
+            line_search_fn="strong_wolfe",
+        )
+
+        def closure():
+            lbfgs_opt.zero_grad()
+            l_pde = _pde_loss(model, x_f, y_f, t_f, T_prev_f, dt)
+            l_ic  = _ic_loss(model, x_f, y_f, T_prev_f, dt)
+            l_bc  = _boundary_loss(model, t_f, T_prev_mean_f, dt, n_bc, device)
+            l     = W_PDE * l_pde + W_IC * l_ic + W_BOUNDARY * l_bc
+            l.backward()
+            return l
+
+        lbfgs_opt.step(closure)
 
     elapsed = time.time() - t0
     return model, {"history": history, "train_time": elapsed, "final_loss": loss.item()}

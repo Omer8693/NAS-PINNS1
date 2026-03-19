@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Level 6 — Poisson Fine-Tuning | NAS-PINNs</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -289,26 +288,45 @@ canvas{display:block;width:100%;border-radius:6px}
 <footer>NAS-PINNs &middot; Level 6 &middot; <a href="../index.html">Back to overview</a></footer>
 
 <script>
-new Chart(document.getElementById('l6Chart'),{
-  type:'bar',
-  data:{
-    labels:['Bayesian','NSGA-II','NSGA-III'],
-    datasets:[
-      {label:'L5 L2',backgroundColor:'rgba(72,79,88,.7)',data:[0.037,0.055,0.259],borderRadius:4},
-      {label:'L6 L2',backgroundColor:['rgba(163,113,247,.8)','rgba(88,166,255,.5)','rgba(247,129,102,.8)'],data:[0.031,0.053,0.261],borderRadius:4},
-    ]
-  },
-  options:{
-    responsive:true,
-    plugins:{
-      legend:{position:'top',labels:{color:'#8B949E'}},
-    },
-    scales:{
-      y:{min:0,max:0.30,title:{display:true,text:'L2 Relative Error',color:'#8B949E'},ticks:{color:'#8B949E'},grid:{color:'rgba(48,54,61,.6)'}},
-      x:{ticks:{color:'#8B949E'},grid:{color:'rgba(48,54,61,.4)'}}
-    }
+(function(){
+  var cv=document.getElementById('l6Chart');
+  if(!cv) return;
+  cv.width=cv.offsetWidth||500; cv.height=220;
+  var W=cv.width,H=cv.height,ctx=cv.getContext('2d');
+  var ml=55,mr=20,mt=35,mb=40,pw=W-ml-mr,ph=H-mt-mb;
+  var labels=['Bayesian','NSGA-II','NSGA-III'];
+  var datasets=[
+    {label:'L5 L2',colors:['rgba(72,79,88,.7)','rgba(72,79,88,.7)','rgba(72,79,88,.7)'],data:[0.037,0.055,0.259]},
+    {label:'L6 L2',colors:['rgba(163,113,247,.8)','rgba(88,166,255,.5)','rgba(247,129,102,.8)'],data:[0.031,0.053,0.261]}
+  ];
+  var yMax=0.30,n=3,ns=2,bw=pw/n*0.35,gap=pw/n*0.08,grpW=pw/n;
+  ctx.fillStyle='#161B22'; ctx.fillRect(0,0,W,H);
+  ctx.font='10px system-ui'; ctx.strokeStyle='rgba(48,54,61,.6)'; ctx.lineWidth=1;
+  for(var i=0;i<=5;i++){
+    var yv=yMax*i/5,yp=mt+ph-ph*yv/yMax;
+    ctx.beginPath(); ctx.moveTo(ml,yp); ctx.lineTo(W-mr,yp); ctx.stroke();
+    ctx.fillStyle='#8B949E'; ctx.textAlign='right'; ctx.fillText(yv.toFixed(2),ml-5,yp+3);
   }
-});
+  datasets.forEach(function(ds,di){
+    ds.data.forEach(function(v,gi){
+      var x=ml+gi*grpW+(grpW-(ns*bw+(ns-1)*gap))/2+di*(bw+gap);
+      var bh=ph*v/yMax,y=mt+ph-bh;
+      ctx.fillStyle=ds.colors[gi]; ctx.fillRect(x,y,bw,bh);
+    });
+  });
+  ctx.fillStyle='#8B949E'; ctx.textAlign='center'; ctx.font='10px system-ui';
+  labels.forEach(function(l,i){ ctx.fillText(l,ml+i*grpW+grpW/2,mt+ph+15); });
+  var legX=ml;
+  datasets.forEach(function(ds){
+    ctx.fillStyle=ds.colors[0]; ctx.fillRect(legX,mt-20,12,10);
+    ctx.fillStyle='#8B949E'; ctx.textAlign='left'; ctx.fillText(ds.label,legX+16,mt-11);
+    legX+=ctx.measureText(ds.label).width+35;
+  });
+  ctx.save(); ctx.translate(12,mt+ph/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText('L2 Relative Error',0,0); ctx.restore();
+  ctx.strokeStyle='rgba(48,54,61,.8)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(ml,mt); ctx.lineTo(ml,mt+ph); ctx.lineTo(W-mr,mt+ph); ctx.stroke();
+})();
 </script>
 </body>
 </html>

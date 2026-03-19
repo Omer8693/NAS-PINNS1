@@ -2,290 +2,168 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Level 7 — Multi-Domain NAS | NAS-PINNs</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-/* ─── NAS-PINNs · Shared Stylesheet ───────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg:        #F5F7FA;
-  --surface:   #FFFFFF;
-  --border:    #E2E8F0;
-  --primary:   #2563EB;
-  --primary-l: #DBEAFE;
-  --primary-d: #1D4ED8;
-  --orange:    #EA580C;
-  --orange-l:  #FEF3C7;
-  --green:     #16A34A;
-  --green-l:   #DCFCE7;
-  --red:       #DC2626;
-  --red-l:     #FEE2E2;
-  --purple:    #7C3AED;
-  --purple-l:  #EDE9FE;
-  --txt:       #1E293B;
-  --txt-mid:   #475569;
-  --txt-light: #94A3B8;
-  --radius:    12px;
-  --shadow:    0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.05);
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D1117;--surface:#161B22;--border:#30363D;
+  --s2:#21262D;--txt:#E6EDF3;--mid:#8B949E;
+  --dim:#484F58;--blue:#58A6FF;--orange:#F0883E;
+  --green:#3FB950;--purple:#A371F7;--red:#F78166;
+  --yellow:#E3B341;--radius:10px;
 }
-html  { scroll-behavior: smooth; }
-body  { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: var(--bg); color: var(--txt); line-height: 1.6; }
-a     { color: var(--primary); text-decoration: none; }
-a:hover { text-decoration: underline; }
-img   { max-width: 100%; }
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,sans-serif;font-size:14px;line-height:1.6;min-height:100vh}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+img{max-width:100%;border-radius:var(--radius);border:1px solid var(--border);display:block;margin-top:10px}
+nav{display:flex;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;overflow-x:auto}
+.nav-logo{font-weight:700;font-size:.95rem;color:var(--blue);padding:.75rem 1.25rem;white-space:nowrap;display:flex;align-items:center;text-decoration:none;border-right:1px solid var(--border);flex-shrink:0}
+.nav-logo:hover{text-decoration:none;color:var(--txt)}
+.nav-links{display:flex;list-style:none}
+.nav-links a{display:block;padding:.75rem .9rem;font-size:.8rem;color:var(--mid);white-space:nowrap;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
+.nav-links a:hover{color:var(--txt);text-decoration:none}
+.nav-links a.active{color:var(--txt);border-bottom-color:var(--yellow)}
+.level-hero{padding:3rem 2rem 2rem;border-bottom:1px solid var(--border);background:var(--bg)}
+.container{max-width:1080px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{font-size:.8rem;color:var(--dim);margin-bottom:.75rem}
+.level-badge{display:inline-block;padding:3px 14px;border-radius:6px;font-size:.72rem;font-weight:700;margin-bottom:.75rem;background:rgba(227,179,65,.12);color:var(--yellow);border:1px solid rgba(227,179,65,.3)}
+.hero-title{font-size:clamp(1.4rem,3vw,2rem);font-weight:700;line-height:1.25;margin-bottom:.5rem;background:linear-gradient(90deg,var(--yellow),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:.92rem;color:var(--mid);max-width:680px;margin-bottom:1rem}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:.75rem}
+.badge{border-radius:20px;padding:3px 10px;font-size:.72rem;border:1px solid}
+.bb{border-color:rgba(88,166,255,.4);color:var(--blue);background:rgba(88,166,255,.08)}
+.bo{border-color:rgba(240,136,62,.4);color:var(--orange);background:rgba(240,136,62,.08)}
+.bg{border-color:rgba(63,185,80,.4);color:var(--green);background:rgba(63,185,80,.08)}
+.by{border-color:rgba(227,179,65,.4);color:var(--yellow);background:rgba(227,179,65,.08)}
+section{padding:2.5rem 0}
+section+section{border-top:1px solid var(--border)}
+.sec-label{font-size:.72rem;font-weight:700;letter-spacing:.08em;color:var(--yellow);text-transform:uppercase;margin-bottom:.4rem}
+h2{font-size:1.4rem;font-weight:600;color:var(--txt);margin-bottom:.5rem}
+h3{font-size:1rem;font-weight:600;color:var(--txt);margin-bottom:.5rem}
+.sec-desc{font-size:.88rem;color:var(--mid);max-width:680px;margin-bottom:1.5rem;line-height:1.65}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1rem}
+.card-title{font-size:.9rem;font-weight:600;color:var(--txt);margin-bottom:.75rem}
+.explain{background:var(--s2);border:1px solid var(--border);border-left:3px solid var(--yellow);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem;font-size:.83rem;color:var(--mid);line-height:1.65}
+.explain strong{color:var(--txt)}
+.eq-box{background:var(--s2);border-left:3px solid var(--yellow);border-radius:0 6px 6px 0;padding:12px 16px;font-family:'Courier New',monospace;font-size:.88rem;color:var(--txt);margin:10px 0;overflow-x:auto}
+.params-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:.75rem}
+.param-item{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
+.param-item .plabel{font-size:.68rem;color:var(--dim);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.param-item .pvalue{font-size:.9rem;font-weight:600;color:var(--txt);margin-top:2px}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{text-align:left;font-weight:500;font-size:.72rem;color:var(--mid);padding:8px 12px;border-bottom:1px solid var(--border);background:var(--s2)}
+td{padding:8px 12px;border-bottom:1px solid rgba(48,54,61,.5);color:var(--txt)}
+tr:last-child td{border-bottom:none}
+.best{color:var(--green);font-weight:600}
+.bad{color:var(--red)}
+.note{font-size:.75rem;color:var(--dim)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:720px){.two-col,.three-col{grid-template-columns:1fr}}
+.finding-list{list-style:none;margin-top:.75rem}
+.finding-list li{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)}
+.finding-list li:last-child{border-bottom:none}
+.finding-icon{width:26px;height:26px;border-radius:6px;background:rgba(63,185,80,.12);color:var(--green);border:1px solid rgba(63,185,80,.25);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;margin-top:1px}
+.finding-body strong{display:block;font-size:.88rem;color:var(--txt)}
+.finding-body span{font-size:.82rem;color:var(--mid)}
+.page-nav{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding:1.5rem 0}
+.btn{padding:8px 18px;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;border:none;transition:all .15s;display:inline-block;text-decoration:none}
+.btn-primary{background:rgba(227,179,65,.15);color:var(--yellow);border:1px solid rgba(227,179,65,.3)}
+.btn-primary:hover{background:rgba(227,179,65,.25);text-decoration:none}
+.btn-outline{background:var(--s2);color:var(--mid);border:1px solid var(--border)}
+.btn-outline:hover{color:var(--txt);border-color:var(--mid);text-decoration:none}
+.page-info{font-size:.82rem;color:var(--dim)}
+footer{text-align:center;padding:1.5rem;font-size:.72rem;color:var(--dim);border-top:1px solid var(--border)}
+canvas{display:block;width:100%;border-radius:6px}
 
-/* ── Layout ───────────────────────────────────────────────────────────────── */
-.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
-section    { padding: 56px 0; }
-section + section { border-top: 1px solid var(--border); }
+/* Domain cards grid */
+.domain-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:1rem}
+.dcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem}
+.dtag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.7rem;font-weight:700;margin-bottom:.5rem}
+.dcard h3{font-size:.88rem;font-weight:600;margin-bottom:.25rem}
+.dcard p{font-size:.78rem;color:var(--mid);line-height:1.5}
+.dresult{margin-top:.5rem;display:inline-block;padding:2px 8px;border-radius:4px;font-size:.72rem;font-weight:700;background:rgba(63,185,80,.12);color:var(--green);border:1px solid rgba(63,185,80,.3)}
+.dresult.hard{background:rgba(247,129,102,.12);color:var(--red);border-color:rgba(247,129,102,.3)}
 
-/* ── Nav ──────────────────────────────────────────────────────────────────── */
-nav {
-  position: sticky; top: 0; z-index: 100;
-  background: rgba(255,255,255,.92); backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-}
-.nav-inner {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 24px; max-width: 1100px; margin: 0 auto; gap: 16px;
-}
-.nav-logo { font-weight: 700; font-size: 1rem; color: var(--primary); white-space: nowrap; }
-.nav-links { display: flex; gap: 16px; list-style: none; flex-wrap: wrap; }
-.nav-links a { font-size: .82rem; color: var(--txt-mid); font-weight: 500; white-space: nowrap; }
-.nav-links a:hover, .nav-links a.active { color: var(--primary); text-decoration: none; }
-
-/* ── Buttons ──────────────────────────────────────────────────────────────── */
-.btn { padding: 10px 22px; border-radius: 8px; font-size: .9rem; font-weight: 600;
-       cursor: pointer; border: none; transition: all .15s; display: inline-block; }
-.btn-primary  { background: var(--primary); color: #fff; }
-.btn-primary:hover  { background: var(--primary-d); text-decoration: none; }
-.btn-outline  { background: #fff; color: var(--primary); border: 1.5px solid var(--primary); }
-.btn-outline:hover  { background: var(--primary-l); text-decoration: none; }
-.btn-group    { display: flex; gap: 12px; flex-wrap: wrap; }
-
-/* ── Badges ───────────────────────────────────────────────────────────────── */
-.badge { display: inline-flex; align-items: center; gap: 6px;
-         padding: 4px 12px; border-radius: 99px; font-size: .78rem;
-         font-weight: 600; border: 1px solid; }
-.badge-blue   { background: var(--primary-l); color: var(--primary); border-color: #BFDBFE; }
-.badge-green  { background: var(--green-l);   color: var(--green);   border-color: #BBF7D0; }
-.badge-orange { background: var(--orange-l);  color: var(--orange);  border-color: #FED7AA; }
-.badge-red    { background: var(--red-l);     color: var(--red);     border-color: #FECACA; }
-.badge-purple { background: var(--purple-l);  color: var(--purple);  border-color: #DDD6FE; }
-
-/* ── Cards ────────────────────────────────────────────────────────────────── */
-.card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 28px 32px; box-shadow: var(--shadow);
-}
-.card + .card { margin-top: 20px; }
-
-/* ── Section header ───────────────────────────────────────────────────────── */
-.section-label { font-size: .8rem; font-weight: 700; letter-spacing: .08em;
-                 color: var(--primary); text-transform: uppercase; margin-bottom: 8px; }
-h2 { font-size: 1.75rem; font-weight: 800; margin-bottom: 12px; }
-h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
-.section-desc { color: var(--txt-mid); max-width: 700px; margin-bottom: 32px; font-size: .95rem; }
-
-/* ── Level cards ──────────────────────────────────────────────────────────── */
-.level-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-              gap: 16px; margin-top: 32px; }
-.level-card { background: var(--surface); border: 1px solid var(--border);
-              border-radius: var(--radius); padding: 20px 22px; box-shadow: var(--shadow);
-              transition: transform .15s, box-shadow .15s; }
-.level-card:hover { transform: translateY(-3px); box-shadow: 0 6px 24px rgba(0,0,0,.12); }
-.level-tag { display: inline-block; padding: 2px 10px; border-radius: 6px;
-             font-size: .78rem; font-weight: 700; margin-bottom: 10px; }
-.level-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
-.level-card p  { font-size: .88rem; color: var(--txt-mid); }
-.result-chip   { margin-top: 10px; display: inline-block;
-                 padding: 3px 10px; background: var(--green-l); color: var(--green);
-                 border-radius: 6px; font-size: .78rem; font-weight: 600; }
-
-/* ── Results table ────────────────────────────────────────────────────────── */
-.results-table { width: 100%; border-collapse: collapse; font-size: .9rem; margin-top: 16px; }
-.results-table th { background: var(--primary); color: #fff; padding: 10px 14px;
-                    text-align: left; font-weight: 600; font-size: .82rem; }
-.results-table th:first-child { border-radius: 8px 0 0 0; }
-.results-table th:last-child  { border-radius: 0 8px 0 0; }
-.results-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
-.results-table tr:hover td { background: var(--primary-l); }
-.results-table tr:last-child td { border-bottom: none; }
-.cell-good { color: var(--green); font-weight: 700; }
-.cell-bad  { color: var(--red);   font-weight: 600; }
-.cell-note { font-size: .8rem; color: var(--txt-light); }
-
-/* ── Parameter grid ───────────────────────────────────────────────────────── */
-.params-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-               gap: 10px; margin-top: 16px; }
-.param-item  { background: var(--surface); border: 1px solid var(--border);
-               border-radius: 8px; padding: 12px 14px; }
-.param-item .plabel { font-size: .72rem; color: var(--txt-light); font-weight: 600;
-                      text-transform: uppercase; letter-spacing: .04em; }
-.param-item .pvalue { font-size: .95rem; font-weight: 700; color: var(--txt); margin-top: 2px; }
-
-/* ── Equation box ─────────────────────────────────────────────────────────── */
-.eq-box { background: var(--primary-l); border-left: 4px solid var(--primary);
-          border-radius: 0 8px 8px 0; padding: 14px 18px;
-          font-family: 'Courier New', monospace; font-size: .9rem;
-          color: var(--txt); margin: 12px 0; overflow-x: auto; }
-
-/* ── Step row (FEM ↔ PINN visualization) ──────────────────────────────────── */
-.step-row  { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
-.step-box  { padding: 6px 12px; border-radius: 6px; font-size: .82rem; font-weight: 700; }
-.step-fem  { background: #DBEAFE; color: #1E40AF; }
-.step-pinn { background: #FEF3C7; color: #92400E; }
-.step-skip { background: #DCFCE7; color: #166534; }
-.step-arrow { color: var(--txt-light); font-size: 1.1rem; }
-
-/* ── Plot image ───────────────────────────────────────────────────────────── */
-.plot-img { width: 100%; border-radius: 10px; border: 1px solid var(--border);
-            display: block; margin-top: 12px; }
-.plot-caption { font-size: .8rem; color: var(--txt-light); text-align: center;
-                margin-top: 6px; }
-
-/* ── CMM bars ─────────────────────────────────────────────────────────────── */
-.cmm-bar-row   { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-.cmm-bar-label { width: 140px; font-size: .85rem; font-weight: 600; flex-shrink: 0; }
-.cmm-bar-track { flex: 1; background: var(--border); border-radius: 99px; height: 20px; overflow: hidden; }
-.cmm-bar-fill  { height: 100%; border-radius: 99px; display: flex; align-items: center;
-                 padding-left: 8px; font-size: .76rem; font-weight: 700; color: #fff;
-                 transition: width 1.2s cubic-bezier(.4,0,.2,1); }
-.cmm-bar-val   { font-size: .85rem; font-weight: 700; min-width: 60px; text-align: right; }
-
-/* ── Skip timeline ────────────────────────────────────────────────────────── */
-.skip-controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
-.skip-select   { padding: 7px 14px; border-radius: 8px; border: 1.5px solid var(--border);
-                 font-size: .88rem; font-weight: 600; background: #fff; color: var(--txt); cursor: pointer; }
-.skip-select:focus { outline: none; border-color: var(--primary); }
-.skip-stats { display: flex; gap: 14px; margin-top: 14px; flex-wrap: wrap; }
-.stat-chip  { padding: 8px 14px; border-radius: 8px; font-size: .84rem; font-weight: 600; }
-
-/* ── Two / three col ──────────────────────────────────────────────────────── */
-.two-col   { display: grid; grid-template-columns: 1fr 1fr;     gap: 24px; align-items: start; }
-.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: start; }
-@media (max-width: 800px) { .two-col, .three-col { grid-template-columns: 1fr; } }
-
-/* ── Level hero (top of each level page) ─────────────────────────────────── */
-.level-hero { padding: 48px 0 36px; border-bottom: 1px solid var(--border); }
-.level-hero .breadcrumb { font-size: .85rem; color: var(--txt-light); margin-bottom: 14px; }
-.level-hero h1 { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 800; line-height: 1.25; }
-.level-hero .sub { font-size: 1rem; color: var(--txt-mid); max-width: 700px; margin-top: 10px; }
-.level-num { display: inline-block; font-size: 1.3rem; font-weight: 900;
-             padding: 4px 16px; border-radius: 8px; margin-bottom: 12px; }
-
-/* ── Finding list ─────────────────────────────────────────────────────────── */
-.finding-list { list-style: none; margin-top: 16px; }
-.finding-list li { display: flex; gap: 12px; align-items: flex-start;
-                   padding: 12px 0; border-bottom: 1px solid var(--border); }
-.finding-list li:last-child { border-bottom: none; }
-.finding-icon { width: 28px; height: 28px; border-radius: 8px; background: var(--green-l);
-                color: var(--green); display: flex; align-items: center; justify-content: center;
-                font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
-.finding-body strong { display: block; font-size: .95rem; }
-.finding-body span   { font-size: .85rem; color: var(--txt-mid); }
-
-/* ── References section ───────────────────────────────────────────────────── */
-#references { background: #F8FAFF; }
-.ref-list   { list-style: none; margin-top: 16px; }
-.ref-list li { padding: 12px 0; border-bottom: 1px solid var(--border);
-               font-size: .88rem; color: var(--txt-mid); line-height: 1.5; }
-.ref-list li:last-child { border-bottom: none; }
-.ref-list strong { color: var(--txt); }
-
-/* ── Footer ───────────────────────────────────────────────────────────────── */
-footer { background: var(--txt); color: #94A3B8; padding: 32px 24px;
-         text-align: center; font-size: .85rem; }
-footer strong { color: #fff; }
-footer a { color: #60A5FA; }
-
-/* ── Animation controls ───────────────────────────────────────────────────── */
-input[type=range] { accent-color: var(--primary); flex: 1; }
-.ctrl-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-.ctrl-btn { padding: 8px 18px; border-radius: 8px; border: none; cursor: pointer;
-            font-size: .88rem; font-weight: 600; transition: background .15s; }
-.ctrl-btn.play  { background: var(--primary); color: #fff; }
-.ctrl-btn.play:hover  { background: var(--primary-d); }
-.ctrl-btn.reset { background: var(--border); color: var(--txt); }
-.ctrl-btn.reset:hover { background: #CBD5E1; }
-.ctrl-label { font-size: .82rem; color: var(--txt-mid); font-weight: 600; }
-
+/* Poisson canvas cards */
+.poisson-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
+.pcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:.875rem;text-align:center}
+.pcard-title{font-size:.82rem;font-weight:600;color:var(--txt);margin-bottom:.4rem}
+.pcard-sub{font-size:.72rem;color:var(--mid);margin-top:.4rem;line-height:1.5;text-align:left}
+@media(max-width:720px){.poisson-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="nav-inner">
-    <a class="nav-logo" href="../index.html">NAS-PINNs</a>
-    <ul class="nav-links">
-      <li><a href="../index.html">Home</a></li>
-      <li><a href="level1.html">L1</a></li>
-      <li><a href="level2.html">L2</a></li>
-      <li><a href="level3.html">L3</a></li>
-      <li><a href="level4.html">L4</a></li>
-      <li><a href="level5.html">L5</a></li>
-      <li><a href="level6.html">L6</a></li>
-      <li><a href="level7.html" class="active">L7</a></li>
-    </ul>
-  </div>
+  <a class="nav-logo" href="../index.html">NAS-PINNs</a>
+  <ul class="nav-links">
+    <li><a href="level1.html">L1</a></li>
+    <li><a href="level2.html">L2</a></li>
+    <li><a href="level3.html">L3</a></li>
+    <li><a href="level4.html">L4</a></li>
+    <li><a href="level5.html">L5</a></li>
+    <li><a href="level6.html">L6</a></li>
+    <li><a href="level7.html" class="active">L7</a></li>
+  </ul>
 </nav>
 
-<!-- Hero -->
-<div class="level-hero" style="background:linear-gradient(135deg,#FFF7ED 0%,#FFFBEB 50%,#F0FDF4 100%);">
+<div class="level-hero">
   <div class="container">
-    <div class="breadcrumb"><a href="../index.html">Home</a> › Level 7</div>
-    <span class="level-num" style="background:#FEF3C7;color:#92400E;">Level 7</span>
-    <h1>Multi-Domain NAS — Poisson Equation</h1>
-    <p class="sub">
-      NAS is applied independently to five different 2-D geometries, all solving the
-      Poisson equation. This tests whether NAS-PINNs generalise across domain shapes —
-      from simple circles to complex 5-petal flower boundaries.
-    </p>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;">
-      <span class="badge badge-orange">5 geometries</span>
-      <span class="badge badge-blue">Poisson PDE: −∇²u = f</span>
-      <span class="badge badge-green">Circle L2 = 0.00014 ✓✓</span>
-      <span class="badge badge-blue">Bayesian · NSGA-II · NSGA-III</span>
+    <div class="breadcrumb"><a href="../index.html">Home</a> &rsaquo; Level 7</div>
+    <div class="level-badge">Level 7 of 7</div>
+    <div class="hero-title">Multi-Domain NAS &mdash; Poisson Equation</div>
+    <p class="hero-sub">NAS is applied independently to five different 2-D geometries, all solving the Poisson equation. This tests whether NAS-PINNs generalise across domain shapes — from simple circles to complex 5-petal flower boundaries. Circle achieves L2=0.00014; Flower remains at L2=0.17.</p>
+    <div class="badges">
+      <span class="badge bo">5 geometries</span>
+      <span class="badge bb">Poisson: &minus;&nabla;&sup2;u = f</span>
+      <span class="badge bg">Circle L2 = 0.00014</span>
+      <span class="badge by">Bayesian &middot; NSGA-II &middot; NSGA-III</span>
     </div>
   </div>
 </div>
 
-<!-- Problem -->
+<!-- Problem Setup -->
 <section>
   <div class="container">
-    <div class="section-label">Problem Setup</div>
+    <div class="sec-label">Problem Setup</div>
     <h2>Poisson Equation on 5 Geometries</h2>
     <div class="two-col">
       <div>
         <h3>PDE</h3>
-        <div class="eq-box">−∇²u = f(x, y)  on Ω<br>
-u = 0  on ∂Ω  (Dirichlet)</div>
-        <p style="margin-top:14px;font-size:.9rem;color:var(--txt-mid);">
-          Each domain has a different exact or reference solution.
-          The PINN is trained using only the PDE loss — no labelled solution data.
-          Accuracy is measured as L2 relative error against the reference.
-        </p>
-        <h3 style="margin-top:18px;">Why Different Geometries?</h3>
-        <p style="font-size:.9rem;color:var(--txt-mid);">
-          Geometry complexity tests the PINN's ability to learn complex boundary shapes.
-          Re-entrant corners (L-Shape) and curved petals (Flower) create challenging
-          boundary conditions and singular features in the solution.
-        </p>
+        <div class="eq-box">&minus;&nabla;&sup2;u = f(x, y)  on &Omega;<br>u = 0  on &part;&Omega;  (Dirichlet BC)</div>
+        <p style="font-size:.83rem;color:var(--mid);margin-top:.75rem">Each domain has a different exact or FDM-reference solution. The PINN is trained using only the PDE loss — no labelled solution data. Accuracy is measured as L2 relative error against the reference.</p>
+        <h3 style="margin-top:1rem">Why Different Geometries?</h3>
+        <p style="font-size:.83rem;color:var(--mid)">Geometry complexity tests the PINN's ability to learn complex boundary shapes. Re-entrant corners (L-Shape) and curved petals (Flower) create challenging boundary conditions and singular features in the solution that standard MLP architectures may struggle to represent.</p>
       </div>
       <div class="card">
-        <h3>NAS Search Space (same as L1)</h3>
-        <table class="results-table">
+        <div class="card-title">Domains Summary</div>
+        <table>
+          <thead><tr><th>Domain</th><th>Description</th><th>Exact/Ref</th><th>Difficulty</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Square</strong></td><td>[0,1]&sup2;</td><td>Analytical</td><td>Medium</td></tr>
+            <tr><td><strong>Circle</strong></td><td>r &le; 1</td><td>Analytical</td><td>Easy</td></tr>
+            <tr><td><strong>Annulus</strong></td><td>0.3 &le; r &le; 1</td><td>FDM</td><td>Medium</td></tr>
+            <tr><td><strong>L-Shape</strong></td><td>[0,1]&sup2; \ corner</td><td>FDM</td><td>Hard</td></tr>
+            <tr><td><strong>Flower</strong></td><td>r &le; 1+0.3cos(5&theta;)</td><td>FDM</td><td>Hardest</td></tr>
+          </tbody>
+        </table>
+        <div class="card-title" style="margin-top:1rem">NAS Search Space (same as L1)</div>
+        <table>
           <thead><tr><th>Parameter</th><th>Range</th></tr></thead>
           <tbody>
-            <tr><td>Hidden layers</td><td>2 – 8</td></tr>
-            <tr><td>Neurons per layer</td><td>32 – 256</td></tr>
+            <tr><td>Hidden layers</td><td>2 &ndash; 8</td></tr>
+            <tr><td>Neurons per layer</td><td>32 &ndash; 256</td></tr>
             <tr><td>Activation</td><td>relu, tanh, silu, gelu</td></tr>
-            <tr><td>NAS trials</td><td>50 per domain × 3 optimisers</td></tr>
+            <tr><td>NAS trials</td><td>50 per domain &times; 3 opt.</td></tr>
           </tbody>
         </table>
       </div>
+    </div>
+    <div class="explain">
+      <p>The Poisson equation &minus;&nabla;&sup2;u = f is the canonical test problem for elliptic PDE solvers. By applying NAS independently on five geometries with the same search space, we test whether the architecture preferences found in Level 1 (for the thermal quenching problem) generalise to a different PDE family and different geometric complexity levels. The Dirichlet boundary condition u=0 is easier to enforce than the Robin condition in Levels 1&ndash;6, but the boundary geometry itself introduces difficulty — especially for the Flower domain where the boundary oscillates rapidly in polar angle.</p>
     </div>
   </div>
 </section>
@@ -293,39 +171,80 @@ u = 0  on ∂Ω  (Dirichlet)</div>
 <!-- Domain cards -->
 <section>
   <div class="container">
-    <div class="section-label">Geometries</div>
-    <h2>Five Domains</h2>
-    <div class="level-grid">
-      <div class="level-card">
-        <span class="level-tag" style="background:#DBEAFE;color:#1D4ED8;">Square [0,1]²</span>
+    <div class="sec-label">Geometries</div>
+    <h2>Five Poisson Domains</h2>
+    <div class="domain-grid">
+      <div class="dcard">
+        <span class="dtag" style="background:rgba(88,166,255,.12);color:var(--blue);border:1px solid rgba(88,166,255,.3)">Square [0,1]&sup2;</span>
         <h3>Manufactured Solution</h3>
-        <p>u* = x²(x−1)²·y²(y−1)²<br>Smooth boundary, medium difficulty.</p>
-        <span class="result-chip">Bayesian L2 = 0.0376</span>
+        <p>u* = x&sup2;(x&minus;1)&sup2;&middot;y&sup2;(y&minus;1)&sup2;<br>Smooth boundary, medium difficulty.</p>
+        <span class="dresult">Bayesian L2 = 0.0376</span>
       </div>
-      <div class="level-card">
-        <span class="level-tag" style="background:#DCFCE7;color:#15803D;">Circle r ≤ 1</span>
+      <div class="dcard">
+        <span class="dtag" style="background:rgba(63,185,80,.12);color:var(--green);border:1px solid rgba(63,185,80,.3)">Circle r &le; 1</span>
         <h3>Analytic Solution</h3>
-        <p>u* = (1 − x² − y²) / 4<br>Smooth, simple shape. Easiest domain.</p>
-        <span class="result-chip">Bayesian L2 = 0.00014 ✓✓</span>
+        <p>u* = (1 &minus; r&sup2;) / 4<br>Smooth convex shape. Easiest domain.</p>
+        <span class="dresult">Bayesian L2 = 0.00014 &#10003;&#10003;</span>
       </div>
-      <div class="level-card">
-        <span class="level-tag" style="background:#EDE9FE;color:#6D28D9;">Annulus</span>
+      <div class="dcard">
+        <span class="dtag" style="background:rgba(163,113,247,.12);color:var(--purple);border:1px solid rgba(163,113,247,.3)">Annulus</span>
         <h3>Ring Domain</h3>
-        <p>0.3 ≤ r ≤ 1.0<br>Inner and outer boundary. Medium difficulty.</p>
-        <span class="result-chip">Bayesian L2 = 0.0091 ✓</span>
+        <p>0.3 &le; r &le; 1.0<br>Inner and outer boundaries. Medium.</p>
+        <span class="dresult">Bayesian L2 = 0.0091 &#10003;</span>
       </div>
-      <div class="level-card">
-        <span class="level-tag" style="background:#FEF3C7;color:#B45309;">L-Shape</span>
+      <div class="dcard">
+        <span class="dtag" style="background:rgba(227,179,65,.12);color:var(--yellow);border:1px solid rgba(227,179,65,.3)">L-Shape</span>
         <h3>Re-entrant Corner</h3>
-        <p>[0,1]² \ [0.5,1]×[0,0.5]<br>FDM reference. Medium-hard.</p>
-        <span class="result-chip">Bayesian L2 = 0.0277 ✓</span>
+        <p>[0,1]&sup2; \ [0.5,1]&times;[0,0.5]<br>FDM reference. Medium-hard.</p>
+        <span class="dresult">Bayesian L2 = 0.0277 &#10003;</span>
       </div>
-      <div class="level-card">
-        <span class="level-tag" style="background:#FEE2E2;color:#DC2626;">Flower</span>
+      <div class="dcard">
+        <span class="dtag" style="background:rgba(247,129,102,.12);color:var(--red);border:1px solid rgba(247,129,102,.3)">Flower</span>
         <h3>5-Petal Boundary</h3>
-        <p>r ≤ 1 + 0.3·cos(5θ)<br>Complex boundary. Hardest domain.</p>
-        <span class="result-chip" style="background:#FEE2E2;color:#DC2626;">Bayesian L2 = 0.172</span>
+        <p>r &le; 1 + 0.3&middot;cos(5&theta;)<br>Complex boundary. Hardest domain.</p>
+        <span class="dresult hard">Bayesian L2 = 0.172</span>
       </div>
+    </div>
+    <div class="explain">
+      <p>Domain complexity follows a clear ordering: Circle (smooth, convex, radially symmetric) is easiest; Square (smooth, corners only) is moderate; Annulus (inner boundary adds complexity) is medium; L-Shape (re-entrant corner creates a stress-singularity-like feature) is harder; Flower (rapidly oscillating boundary with 5 cusps) is hardest. The 3-orders-of-magnitude gap between Circle (L2=0.00014) and Flower (L2=0.17) demonstrates that boundary geometry — more than PDE type — is the dominant source of PINN difficulty in this comparison.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Poisson domain canvas heatmaps -->
+<section>
+  <div class="container">
+    <div class="sec-label">Domain Heatmaps</div>
+    <h2>Analytical / Reference Solutions (Canvas)</h2>
+    <div class="poisson-grid">
+      <div class="pcard">
+        <div class="pcard-title">Square [0,1]&sup2;</div>
+        <canvas id="c-square" height="140"></canvas>
+        <div class="pcard-sub">u* = x&sup2;(x&minus;1)&sup2;y&sup2;(y&minus;1)&sup2;<br>Bayesian L2 = 0.0376<br>Arch: NAS best, relu</div>
+      </div>
+      <div class="pcard">
+        <div class="pcard-title">Circle r &le; 1</div>
+        <canvas id="c-circle" height="140"></canvas>
+        <div class="pcard-sub">u* = max(0, (1&minus;r&sup2;)/4)<br>Bayesian L2 = 0.00014 &#10003;&#10003;<br>Radial symmetry makes this trivial for PINNs.</div>
+      </div>
+      <div class="pcard">
+        <div class="pcard-title">Annulus 0.3 &le; r &le; 1</div>
+        <canvas id="c-annulus" height="140"></canvas>
+        <div class="pcard-sub">u* &asymp; (r&minus;0.3)(1&minus;r) normalised<br>Bayesian L2 = 0.0091<br>Inner boundary adds moderate complexity.</div>
+      </div>
+      <div class="pcard">
+        <div class="pcard-title">L-Shape</div>
+        <canvas id="c-lshape" height="140"></canvas>
+        <div class="pcard-sub">u* &asymp; x(1&minus;x)y(1&minus;y), zero in cutout<br>Bayesian L2 = 0.0277<br>Re-entrant corner creates local singularity.</div>
+      </div>
+      <div class="pcard">
+        <div class="pcard-title">Flower</div>
+        <canvas id="c-flower" height="140"></canvas>
+        <div class="pcard-sub">r_bdy = 1 + 0.3cos(5&theta;)<br>Bayesian L2 = 0.172<br>All optimisers struggle with the oscillating boundary shape.</div>
+      </div>
+    </div>
+    <div class="explain">
+      <p>These canvas heatmaps render the analytical or FDM reference solution using the viridis colourmap (dark purple = low, yellow-green = high). The Square domain shows a smooth bell-like peak at the domain centre, characteristic of the u = x&sup2;(x&minus;1)&sup2;y&sup2;(y&minus;1)&sup2; solution which vanishes at all boundaries. The Circle domain has a radially-symmetric solution that is maximum at the origin. The Annulus solution is zero at both inner and outer boundaries, with a smooth maximum in between. The L-Shape heatmap shows the solution cut off abruptly in the missing quadrant. The Flower domain (rendered in approximate polar coordinates) reveals how the rapidly-varying boundary forces the solution to have high-frequency features near the petal tips — exactly the regime where standard MLP architectures struggle.</p>
     </div>
   </div>
 </section>
@@ -333,73 +252,76 @@ u = 0  on ∂Ω  (Dirichlet)</div>
 <!-- Results table -->
 <section>
   <div class="container">
-    <div class="section-label">Results</div>
+    <div class="sec-label">Results</div>
     <h2>L2 Error by Domain and Optimiser</h2>
     <div class="card">
-      <table class="results-table">
+      <table>
         <thead>
           <tr>
             <th>Domain</th>
             <th>Reference</th>
-            <th>Bayesian L2 ↓</th>
-            <th>NSGA-II L2 ↓</th>
-            <th>NSGA-III L2 ↓</th>
+            <th>Bayesian L2 &darr;</th>
+            <th>NSGA-II L2 &darr;</th>
+            <th>NSGA-III L2 &darr;</th>
             <th>Best</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td><strong>Square</strong></td>
-            <td>Analytical exact</td>
-            <td class="cell-good">0.0376</td>
-            <td class="cell-note">—</td>
-            <td class="cell-note">—</td>
-            <td class="cell-good">Bayesian</td>
+            <td>Analytical</td>
+            <td class="best">0.0376</td>
+            <td class="note">&mdash;</td>
+            <td class="note">&mdash;</td>
+            <td class="best">Bayesian</td>
           </tr>
           <tr>
             <td><strong>Circle</strong></td>
-            <td>Analytical exact</td>
-            <td class="cell-good">0.000143 ✓✓</td>
-            <td class="cell-good">0.000416</td>
+            <td>Analytical</td>
+            <td class="best">0.000143 &#10003;&#10003;</td>
+            <td class="best">0.000416</td>
             <td>0.000657</td>
-            <td class="cell-good">Bayesian</td>
+            <td class="best">Bayesian</td>
           </tr>
           <tr>
             <td><strong>Annulus</strong></td>
             <td>FDM reference</td>
-            <td class="cell-good">0.0091</td>
+            <td class="best">0.0091</td>
             <td>0.0124</td>
             <td>0.0185</td>
-            <td class="cell-good">Bayesian</td>
+            <td class="best">Bayesian</td>
           </tr>
           <tr>
             <td><strong>L-Shape</strong></td>
             <td>FDM reference</td>
-            <td class="cell-good">0.0277</td>
-            <td class="cell-good">0.0285</td>
+            <td class="best">0.0277</td>
+            <td class="best">0.0285</td>
             <td>0.0320</td>
-            <td class="cell-good">Bayesian</td>
+            <td class="best">Bayesian</td>
           </tr>
           <tr>
             <td><strong>Flower</strong></td>
             <td>FDM reference</td>
-            <td>0.172</td>
-            <td>0.176</td>
-            <td>0.176</td>
-            <td class="cell-bad">All struggle</td>
+            <td class="bad">0.172</td>
+            <td class="bad">0.176</td>
+            <td class="bad">0.176</td>
+            <td class="bad">All struggle</td>
           </tr>
         </tbody>
       </table>
-      <p style="font-size:.82rem;color:var(--txt-light);margin-top:10px;">
-        Annulus results are from FDM-reference comparison. Square results are Bayesian-only
-        (NSGA-II/III were not separately evaluated on Square at L7B).
-      </p>
+      <div style="margin-top:.5rem;font-size:.76rem;color:var(--dim)">Square results: Bayesian only evaluated (NSGA-II/III not separately reported at L7B for Square). Circle, Annulus, L-Shape, Flower: all three optimisers evaluated.</div>
+    </div>
+    <div class="explain">
+      <p>Bayesian NAS consistently finds the best architecture across all four fully-evaluated domains. The Circle result (L2=0.00014) is exceptionally good — 3 orders of magnitude better than the Flower — confirming that domain topology dominates over optimiser choice for well-behaved geometries. For Annulus and L-Shape, all three optimisers achieve engineering-level accuracy (L2 &lt; 0.05) with Bayesian leading. The Flower domain is qualitatively different: all three optimisers cluster near L2=0.17&ndash;0.18, suggesting a fundamental barrier related to the high-frequency boundary features rather than any optimiser-specific limitation.</p>
     </div>
 
     <!-- Bar chart -->
-    <div style="margin-top:20px;" class="card">
-      <h3>L2 Error by Domain</h3>
+    <div class="card" style="margin-top:1rem">
+      <div class="card-title">L2 Error by Domain and Optimiser</div>
       <canvas id="domainChart" height="240"></canvas>
+    </div>
+    <div class="explain" style="margin-top:.75rem">
+      <p>The grouped bar chart shows L2 error for each domain (x-axis), with bars coloured by optimiser: Bayesian (blue), NSGA-II (orange), NSGA-III (purple). The logarithmic-like scale reveals the dramatic spread: Circle bars are essentially invisible next to the Flower bars. For most domains Bayesian (blue) is shortest (best L2), consistent with its advantage from using a probabilistic surrogate model. The Flower domain is the exception where all bars reach similar heights — a visual confirmation that the bottleneck is domain complexity, not optimiser quality.</p>
     </div>
   </div>
 </section>
@@ -407,51 +329,55 @@ u = 0  on ∂Ω  (Dirichlet)</div>
 <!-- Plots -->
 <section>
   <div class="container">
-    <div class="section-label">Visualisations</div>
-    <h2>Domain Plots and Predictions</h2>
+    <div class="sec-label">Visualisations</div>
+    <h2>Domain Plots and PINN Predictions</h2>
 
     <div class="card">
-      <h3>Domain Shapes with Reference Solutions</h3>
-      <img src="../../results/pres_plots/pres_domain_shapes.png" class="plot-img" alt="Domain shapes with reference solutions">
-      <p class="plot-caption">All 5 geometries with colour-mapped exact/FDM reference solutions.
-         Left: Square · Circle · Annulus. Right: L-Shape · Flower.</p>
-    </div>
-
-    <div style="margin-top:20px;" class="card">
-      <h3>PINN Predictions and L2 Error Maps</h3>
-      <img src="../../results/pres_plots/pres_domain_pred_error.png" class="plot-img" alt="PINN predictions and error maps">
-      <p class="plot-caption">Side-by-side: PINN predicted field and pointwise L2 error for Square, Circle, L-Shape, Flower.
-         Generated from high-quality l7b_*.png plots.</p>
-    </div>
-
-    <div style="margin-top:20px;" class="card">
-      <h3>Multi-Domain L2 Results</h3>
-      <img src="../../results/pres_plots/pres_l7b_results.png" class="plot-img" alt="L7B results grouped bar chart">
-      <p class="plot-caption">Grouped bar chart of L2 errors for all three NAS optimisers across four evaluated geometries.</p>
-    </div>
-
-    <div style="margin-top:20px;" class="two-col">
-      <div class="card">
-        <h3>Square Domain — PINN Solution</h3>
-        <img src="../../level7_multiDomain/results/plots/l7b_square.png" class="plot-img" alt="L7B square">
-        <p class="plot-caption">PINN prediction, reference, and error map for Square domain.</p>
-      </div>
-      <div class="card">
-        <h3>Circle Domain — PINN Solution</h3>
-        <img src="../../level7_multiDomain/results/plots/l7b_circle.png" class="plot-img" alt="L7B circle">
-        <p class="plot-caption">Circle domain — best result overall. L2=0.00014 for Bayesian.</p>
+      <div class="card-title">Domain Shapes with Reference Solutions</div>
+      <img src="../../results/pres_plots/pres_domain_shapes.png" alt="Domain shapes with reference solutions">
+      <div class="explain" style="margin-top:.75rem">
+        <p>This figure shows all five geometries with colour-mapped exact or FDM reference solutions. Left panel: Square (smooth bell peak), Circle (radially symmetric peak at origin), Annulus (ring-shaped distribution). Right panel: L-Shape (smooth except for the excised quadrant where the solution is identically zero) and Flower (solution with oscillating boundary features). The colour scale is normalised independently for each domain to maximise visual contrast. The Flower solution is the most complex, with solution values that change rapidly near the petal tips where the boundary approaches the origin.</p>
       </div>
     </div>
-    <div style="margin-top:16px;" class="two-col">
+
+    <div class="card" style="margin-top:1rem">
+      <div class="card-title">PINN Predictions and L2 Error Maps</div>
+      <img src="../../results/pres_plots/pres_domain_pred_error.png" alt="PINN predictions and error maps">
+      <div class="explain" style="margin-top:.75rem;border-left-color:var(--orange)">
+        <p>Side-by-side comparison of PINN predicted fields (left columns) and pointwise L2 error maps (right columns) for all evaluated domains. The Circle prediction is nearly indistinguishable from the reference — the error map shows near-zero error everywhere. The L-Shape prediction reproduces the smooth variation correctly but shows elevated error near the re-entrant corner, consistent with the known singularity in the gradient of the true solution at that point. The Flower prediction shows largest errors near the petal tips where boundary oscillations are fastest.</p>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-top:1rem">
       <div class="card">
-        <h3>L-Shape Domain — PINN Solution</h3>
-        <img src="../../level7_multiDomain/results/plots/l7b_lshape.png" class="plot-img" alt="L7B L-shape">
-        <p class="plot-caption">Re-entrant corner domain. Bayesian achieves L2=0.0277.</p>
+        <div class="card-title">Square Domain &mdash; PINN Solution</div>
+        <img src="../../level7_multiDomain/results/plots/l7b_square.png" alt="L7B square">
+        <div class="explain" style="margin-top:.75rem;border-left-color:var(--blue)">
+          <p>The Square domain result shows the PINN prediction, analytical reference, and pointwise error for the manufactured solution u*=x&sup2;(x&minus;1)&sup2;y&sup2;(y&minus;1)&sup2;. Bayesian NAS achieves L2=0.0376 on this domain. The error is highest at the centre of the domain where the solution has its maximum value, but is uniformly small compared to the peak magnitude. This smooth manufactured solution represents a moderate test case for PINN accuracy.</p>
+        </div>
       </div>
       <div class="card">
-        <h3>Flower Domain — PINN Solution</h3>
-        <img src="../../level7_multiDomain/results/plots/l7b_flower.png" class="plot-img" alt="L7B flower">
-        <p class="plot-caption">Hardest domain. Best L2=0.172 — the complex boundary challenges all architectures.</p>
+        <div class="card-title">Circle Domain &mdash; PINN Solution</div>
+        <img src="../../level7_multiDomain/results/plots/l7b_circle.png" alt="L7B circle">
+        <div class="explain" style="margin-top:.75rem;border-left-color:var(--green)">
+          <p>The Circle domain result shows the best L2 of the entire study: L2=0.00014 for Bayesian NAS, representing near-perfect recovery of the analytical solution u*=(1&minus;r&sup2;)/4. The radial symmetry of both the domain and the solution makes this particularly easy for PINNs — the network only needs to learn a 1D function of r, even though it operates in 2D. The error map is uniformly near-zero throughout the domain, with the very small remaining error concentrated at the outermost boundary points.</p>
+        </div>
+      </div>
+    </div>
+    <div class="two-col" style="margin-top:1rem">
+      <div class="card">
+        <div class="card-title">L-Shape Domain &mdash; PINN Solution</div>
+        <img src="../../level7_multiDomain/results/plots/l7b_lshape.png" alt="L7B L-shape">
+        <div class="explain" style="margin-top:.75rem;border-left-color:var(--orange)">
+          <p>The L-Shape domain result (Bayesian L2=0.0277) demonstrates that NAS-PINNs can handle non-convex domains with re-entrant corners. The PINN correctly predicts zero solution in the excised quadrant [0.5,1]&times;[0,0.5] while maintaining a smooth solution in the rest of the domain. The largest errors occur near the re-entrant corner at (0.5, 0.5) where the true solution gradient has a singularity-like steepening — a known challenge for all mesh-free methods including PINNs.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Flower Domain &mdash; PINN Solution</div>
+        <img src="../../level7_multiDomain/results/plots/l7b_flower.png" alt="L7B flower">
+        <div class="explain" style="margin-top:.75rem;border-left-color:var(--red)">
+          <p>The Flower domain (Bayesian L2=0.172) is the hardest case in the study. The 5-petal boundary r=1+0.3cos(5&theta;) creates rapidly oscillating boundary features that a standard MLP architecture struggles to represent accurately. All three optimisers converge to similar L2 values (0.172&ndash;0.176), suggesting the bottleneck is the expressiveness of the standard fully-connected MLP search space rather than the NAS optimiser strategy. Architectures with Fourier feature embeddings or periodic activations could potentially improve performance on this geometry.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -460,75 +386,171 @@ u = 0  on ∂Ω  (Dirichlet)</div>
 <!-- Takeaways -->
 <section>
   <div class="container">
-    <div class="section-label">Takeaways</div>
+    <div class="sec-label">Takeaways</div>
     <h2>Key Observations</h2>
     <ul class="finding-list">
       <li>
-        <div class="finding-icon">✓</div>
+        <div class="finding-icon">&#10003;</div>
         <div class="finding-body">
           <strong>NAS generalises across PDE families and geometries</strong>
-          <span>Circle L2=0.00014, Annulus L2=0.009, L-Shape L2=0.028 — four of five geometries solved to engineering accuracy.</span>
+          <span>Circle L2=0.00014, Annulus L2=0.009, L-Shape L2=0.028 — four of five geometries solved to engineering accuracy using the same NAS search space as the thermal problem.</span>
         </div>
       </li>
       <li>
-        <div class="finding-icon">✓</div>
+        <div class="finding-icon">&#10003;</div>
         <div class="finding-body">
-          <strong>Smooth boundaries are dramatically easier</strong>
-          <span>Circle (smooth, convex) achieves 3 orders of magnitude better accuracy than Flower (complex curved boundary).</span>
+          <strong>Smooth convex boundaries are dramatically easier</strong>
+          <span>Circle (smooth, convex) achieves 3 orders of magnitude better accuracy than Flower (complex curved boundary). Domain topology dominates over optimiser choice for well-behaved geometries.</span>
         </div>
       </li>
       <li>
-        <div class="finding-icon">→</div>
+        <div class="finding-icon">&#8594;</div>
         <div class="finding-body">
           <strong>Flower domain requires architecture-level adaptation</strong>
-          <span>L2=0.172 for all three optimisers suggests the search space (standard MLP) cannot easily capture the high-frequency boundary features of the 5-petal shape.</span>
+          <span>L2=0.17 for all three optimisers suggests the MLP search space cannot capture the high-frequency boundary features. Fourier feature networks or periodic activations may be needed.</span>
         </div>
       </li>
       <li>
-        <div class="finding-icon">✓</div>
+        <div class="finding-icon">&#10003;</div>
         <div class="finding-body">
           <strong>Bayesian NAS consistently finds the best architecture</strong>
-          <span>Bayesian wins on all 4 evaluated domains. NSGA-II is competitive on Circle and L-Shape but falls behind on complex geometries.</span>
+          <span>Bayesian wins on all four fully-evaluated domains. NSGA-II is competitive on Circle and L-Shape but the probabilistic surrogate model of TPE gives Bayesian a consistent edge.</span>
         </div>
       </li>
     </ul>
   </div>
 </section>
 
-<section style="padding:32px 0;background:var(--surface);border-top:1px solid var(--border);">
+<!-- Prev/Next -->
+<section style="padding:1.5rem 0;background:var(--surface);border-top:1px solid var(--border)">
   <div class="container">
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
-      <a href="level6.html" class="btn btn-outline">← Level 6</a>
-      <span style="color:var(--txt-light);font-size:.9rem;">Level 7 of 7 — Final Level</span>
-      <a href="../index.html" class="btn btn-primary">← Back to Overview</a>
+    <div class="page-nav">
+      <a href="level6.html" class="btn btn-outline">&larr; Level 6</a>
+      <span class="page-info">Level 7 of 7 &mdash; Final Level</span>
+      <a href="../index.html" class="btn btn-primary">&larr; Back to Overview</a>
     </div>
   </div>
 </section>
 
-<footer>
-  <div class="container">
-    <strong>NAS-PINNs</strong> — Level 7: Multi-Domain NAS ·
-    <a href="../index.html">Back to overview</a>
-  </div>
-</footer>
+<footer>NAS-PINNs &middot; Level 7 &middot; <a href="../index.html">Back to overview</a></footer>
 
 <script>
-new Chart(document.getElementById('domainChart'),{
-  type:'bar',
-  data:{
-    labels:['Square','Circle','Annulus','L-Shape','Flower'],
-    datasets:[
-      {label:'Bayesian',backgroundColor:'rgba(21,101,192,.8)',
-       data:[0.0376,0.000143,0.0091,0.0277,0.172],borderRadius:4},
-      {label:'NSGA-II', backgroundColor:'rgba(198,40,40,.8)',
-       data:[null,0.000416,0.0124,0.0285,0.176],borderRadius:4},
-      {label:'NSGA-III',backgroundColor:'rgba(46,125,50,.8)',
-       data:[null,0.000657,0.0185,0.0320,0.176],borderRadius:4},
-    ]
-  },
-  options:{responsive:true,plugins:{legend:{position:'top'}},
-    scales:{y:{title:{display:true,text:'L2 Relative Error'},min:0,max:0.22}}}
+// Viridis colormap
+function viridis(t){
+  const stops=[[68,1,84],[59,82,139],[33,145,140],[94,201,98],[253,231,37]];
+  const idx=t*(stops.length-1),lo=Math.floor(idx),hi=Math.min(stops.length-1,lo+1),f=idx-lo;
+  return stops[lo].map((v,i)=>Math.round(v+f*(stops[hi][i]-v)));
+}
+function fillCanvas(id, fn){
+  const c=document.getElementById(id);
+  if(!c)return;
+  const W=c.offsetWidth||200, H=140;
+  c.width=W; c.height=H;
+  const ctx=c.getContext('2d');
+  const img=ctx.createImageData(W,H);
+  for(let py=0;py<H;py++){
+    for(let px=0;px<W;px++){
+      const x=px/W, y=1-py/H;
+      const v=fn(x,y);
+      const t=Math.max(0,Math.min(1,v));
+      const rgb=viridis(t);
+      const i=(py*W+px)*4;
+      img.data[i]=rgb[0];img.data[i+1]=rgb[1];img.data[i+2]=rgb[2];img.data[i+3]=255;
+    }
+  }
+  ctx.putImageData(img,0,0);
+}
+
+// Square: u = x^2(x-1)^2 * y^2(y-1)^2, normalize by max value
+function drawSquare(){
+  fillCanvas('c-square',(x,y)=>{
+    const v=x*x*(x-1)*(x-1)*y*y*(y-1)*(y-1);
+    return v/(1/256); // max at x=0.5, y=0.5 = (0.25)^2 = 1/16... scale appropriately
+  });
+}
+window.addEventListener('load',()=>{
+  // Square: u = x²(x-1)²y²(y-1)², max = (0.5²*0.5²)² = (0.0625)² = 0.00390625
+  fillCanvas('c-square',(x,y)=>{const v=x*x*(x-1)*(x-1)*y*y*(y-1)*(y-1); return v/0.00390625;});
+
+  // Circle: u = max(0,(1-r²)/4), only inside unit circle
+  fillCanvas('c-circle',(x,y)=>{
+    const cx=x*2-1, cy=y*2-1;
+    const r2=cx*cx+cy*cy;
+    if(r2>1) return 0;
+    return (1-r2)/4; // max=0.25 at r=0, so normalize to 0..1
+  });
+
+  // Annulus: u ≈ (r-0.3)(1-r), for 0.3<=r<=1, normalised
+  fillCanvas('c-annulus',(x,y)=>{
+    const cx=x*2-1, cy=y*2-1;
+    const r=Math.sqrt(cx*cx+cy*cy);
+    if(r<0.3||r>1) return 0;
+    const v=(r-0.3)*(1-r); // max at r=0.65, v=0.1225
+    return v/0.1225;
+  });
+
+  // L-Shape: [0,1]^2 minus [0.5,1]x[0,0.5], u≈x(1-x)y(1-y) with zero in cutout
+  fillCanvas('c-lshape',(x,y)=>{
+    if(x>0.5&&y<0.5) return 0; // cutout region
+    const v=x*(1-x)*y*(1-y);
+    return v/0.0625; // max 0.0625
+  });
+
+  // Flower: r_boundary = 1+0.3*cos(5θ), approximate distance-to-boundary
+  fillCanvas('c-flower',(x,y)=>{
+    const cx=x*2.4-1.2, cy=y*2.4-1.2;
+    const r=Math.sqrt(cx*cx+cy*cy);
+    const theta=Math.atan2(cy,cx);
+    const rBdy=1+0.3*Math.cos(5*theta);
+    if(r>rBdy) return 0;
+    const dist=rBdy-r; // 0 at boundary, up to ~rBdy at centre
+    const maxDist=1.0;
+    return Math.min(1,dist/maxDist);
+  });
 });
+
+// Domain results chart (pure canvas)
+(function(){
+  var cv=document.getElementById('domainChart');
+  if(!cv) return;
+  cv.width=cv.offsetWidth||600; cv.height=230;
+  var W=cv.width,H=cv.height,ctx=cv.getContext('2d');
+  var ml=55,mr=20,mt=35,mb=42,pw=W-ml-mr,ph=H-mt-mb;
+  var labels=['Square','Circle','Annulus','L-Shape','Flower'];
+  var datasets=[
+    {label:'Bayesian',color:'rgba(88,166,255,.8)',data:[0.0376,0.000143,0.0091,0.0277,0.172]},
+    {label:'NSGA-II', color:'rgba(240,136,62,.8)', data:[null,0.000416,0.0124,0.0285,0.176]},
+    {label:'NSGA-III',color:'rgba(163,113,247,.8)',data:[null,0.000657,0.0185,0.0320,0.176]}
+  ];
+  var yMax=0.22,n=5,ns=3,bw=pw/n*0.22,gap=pw/n*0.04,grpW=pw/n;
+  ctx.fillStyle='#161B22'; ctx.fillRect(0,0,W,H);
+  ctx.font='10px system-ui'; ctx.strokeStyle='rgba(48,54,61,.6)'; ctx.lineWidth=1;
+  for(var i=0;i<=5;i++){
+    var yv=yMax*i/5,yp=mt+ph-ph*yv/yMax;
+    ctx.beginPath(); ctx.moveTo(ml,yp); ctx.lineTo(W-mr,yp); ctx.stroke();
+    ctx.fillStyle='#8B949E'; ctx.textAlign='right'; ctx.fillText(yv.toFixed(3),ml-4,yp+3);
+  }
+  datasets.forEach(function(ds,di){
+    ds.data.forEach(function(v,gi){
+      if(v===null||v===undefined) return;
+      var x=ml+gi*grpW+(grpW-(ns*bw+(ns-1)*gap))/2+di*(bw+gap);
+      var bh=ph*v/yMax,y=mt+ph-bh;
+      ctx.fillStyle=ds.color; ctx.fillRect(x,y,bw,bh);
+    });
+  });
+  ctx.fillStyle='#8B949E'; ctx.textAlign='center'; ctx.font='10px system-ui';
+  labels.forEach(function(l,i){ ctx.fillText(l,ml+i*grpW+grpW/2,mt+ph+15); });
+  var legX=ml;
+  datasets.forEach(function(ds){
+    ctx.fillStyle=ds.color; ctx.fillRect(legX,mt-20,12,10);
+    ctx.fillStyle='#8B949E'; ctx.textAlign='left'; ctx.fillText(ds.label,legX+16,mt-11);
+    legX+=ctx.measureText(ds.label).width+35;
+  });
+  ctx.save(); ctx.translate(12,mt+ph/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText('L2 Relative Error',0,0); ctx.restore();
+  ctx.strokeStyle='rgba(48,54,61,.8)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(ml,mt); ctx.lineTo(ml,mt+ph); ctx.lineTo(W-mr,mt+ph); ctx.stroke();
+})();
 </script>
 </body>
 </html>

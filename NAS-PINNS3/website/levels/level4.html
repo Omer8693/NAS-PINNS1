@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Level 4 — Distortion Mechanics | NAS-PINNs</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -423,27 +422,38 @@ const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersec
 });},{threshold:.3});
 obs.observe(document.getElementById('cmmBars'));
 
-// Bar chart
-new Chart(document.getElementById('distortionChart'),{
-  type:'bar',
-  data:{
-    labels:['Paper Measured','Paper FEM','Bayesian PINN','NSGA-II PINN','NSGA-III PINN'],
-    datasets:[{
-      label:'Mean Absolute Distortion (mm)',
-      backgroundColor:['rgba(240,136,62,.75)','rgba(88,166,255,.75)','rgba(63,185,80,.75)','rgba(247,129,102,.75)','rgba(163,113,247,.75)'],
-      data:[0.78,0.75,1.67,2.81,4.74],
-      borderRadius:4,
-    }]
-  },
-  options:{
-    responsive:true,
-    plugins:{legend:{display:false}},
-    scales:{
-      y:{min:0,max:5.2,title:{display:true,text:'|&delta;&#x0304;| (mm)',color:'#8B949E'},ticks:{color:'#8B949E'},grid:{color:'rgba(48,54,61,.6)'}},
-      x:{ticks:{color:'#8B949E'},grid:{color:'rgba(48,54,61,.4)'}}
-    }
+// Bar chart (pure canvas)
+(function(){
+  var cv=document.getElementById('distortionChart');
+  if(!cv) return;
+  cv.width=cv.offsetWidth||500; cv.height=220;
+  var W=cv.width,H=cv.height,ctx=cv.getContext('2d');
+  var ml=50,mr=20,mt=25,mb=55,pw=W-ml-mr,ph=H-mt-mb;
+  var labels=['Paper\nMeasured','Paper\nFEM','Bayesian\nPINN','NSGA-II\nPINN','NSGA-III\nPINN'];
+  var short=['Paper Meas.','Paper FEM','Bayesian','NSGA-II','NSGA-III'];
+  var vals=[0.78,0.75,1.67,2.81,4.74];
+  var colors=['rgba(240,136,62,.75)','rgba(88,166,255,.75)','rgba(63,185,80,.75)','rgba(247,129,102,.75)','rgba(163,113,247,.75)'];
+  var yMax=5.2,n=5,bw=pw/n*0.55,bg=pw/n*0.45;
+  ctx.fillStyle='#161B22'; ctx.fillRect(0,0,W,H);
+  ctx.font='10px system-ui'; ctx.strokeStyle='rgba(48,54,61,.6)'; ctx.lineWidth=1;
+  for(var i=0;i<=5;i++){
+    var yv=yMax*i/5,yp=mt+ph-ph*yv/yMax;
+    ctx.beginPath(); ctx.moveTo(ml,yp); ctx.lineTo(W-mr,yp); ctx.stroke();
+    ctx.fillStyle='#8B949E'; ctx.textAlign='right'; ctx.fillText(yv.toFixed(2),ml-4,yp+3);
   }
-});
+  vals.forEach(function(v,i){
+    var x=ml+i*(pw/n)+bg/2,bh=ph*v/yMax,y=mt+ph-bh;
+    ctx.fillStyle=colors[i]; ctx.fillRect(x,y,bw,bh);
+    ctx.fillStyle='#E6EDF3'; ctx.textAlign='center'; ctx.font='10px system-ui';
+    ctx.fillText(v.toFixed(2),x+bw/2,y-5);
+  });
+  ctx.fillStyle='#8B949E'; ctx.textAlign='center'; ctx.font='9.5px system-ui';
+  short.forEach(function(l,i){ ctx.fillText(l,ml+i*(pw/n)+(pw/n)/2,mt+ph+14); });
+  ctx.save(); ctx.translate(12,mt+ph/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText('|\u03B4\u0305| (mm)',0,0); ctx.restore();
+  ctx.strokeStyle='rgba(48,54,61,.8)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(ml,mt); ctx.lineTo(ml,mt+ph); ctx.lineTo(W-mr,mt+ph); ctx.stroke();
+})();
 </script>
 </body>
 </html>

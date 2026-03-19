@@ -672,7 +672,6 @@ footer{text-align:center;padding:1.5rem;font-size:.72rem;color:var(--txt-dim);bo
 
 <footer>NAS-PINNs &middot; Mortensen, Noorsumar, Fj&aelig;r, Babaei, Dr&oslash;nen &middot; Int. J. Advanced Manufacturing Technology &middot; 2026</footer>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 // ─── NAV ─────────────────────────────────────────────────────────────────────
 document.getElementById('mainnav').addEventListener('click', function(e) {
@@ -764,39 +763,59 @@ document.getElementById('anim-btn').addEventListener('click', function() {
 });
 
 // ─── COOLING CURVE ────────────────────────────────────────────────────────────
-var coolChart = null;
 function drawCoolCurve() {
   var l2 = parseFloat(document.getElementById('hm-opt').value);
   var cv = document.getElementById('cool-curve');
   if (!cv) return;
-  if (coolChart) { coolChart.destroy(); coolChart = null; }
-  var times = [], fem = [], pinn = [];
+  var fem = [], pinn = [];
   for (var i = 0; i <= 60; i++) {
     var ti = i * 0.5;
-    times.push(ti.toFixed(1));
     var T = 20 + 520 * Math.exp(-1.75e-3 * ti);
-    fem.push(parseFloat(T.toFixed(2)));
+    fem.push(T);
     var err = l2 * 520 * 0.15 * Math.exp(-0.05 * ti);
-    pinn.push(parseFloat((T + err * (ti < 5 ? 1 : ti < 15 ? 0.6 : 0.3)).toFixed(2)));
+    pinn.push(T + err * (ti < 5 ? 1 : ti < 15 ? 0.6 : 0.3));
   }
-  coolChart = new Chart(cv, {
-    type: 'line',
-    data: {
-      labels: times,
-      datasets: [
-        { label: 'FEM reference', data: fem, borderColor: '#58A6FF', borderWidth: 2, pointRadius: 0, fill: false },
-        { label: 'PINN prediction', data: pinn, borderColor: '#F0883E', borderWidth: 2, borderDash: [5,3], pointRadius: 0, fill: false }
-      ]
-    },
-    options: {
-      responsive: true,
-      plugins: { legend: { labels: { color: '#8B949E', font: { size: 11 }, boxWidth: 14 } } },
-      scales: {
-        x: { title: { display: true, text: 'Time (s)', color: '#8B949E', font: { size: 11 } }, ticks: { color: '#8B949E', font: { size: 9 }, maxTicksLimit: 13 }, grid: { color: 'rgba(48,54,61,.5)' } },
-        y: { title: { display: true, text: 'Centre temperature (\u00B0C)', color: '#8B949E', font: { size: 11 } }, ticks: { color: '#8B949E', font: { size: 10 } }, grid: { color: 'rgba(48,54,61,.5)' } }
-      }
+  cv.width = cv.offsetWidth || 500; cv.height = 220;
+  var W = cv.width, H = cv.height, ctx = cv.getContext('2d');
+  var ml=58,mr=15,mt=32,mb=42, pw=W-ml-mr, ph=H-mt-mb;
+  var yMin=0, yMax=560, xMax=30;
+  ctx.fillStyle='#161B22'; ctx.fillRect(0,0,W,H);
+  ctx.font='10px system-ui'; ctx.strokeStyle='rgba(48,54,61,.5)'; ctx.lineWidth=1;
+  for(var i=0;i<=5;i++){
+    var yv=yMax*i/5, yp=mt+ph-ph*yv/yMax;
+    ctx.beginPath(); ctx.moveTo(ml,yp); ctx.lineTo(W-mr,yp); ctx.stroke();
+    ctx.fillStyle='#8B949E'; ctx.textAlign='right'; ctx.fillText(Math.round(yv),ml-5,yp+3);
+  }
+  for(var j=0;j<=6;j++){
+    var xv=xMax*j/6, xp=ml+pw*xv/xMax;
+    ctx.beginPath(); ctx.moveTo(xp,mt); ctx.lineTo(xp,mt+ph); ctx.stroke();
+    ctx.fillStyle='#8B949E'; ctx.textAlign='center'; ctx.fillText(xv.toFixed(0),xp,mt+ph+14);
+  }
+  ctx.fillStyle='#8B949E'; ctx.textAlign='center';
+  ctx.fillText('Time (s)',ml+pw/2,H-4);
+  ctx.save(); ctx.translate(11,mt+ph/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText('Centre temperature (\u00B0C)',0,0); ctx.restore();
+  function drawLine(data,color,dash){
+    ctx.save(); ctx.strokeStyle=color; ctx.lineWidth=2;
+    if(dash) ctx.setLineDash(dash);
+    ctx.beginPath();
+    for(var k=0;k<data.length;k++){
+      var xp2=ml+pw*(k*0.5)/xMax, yp2=mt+ph-ph*(data[k]-yMin)/(yMax-yMin);
+      if(k===0) ctx.moveTo(xp2,yp2); else ctx.lineTo(xp2,yp2);
     }
-  });
+    ctx.stroke(); ctx.restore();
+  }
+  drawLine(fem,'#58A6FF',null);
+  drawLine(pinn,'#F0883E',[5,3]);
+  ctx.strokeStyle='#58A6FF'; ctx.lineWidth=2; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(ml,mt-12); ctx.lineTo(ml+18,mt-12); ctx.stroke();
+  ctx.fillStyle='#8B949E'; ctx.font='10px system-ui'; ctx.textAlign='left';
+  ctx.fillText('FEM reference',ml+22,mt-8);
+  ctx.strokeStyle='#F0883E'; ctx.setLineDash([5,3]);
+  ctx.beginPath(); ctx.moveTo(ml+115,mt-12); ctx.lineTo(ml+133,mt-12); ctx.stroke();
+  ctx.setLineDash([]); ctx.fillText('PINN prediction',ml+137,mt-8);
+  ctx.strokeStyle='rgba(48,54,61,.8)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(ml,mt); ctx.lineTo(ml,mt+ph); ctx.lineTo(W-mr,mt+ph); ctx.stroke();
 }
 
 document.getElementById('hm-opt').addEventListener('change', function() {
@@ -830,58 +849,56 @@ var nasData = (function() {
   return out;
 })();
 
-var nasChart = null;
 function drawNAS() {
   var filter = document.getElementById('nas-filter').value;
   var hl = document.getElementById('nas-hl').value === '1';
   var cBase = { bayesian:'rgba(88,166,255,.7)', nsga2:'rgba(247,129,102,.7)', nsga3:'rgba(163,113,247,.7)' };
   var cWin = 'rgba(63,185,80,1)';
-  var opts = ['bayesian','nsga2','nsga3'];
-  var datasets = opts.map(function(opt) {
-    var pts = nasData.filter(function(d){ return (filter==='all'||d.opt===opt) && d.opt===opt; });
-    return {
-      label: opt,
-      data: pts.map(function(d){ return { x:d.p, y:d.l2, best:d.best }; }),
-      backgroundColor: pts.map(function(d){ return hl&&d.best ? cWin : cBase[opt]; }),
-      pointRadius: pts.map(function(d){ return hl&&d.best ? 9 : 4; }),
-      pointHoverRadius: 7
-    };
-  });
   var cv = document.getElementById('nas-canvas');
   if (!cv) return;
-  if (nasChart) { nasChart.destroy(); nasChart = null; }
-  nasChart = new Chart(cv, {
-    type: 'scatter',
-    data: { datasets: datasets },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: function(d){ return 'Params: '+Math.round(d.raw.x).toLocaleString()+'  |  L2: '+d.raw.y.toFixed(3); } } }
-      },
-      scales: {
-        x: { type:'linear', title:{display:true,text:'Parameter count',color:'#8B949E',font:{size:11}},
-             ticks:{color:'#8B949E',font:{size:10},callback:function(v){return v>=1000?Math.round(v/1000)+'k':v;}},
-             grid:{color:'rgba(48,54,61,.5)'} },
-        y: { min:0, max:1.1, title:{display:true,text:'L2 relative error',color:'#8B949E',font:{size:11}},
-             ticks:{color:'#8B949E',font:{size:10}}, grid:{color:'rgba(48,54,61,.5)'} }
-      }
-    },
-    plugins: [{
-      id: 'targetZone',
-      beforeDraw: function(ch) {
-        var ctx = ch.ctx, ya = ch.scales.y;
-        var y = ya.getPixelForValue(0.10);
-        var yb = ya.getPixelForValue(0);
-        ctx.save();
-        ctx.fillStyle = 'rgba(63,185,80,.08)';
-        ctx.fillRect(ch.chartArea.left, y, ch.chartArea.right-ch.chartArea.left, yb-y);
-        ctx.strokeStyle = 'rgba(63,185,80,.4)'; ctx.lineWidth = 1; ctx.setLineDash([4,4]);
-        ctx.beginPath(); ctx.moveTo(ch.chartArea.left, y); ctx.lineTo(ch.chartArea.right, y); ctx.stroke();
-        ctx.setLineDash([]); ctx.restore();
-      }
-    }]
+  cv.width = cv.offsetWidth || 500; cv.height = 260;
+  var W = cv.width, H = cv.height, ctx = cv.getContext('2d');
+  var ml=58,mr=20,mt=32,mb=45, pw=W-ml-mr, ph=H-mt-mb;
+  var xMax=90000, yMax=1.1;
+  ctx.fillStyle='#161B22'; ctx.fillRect(0,0,W,H);
+  ctx.font='10px system-ui'; ctx.strokeStyle='rgba(48,54,61,.5)'; ctx.lineWidth=1;
+  for(var i=0;i<=5;i++){
+    var yv=yMax*i/5, yp=mt+ph-ph*yv/yMax;
+    ctx.beginPath(); ctx.moveTo(ml,yp); ctx.lineTo(W-mr,yp); ctx.stroke();
+    ctx.fillStyle='#8B949E'; ctx.textAlign='right'; ctx.fillText(yv.toFixed(2),ml-5,yp+3);
+  }
+  for(var j=0;j<=6;j++){
+    var xv=xMax*j/6, xp=ml+pw*xv/xMax;
+    ctx.beginPath(); ctx.moveTo(xp,mt); ctx.lineTo(xp,mt+ph); ctx.stroke();
+    ctx.fillStyle='#8B949E'; ctx.textAlign='center';
+    ctx.fillText(xv>=1000?Math.round(xv/1000)+'k':'0',xp,mt+ph+14);
+  }
+  var typ=mt+ph-ph*0.10/yMax;
+  ctx.fillStyle='rgba(63,185,80,.08)'; ctx.fillRect(ml,typ,pw,mt+ph-typ);
+  ctx.save(); ctx.strokeStyle='rgba(63,185,80,.4)'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+  ctx.beginPath(); ctx.moveTo(ml,typ); ctx.lineTo(W-mr,typ); ctx.stroke(); ctx.restore();
+  var opList=['bayesian','nsga2','nsga3'];
+  opList.forEach(function(opt){
+    if(filter!=='all'&&filter!==opt) return;
+    nasData.filter(function(d){return d.opt===opt;}).forEach(function(d){
+      var xp2=ml+pw*d.p/xMax, yp2=mt+ph-ph*d.l2/yMax;
+      var r=(hl&&d.best)?8:4, color=(hl&&d.best)?cWin:cBase[opt];
+      ctx.beginPath(); ctx.arc(xp2,yp2,r,0,Math.PI*2);
+      ctx.fillStyle=color; ctx.fill();
+    });
   });
+  ctx.fillStyle='#8B949E'; ctx.textAlign='center';
+  ctx.fillText('Parameter count',ml+pw/2,H-4);
+  ctx.save(); ctx.translate(11,mt+ph/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText('L2 relative error',0,0); ctx.restore();
+  var legX=ml;
+  opList.forEach(function(opt){
+    ctx.fillStyle=cBase[opt]; ctx.beginPath(); ctx.arc(legX+5,mt-12,4,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#8B949E'; ctx.font='10px system-ui'; ctx.textAlign='left';
+    ctx.fillText(opt,legX+13,mt-8); legX+=80;
+  });
+  ctx.strokeStyle='rgba(48,54,61,.8)'; ctx.lineWidth=1; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(ml,mt); ctx.lineTo(ml,mt+ph); ctx.lineTo(W-mr,mt+ph); ctx.stroke();
 }
 
 document.getElementById('nas-filter').addEventListener('change', drawNAS);
@@ -926,7 +943,6 @@ var residuals = {
   nsga2:    [0.22,0.09,0.07,0.09,0.14,0.18,0.10,0.08,0.10,0.15,0.19,0.09,0.07,0.09,0.13,0.17,0.09,0.07,0.09,0.12],
   nsga3:    [0.28,0.14,0.11,0.13,0.19,0.25,0.14,0.11,0.13,0.18,0.24,0.13,0.11,0.13,0.17,0.22,0.12,0.10,0.12,0.16]
 };
-var rtChart = null;
 function drawRouting() {
   var thr = parseFloat(document.getElementById('thr-sl').value);
   var opt = document.getElementById('rt-opt').value;
@@ -948,30 +964,41 @@ function drawRouting() {
     '<div class="pill '+(pct>=80?'pg':pct>=50?'po':'pr')+'">PINN coverage: '+pct+'%</div>';
   var cv = document.getElementById('rt-canvas');
   if (!cv) return;
-  if (rtChart) { rtChart.destroy(); rtChart = null; }
-  rtChart = new Chart(cv, {
-    type: 'bar',
-    data: {
-      labels: res.map(function(_,i){ return 't'+(i+1); }),
-      datasets: [
-        { label: 'PDE residual', data: res,
-          backgroundColor: res.map(function(r){ return r>thr?'rgba(88,166,255,.8)':'rgba(63,185,80,.7)'; }),
-          borderRadius: 3 },
-        { label: 'Threshold', data: res.map(function(){ return thr; }),
-          type: 'line', borderColor: 'rgba(240,136,62,.9)', borderWidth: 1.5,
-          borderDash: [4,3], pointRadius: 0, fill: false }
-      ]
-    },
-    options: {
-      responsive: true,
-      plugins: { legend: { labels: { color:'#8B949E', font:{size:11}, boxWidth:14 } } },
-      scales: {
-        x: { ticks:{color:'#8B949E',font:{size:9}}, grid:{color:'rgba(48,54,61,.4)'} },
-        y: { min:0, max:0.35, ticks:{color:'#8B949E',font:{size:10}}, grid:{color:'rgba(48,54,61,.4)'},
-             title:{display:true,text:'Normalised residual',color:'#8B949E',font:{size:10}} }
-      }
-    }
+  cv.width = cv.offsetWidth || 500; cv.height = 200;
+  var W=cv.width, H=cv.height, ctx=cv.getContext('2d');
+  var ml=50,mr=15,mt=22,mb=35, pw=W-ml-mr, ph=H-mt-mb;
+  var yMax=0.35, n=res.length;
+  var bw=pw/n*0.72, bg=pw/n*0.28;
+  ctx.fillStyle='#161B22'; ctx.fillRect(0,0,W,H);
+  ctx.font='10px system-ui'; ctx.strokeStyle='rgba(48,54,61,.4)'; ctx.lineWidth=1;
+  for(var i=0;i<=4;i++){
+    var yv=yMax*i/4, yp=mt+ph-ph*yv/yMax;
+    ctx.beginPath(); ctx.moveTo(ml,yp); ctx.lineTo(W-mr,yp); ctx.stroke();
+    ctx.fillStyle='#8B949E'; ctx.textAlign='right'; ctx.fillText(yv.toFixed(2),ml-4,yp+3);
+  }
+  res.forEach(function(r,i){
+    var x=ml+i*(pw/n)+bg/2, bh=ph*r/yMax, y=mt+ph-bh;
+    ctx.fillStyle=r>thr?'rgba(88,166,255,.8)':'rgba(63,185,80,.7)';
+    ctx.fillRect(x,y,bw,bh);
   });
+  var tp=mt+ph-ph*thr/yMax;
+  ctx.save(); ctx.strokeStyle='rgba(240,136,62,.9)'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+  ctx.beginPath(); ctx.moveTo(ml,tp); ctx.lineTo(W-mr,tp); ctx.stroke(); ctx.restore();
+  ctx.fillStyle='#8B949E'; ctx.textAlign='center';
+  res.forEach(function(_,i){
+    if(i%2===0) ctx.fillText('t'+(i+1), ml+i*(pw/n)+(pw/n)/2, mt+ph+14);
+  });
+  ctx.save(); ctx.translate(11,mt+ph/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText('Normalised residual',0,0); ctx.restore();
+  ctx.fillStyle='rgba(88,166,255,.8)'; ctx.fillRect(ml,mt-14,12,10);
+  ctx.fillStyle='#8B949E'; ctx.textAlign='left'; ctx.fillText('FEM (r>thr)',ml+16,mt-5);
+  ctx.fillStyle='rgba(63,185,80,.7)'; ctx.fillRect(ml+100,mt-14,12,10);
+  ctx.fillStyle='#8B949E'; ctx.fillText('PINN (r\u2264thr)',ml+116,mt-5);
+  ctx.strokeStyle='rgba(240,136,62,.9)'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+  ctx.beginPath(); ctx.moveTo(ml+208,mt-9); ctx.lineTo(ml+226,mt-9); ctx.stroke();
+  ctx.setLineDash([]); ctx.fillStyle='#8B949E'; ctx.fillText('Threshold',ml+230,mt-5);
+  ctx.strokeStyle='rgba(48,54,61,.8)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(ml,mt); ctx.lineTo(ml,mt+ph); ctx.lineTo(W-mr,mt+ph); ctx.stroke();
 }
 
 document.getElementById('thr-sl').addEventListener('input', drawRouting);

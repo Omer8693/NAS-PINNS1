@@ -1,406 +1,368 @@
 # NAS-PINNs: Neural Architecture Search for Physics-Informed Neural Networks
 
-A **7-level progressive framework** applying NAS to thermal simulation of A356 aluminum water quenching — with temporal skip operator, hybrid FEM+PINN routing, L-BFGS refinement, and multi-domain generalization.
+A seven-level progressive framework that applies Neural Architecture Search (NAS) to
+Physics-Informed Neural Networks (PINN) for simulating A356 aluminum water quenching.
 
----
-
-## Core Thesis
-
-> **PINN with NAS-optimized architecture can replace sequential FEM time steps — solving in fewer solver calls without accuracy loss.**
-
-FEM requires 20 mandatory sequential solves (t = 1.5 s each). The NAS-PINN skip operator reduces this to 11 solves (skip=2, 2× speedup) for the Bayesian architecture, with equal or better accuracy. With 2000 Adam epochs, NSGA-II (ratio=0.98×) and NSGA-III (ratio=0.99×) also achieve skip=2 convergence.
-
----
-
-## Problem
-
-**A356 aluminum subframe water quenching** (Mortensen et al. 2026):
-
-| Parameter | Value |
-|-----------|-------|
-| Domain | 1.3 m × 0.6 m (2D cross-section) |
-| Time range | 0 → 30 s |
-| Initial temperature T₀ | 540 °C |
-| Water temperature T_w | 20 °C |
-| PDE | ρCp·∂T/∂t = K·∇²T with Robin BC |
-| HTC | Nonlinear h(T) — nucleate/film boiling regimes |
-| Analytical reference | T(t) = 20 + 520·exp(−1.75×10⁻³·t) |
-
----
-
-## Seven-Level Framework
-
-```
-L1 → L2 → L3 → L4 → L5 → L6 → L7
-```
-
-| Level | Name | Description |
-|-------|------|-------------|
-| **1** | Single-Shot PINN | Global T(t,x,y) trained over entire time domain |
-| **2** | Skip Operator | Window PINN: FEM at anchors, PINN fills skipped steps |
-| **3** | Hybrid FEM+PINN | Adaptive residual-driven routing between FEM and PINN |
-| **4** | Distortion Mechanics | Plane-stress FEM: T-field → CMM distortion at 47 points |
-| **5** | L-BFGS Refinement | Second-order polish applied after Adam convergence |
-| **6** | Poisson Benchmark | Generalization test on a different PDE family |
-| **7** | Multi-Domain | 7A: temporal skip analysis · 7B: 5-geometry Poisson NAS |
-
----
-
-## Key Results
-
-### Level 1 — Single-Shot NAS-PINN
-
-| Optimizer | Architecture | L2_rel ↓ | MAE (°C) ↓ | NAS time |
-|-----------|-------------|-----------|------------|----------|
-| **Bayesian** ★ | 5×151 relu | **0.076** | **39.1** | ~180 s |
-| NSGA-II | 3×153 tanh | 0.252 | 132.6 | ~120 s |
-| NSGA-III | 3×75 tanh | 0.513 | 270.3 | ~110 s |
-| Target | — | < 0.100 | < 50.0 | — |
-
-Only Bayesian meets the L2 < 0.10 target at Level 1.
-
-### Level 2 — Temporal Skip Operator (500-epoch, Bayesian)
-
-| Skip k | FEM Steps | MAE (°C) | Speedup | Converged? |
-|--------|-----------|----------|---------|------------|
-| 1 | 21/21 | 43.6 | 1.0× | ✓ |
-| **2** ★ | **11/21** | **33.2** | **2.0×** | **✓** |
-| 4 | 6/21 | 57.5 | 4.0× | ✓ |
-| 6 | 4/21 | 93.6 | 6.6× | ✗ |
-
-**2000-epoch result:** NSGA-II skip=2 ratio=0.98× ✓ | NSGA-III skip=2 ratio=0.99× ✓ — epoch count was the limiting factor, not architecture.
-
-**Convergence criterion:** MAE ratio vs skip=1 baseline < 1.5×
-
-### Level 3 — Hybrid FEM+PINN (all optimizers)
-
-| Optimizer | FEM steps | PINN steps | Skip rate |
-|-----------|-----------|------------|-----------|
-| All three | 4/20 | 16/20 | **80%** |
-
-Adaptive residual routing (threshold=0.1) achieves 80% FEM reduction for all three architectures.
-
-### Level 4 — Distortion at CMM Points
-
-| Source | Mean |δ| (mm) |
-|--------|--------------|
-| Bayesian PINN | **1.67** |
-| NSGA-II PINN | 2.81 |
-| NSGA-III PINN | 4.74 |
-
-Better PINN accuracy (L2) translates directly to lower thermal distortion prediction error.
-
-### Level 5 — L-BFGS Refinement
-
-| Optimizer | Adam L2 | Adam MAE | L-BFGS L2 | L-BFGS MAE | Improvement |
-|-----------|---------|----------|-----------|------------|-------------|
-| Bayesian | 0.076 | 39.1°C | **0.030** | **14.4°C** | 2.6× |
-| NSGA-II | 0.252 | 132.6°C | **0.055** | **28.7°C** | 4.5× |
-| NSGA-III | 0.513 | 270.3°C | 0.259 | 136.4°C | 2.0× |
-
-### Level 6 — Poisson PDE Benchmark
-
-| Optimizer | L2_rel | Status |
-|-----------|--------|--------|
-| Bayesian | **0.0083** | ✓ |
-| NSGA-II | 0.0412 | ✓ |
-| NSGA-III | 0.1890 | marginal |
-
-Same NAS architectures (no re-search) generalize to the Poisson PDE on the unit square with exact solution u = sin(πx)·sin(πy).
-
-### Level 7A — Temporal Skip Analysis
-
-- Bayesian skip=4 converges (extended analysis)
-- NSGA-II/III diverge at skip=2 with 500 epochs; converge with 2000 epochs
-
-### Level 7B — Multi-Domain Poisson (5 Geometries)
-
-- Domains: Square · Circle · Annulus · L-shape · Flower
-- Bayesian: L2 < 0.05 on all five domains
-- NSGA-III: struggles on complex geometries (flower)
-
----
-
-## Repository Structure
-
-```
-NAS-PINNS3/
-├── main.py                              # Root orchestrator — CLI entry point
-├── make_presentation.py                 # Generate 12-slide PowerPoint
-├── compare_all_levels.py                # Cross-level analysis pipeline
-├── finalize_after_5k.py                 # Post-run finalization and plot update
-│
-├── src/                                 # Shared core framework
-│   ├── config.py                        # Global constants: material, domain, NAS space
-│   ├── pinn_network.py                  # PINNNet: MLP with configurable activations
-│   ├── physics_model.py                 # Heat equation residuals, HTC boiling curve
-│   ├── trainers.py                      # Adam / L-BFGS / PSO training phases
-│   ├── baseline_data.py                 # Paper data: Tables 1-2, Figures 7, 15-22
-│   ├── arch_search.py                   # NAS: decode, evaluate, pymoo interface
-│   ├── opt_nsga2.py                     # NSGA-II (pop=24, gen=16)
-│   ├── opt_nsga3.py                     # NSGA-III (ref_dirs=10)
-│   ├── opt_bayesian.py                  # Bayesian Optimization (TPE)
-│   └── experiment_runner.py             # Orchestration: single and multi-optimizer runs
-│
-├── problems/                            # Benchmark problem definitions
-│   ├── base.py                          # Abstract PINNProblem base class
-│   ├── quenching.py                     # A356 aluminum quenching (main problem)
-│   ├── burgers.py                       # 1D Burgers equation
-│   ├── poisson.py                       # 2D Poisson equation
-│   └── allen_cahn.py                    # 1D+t Allen-Cahn equation
-│
-├── level1_single_shot/                  # Level 1: Global single-shot PINN
-│   ├── plot_pinn_vs_fem.py              # PINN vs FEM direct comparison
-│   ├── plot_results.py                  # comparison.json → accuracy / runtime / table
-│   ├── plot_fem_vs_pinn_steps.py        # FEM step-by-step vs PINN single pass
-│   └── results/
-│       ├── bayesian/                    # NAS results and model weights
-│       ├── nsga2/
-│       ├── nsga3/
-│       ├── baseline/
-│       └── fig1/ fig2/ fig3/            # Output PNGs
-│
-├── level2_timestepper/                  # Level 2: Window-based skip operator
-│   ├── main_level2.py                   # CLI: generate skip_table.json (Adam 500 ep)
-│   ├── eval_skip_5k.py                  # Skip eval with 2000/5000 Adam epochs
-│   ├── eval_skip_lbfgs.py               # Skip eval with Adam+L-BFGS per window
-│   ├── plot_results.py                  # Skip vs L2 / MAE / runtime curves
-│   ├── plot_fem_vs_pinn_skip.py         # Core thesis visualization: FEM vs skip PINN
-│   ├── src/
-│   │   ├── ts_model.py                  # TimeStepperPINN: 4-input MLP
-│   │   ├── ts_trainer.py                # Window training + optional L-BFGS phase
-│   │   ├── ts_nas.py                    # Grid-search NAS for optimal skip factor
-│   │   └── ts_evaluate.py              # Evaluate skip ∈ {1, 2, 4, 6, …}
-│   └── results/
-│       ├── skip_table*.json             # Per-optimizer skip evaluation results
-│       └── *.png                        # Skip comparison plots
-│
-├── level3_hybrid_fem/                   # Level 3: Adaptive hybrid FEM+PINN loop
-│   ├── main_level3.py                   # CLI: run hybrid for 3 architectures
-│   ├── plot_results.py                  # Residual trace, step distribution, CMM bars
-│   ├── src/
-│   │   ├── fem_interface.py             # FEMCheckpoint: T-field snapshots
-│   │   ├── hybrid_runner.py             # FEM ↔ PINN alternation loop
-│   │   ├── adaptive_skip.py             # Residual-based FEM/PINN selector
-│   │   └── mechanical.py               # Thermal strain → CMM distortion estimate
-│   └── results/
-│
-├── level4_distortion/                   # Level 4: 2D plane-stress distortion
-│   ├── main_distortion.py               # CLI: T_field → FEM solve → CMM |δ|
-│   ├── plot_results.py                  # CMM bar chart, displacement map
-│   ├── plot_paper_comparison.py         # Signed bar chart vs paper Fig17/18
-│   ├── src/
-│   │   ├── plane_stress_fem.py          # PlaneStressFEM: Q4 elements, CG solver
-│   │   ├── thermal_field.py             # Analytical T(x,y) profiles
-│   │   └── cmm_points.py               # CMM labels + paper reference values
-│   └── results/
-│
-├── level5_refinement/                   # Level 5: L-BFGS refinement
-│   ├── main_level5.py                   # CLI: Adam → L-BFGS refinement pipeline
-│   ├── plot_results.py                  # L2 before/after, summary table
-│   ├── eval_skip_l5.py                  # Skip capability of Level 5 global PINNs
-│   ├── plot_skip_l5.py                  # 4-series skip comparison plot
-│   └── results/
-│       ├── bayesian/                    # model_lbfgs.pt
-│       ├── nsga2/
-│       ├── nsga3/
-│       ├── skip_table_l5.json
-│       └── level5_skip_comparison.png
-│
-├── level6_poisson_benchmark/            # Level 6: Poisson PDE generalization
-│   ├── main_level6.py                   # CLI: train and evaluate on Poisson
-│   ├── plot_results.py                  # Heatmaps, L2 progression, summary table
-│   ├── src/
-│   │   ├── level6_finetune.py           # Fine-tune quenching NAS weights on Poisson
-│   │   └── poisson_aux_loss.py          # Auxiliary boundary + PDE losses
-│   └── results/
-│       ├── bayesian/
-│       ├── nsga2/
-│       ├── nsga3/
-│       └── plots/
-│
-├── level7_temporal/                     # Level 7A: Temporal skip analysis
-│   ├── main_level7a.py                  # CLI: time-skip table for quenching
-│   ├── plot_level7a.py                  # Cooling curves + L2 vs time + skip table
-│   ├── src/
-│   │   └── time_skip_analysis.py        # Extended skip analysis across epoch counts
-│   └── results/
-│       ├── bayesian/
-│       ├── nsga2/
-│       ├── nsga3/
-│       └── plots/
-│
-├── level7_multiDomain/                  # Level 7B: Multi-domain Poisson NAS
-│   ├── main_level7b.py                  # CLI: NAS per geometry (5 domains)
-│   ├── plot_level7b.py                  # Per-geometry heatmaps + summary table
-│   ├── src/
-│   │   ├── domains.py                   # Domain definitions: square/circle/annulus/lshape/flower
-│   │   ├── poisson_pinn.py              # Poisson PINN trainer per domain
-│   │   └── nas_search_7b.py             # NAS search for each geometry
-│   └── results/
-│       ├── square/
-│       ├── circle/
-│       ├── annulus/
-│       ├── lshape/
-│       ├── flower/
-│       └── plots/
-│
-└── results/                             # All generated output files
-    ├── NAS_PINNs_Presentation.pptx      # 12-slide PowerPoint presentation
-    └── cross_level_comparison/
-        ├── cross_level_summary.json
-        └── cross_level_summary_table.png
-```
+**Reference:**
+> Dag Mortensen, Gulshan Noorsumar, Hallvard G. Fjær, Reza Babaei, Per Erik Drønen (2026)
+> *"Mitigating distortions in cast automotive subframes: A finite element simulation approach"*
+> The International Journal of Advanced Manufacturing Technology
+> https://doi.org/10.1007/s00170-026-17515-w
 
 ---
 
 ## Quick Start
 
-### Prerequisites
-
 ```bash
-pip install torch numpy scipy matplotlib pymoo bayesian-optimization python-pptx
+# Generate all presentation plots
+python generate_presentation_plots.py
+
+# Build the PowerPoint (21 slides)
+python make_presentation.py
+# Output: results/NAS_PINNs_Presentation.pptx
 ```
 
-### Level 1 — Run NAS and train all 3 optimizers
+---
 
-```bash
-python main.py --compare_all --problem quenching
-python level1_single_shot/plot_results.py
-python level1_single_shot/plot_fem_vs_pinn_steps.py
+## Project Structure
+
+```
+NAS-PINNS3/
+├── src/                        # Core framework (NAS, PINN, trainers, physics)
+├── problems/                   # PDE definitions (quenching, Poisson, Burgers)
+├── level1_single_shot/         # L1: global T(t,x,y) PINN
+├── level2_timestepper/         # L2: temporal skip operator
+├── level3_hybrid_fem/          # L3: adaptive FEM+PINN routing
+├── level4_distortion/          # L4: thermal → distortion mechanics
+├── level5_refinement/          # L5: extended Adam training
+├── level6_poisson_benchmark/   # L6: Poisson auxiliary fine-tuning
+├── level7_temporal/            # L7A: temporal skip analysis
+├── level7_multiDomain/         # L7B: 5-geometry Poisson NAS
+├── results/
+│   ├── pres_plots/             # Clean plots for presentation
+│   ├── cross_level_comparison/ # Cross-level analysis
+│   └── NAS_PINNs_Presentation.pptx
+├── generate_presentation_plots.py
+└── make_presentation.py
 ```
 
-### Level 2 — Temporal skip operator
+---
 
-```bash
-# Standard 500-epoch evaluation
-python level2_timestepper/main_level2.py --skip_values 1 2 4 6
-python level2_timestepper/plot_results.py
-python level2_timestepper/plot_fem_vs_pinn_skip.py
+## Framework Overview
 
-# 2000-epoch test for NSGA-II/III convergence at skip=2
-python level2_timestepper/eval_skip_5k.py
+| Level | Name | Input → Output | Key Result |
+|-------|------|----------------|------------|
+| L1 | Single-Shot PINN | (t,x,y) → T | Bayesian L2=0.076 (best) |
+| L2 | Skip Operator | (x,y,t_local,T_prev) → T_next | skip=2: 2× FEM reduction |
+| L3 | Hybrid FEM+PINN | residual → route | 80% FEM step reduction |
+| L4 | Distortion | T_field → δ (mm) | Bayesian: 1.67 mm mean |
+| L5 | Extended Training | more epochs → lower L2 | NSGA-II: 4.5× improvement |
+| L6 | Poisson Fine-Tune | Poisson aux loss | marginal gain (+17%) |
+| L7B | Multi-Domain NAS | 5 geometries | Circle: L2=0.00014 |
 
-# Adam + L-BFGS per window
-python level2_timestepper/eval_skip_lbfgs.py
+---
+
+## Physical Problem
+
+**Material:** A356 cast aluminium alloy
+**Domain:** 1.3 m × 0.6 m cross-section (2D)
+**Initial temperature:** T₀ = 540°C
+**Water bath:** T_water = 20°C
+**Duration:** 30 seconds
+
+**Governing PDE:**
+```
+ρCₚ · ∂T/∂t = K · ∇²T    in Ω
+K · ∂T/∂n = h(T) · (T - T_water)    on ∂Ω (Robin BC)
 ```
 
-### Level 3 — Hybrid FEM+PINN
+**Material properties (A356):**
 
-```bash
-python level3_hybrid_fem/main_level3.py --threshold 0.1 --max_skip 4
-python level3_hybrid_fem/plot_results.py --dir results/thr0.1_skip4
+| Property | Value |
+|----------|-------|
+| K (thermal conductivity) | 150 W/mK |
+| ρCₚ (volumetric heat capacity) | 2.4×10⁶ J/m³K |
+| E (elastic modulus) | 69 GPa |
+| α (thermal expansion) | 22×10⁻⁶ /°C |
+
+**Analytical reference (Robin BC fundamental mode):**
 ```
-
-### Level 4 — Distortion mechanics
-
-```bash
-python level4_distortion/main_distortion.py
-python level4_distortion/plot_results.py
-python level4_distortion/plot_paper_comparison.py
+T(t) = 20 + 520 · exp(−1.75×10⁻³ · t)
 ```
-
-### Level 5 — L-BFGS refinement
-
-```bash
-python level5_refinement/main_level5.py
-python level5_refinement/plot_results.py
-python level5_refinement/eval_skip_l5.py     # skip capability of refined models
-python level5_refinement/plot_skip_l5.py     # 4-series comparison plot
-```
-
-### Level 6 — Poisson benchmark
-
-```bash
-python level6_poisson_benchmark/main_level6.py
-python level6_poisson_benchmark/plot_results.py
-```
-
-### Level 7 — Temporal + Multi-domain
-
-```bash
-python level7_temporal/main_level7a.py
-python level7_temporal/plot_level7a.py
-
-python level7_multiDomain/main_level7b.py
-python level7_multiDomain/plot_level7b.py
-```
-
-### Cross-level comparison + PowerPoint
-
-```bash
-python compare_all_levels.py --skip_run     # plot from existing results
-python make_presentation.py                 # generate 12-slide PPTX
-```
-
-### Post-run finalization
-
-```bash
-python finalize_after_5k.py    # updates plots and regenerates PPTX
-```
+Derived from paper parameters (Mortensen 2026).
 
 ---
 
 ## NAS Search Space
 
-| Parameter | Range |
-|-----------|-------|
-| Hidden layers | 2 – 6 |
-| Neurons per layer | 32 – 256 |
-| Activation function | tanh · relu · swish |
-| Optimizers | Bayesian (TPE) · NSGA-II · NSGA-III |
+All three optimizers search the same architecture space:
 
-Training pipeline: **Adam** (cosine LR: 1e-3 → 1e-5) → **L-BFGS** (Level 5 refinement)
+| Hyperparameter | Options |
+|----------------|---------|
+| Number of hidden layers | {2, 3, 4, 5, 6} |
+| Neurons per layer | {32, 48, 64, 96, 128, 160, 192, 256} |
+| Activation function | tanh, relu, swish |
+| Architecture type | uniform (same neurons in all layers) |
+
+**Optimizers:**
+- **Bayesian (TPE):** single-objective, minimises L2_rel
+- **NSGA-II:** multi-objective (L2, param count), evolutionary
+- **NSGA-III:** multi-objective with reference-point directions
 
 ---
 
-## Material Properties — A356 Aluminum
+## Level 1 — Single-Shot NAS-PINN
 
-*Source: Mortensen et al. 2026, Table 1*
+**Goal:** Find architecture for global T(t,x,y) predictor.
+
+**Training parameters:**
+
+| Parameter | Value |
+|-----------|-------|
+| Input | (t, x, y) → T |
+| Adam epochs | 20 000 |
+| Learning rate | 1×10⁻³ → 1×10⁻⁵ (cosine) |
+| Domain points | 2 000 (random collocation) |
+| BC points | 200 (boundary sampling) |
+| Time range | t ∈ [0, 30] s |
+
+**Results:**
+
+| Optimizer | Architecture | Parameters | L2_rel | MAE (°C) | NAS Time |
+|-----------|-------------|------------|--------|----------|----------|
+| **Bayesian ★** | **5×151 relu** | **92 564** | **0.076 ✓** | **39.1°C** | ~150 s |
+| NSGA-II | 3×153 tanh | 47 890 | 0.252 | 132.6°C | ~1 583 s |
+| NSGA-III | 3×75 tanh | 11 776 | 0.513 | 270.3°C | ~1 609 s |
+| Target | — | — | < 0.100 | < 50°C | — |
+
+★ Only Bayesian meets the L2 < 0.10 target at Level 1.
+
+**Key finding:** Architecture depth and width directly determine accuracy. The Bayesian 5×151 network has 8× more parameters than NSGA-III and achieves 7× lower MAE.
+
+---
+
+## Level 2 — Temporal Skip Operator
+
+**Goal:** Replace intermediate FEM time steps with PINN predictions.
+
+**How it works:**
+- FEM runs at anchor points `t[::k]` (every k-th step)
+- PINN (TimeStepperPINN) predicts the k-1 skipped steps
+- Input: `[x, y, t_local, T_prev(x,y)]` → `T_next(x,y)`
+- Convergence criterion: `MAE(skip=k) / MAE(skip=1) < 1.5×`
+
+**Training parameters (500-epoch baseline):**
+
+| Parameter | Value |
+|-----------|-------|
+| Adam epochs per window | 500 |
+| Learning rate | 1×10⁻³ → 1×10⁻⁵ (cosine) |
+| Domain points | 500 |
+| BC points | 100 |
+| Time steps | N=20 (Δt = 1.5 s) |
+
+**Results — 500 Adam epochs:**
+
+| Skip | FEM Calls | Bayesian | Ratio | NSGA-II | Ratio | NSGA-III | Ratio |
+|------|-----------|----------|-------|---------|-------|---------|-------|
+| 1 | 21/21 | 43.6°C ✓ | 1.00× | 38.1°C ✓ | 1.00× | 44.4°C ✓ | 1.00× |
+| 2 | 11/21 | 33.2°C ✓ | 0.76× | 56.0°C **✓** | **1.47×** | 75.6°C ✗ | 1.70× |
+| 4 | 6/21 | 57.5°C ✓ | 1.32× | 154.8°C ✗ | 4.06× | 202.1°C ✗ | 4.55× |
+| 6 | 4/21 | 93.6°C ✗ | 2.15× | 354.6°C ✗ | 9.30× | 428.6°C ✗ | 9.65× |
+
+**Correction vs previous version:** NSGA-II skip=2 ratio=1.47× is **CONVERGED** (< 1.5 threshold), not diverged.
+
+**Results — 2 000 Adam epochs (NSGA-II and NSGA-III only):**
+
+| Optimizer | skip=1 MAE | skip=2 MAE | Ratio vs 500ep ref | Result |
+|-----------|-----------|-----------|-------------------|--------|
+| NSGA-II | 18.4°C | 37.4°C | 0.98× | **✓ Converged** |
+| NSGA-III | 33.8°C | 43.8°C | 0.99× | **✓ Converged** |
+
+**Key finding:** Epoch count was the bottleneck, not architecture. With 2 000 epochs, both NSGA-II and NSGA-III converge at skip=2.
+
+**Interesting observation:** Bayesian skip=2 (33.2°C) is BETTER than skip=1 (43.6°C). PINN avoids FEM's sequential numerical error accumulation.
+
+---
+
+## Level 3 — Hybrid FEM + PINN
+
+**Goal:** Adaptive routing — call FEM only when PINN error is too high.
+
+**Algorithm:**
+1. Solve step with PINN
+2. Compute PDE residual `r(t) = ‖∂T/∂t − K∇²T‖ / ‖T‖`
+3. If `r > threshold` → trigger full FEM solve
+4. If `r ≤ threshold` → accept PINN prediction
+
+**Parameters:**
+
+| Parameter | Config A | Config B |
+|-----------|---------|---------|
+| Residual threshold | 0.10 | 0.10 |
+| Max consecutive PINN steps | 4 | 20 |
+| Total time steps | 20 | 20 |
+
+**Results (Bayesian architecture):**
+
+| Config | FEM Steps | PINN Steps | Skip Rate |
+|--------|----------|-----------|-----------|
+| A (max_skip=4) | 4 | 16 | 80% |
+| B (max_skip=20) | 1 | 19 | 95% |
+
+**Key finding:** All three optimizers achieve 80% FEM step reduction in Config A. The residual check prevents error accumulation automatically.
+
+---
+
+## Level 4 — Thermal Distortion Mechanics
+
+**Goal:** Convert PINN temperature field to CMM-point distortions in mm.
+
+**Method:**
+- Input: `T(x,y,t=30s)` from Level 3 PINN
+- 2D plane-stress FEM: `σ = E · α · ΔT`
+- Output: `δ (mm)` at 47 CMM measurement points
+
+**Parameters:**
 
 | Property | Value |
 |----------|-------|
-| Thermal conductivity K | 151 W/m·K |
-| Volumetric heat capacity ρ·Cₚ | 2.43×10⁶ J/m³·K |
-| Elastic modulus E | 70 GPa |
-| Poisson's ratio ν | 0.33 |
-| Thermal expansion β | 2.34×10⁻⁵ /K |
-| Stress-free temperature T_ref | 540 °C |
+| E (elastic modulus) | 69 GPa |
+| α (thermal expansion) | 22×10⁻⁶ /°C |
+| FEM elements | Q4 plane-stress |
+| CMM points | 47 (from paper Fig 17) |
+
+**Results — Mean absolute distortion |δ|:**
+
+| Source | Mean |δ| (mm) | MAE vs Measured |
+|--------|--------------|----------------|
+| Paper Measured | 0.78 mm | — (reference) |
+| Paper FEM | 0.75 mm | 0.18 mm |
+| Bayesian PINN | 1.67 mm | 1.14 mm |
+| NSGA-II PINN | 2.81 mm | 2.08 mm |
+| NSGA-III PINN | 4.74 mm | 3.97 mm |
+
+**Key finding:** PINN thermal accuracy (L2_rel) directly determines distortion accuracy. Bayesian (L2=0.076) → 1.67mm; NSGA-III (L2=0.513) → 4.74mm.
 
 ---
 
-## Physics Reference
+## Level 5 — Extended Adam Training
 
-**Heat equation with Robin boundary condition:**
+**Goal:** Improve accuracy by training longer with cosine LR schedule.
 
-```
-ρCp · ∂T/∂t = K · ∇²T        (interior)
--K · ∂T/∂n = h(T) · (T - T_w)  (boundary)
-```
+**Note:** L-BFGS was tested but did not run (0 iterations in all cases — the Adam minimum was already in a locally flat region). The improvement comes from extended Adam with cosine LR.
 
-Analytical approximation (fundamental mode):
+**Training parameters:**
 
-```
-T(t) = 20 + 520 · exp(−1.75×10⁻³ · t)
-```
+| Parameter | Value |
+|-----------|-------|
+| Adam epochs | 20 000 |
+| LR schedule | cosine: 1×10⁻³ → 1×10⁻⁵ |
+| Same architectures | as Level 1 |
+
+**Results:**
+
+| Optimizer | L1 L2 | L5 L2 | Improvement | L1 MAE | L5 MAE |
+|-----------|-------|-------|-------------|--------|--------|
+| **Bayesian** | 0.076 | **0.030 ✓** | 2.6× | 39.1°C | 14.4°C ✓ |
+| **NSGA-II** | 0.252 | **0.055 ✓** | 4.5× | 132.6°C | 28.7°C ✓ |
+| NSGA-III | 0.513 | 0.259 | 2.0× | 270.3°C | 136.4°C |
+
+**Key finding:** NSGA-II shows the largest gain (4.5×) — its 3-layer architecture has enough capacity when given sufficient training time. Both Bayesian and NSGA-II now meet the L2 < 0.10 target.
+
+---
+
+## Level 6 — Poisson Auxiliary Fine-Tuning
+
+**Goal:** Test whether Poisson-type auxiliary loss improves quenching accuracy.
+
+**Method:**
+- Start from Level 5 weights
+- Add Poisson PDE auxiliary loss at 5 time slices: t ∈ {0.5, 2, 5, 10, 20} s
+- Fine-tune for 5 000 epochs
+
+**Training parameters:**
+
+| Parameter | Value |
+|-----------|-------|
+| Fine-tune epochs | 5 000 |
+| LR | 1×10⁻⁵ → 1×10⁻⁶ (cosine) |
+| λ_poisson | 1.0 |
+| Spatial points per slice | 1 000 |
+| Time slices | {0.5, 2, 5, 10, 20} s |
+
+**Results:**
+
+| Optimizer | L5 L2 | L6 L2 | Improvement |
+|-----------|-------|-------|-------------|
+| Bayesian | 0.038 | 0.031 | +17.5% |
+| NSGA-II | 0.062 | 0.058 | +6.2% |
+| NSGA-III | 0.274 | 0.267 | +2.5% |
+
+**Key finding:** Marginal gains only. Poisson auxiliary loss acts as a light regulariser but does not fundamentally improve accuracy for quenching.
+
+---
+
+## Level 7B — Multi-Domain Poisson NAS
+
+**Goal:** Apply NAS to Poisson PDE across 5 different geometries.
+
+**PDE:** `−∇²u = f(x,y)` with `u = 0` on boundary (Dirichlet)
+
+**Training parameters:**
+
+| Parameter | Value |
+|-----------|-------|
+| Proxy epochs (NAS) | 2 000 |
+| Final training epochs | 5 000 |
+| LR | 1×10⁻³ → 1×10⁻⁵ |
+| Domain points | 1 000 per domain |
+| BC points | 200 |
+
+**Domains and results:**
+
+| Domain | Reference | Best L2 (Bayesian) | Architecture | Difficulty |
+|--------|-----------|-------------------|--------------|------------|
+| Square [0,1]² | u*=x²(x−1)²y²(y−1)² (exact) | 0.0376 | 5×100 gelu | Medium |
+| Circle x²+y²≤1 | u*=(1−r²)/4 (exact) | **0.00014 ✓** | 5×40 gelu | Easy |
+| Annulus 0.25≤r≤1 | u*=(r²−r_i²)/4 (exact) | — | — | Did not converge |
+| L-Shape | FDM reference | 0.0277 ✓ | 5×100 gelu | Medium |
+| Flower r≤1+0.3cos(5θ) | FDM reference | 0.172 | 2×50 gelu | Hard |
+
+**Key finding:** Geometry complexity strongly affects NAS results. Smooth domains (circle) converge excellently. Complex boundaries (flower) remain challenging for all optimizers.
 
 ---
 
 ## Skip Operator: Core Concept
 
 ```
-FEM alone:  t=0 → t=1.5 → t=3 → t=4.5 → … → t=30   (21 points, 20 solves)
+FEM alone:  t=0 → t=1.5 → t=3 → t=4.5 → … → t=30   (21 steps, 20 FEM solves)
 
-skip=2:     FEM at [0, 3, 6, 9, …, 30]               (11 points, 10 FEM solves)
-            PINN at [1.5, 4.5, 7.5, …, 28.5]          (10 predicted)
-            → 2× speedup, MAE = 33.2°C (better than skip=1: 43.6°C)
+skip=2:     FEM at [0, 3, 6, 9, …, 30]               (11 FEM solves — 2× faster)
+            PINN at [1.5, 4.5, 7.5, …, 28.5]         (10 predictions)
+            Bayesian MAE = 33.2°C ✓  (better than skip=1!)
 
-skip=4:     FEM at [0, 6, 12, 18, 24, 30]             (6 points, 5 FEM solves)
+skip=4:     FEM at [0, 6, 12, 18, 24, 30]            (6 FEM solves — 4× faster)
             PINN fills 15 intermediate steps
-            → 4× speedup, MAE = 57.5°C (converged for Bayesian)
+            Bayesian MAE = 57.5°C ✓  (still within 1.5× threshold)
 ```
 
-**Convergence criterion:** MAE ratio vs skip=1 baseline < 1.5×
+**Convergence criterion:** `MAE(skip=k) / MAE(skip=1) < 1.5×`
+
+---
+
+## Key Results Summary
+
+| Metric | Bayesian | NSGA-II | NSGA-III | Paper FEM |
+|--------|---------|---------|---------|-----------|
+| L1 L2_rel | 0.076 ✓ | 0.252 | 0.513 | — |
+| L5 L2_rel | **0.030 ✓** | **0.055 ✓** | 0.259 | — |
+| Skip=2 (500ep) | ✓ (0.76×) | ✓ (1.47×) | ✗ (1.70×) | — |
+| Skip=2 (2000ep) | ✓ | ✓ (0.98×) | ✓ (0.99×) | — |
+| Skip=4 (500ep) | ✓ (1.32×) | ✗ | ✗ | — |
+| CMM distortion | 1.67 mm | 2.81 mm | 4.74 mm | 0.75 mm |
+| Hybrid skip rate | 80% | 80% | 80% | — |
+| Poisson L2 (circle) | 0.00014 | 0.00042 | 0.00066 | — |
 
 ---
 
@@ -411,4 +373,7 @@ skip=4:     FEM at [0, 6, 12, 18, 24, 30]             (6 points, 5 FEM solves)
 > The International Journal of Advanced Manufacturing Technology
 > https://doi.org/10.1007/s00170-026-17515-w
 
-The analytical cooling reference T(t) = 20 + 520·exp(−1.75×10⁻³·t) is derived from the Robin BC fundamental mode using the material parameters reported in this paper (K = 150 W/mK, ρCp = 2.4×10⁶ J/m³K). All FEM baseline values, CMM distortion measurements, and A356 material properties (Table 1) originate from this work.
+The analytical cooling reference `T(t) = 20 + 520·exp(−1.75×10⁻³·t)` is derived from the
+Robin BC fundamental mode using the material parameters reported in this paper
+(K = 150 W/mK, ρCₚ = 2.4×10⁶ J/m³K). All FEM baseline values, CMM distortion
+measurements, and A356 material properties originate from this work.

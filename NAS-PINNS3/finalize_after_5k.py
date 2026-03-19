@@ -26,7 +26,7 @@ ref_path = ROOT / "level2_timestepper" / "results" / "skip_table.json"
 with open(ref_path) as f:
     ref = json.load(f)
 
-print("\n5000-Epoch Skip Results vs 500-Epoch Baseline")
+print("\n2000-Epoch Skip Results vs 500-Epoch Baseline")
 print("=" * 60)
 CONV = 1.5
 for opt in ["nsga2", "nsga3"]:
@@ -70,7 +70,7 @@ with open(ROOT / "level2_timestepper/results/skip_table.json") as f:
     l2 = json.load(f)
 with open(ROOT / "level2_timestepper/results/skip_table_lbfgs.json") as f:
     l2l = json.load(f)
-with open(ROOT / "results/level5_refinement/skip_table_l5.json") as f:
+with open(ROOT / "level5_refinement/results/skip_table_l5.json") as f:
     l5 = json.load(f)
 
 skip_vals = [1, 2, 4, 6]
@@ -78,9 +78,9 @@ opts      = ["bayesian", "nsga2", "nsga3"]
 CONV_FAC  = 1.5
 
 SERIES = [
-    {"data": l2,   "label": "L2 Adam 500ep",       "ls": "-",   "marker": "o",  "lw": 2.2},
-    {"data": l2l,  "label": "L2 Adam+LBFGS 300+30","ls": "--",  "marker": "s",  "lw": 1.6},
-    {"data": l5,   "label": "L5 Global PINN",       "ls": "-.",  "marker": "D",  "lw": 1.6},
+    {"data": l2,   "label": "L2 Adam 500ep",        "ls": "-",   "marker": "o",  "lw": 2.2},
+    {"data": l2l,  "label": "L2 Adam+LBFGS 300+30", "ls": "--",  "marker": "s",  "lw": 1.6},
+    {"data": l5,   "label": "L5 Global PINN",        "ls": "-.",  "marker": "D",  "lw": 1.6},
 ]
 
 # Add 5k data for nsga2/nsga3 only
@@ -92,13 +92,13 @@ for opt in opts:
         # Bayesian: use original L2 data as placeholder (not re-run)
         data5k_full[opt] = []
 
-SERIES_5K = {"data": data5k_full, "label": "L2 Adam 5000ep\n(NSGA only)",
+SERIES_5K = {"data": data5k_full, "label": "L2 Adam 2000ep\n(NSGA only)",
              "ls": (0,(3,1,1,1)), "marker": "*", "lw": 2.0}
 
 fig = plt.figure(figsize=(18, 13), facecolor=_FIG_BG)
 fig.suptitle(
     "Temporal Skip Capability: Four Approaches Compared\n"
-    "L2 Adam-500  |  L2 Adam+L-BFGS  |  L5 Global PINN  |  L2 Adam-5000 (NSGA-II/III)",
+    "L2 Adam-500  |  L2 Adam+L-BFGS  |  L5 Global PINN  |  L2 Adam-2000 (NSGA-II/III)",
     fontsize=11, color=_TXT_C, fontweight="bold", y=0.99,
 )
 gs = gridspec.GridSpec(3, 3, hspace=0.50, wspace=0.35,
@@ -169,7 +169,7 @@ ser_triples = [
     ("L2 Adam-500",     l2,           base_cols),
     ("L2 Adam+LBFGS",   l2l,          lite_cols),
     ("L5 Global PINN",  l5,           glob_cols),
-    ("L2 Adam-5000",    data5k_full,  fivek_cols),
+    ("L2 Adam-2000",    data5k_full,  fivek_cols),
 ]
 
 for opt in opts:
@@ -213,7 +213,7 @@ for i, rc in enumerate(rc_all):
                 tbl[i+1,j_c].set_facecolor("#FFCDD2")
                 tbl[i+1,j_c].set_text_props(color="#B71C1C", fontweight="bold")
 
-out_png = ROOT / "results/level5_refinement/level5_skip_comparison.png"
+out_png = ROOT / "level5_refinement/results/level5_skip_comparison.png"
 fig.savefig(out_png, dpi=150, bbox_inches="tight", facecolor=fig.get_facecolor())
 plt.close()
 print(f"Updated plot: {out_png}")

@@ -58,7 +58,7 @@ def load_model(opt_name: str) -> PINNNet:
         activation   = cfg["activation"],
         residual     = False,
     )
-    wt = _ROOT / "results" / "level5_refinement" / opt_name / "model_lbfgs.pt"
+    wt = _ROOT / "level5_refinement" / "results" / opt_name / "model_lbfgs.pt"
     net.load_state_dict(torch.load(wt, map_location="cpu", weights_only=False))
     net.eval()
     return net.to(DEVICE)
@@ -150,7 +150,7 @@ def run():
 
         all_results[opt_name] = rows
 
-    out_path = _ROOT / "results" / "level5_refinement" / "skip_table_l5.json"
+    out_path = _ROOT / "level5_refinement" / "results" / "skip_table_l5.json"
     with open(out_path, "w") as f:
         json.dump(all_results, f, indent=2)
     print(f"\nSaved: {out_path}")

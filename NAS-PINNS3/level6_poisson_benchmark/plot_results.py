@@ -31,8 +31,8 @@ import torch
 _ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_ROOT))
 
-L5_SUMMARY = _ROOT / "results" / "level5_refinement" / "level5_summary.json"
-L6_DIR     = _ROOT / "results" / "level6"
+L5_SUMMARY = _ROOT / "level5_refinement" / "results" / "level5_summary.json"
+L6_DIR     = _ROOT / "level6_poisson_benchmark" / "results"
 
 OPT_COLORS = {
     "bayesian": "#1565C0",
@@ -298,9 +298,9 @@ def plot_summary_table(l5: dict, out_dir: Path) -> None:
 # Figure 5 & 6 — Temperature heatmaps
 # ──────────────────────────────────────────────────────────────────────────────
 
-LEVEL1_DIR = _ROOT / "results" / "run2"
-LEVEL5_DIR = _ROOT / "results" / "level5_refinement"
-LEVEL6_DIR = _ROOT / "results" / "level6"
+LEVEL1_DIR = _ROOT / "level1_single_shot" / "results"
+LEVEL5_DIR = _ROOT / "level5_refinement" / "results"
+LEVEL6_DIR = _ROOT / "level6_poisson_benchmark" / "results"
 
 # Domain bounds (must match src/config.py)
 _X_MAX = 1.3
@@ -347,7 +347,7 @@ def _load_model_for_plot(opt: str, level: int):
         from src.pinn_network import PINNNet
         from src.config import DEVICE
 
-        arch_path = LEVEL1_DIR / "quenching" / opt / "best_arch.json"
+        arch_path = LEVEL1_DIR / opt / "best_arch.json"
         if not arch_path.exists():
             return None
         cfg = _json.load(open(arch_path))

@@ -45,7 +45,7 @@ TARGET_L2 = 0.10
 
 def collect_level1() -> dict:
     """Load Level 1 results from results/run2/comparison.json."""
-    p = ROOT / "results" / "run2" / "comparison.json"
+    p = ROOT / "level1_single_shot" / "results" / "comparison.json"
     if not p.exists():
         return {}
     with open(p) as f:
@@ -127,7 +127,7 @@ def collect_level4() -> dict:
 
 def collect_level5() -> dict:
     """Load Level 5 cosine LR results."""
-    p = ROOT / "results" / "level5_refinement" / "level5_summary.json"
+    p = ROOT / "level5_refinement" / "results" / "level5_summary.json"
     if not p.exists():
         return {}
     with open(p) as f:

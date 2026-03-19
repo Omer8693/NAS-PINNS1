@@ -35,9 +35,9 @@ from level6_poisson_benchmark.src.poisson_aux_loss import (
 )
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
-LEVEL1_DIR = _ROOT / "results" / "run2"
-LEVEL5_DIR = _ROOT / "results" / "level5_refinement"
-OUT_BASE   = _ROOT / "results" / "level6"
+LEVEL1_DIR = _ROOT / "level1_single_shot" / "results"
+LEVEL5_DIR = _ROOT / "level5_refinement" / "results"
+OUT_BASE   = _ROOT / "level6_poisson_benchmark" / "results"
 
 # ── Fine-tuning hyper-parameters ──────────────────────────────────────────────
 FINETUNE_EPOCHS = 5_000
@@ -55,7 +55,7 @@ LOG_EVERY  = 200
 
 def _load_arch(opt_name: str) -> dict:
     """Load architecture config from Level 1 results."""
-    p = LEVEL1_DIR / "quenching" / opt_name / "best_arch.json"
+    p = LEVEL1_DIR / opt_name / "best_arch.json"
     if not p.exists():
         raise FileNotFoundError(f"Level 1 arch not found: {p}")
     with open(p) as f:

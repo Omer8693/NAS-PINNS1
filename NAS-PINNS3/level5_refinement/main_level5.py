@@ -39,8 +39,8 @@ from level5_refinement.src.batch_sampler import sample_fixed_batch, COL_POINTS, 
 from level5_refinement.src.lbfgs_refiner import LBFGSRefiner, load_level1_model, LBFGS_CONFIG
 
 OPTIMIZERS = ["bayesian", "nsga2", "nsga3"]
-LEVEL1_DIR = _ROOT / "results" / "run2"
-OUT_BASE   = _ROOT / "results" / "level5_refinement"
+LEVEL1_DIR = _ROOT / "level1_single_shot" / "results"  # passed as str to load_level1_model
+OUT_BASE   = _ROOT / "level5_refinement" / "results"
 
 # Adam with cosine LR decay — same epochs as Level 1, better schedule
 ADAM_EPOCHS = 20000

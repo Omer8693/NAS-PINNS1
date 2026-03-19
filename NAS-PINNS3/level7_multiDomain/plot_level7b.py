@@ -54,7 +54,7 @@ DOM_FORMULAS = {
     "flower":  ("r ≤ 1 + 0.3·cos(5θ)",    "f = 1,  5 petals",            "FDM ref"),
 }
 
-L7B_DIR = _ROOT / "results" / "level7b"
+L7B_DIR = _ROOT / "level7_multiDomain" / "results"
 OUT_DIR  = L7B_DIR / "plots"
 
 # ── Style constants (identical to FEM-PINNS) ─────────────────────────────────

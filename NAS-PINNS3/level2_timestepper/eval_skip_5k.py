@@ -2,7 +2,7 @@
 eval_skip_5k.py — Level 2 High-Epoch Skip Test
 ================================================
 Runs NSGA-II and NSGA-III only at skip=1 and skip=2
-with 5000 Adam epochs to test whether they can converge.
+with 2000 Adam epochs to test whether they can converge.
 
 Result saved to: results/skip_table_5k.json
 """
@@ -12,8 +12,8 @@ from pathlib import Path
 _ROOT    = Path(__file__).resolve().parent.parent
 _L2_ROOT = Path(__file__).resolve().parent
 os.chdir(str(_L2_ROOT))
-sys.path.insert(0, str(_L2_ROOT))
 sys.path.insert(0, str(_ROOT))
+sys.path.insert(0, str(_L2_ROOT))   # L2 first → wins over project-root src
 
 from src.ts_model    import TimeStepperPINN
 from src.ts_evaluate import skip_table
@@ -30,9 +30,9 @@ CONFIGS = {
 }
 
 TRAIN_KWARGS = {
-    "n_domain": 1000,
-    "n_bc":     200,
-    "n_epochs": 5000,
+    "n_domain": 500,
+    "n_bc":     100,
+    "n_epochs": 2000,
     "lr":       1e-3,
     "lr_min":   1e-5,
 }
@@ -51,7 +51,7 @@ def run():
     for opt, cfg in CONFIGS.items():
         ref_mae = {r["skip"]: r for r in ref.get(opt, [])}.get(1, {}).get("mae_C", 999)
         print(f"\n{'='*60}")
-        print(f"  {opt.upper()}  5000 epoch  (ref skip=1 MAE={ref_mae:.1f}°C)")
+        print(f"  {opt.upper()}  2000 epoch  (ref skip=1 MAE={ref_mae:.1f}°C)")
         print(f"{'='*60}")
 
         rows = skip_table(

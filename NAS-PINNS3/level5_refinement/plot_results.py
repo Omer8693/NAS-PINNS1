@@ -210,7 +210,7 @@ def plot_summary_table(summary: dict, out_dir: str) -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Level 5 — Visualize L-BFGS Refinement")
     parser.add_argument("--results_dir", type=str,
-                        default="results/level5_refinement")
+                        default=str(Path(__file__).resolve().parent / "results"))
     parser.add_argument("--out", type=str, default=None)
     args = parser.parse_args()
 

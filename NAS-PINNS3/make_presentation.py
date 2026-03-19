@@ -139,6 +139,13 @@ def footer(slide, text="NAS-PINNs Thesis  |  2026"):
              font_size=8, color=RGBColor(0x90, 0xCA, 0xF9), align=PP_ALIGN.LEFT)
 
 
+def add_notes(slide, text: str):
+    """Add speaker notes to a slide."""
+    notes_slide = slide.notes_slide
+    tf = notes_slide.notes_text_frame
+    tf.text = text
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 # SLIDES
 # ══════════════════════════════════════════════════════════════════════════════
@@ -176,6 +183,8 @@ def slide_title(prs):
 
     add_text(sl, "2026", Inches(0.5), Inches(6.8), Inches(12.0), Inches(0.4),
              font_size=11, color=RGBColor(0x64, 0xB5, 0xF6), align=PP_ALIGN.CENTER)
+
+    add_notes(sl, "This presentation covers the NAS-PINNs framework — a 7-level progressive system that applies Neural Architecture Search to Physics-Informed Neural Networks for thermal simulation of A356 aluminum water quenching. The core innovation is the temporal skip operator: using PINN to replace intermediate FEM time steps, reducing solver calls while maintaining accuracy. Three NAS optimizers are compared: Bayesian (TPE), NSGA-II, and NSGA-III. The framework is built in PyTorch and covers everything from single-shot prediction to multi-domain generalization.")
 
 
 def slide_overview(prs):
@@ -220,6 +229,8 @@ def slide_overview(prs):
              "— solving in fewer solver calls without accuracy loss.",
              Inches(0.45), Inches(6.58), Inches(12.4), Inches(0.55),
              font_size=12, bold=True, color=C_ACCENT, align=PP_ALIGN.CENTER)
+
+    add_notes(sl, "The framework is structured as seven progressive levels, each building on the previous. Levels 1-4 establish the core quenching simulation pipeline: single-shot prediction, temporal skip operator, hybrid FEM/PINN routing, and distortion mechanics. Levels 5-7 extend and validate: L-BFGS refinement improves all architectures, Level 6 tests generalization to Poisson PDE, and Level 7 combines temporal analysis with multi-domain NAS. The core thesis is that a PINN with NAS-optimized architecture can replace sequential FEM steps — solving in fewer calls without accuracy loss.")
 
 
 def slide_problem(prs):
@@ -269,6 +280,8 @@ def slide_problem(prs):
                  Inches(3.7), Inches(0.42),
                  font_size=12, color=C_GRAY)
 
+    add_notes(sl, "The physical problem is A356 aluminum water quenching: a 1.3×0.6 meter 2D cross-section heated to 540°C is immersed in 20°C water. The governing PDE is the heat equation with nonlinear Robin boundary conditions — the heat transfer coefficient h(T) changes regime as boiling transitions from film to nucleate to forced convection. The key challenge is that FEM must solve 20 sequential time steps, each requiring a full mesh assembly and matrix solve. PINN's opportunity is to predict intermediate steps without the FEM solve, reducing the total number of expensive solver calls. The analytical reference T(t) = 20 + 520·exp(−1.75×10⁻³·t) captures the fundamental mode of the 2D Robin BC system.")
+
 
 def slide_level1(prs):
     sl = blank_slide(prs)
@@ -312,12 +325,14 @@ def slide_level1(prs):
             cx += cw
 
     # Image placeholder
-    img = ROOT / "results/run2/plots/fem_vs_pinn_steps.png"
+    img = ROOT / "level1_single_shot/results/plots/fem_vs_pinn_steps.png"
     add_picture_safe(sl, img, Inches(6.6), Inches(1.35), Inches(6.5), Inches(3.5))
 
     add_text(sl, "★ Only Bayesian meets the L2 < 0.10 target at Level 1",
              Inches(0.4), Inches(6.8), Inches(12.5), Inches(0.38),
              font_size=12, bold=True, color=C_ACCENT, align=PP_ALIGN.CENTER)
+
+    add_notes(sl, "Level 1 establishes the baseline NAS-PINN: a global network that takes (t, x, y) as input and predicts temperature T. Three optimizers search the architecture space (layers 2-6, neurons 32-256, activations tanh/relu/swish). Bayesian optimization with TPE finds the best architecture (5 layers × 151 neurons, relu) and achieves L2=0.076, meeting the <0.10 target. NSGA-II finds a slightly smaller architecture (3×153 tanh) but achieves L2=0.252 — missing the target. NSGA-III finds an even smaller model (3×75 tanh) with L2=0.513. The key finding is that architecture quality directly impacts downstream skip capability: only Bayesian's larger, deeper network can tolerate temporal skipping.")
 
 
 def slide_level2(prs):
@@ -363,12 +378,14 @@ def slide_level2(prs):
                      font_size=11, bold=(ri==0), color=tc, align=PP_ALIGN.CENTER)
             cx += cw
 
-    img = ROOT / "results/level2/fem_vs_pinn_skip.png"
+    img = ROOT / "level2_timestepper/results/fem_vs_pinn_skip.png"
     add_picture_safe(sl, img, Inches(6.8), Inches(1.35), Inches(6.3), Inches(5.1))
 
     add_text(sl, "Key result: Only Bayesian NAS achieves skip=2 (2× FEM reduction) with convergence",
              Inches(0.4), Inches(6.82), Inches(6.3), Inches(0.36),
              font_size=11, bold=True, color=C_MID)
+
+    add_notes(sl, "Level 2 introduces the temporal skip operator — the core innovation. Instead of a global predictor, a window-based TimeStepperPINN takes [x, y, t_local, T_prev] as input and predicts T_next for one time window. FEM runs at anchor points t[::k], PINN fills the skipped steps. With skip=2, only 11 out of 21 time steps need FEM — a 2× speedup. The convergence criterion is that MAE at skip=k must be less than 1.5× the skip=1 baseline MAE. With 500 Adam epochs, only Bayesian achieves this. With 2000 Adam epochs, NSGA-II (ratio=0.98×) and NSGA-III (ratio=0.99×) also converge — showing that epoch count is the limiting factor, not architecture per se.")
 
 
 def slide_level3(prs):
@@ -419,6 +436,8 @@ def slide_level3(prs):
              Inches(6.9), Inches(5.75), Inches(6.2), Inches(0.65),
              font_size=12, bold=True, color=C_GREEN)
 
+    add_notes(sl, "Level 3 adds adaptive intelligence: instead of a fixed skip factor, the system decides at each time step whether to use FEM or PINN based on the PDE residual. If the residual exceeds threshold 0.1, FEM is called for accuracy. If it falls below, PINN handles the prediction. This achieves 80% FEM skip across all three optimizers — even NSGA-II and NSGA-III benefit from this adaptive approach, since the residual check prevents error accumulation. The key insight is that residual-based routing is more robust than fixed-skip: it automatically calls FEM when the physics are challenging.")
+
 
 def slide_level4(prs):
     sl = blank_slide(prs)
@@ -465,6 +484,8 @@ def slide_level4(prs):
         add_text(sl, name, bx, Inches(5.55),
                  Inches(1.6), Inches(0.6),
                  font_size=10, color=C_GRAY, align=PP_ALIGN.CENTER)
+
+    add_notes(sl, "Level 4 connects thermal simulation to structural mechanics. The PINN temperature field at t=30s is used as input to a 2D plane-stress FEM solver, which computes thermal strains and distortions. Results are compared to CMM (Coordinate Measuring Machine) measurements at 47 points from the paper (Mortensen et al. 2026). Bayesian's more accurate temperature field (L2=0.076) translates directly to lower distortion error: 1.67mm mean displacement vs 2.81mm for NSGA-II and 4.74mm for NSGA-III. This demonstrates the practical engineering consequence of NAS architecture quality: better PINN → better distortion prediction → fewer physical prototypes.")
 
 
 def slide_level5(prs):
@@ -522,6 +543,8 @@ def slide_level5(prs):
              Inches(0.4), Inches(6.75), Inches(12.5), Inches(0.42),
              font_size=11, italic=True, color=C_ACCENT, align=PP_ALIGN.CENTER)
 
+    add_notes(sl, "Level 5 applies L-BFGS as a second-order refinement after Adam convergence. Adam is a first-order optimizer — it finds a good region but cannot exploit curvature information. L-BFGS uses an approximation to the inverse Hessian and achieves much tighter convergence near minima. Applied to the Level 1 models: Bayesian improves from L2=0.076 to 0.030 (2.6× improvement), NSGA-II from 0.252 to 0.055 (4.5× improvement), NSGA-III from 0.513 to 0.259 (2× improvement). Notably, applying L-BFGS per-window in Level 2 is LESS effective — window training needs sufficient Adam pre-convergence before L-BFGS can help. The correct sequence is: Adam fully converge, then L-BFGS refine.")
+
 
 def slide_level6(prs):
     sl = blank_slide(prs)
@@ -546,7 +569,7 @@ def slide_level6(prs):
         "to different PDE families without re-search.",
     ], Inches(0.4), Inches(1.35), Inches(6.2), Inches(5.5), font_size=13)
 
-    img = ROOT / "results/level6/plots/l6_heatmap_t5s.png"
+    img = ROOT / "level6_poisson_benchmark/results/plots/l6_heatmap_t5s.png"
     add_picture_safe(sl, img, Inches(6.8), Inches(1.35), Inches(6.3), Inches(3.5))
 
     add_rect(sl, Inches(6.8), Inches(5.0), Inches(6.3), Inches(1.7),
@@ -557,6 +580,8 @@ def slide_level6(prs):
              "without any architecture modification.",
              Inches(6.95), Inches(5.1), Inches(5.9), Inches(1.5),
              font_size=12, color=C_GREEN)
+
+    add_notes(sl, "Level 6 tests generalization: can the NAS-found architectures solve a completely different PDE without re-searching? The Poisson equation −∇²u = f on the unit square has exact solution u = sin(πx)·sin(πy). The same Bayesian architecture (5×151 relu) achieves L2=0.0083 — excellent generalization. NSGA-II achieves L2=0.0412, also good. NSGA-III achieves L2=0.1890 — marginal but present. This validates a key hypothesis: NAS-optimized architectures for heat equations are not overfitted to that specific PDE. The capacity and inductive bias selected by Bayesian NAS generalizes across PDE families, making the approach practically useful for multi-physics simulations.")
 
 
 def slide_level7(prs):
@@ -578,7 +603,7 @@ def slide_level7(prs):
         "▸  Skip efficiency: 80% FEM step reduction for Bayesian",
     ], Inches(0.4), Inches(1.78), Inches(6.1), Inches(2.0), font_size=12)
 
-    img7a = ROOT / "results/level7/plots/l7a_cooling_curves.png"
+    img7a = ROOT / "level7_temporal/results/plots/l7a_cooling_curves.png"
     add_picture_safe(sl, img7a, Inches(0.4), Inches(3.85), Inches(6.1), Inches(2.8))
 
     # 7B
@@ -592,8 +617,10 @@ def slide_level7(prs):
         "▸  NSGA-III struggles on complex geometries (flower)",
     ], Inches(6.8), Inches(1.78), Inches(6.3), Inches(2.0), font_size=12)
 
-    img7b = ROOT / "results/level7b/plots/l7b_summary_table.png"
+    img7b = ROOT / "level7_multiDomain/results/plots/l7b_summary_table.png"
     add_picture_safe(sl, img7b, Inches(6.8), Inches(3.85), Inches(6.3), Inches(2.8))
+
+    add_notes(sl, "Level 7 has two components. Level 7A revisits temporal skip with more detailed analysis across different training regimes: with 500 epochs, only Bayesian converges at skip=2. With 2000 epochs, NSGA-II achieves ratio=0.98× and NSGA-III achieves ratio=0.99× — both converge. This shows that epoch count, not architecture, was the limiting factor. Level 7B tests NAS across 5 different geometric domains for the Poisson PDE: square, circle, annulus, L-shape, and flower. Bayesian achieves L2<0.05 on all domains. NSGA-III struggles on complex geometries like the flower shape, where the boundary representation is more challenging. This demonstrates multi-domain robustness of the NAS framework.")
 
 
 def slide_cross_level(prs):
@@ -621,6 +648,8 @@ def slide_cross_level(prs):
                  Inches(10.8), Inches(0.42),
                  font_size=12, color=C_GRAY)
 
+    add_notes(sl, "The cross-level summary shows the full progression. Bayesian NAS consistently outperforms at every level — it meets the L2<0.10 target at Level 1, achieves skip=2 at Level 2 with 500 epochs, and reaches L2=0.030 after L-BFGS. NSGA-II shows the largest improvement from L-BFGS: 4.5× reduction in L2 error. NSGA-III, despite being the smallest model (11,776 parameters), still achieves useful accuracy after L-BFGS and converges at skip=2 with sufficient training. The key message is that NAS optimizer choice affects initial performance but all architectures benefit substantially from the full pipeline: Adam → L-BFGS → skip operator.")
+
 
 def slide_conclusions(prs):
     sl = blank_slide(prs)
@@ -642,8 +671,8 @@ def slide_conclusions(prs):
          "Adaptive residual routing works for all 3 optimizers"),
         ("✓", "NAS architectures generalize across PDE families",
          "Same architecture: heat equation → Poisson PDE, 5 geometries"),
-        ("→", "Future: NSGA-II skip=2 with 5000 epoch training",
-         "Current 500-epoch result ratio=1.47× — just above 1.5× threshold"),
+        ("✓", "NSGA-II/III achieve skip=2 with 2000 epoch training",
+         "NSGA-II ratio=0.98× ✓  |  NSGA-III ratio=0.99× ✓  |  Epoch count was limiting factor, not architecture"),
     ]
 
     for i, (icon, title, detail) in enumerate(findings):
@@ -661,9 +690,11 @@ def slide_conclusions(prs):
                  font_size=11, color=RGBColor(0xBB,0xDE,0xFB), italic=True)
 
     add_rect(sl, 0, Inches(7.1), SLIDE_W, Inches(0.4), RGBColor(0x0D,0x47,0xA1))
-    add_text(sl, "NAS-PINNs: Temporal Skip Operator for FEM Acceleration  |  2026",
+    add_text(sl, "NAS-PINNs: Neural Architecture Search for Physics-Informed Neural Networks  |  Mortensen et al. 2026",
              Inches(0.3), Inches(7.12), Inches(12.7), Inches(0.35),
              font_size=10, color=RGBColor(0x90,0xCA,0xF9), align=PP_ALIGN.CENTER)
+
+    add_notes(sl, "To summarize the key contributions: First, the temporal skip operator is validated — PINN can replace FEM intermediate steps with 2× speedup and no accuracy loss for Bayesian. With 2000 epochs, NSGA-II and NSGA-III also achieve skip=2. Second, NAS architecture quality determines skip capability: larger deeper networks (Bayesian 5×151) converge faster at higher skip rates. Third, L-BFGS refinement dramatically improves all optimizers — particularly NSGA-II which improves 4.5×. Fourth, hybrid FEM+PINN with residual-based routing achieves 80% FEM step reduction for all optimizers. Fifth, the framework generalizes: same NAS architectures work for Poisson PDE and 5 different geometries. Future work: higher skip rates (k=4,6) for NSGA-II/III with more training epochs; real FEM coupling (Abaqus/OpenFOAM); 3D extension.")
 
 
 # ══════════════════════════════════════════════════════════════════════════════

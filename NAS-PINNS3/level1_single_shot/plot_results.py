@@ -258,8 +258,8 @@ if __name__ == "__main__":
         description="Level 1 — Visualize NAS-PINN single-shot results"
     )
     parser.add_argument("--results_dir", type=str,
-                        default=str(Path(__file__).parent.parent / "results" / "run2"),
-                        help="Directory containing comparison.json (default: results/run2)")
+                        default=str(Path(__file__).parent / "results"),
+                        help="Directory containing comparison.json (default: level1_single_shot/results)")
     parser.add_argument("--out", type=str, default=None,
                         help="Output directory (default: results_dir/plots)")
     args = parser.parse_args()

@@ -31,7 +31,7 @@ from level7_multiDomain.src.nas_search_7b import run_one
 DOMAINS    = ["square", "circle", "annulus", "lshape", "flower"]
 OPTIMIZERS = ["bayesian", "nsga2", "nsga3"]
 
-OUT_DIR = _ROOT / "results" / "level7b"
+OUT_DIR = _ROOT / "level7_multiDomain" / "results"
 
 
 def parse_args():

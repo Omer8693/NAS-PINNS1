@@ -57,7 +57,7 @@ def load_data():
     with open(p2l) as f:
         l2l_data = json.load(f)
 
-    p5 = _ROOT / "results" / "level5_refinement" / "skip_table_l5.json"
+    p5 = _ROOT / "level5_refinement" / "results" / "skip_table_l5.json"
     with open(p5) as f:
         l5_data = json.load(f)
 
@@ -216,6 +216,6 @@ def plot_skip_comparison(l2_data, l2l_data, l5_data, out_dir: Path):
 
 if __name__ == "__main__":
     l2_data, l2l_data, l5_data = load_data()
-    out_dir = _ROOT / "results" / "level5_refinement"
+    out_dir = _ROOT / "level5_refinement" / "results"
     plot_skip_comparison(l2_data, l2l_data, l5_data, out_dir)
     print("Done.")

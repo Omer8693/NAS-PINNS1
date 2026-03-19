@@ -27,7 +27,7 @@ sys.path.insert(0, str(_ROOT))
 
 from src.config import T_INIT, T_WATER_INIT, T_END, ALPHA, X_MAX, Y_MAX
 
-L7_DIR  = _ROOT / "results" / "level7"
+L7_DIR  = _ROOT / "level7_temporal" / "results"
 OUT_DIR = L7_DIR / "plots"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 

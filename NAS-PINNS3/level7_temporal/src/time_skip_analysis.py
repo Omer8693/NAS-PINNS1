@@ -35,8 +35,8 @@ from src.config import (
 from src.pinn_network import PINNNet
 
 # ── Dizin sabitleri ────────────────────────────────────────────────────────────
-LEVEL1_DIR = _ROOT / "results" / "run2"
-LEVEL6_DIR = _ROOT / "results" / "level6"
+LEVEL1_DIR = _ROOT / "level1_single_shot" / "results"
+LEVEL6_DIR = _ROOT / "level6_poisson_benchmark" / "results"
 OPTIMIZERS = ["bayesian", "nsga2", "nsga3"]
 
 # ── FEM referans sabitleri ─────────────────────────────────────────────────────
@@ -74,7 +74,7 @@ def T_ref(t_arr: np.ndarray) -> np.ndarray:
 
 def load_model(opt: str) -> Optional[PINNNet]:
     """Level 6 → Level 5 → Level 1 öncelik sırası ile model yükle."""
-    arch_path = LEVEL1_DIR / "quenching" / opt / "best_arch.json"
+    arch_path = LEVEL1_DIR / opt / "best_arch.json"
     if not arch_path.exists():
         return None
     cfg = json.load(open(arch_path))
@@ -82,8 +82,8 @@ def load_model(opt: str) -> Optional[PINNNet]:
 
     candidates = [
         LEVEL6_DIR / opt / "model_l6.pt",
-        _ROOT / "results" / "level5_refinement" / opt / "model_lbfgs.pt",
-        LEVEL1_DIR / "quenching" / opt / "model.pt",
+        _ROOT / "level5_refinement" / "results" / opt / "model_lbfgs.pt",
+        LEVEL1_DIR / opt / "model.pt",
     ]
     weights = next((p for p in candidates if p.exists()), None)
     if weights is None:

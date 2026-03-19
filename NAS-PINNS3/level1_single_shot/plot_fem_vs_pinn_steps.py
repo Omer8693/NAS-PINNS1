@@ -38,7 +38,7 @@ from src.config import (
 from src.pinn_network import PINNNet
 
 DEVICE  = torch.device("cpu")
-OUT_DIR = _ROOT / "results" / "run2" / "plots"
+OUT_DIR = _ROOT / "level1_single_shot" / "results" / "plots"
 
 # FEM-PINNS stil sabitleri
 _FIG_BG  = "#f7f1e3"
@@ -122,8 +122,8 @@ def simulate_fem(sv_ratio: float, n_steps: int = N_TIME_STEPS) -> tuple:
 # ── Load PINN model ───────────────────────────────────────────────────────────
 
 def load_pinn() -> PINNNet:
-    arch_path = _ROOT / "results" / "run2" / "quenching" / "bayesian" / "best_arch.json"
-    wt_path   = _ROOT / "results" / "run2" / "quenching" / "bayesian" / "model.pt"
+    arch_path = _ROOT / "level1_single_shot" / "results" / "bayesian" / "best_arch.json"
+    wt_path   = _ROOT / "level1_single_shot" / "results" / "bayesian" / "model.pt"
 
     with open(arch_path) as f:
         arch = json.load(f)

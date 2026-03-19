@@ -37,13 +37,13 @@ LBFGS_CONFIG = {
 
 
 def load_level1_model(opt_name: str,
-                      results_dir: str = "results/run2") -> tuple:
+                      results_dir: str = "level1_single_shot/results") -> tuple:
     """
     Load Level 1 architecture + weights for a given optimizer.
 
     Returns: (model, config_dict, results_dict)
     """
-    base = Path(results_dir) / "quenching" / opt_name
+    base = Path(results_dir) / opt_name
 
     arch_path    = base / "best_arch.json"
     weights_path = base / "model.pt"

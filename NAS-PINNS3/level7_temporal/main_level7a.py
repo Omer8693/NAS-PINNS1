@@ -76,7 +76,7 @@ def print_summary(results: dict):
     print("=" * 70)
 
     # Özet JSON kaydet
-    out_dir = _ROOT / "results" / "level7"
+    out_dir = _ROOT / "level7_temporal" / "results"
     out_dir.mkdir(parents=True, exist_ok=True)
     summary = {
         "question": "NAS-PINN, FEM zaman marching olmadan aynı doğrulukta tahmin yapabilir mi?",

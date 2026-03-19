@@ -2,252 +2,135 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Level 1 — Single-Shot NAS-PINN | NAS-PINNs</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-/* ─── NAS-PINNs · Shared Stylesheet ───────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg:        #F5F7FA;
-  --surface:   #FFFFFF;
-  --border:    #E2E8F0;
-  --primary:   #2563EB;
-  --primary-l: #DBEAFE;
-  --primary-d: #1D4ED8;
-  --orange:    #EA580C;
-  --orange-l:  #FEF3C7;
-  --green:     #16A34A;
-  --green-l:   #DCFCE7;
-  --red:       #DC2626;
-  --red-l:     #FEE2E2;
-  --purple:    #7C3AED;
-  --purple-l:  #EDE9FE;
-  --txt:       #1E293B;
-  --txt-mid:   #475569;
-  --txt-light: #94A3B8;
-  --radius:    12px;
-  --shadow:    0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.05);
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D1117;--surface:#161B22;--border:#30363D;
+  --s2:#21262D;--txt:#E6EDF3;--mid:#8B949E;
+  --dim:#484F58;--blue:#58A6FF;--orange:#F0883E;
+  --green:#3FB950;--purple:#A371F7;--red:#F78166;
+  --radius:10px;
 }
-html  { scroll-behavior: smooth; }
-body  { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: var(--bg); color: var(--txt); line-height: 1.6; }
-a     { color: var(--primary); text-decoration: none; }
-a:hover { text-decoration: underline; }
-img   { max-width: 100%; }
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,sans-serif;font-size:14px;line-height:1.6;min-height:100vh}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+img{max-width:100%;border-radius:var(--radius);border:1px solid var(--border);display:block;margin-top:10px}
 
-/* ── Layout ───────────────────────────────────────────────────────────────── */
-.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
-section    { padding: 56px 0; }
-section + section { border-top: 1px solid var(--border); }
+/* Nav */
+nav{display:flex;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;overflow-x:auto}
+.nav-logo{font-weight:700;font-size:.95rem;color:var(--blue);padding:.75rem 1.25rem;white-space:nowrap;display:flex;align-items:center;text-decoration:none;border-right:1px solid var(--border);flex-shrink:0}
+.nav-logo:hover{text-decoration:none;color:var(--txt)}
+.nav-links{display:flex;list-style:none}
+.nav-links a{display:block;padding:.75rem .9rem;font-size:.8rem;color:var(--mid);white-space:nowrap;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
+.nav-links a:hover{color:var(--txt);text-decoration:none}
+.nav-links a.active{color:var(--txt);border-bottom-color:var(--blue)}
 
-/* ── Nav ──────────────────────────────────────────────────────────────────── */
-nav {
-  position: sticky; top: 0; z-index: 100;
-  background: rgba(255,255,255,.92); backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-}
-.nav-inner {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 24px; max-width: 1100px; margin: 0 auto; gap: 16px;
-}
-.nav-logo { font-weight: 700; font-size: 1rem; color: var(--primary); white-space: nowrap; }
-.nav-links { display: flex; gap: 16px; list-style: none; flex-wrap: wrap; }
-.nav-links a { font-size: .82rem; color: var(--txt-mid); font-weight: 500; white-space: nowrap; }
-.nav-links a:hover, .nav-links a.active { color: var(--primary); text-decoration: none; }
+/* Hero */
+.level-hero{padding:3rem 2rem 2rem;border-bottom:1px solid var(--border);background:var(--bg)}
+.container{max-width:1080px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{font-size:.8rem;color:var(--dim);margin-bottom:.75rem}
+.level-badge{display:inline-block;padding:3px 14px;border-radius:6px;font-size:.72rem;font-weight:700;margin-bottom:.75rem;background:rgba(88,166,255,.12);color:var(--blue);border:1px solid rgba(88,166,255,.3)}
+.hero-title{font-size:clamp(1.4rem,3vw,2rem);font-weight:700;line-height:1.25;margin-bottom:.5rem;background:linear-gradient(90deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:.92rem;color:var(--mid);max-width:680px;margin-bottom:1rem}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:.75rem}
+.badge{border-radius:20px;padding:3px 10px;font-size:.72rem;border:1px solid}
+.bb{border-color:rgba(88,166,255,.4);color:var(--blue);background:rgba(88,166,255,.08)}
+.bo{border-color:rgba(240,136,62,.4);color:var(--orange);background:rgba(240,136,62,.08)}
+.bg{border-color:rgba(63,185,80,.4);color:var(--green);background:rgba(63,185,80,.08)}
+.bp{border-color:rgba(163,113,247,.4);color:var(--purple);background:rgba(163,113,247,.08)}
+.br{border-color:rgba(247,129,102,.4);color:var(--red);background:rgba(247,129,102,.08)}
 
-/* ── Buttons ──────────────────────────────────────────────────────────────── */
-.btn { padding: 10px 22px; border-radius: 8px; font-size: .9rem; font-weight: 600;
-       cursor: pointer; border: none; transition: all .15s; display: inline-block; }
-.btn-primary  { background: var(--primary); color: #fff; }
-.btn-primary:hover  { background: var(--primary-d); text-decoration: none; }
-.btn-outline  { background: #fff; color: var(--primary); border: 1.5px solid var(--primary); }
-.btn-outline:hover  { background: var(--primary-l); text-decoration: none; }
-.btn-group    { display: flex; gap: 12px; flex-wrap: wrap; }
+/* Layout */
+section{padding:2.5rem 0}
+section+section{border-top:1px solid var(--border)}
+.sec-label{font-size:.72rem;font-weight:700;letter-spacing:.08em;color:var(--blue);text-transform:uppercase;margin-bottom:.4rem}
+h2{font-size:1.4rem;font-weight:600;color:var(--txt);margin-bottom:.5rem}
+h3{font-size:1rem;font-weight:600;color:var(--txt);margin-bottom:.5rem}
+.sec-desc{font-size:.88rem;color:var(--mid);max-width:680px;margin-bottom:1.5rem;line-height:1.65}
 
-/* ── Badges ───────────────────────────────────────────────────────────────── */
-.badge { display: inline-flex; align-items: center; gap: 6px;
-         padding: 4px 12px; border-radius: 99px; font-size: .78rem;
-         font-weight: 600; border: 1px solid; }
-.badge-blue   { background: var(--primary-l); color: var(--primary); border-color: #BFDBFE; }
-.badge-green  { background: var(--green-l);   color: var(--green);   border-color: #BBF7D0; }
-.badge-orange { background: var(--orange-l);  color: var(--orange);  border-color: #FED7AA; }
-.badge-red    { background: var(--red-l);     color: var(--red);     border-color: #FECACA; }
-.badge-purple { background: var(--purple-l);  color: var(--purple);  border-color: #DDD6FE; }
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1rem}
+.card-title{font-size:.9rem;font-weight:600;color:var(--txt);margin-bottom:.75rem}
 
-/* ── Cards ────────────────────────────────────────────────────────────────── */
-.card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 28px 32px; box-shadow: var(--shadow);
-}
-.card + .card { margin-top: 20px; }
+/* Explain box */
+.explain{background:var(--s2);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem;font-size:.83rem;color:var(--mid);line-height:1.65}
+.explain strong{color:var(--txt)}
 
-/* ── Section header ───────────────────────────────────────────────────────── */
-.section-label { font-size: .8rem; font-weight: 700; letter-spacing: .08em;
-                 color: var(--primary); text-transform: uppercase; margin-bottom: 8px; }
-h2 { font-size: 1.75rem; font-weight: 800; margin-bottom: 12px; }
-h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
-.section-desc { color: var(--txt-mid); max-width: 700px; margin-bottom: 32px; font-size: .95rem; }
+/* Equation */
+.eq-box{background:var(--s2);border-left:3px solid var(--blue);border-radius:0 6px 6px 0;padding:12px 16px;font-family:'Courier New',monospace;font-size:.88rem;color:var(--txt);margin:10px 0;overflow-x:auto}
 
-/* ── Level cards ──────────────────────────────────────────────────────────── */
-.level-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-              gap: 16px; margin-top: 32px; }
-.level-card { background: var(--surface); border: 1px solid var(--border);
-              border-radius: var(--radius); padding: 20px 22px; box-shadow: var(--shadow);
-              transition: transform .15s, box-shadow .15s; }
-.level-card:hover { transform: translateY(-3px); box-shadow: 0 6px 24px rgba(0,0,0,.12); }
-.level-tag { display: inline-block; padding: 2px 10px; border-radius: 6px;
-             font-size: .78rem; font-weight: 700; margin-bottom: 10px; }
-.level-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
-.level-card p  { font-size: .88rem; color: var(--txt-mid); }
-.result-chip   { margin-top: 10px; display: inline-block;
-                 padding: 3px 10px; background: var(--green-l); color: var(--green);
-                 border-radius: 6px; font-size: .78rem; font-weight: 600; }
+/* Params grid */
+.params-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:.75rem}
+.param-item{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
+.param-item .plabel{font-size:.68rem;color:var(--dim);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.param-item .pvalue{font-size:.9rem;font-weight:600;color:var(--txt);margin-top:2px}
 
-/* ── Results table ────────────────────────────────────────────────────────── */
-.results-table { width: 100%; border-collapse: collapse; font-size: .9rem; margin-top: 16px; }
-.results-table th { background: var(--primary); color: #fff; padding: 10px 14px;
-                    text-align: left; font-weight: 600; font-size: .82rem; }
-.results-table th:first-child { border-radius: 8px 0 0 0; }
-.results-table th:last-child  { border-radius: 0 8px 0 0; }
-.results-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
-.results-table tr:hover td { background: var(--primary-l); }
-.results-table tr:last-child td { border-bottom: none; }
-.cell-good { color: var(--green); font-weight: 700; }
-.cell-bad  { color: var(--red);   font-weight: 600; }
-.cell-note { font-size: .8rem; color: var(--txt-light); }
+/* Table */
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{text-align:left;font-weight:500;font-size:.72rem;color:var(--mid);padding:8px 12px;border-bottom:1px solid var(--border);background:var(--s2)}
+td{padding:8px 12px;border-bottom:1px solid rgba(48,54,61,.5);color:var(--txt)}
+tr:last-child td{border-bottom:none}
+.best{color:var(--green);font-weight:600}
+.bad{color:var(--red)}
+.warn{color:var(--orange)}
 
-/* ── Parameter grid ───────────────────────────────────────────────────────── */
-.params-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-               gap: 10px; margin-top: 16px; }
-.param-item  { background: var(--surface); border: 1px solid var(--border);
-               border-radius: 8px; padding: 12px 14px; }
-.param-item .plabel { font-size: .72rem; color: var(--txt-light); font-weight: 600;
-                      text-transform: uppercase; letter-spacing: .04em; }
-.param-item .pvalue { font-size: .95rem; font-weight: 700; color: var(--txt); margin-top: 2px; }
+/* Two col */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+@media(max-width:720px){.two-col{grid-template-columns:1fr}}
 
-/* ── Equation box ─────────────────────────────────────────────────────────── */
-.eq-box { background: var(--primary-l); border-left: 4px solid var(--primary);
-          border-radius: 0 8px 8px 0; padding: 14px 18px;
-          font-family: 'Courier New', monospace; font-size: .9rem;
-          color: var(--txt); margin: 12px 0; overflow-x: auto; }
+/* Finding list */
+.finding-list{list-style:none;margin-top:.75rem}
+.finding-list li{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)}
+.finding-list li:last-child{border-bottom:none}
+.finding-icon{width:26px;height:26px;border-radius:6px;background:rgba(63,185,80,.12);color:var(--green);border:1px solid rgba(63,185,80,.25);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;margin-top:1px}
+.finding-body strong{display:block;font-size:.88rem;color:var(--txt)}
+.finding-body span{font-size:.82rem;color:var(--mid)}
 
-/* ── Step row (FEM ↔ PINN visualization) ──────────────────────────────────── */
-.step-row  { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
-.step-box  { padding: 6px 12px; border-radius: 6px; font-size: .82rem; font-weight: 700; }
-.step-fem  { background: #DBEAFE; color: #1E40AF; }
-.step-pinn { background: #FEF3C7; color: #92400E; }
-.step-skip { background: #DCFCE7; color: #166534; }
-.step-arrow { color: var(--txt-light); font-size: 1.1rem; }
+/* Prev/Next nav */
+.page-nav{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding:1.5rem 0}
+.btn{padding:8px 18px;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;border:none;transition:all .15s;display:inline-block;text-decoration:none}
+.btn-primary{background:rgba(88,166,255,.15);color:var(--blue);border:1px solid rgba(88,166,255,.3)}
+.btn-primary:hover{background:rgba(88,166,255,.25);text-decoration:none}
+.btn-outline{background:var(--s2);color:var(--mid);border:1px solid var(--border)}
+.btn-outline:hover{color:var(--txt);border-color:var(--mid);text-decoration:none}
+.page-info{font-size:.82rem;color:var(--dim)}
 
-/* ── Plot image ───────────────────────────────────────────────────────────── */
-.plot-img { width: 100%; border-radius: 10px; border: 1px solid var(--border);
-            display: block; margin-top: 12px; }
-.plot-caption { font-size: .8rem; color: var(--txt-light); text-align: center;
-                margin-top: 6px; }
+/* Footer */
+footer{text-align:center;padding:1.5rem;font-size:.72rem;color:var(--dim);border-top:1px solid var(--border)}
 
-/* ── CMM bars ─────────────────────────────────────────────────────────────── */
-.cmm-bar-row   { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-.cmm-bar-label { width: 140px; font-size: .85rem; font-weight: 600; flex-shrink: 0; }
-.cmm-bar-track { flex: 1; background: var(--border); border-radius: 99px; height: 20px; overflow: hidden; }
-.cmm-bar-fill  { height: 100%; border-radius: 99px; display: flex; align-items: center;
-                 padding-left: 8px; font-size: .76rem; font-weight: 700; color: #fff;
-                 transition: width 1.2s cubic-bezier(.4,0,.2,1); }
-.cmm-bar-val   { font-size: .85rem; font-weight: 700; min-width: 60px; text-align: right; }
-
-/* ── Skip timeline ────────────────────────────────────────────────────────── */
-.skip-controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
-.skip-select   { padding: 7px 14px; border-radius: 8px; border: 1.5px solid var(--border);
-                 font-size: .88rem; font-weight: 600; background: #fff; color: var(--txt); cursor: pointer; }
-.skip-select:focus { outline: none; border-color: var(--primary); }
-.skip-stats { display: flex; gap: 14px; margin-top: 14px; flex-wrap: wrap; }
-.stat-chip  { padding: 8px 14px; border-radius: 8px; font-size: .84rem; font-weight: 600; }
-
-/* ── Two / three col ──────────────────────────────────────────────────────── */
-.two-col   { display: grid; grid-template-columns: 1fr 1fr;     gap: 24px; align-items: start; }
-.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: start; }
-@media (max-width: 800px) { .two-col, .three-col { grid-template-columns: 1fr; } }
-
-/* ── Level hero (top of each level page) ─────────────────────────────────── */
-.level-hero { padding: 48px 0 36px; border-bottom: 1px solid var(--border); }
-.level-hero .breadcrumb { font-size: .85rem; color: var(--txt-light); margin-bottom: 14px; }
-.level-hero h1 { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 800; line-height: 1.25; }
-.level-hero .sub { font-size: 1rem; color: var(--txt-mid); max-width: 700px; margin-top: 10px; }
-.level-num { display: inline-block; font-size: 1.3rem; font-weight: 900;
-             padding: 4px 16px; border-radius: 8px; margin-bottom: 12px; }
-
-/* ── Finding list ─────────────────────────────────────────────────────────── */
-.finding-list { list-style: none; margin-top: 16px; }
-.finding-list li { display: flex; gap: 12px; align-items: flex-start;
-                   padding: 12px 0; border-bottom: 1px solid var(--border); }
-.finding-list li:last-child { border-bottom: none; }
-.finding-icon { width: 28px; height: 28px; border-radius: 8px; background: var(--green-l);
-                color: var(--green); display: flex; align-items: center; justify-content: center;
-                font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
-.finding-body strong { display: block; font-size: .95rem; }
-.finding-body span   { font-size: .85rem; color: var(--txt-mid); }
-
-/* ── References section ───────────────────────────────────────────────────── */
-#references { background: #F8FAFF; }
-.ref-list   { list-style: none; margin-top: 16px; }
-.ref-list li { padding: 12px 0; border-bottom: 1px solid var(--border);
-               font-size: .88rem; color: var(--txt-mid); line-height: 1.5; }
-.ref-list li:last-child { border-bottom: none; }
-.ref-list strong { color: var(--txt); }
-
-/* ── Footer ───────────────────────────────────────────────────────────────── */
-footer { background: var(--txt); color: #94A3B8; padding: 32px 24px;
-         text-align: center; font-size: .85rem; }
-footer strong { color: #fff; }
-footer a { color: #60A5FA; }
-
-/* ── Animation controls ───────────────────────────────────────────────────── */
-input[type=range] { accent-color: var(--primary); flex: 1; }
-.ctrl-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-.ctrl-btn { padding: 8px 18px; border-radius: 8px; border: none; cursor: pointer;
-            font-size: .88rem; font-weight: 600; transition: background .15s; }
-.ctrl-btn.play  { background: var(--primary); color: #fff; }
-.ctrl-btn.play:hover  { background: var(--primary-d); }
-.ctrl-btn.reset { background: var(--border); color: var(--txt); }
-.ctrl-btn.reset:hover { background: #CBD5E1; }
-.ctrl-label { font-size: .82rem; color: var(--txt-mid); font-weight: 600; }
-
+canvas{display:block;width:100%;border-radius:6px}
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="nav-inner">
-    <a class="nav-logo" href="../index.html">NAS-PINNs</a>
-    <ul class="nav-links">
-      <li><a href="../index.html">Home</a></li>
-      <li><a href="level1.html" class="active">L1</a></li>
-      <li><a href="level2.html">L2</a></li>
-      <li><a href="level3.html">L3</a></li>
-      <li><a href="level4.html">L4</a></li>
-      <li><a href="level5.html">L5</a></li>
-      <li><a href="level6.html">L6</a></li>
-      <li><a href="level7.html">L7</a></li>
-    </ul>
-  </div>
+  <a class="nav-logo" href="../index.html">NAS-PINNs</a>
+  <ul class="nav-links">
+    <li><a href="level1.html" class="active">L1</a></li>
+    <li><a href="level2.html">L2</a></li>
+    <li><a href="level3.html">L3</a></li>
+    <li><a href="level4.html">L4</a></li>
+    <li><a href="level5.html">L5</a></li>
+    <li><a href="level6.html">L6</a></li>
+    <li><a href="level7.html">L7</a></li>
+  </ul>
 </nav>
 
-<!-- Hero -->
-<div class="level-hero" style="background:linear-gradient(135deg,#EFF6FF 0%,#F8FAFF 100%);">
+<div class="level-hero">
   <div class="container">
-    <div class="breadcrumb"><a href="../index.html">Home</a> › Level 1</div>
-    <span class="level-num" style="background:#DBEAFE;color:#1D4ED8;">Level 1</span>
-    <h1>Single-Shot NAS-PINN</h1>
-    <p class="sub">
-      A single neural network predicts the full 3-D temperature field T(t, x, y) for
-      A356 aluminium water quenching. Neural Architecture Search selects the optimal
-      number of layers, neurons per layer, and activation function.
-    </p>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;">
-      <span class="badge badge-blue">Global predictor</span>
-      <span class="badge badge-blue">Bayesian · NSGA-II · NSGA-III</span>
-      <span class="badge badge-green">Target L2 &lt; 0.10</span>
-      <span class="badge badge-orange">A356 · Robin BC</span>
+    <div class="breadcrumb"><a href="../index.html">Home</a> &rsaquo; Level 1</div>
+    <div class="level-badge">Level 1 of 7</div>
+    <div class="hero-title">Single-Shot NAS-PINN</div>
+    <p class="hero-sub">A single neural network predicts the full 3-D temperature field T(t, x, y) for A356 aluminium water quenching. Neural Architecture Search selects the optimal number of layers, neurons per layer, and activation function — no labelled FEM data required.</p>
+    <div class="badges">
+      <span class="badge bb">Global predictor</span>
+      <span class="badge bb">Bayesian &middot; NSGA-II &middot; NSGA-III</span>
+      <span class="badge bg">Target L2 &lt; 0.10</span>
+      <span class="badge bo">A356 &middot; Robin BC</span>
     </div>
   </div>
 </div>
@@ -255,34 +138,39 @@ input[type=range] { accent-color: var(--primary); flex: 1; }
 <!-- Physics -->
 <section>
   <div class="container">
-    <div class="section-label">Problem Setup</div>
+    <div class="sec-label">Problem Setup</div>
     <h2>Physical Problem</h2>
-    <p class="section-desc">
-      An A356 aluminium casting (1.3 m × 0.6 m rectangle) is quenched from 540°C in 20°C water
-      for 30 seconds. The PINN is trained to reproduce the FEM temperature field at every
-      spatial point and every time step using only the PDE loss and boundary conditions —
-      no labelled FEM data.
-    </p>
+    <p class="sec-desc">An A356 aluminium casting (1.3 m &times; 0.6 m rectangle) is quenched from 540&deg;C in 20&deg;C water for 30 seconds. The PINN is trained to reproduce the FEM temperature field at every spatial point and time step using only the PDE and boundary condition losses.</p>
     <div class="two-col">
       <div>
-        <h3>Governing PDE</h3>
-        <div class="eq-box">ρCₚ ∂T/∂t = K (∂²T/∂x² + ∂²T/∂y²)</div>
-        <h3 style="margin-top:18px;">Boundary Condition (Robin)</h3>
-        <div class="eq-box">−K ∂T/∂n = h (T − T<sub>water</sub>)</div>
-        <h3 style="margin-top:18px;">Analytical Reference</h3>
-        <div class="eq-box">T(t) = 20 + 520 · exp(−1.75×10⁻³ · t)</div>
+        <div class="card">
+          <div class="card-title">Governing PDE</div>
+          <div class="eq-box">&rho;C&#x2099; &part;T/&part;t = K (&part;&sup2;T/&part;x&sup2; + &part;&sup2;T/&part;y&sup2;)</div>
+          <div class="card-title" style="margin-top:1rem">Boundary Condition (Robin)</div>
+          <div class="eq-box">&minus;K &part;T/&part;n = h (T &minus; T<sub>water</sub>)</div>
+          <div class="card-title" style="margin-top:1rem">Analytical Centre-Point Reference</div>
+          <div class="eq-box">T(t) = 20 + 520 &middot; exp(&minus;1.75&times;10&sup3; &middot; t)</div>
+        </div>
+        <div class="explain">
+          <p>The governing equation is the <strong>transient heat equation</strong> with a Robin (convective) boundary condition. At every boundary face, heat flux is proportional to the temperature difference between the casting surface and the water bath. The analytical expression T(t) = 20 + 520&middot;exp(&minus;1.75&times;10&sup3;&middot;t) describes the centre-point cooling and serves as a sanity-check reference throughout the experiments. The PINN must satisfy all three constraints simultaneously via automatic differentiation.</p>
+        </div>
       </div>
       <div>
-        <h3>Material &amp; Process Parameters</h3>
-        <div class="params-grid" style="grid-template-columns:1fr 1fr;">
-          <div class="param-item"><div class="plabel">Thermal conductivity</div><div class="pvalue">K = 150 W/mK</div></div>
-          <div class="param-item"><div class="plabel">Volumetric heat cap.</div><div class="pvalue">ρCₚ = 2.4×10⁶ J/m³K</div></div>
-          <div class="param-item"><div class="plabel">Initial temperature</div><div class="pvalue">T₀ = 540°C</div></div>
-          <div class="param-item"><div class="plabel">Water temperature</div><div class="pvalue">T_w = 20°C</div></div>
-          <div class="param-item"><div class="plabel">Heat transfer coeff.</div><div class="pvalue">h = 500 W/m²K</div></div>
-          <div class="param-item"><div class="plabel">Duration</div><div class="pvalue">t ∈ [0, 30] s</div></div>
-          <div class="param-item"><div class="plabel">Domain</div><div class="pvalue">1.3 m × 0.6 m</div></div>
-          <div class="param-item"><div class="plabel">Decay constant</div><div class="pvalue">λ = 1.75×10⁻³ s⁻¹</div></div>
+        <div class="card">
+          <div class="card-title">Material &amp; Process Parameters</div>
+          <div class="params-grid" style="grid-template-columns:1fr 1fr">
+            <div class="param-item"><div class="plabel">Thermal conductivity</div><div class="pvalue">K = 150 W/mK</div></div>
+            <div class="param-item"><div class="plabel">Vol. heat capacity</div><div class="pvalue">&rho;C&#x2099; = 2.4&times;10&sup6;</div></div>
+            <div class="param-item"><div class="plabel">Initial temperature</div><div class="pvalue">T&#x2080; = 540&deg;C</div></div>
+            <div class="param-item"><div class="plabel">Water temperature</div><div class="pvalue">T_w = 20&deg;C</div></div>
+            <div class="param-item"><div class="plabel">Heat transfer coeff.</div><div class="pvalue">h = 500 W/m&sup2;K</div></div>
+            <div class="param-item"><div class="plabel">Duration</div><div class="pvalue">t &isin; [0, 30] s</div></div>
+            <div class="param-item"><div class="plabel">Domain</div><div class="pvalue">1.3 &times; 0.6 m</div></div>
+            <div class="param-item"><div class="plabel">Decay constant</div><div class="pvalue">&lambda; = 1.75&times;10&sup3; s&sup1;</div></div>
+          </div>
+        </div>
+        <div class="explain">
+          <p>The material is A356 aluminium alloy. The high thermal conductivity (K = 150 W/mK) means temperature gradients equilibrate quickly relative to the quench duration. The large heat transfer coefficient h = 500 W/m&sup2;K represents vigorous forced-water convection. The domain dimensions (1.3 m &times; 0.6 m) correspond to an industrial-scale casting cross-section, which the PINN must learn to map from (t, x, y) to temperature without any mesh or finite element assembly.</p>
         </div>
       </div>
     </div>
@@ -292,36 +180,36 @@ input[type=range] { accent-color: var(--primary); flex: 1; }
 <!-- NAS Search Space -->
 <section>
   <div class="container">
-    <div class="section-label">Neural Architecture Search</div>
+    <div class="sec-label">Neural Architecture Search</div>
     <h2>Search Space &amp; Optimisers</h2>
-    <p class="section-desc">
-      Three NAS algorithms independently search the same architecture space.
-      Each trial trains a PINN candidate for 500 epochs and reports L2 error.
-    </p>
+    <p class="sec-desc">Three NAS algorithms independently search the same architecture space. Each trial trains a PINN candidate for 500 epochs and reports L2 error. The best architecture per optimiser is then retrained fully.</p>
     <div class="two-col">
       <div class="card">
-        <h3>Search Space</h3>
-        <table class="results-table" style="margin-top:8px;">
+        <div class="card-title">NAS Search Space</div>
+        <table>
           <thead><tr><th>Hyperparameter</th><th>Range / Choices</th></tr></thead>
           <tbody>
-            <tr><td>Hidden layers</td><td>2 – 8</td></tr>
+            <tr><td>Hidden layers</td><td>2 &ndash; 8</td></tr>
             <tr><td>Neurons per layer</td><td>32, 64, 96, 128, 192, 256</td></tr>
             <tr><td>Activation function</td><td>relu, tanh, silu, gelu</td></tr>
-            <tr><td>Number of NAS trials</td><td>50 per optimiser</td></tr>
+            <tr><td>NAS trials per optimiser</td><td>50</td></tr>
           </tbody>
         </table>
       </div>
       <div class="card">
-        <h3>NAS Optimisers</h3>
-        <table class="results-table" style="margin-top:8px;">
+        <div class="card-title">NAS Optimisers Compared</div>
+        <table>
           <thead><tr><th>Optimiser</th><th>Strategy</th><th>Objective</th></tr></thead>
           <tbody>
-            <tr><td><strong>Bayesian (TPE)</strong></td><td>Probabilistic surrogate model</td><td>Minimise L2</td></tr>
-            <tr><td><strong>NSGA-II</strong></td><td>Multi-objective genetic</td><td>L2 + params</td></tr>
+            <tr><td><strong>Bayesian (TPE)</strong></td><td>Probabilistic surrogate</td><td>Minimise L2</td></tr>
+            <tr><td><strong>NSGA-II</strong></td><td>Multi-obj. genetic</td><td>L2 + params</td></tr>
             <tr><td><strong>NSGA-III</strong></td><td>Reference-point NSGA</td><td>L2 + params</td></tr>
           </tbody>
         </table>
       </div>
+    </div>
+    <div class="explain">
+      <strong>About the search space:</strong> The range of 2&ndash;8 hidden layers with 32&ndash;256 neurons provides architectures spanning from 12k to ~200k parameters. Activation functions include both smooth (tanh, silu, gelu) and piecewise-linear (relu) options. Bayesian TPE builds a probabilistic model of hyperparameter performance, focusing trials on promising regions. NSGA-II and NSGA-III additionally balance model size against accuracy as two competing objectives, which tends to produce compact architectures but may sacrifice peak accuracy.
     </div>
   </div>
 </section>
@@ -329,20 +217,21 @@ input[type=range] { accent-color: var(--primary); flex: 1; }
 <!-- Training -->
 <section>
   <div class="container">
-    <div class="section-label">Training Setup</div>
+    <div class="sec-label">Training Setup</div>
     <h2>Training Parameters</h2>
     <div class="params-grid">
       <div class="param-item"><div class="plabel">Optimizer</div><div class="pvalue">Adam</div></div>
       <div class="param-item"><div class="plabel">Epochs</div><div class="pvalue">20 000</div></div>
       <div class="param-item"><div class="plabel">LR schedule</div><div class="pvalue">Cosine decay</div></div>
-      <div class="param-item"><div class="plabel">LR range</div><div class="pvalue">1×10⁻³ → 1×10⁻⁵</div></div>
-      <div class="param-item"><div class="plabel">Collocation points</div><div class="pvalue">10 000 (interior)</div></div>
-      <div class="param-item"><div class="plabel">Boundary points</div><div class="pvalue">2 000</div></div>
-      <div class="param-item"><div class="plabel">Initial condition pts</div><div class="pvalue">1 000</div></div>
+      <div class="param-item"><div class="plabel">LR range</div><div class="pvalue">1&times;10&sup3; &rarr; 1&times;10&sup5;</div></div>
+      <div class="param-item"><div class="plabel">Collocation pts</div><div class="pvalue">10 000</div></div>
+      <div class="param-item"><div class="plabel">Boundary pts</div><div class="pvalue">2 000</div></div>
+      <div class="param-item"><div class="plabel">IC pts</div><div class="pvalue">1 000</div></div>
       <div class="param-item"><div class="plabel">PDE loss weight</div><div class="pvalue">1.0</div></div>
     </div>
-    <div style="margin-top:16px;" class="eq-box">
-      Loss = λ_pde · ||PDE residual||² + λ_bc · ||BC error||² + λ_ic · ||IC error||²
+    <div class="eq-box" style="margin-top:1rem">Loss = &lambda;<sub>pde</sub> &middot; ||PDE residual||&sup2; + &lambda;<sub>bc</sub> &middot; ||BC error||&sup2; + &lambda;<sub>ic</sub> &middot; ||IC error||&sup2;</div>
+    <div class="explain" style="margin-top:.75rem">
+      <p>Training uses <strong>Adam with cosine learning-rate decay</strong>, starting at 1&times;10&sup3; and decaying to 1&times;10&sup5; over 20,000 epochs. Collocation points are randomly sampled in the interior; boundary and initial-condition points are fixed on the domain boundary and at t=0. The composite loss penalises violations of the PDE, the Robin boundary condition, and the initial temperature field simultaneously — no ground-truth FEM data is used.</p>
     </div>
   </div>
 </section>
@@ -350,137 +239,154 @@ input[type=range] { accent-color: var(--primary); flex: 1; }
 <!-- Results -->
 <section>
   <div class="container">
-    <div class="section-label">Results</div>
+    <div class="sec-label">Results</div>
     <h2>NAS Results</h2>
     <div class="two-col">
       <div class="card">
-        <h3>Best Architectures Found</h3>
-        <table class="results-table">
+        <div class="card-title">Best Architectures Found</div>
+        <table>
           <thead>
-            <tr><th>Optimiser</th><th>Architecture</th><th>Activation</th><th>Params</th><th>L2 ↓</th><th>MAE ↓</th></tr>
+            <tr><th>Optimiser</th><th>Arch.</th><th>Act.</th><th>Params</th><th>L2 &darr;</th><th>MAE &darr;</th></tr>
           </thead>
           <tbody>
             <tr>
-              <td><strong>Bayesian ★</strong></td>
-              <td>5 × 151</td><td>relu</td><td>92 564</td>
-              <td class="cell-good">0.076</td><td class="cell-good">39.1°C</td>
+              <td><strong>Bayesian &#9733;</strong></td>
+              <td>5&times;151</td><td>relu</td><td>92 564</td>
+              <td class="best">0.076</td><td class="best">39.1&deg;C</td>
             </tr>
             <tr>
               <td>NSGA-II</td>
-              <td>3 × 153</td><td>tanh</td><td>47 890</td>
-              <td class="cell-bad">0.252</td><td>132.6°C</td>
+              <td>3&times;153</td><td>tanh</td><td>47 890</td>
+              <td class="bad">0.252</td><td>132.6&deg;C</td>
             </tr>
             <tr>
               <td>NSGA-III</td>
-              <td>3 × 75</td><td>tanh</td><td>11 776</td>
-              <td class="cell-bad">0.513</td><td>270.3°C</td>
+              <td>3&times;75</td><td>tanh</td><td>11 776</td>
+              <td class="bad">0.513</td><td>270.3&deg;C</td>
             </tr>
-            <tr style="background:var(--green-l);">
-              <td colspan="4"><strong>Accuracy Target</strong></td>
-              <td class="cell-good"><strong>&lt; 0.100</strong></td>
-              <td class="cell-good"><strong>&lt; 50°C</strong></td>
+            <tr>
+              <td colspan="4" style="color:var(--mid);font-size:.75rem">Accuracy Target</td>
+              <td class="best">&lt; 0.100</td>
+              <td class="best">&lt; 50&deg;C</td>
             </tr>
           </tbody>
         </table>
-        <p style="font-size:.82rem;color:var(--txt-light);margin-top:10px;">
-          ★ Only Bayesian meets the L2 &lt; 0.10 target at 500 NAS trial epochs.
-          NSGA-II and NSGA-III improve significantly with extended training (→ Level 5).
-        </p>
+        <div style="margin-top:.6rem;font-size:.76rem;color:var(--dim)">&#9733; Only Bayesian meets L2 &lt; 0.10 at 500 NAS trial epochs. NSGA-II/III improve significantly with extended training (Level 5).</div>
       </div>
       <div class="card">
-        <h3>L2 Error Comparison</h3>
-        <canvas id="l1Chart" height="220"></canvas>
+        <div class="card-title">L2 Error Comparison (Chart.js)</div>
+        <canvas id="l1Chart" height="200"></canvas>
       </div>
     </div>
 
-    <!-- Plot -->
-    <div style="margin-top:24px;" class="card">
-      <h3>Architecture Search — Neurons vs L2</h3>
-      <img src="../../results/pres_plots/pres_l1_arch_bars.png" class="plot-img" alt="L1 architecture comparison bars">
-      <p class="plot-caption">L2 and MAE bar chart for all three NAS optimisers (Level 1, 20 000 training epochs).</p>
+    <div class="explain" style="margin-top:.75rem">
+      <p>The bar chart compares L2 relative error for the three NAS optimisers against the target threshold of 0.10. <strong>Bayesian</strong> achieves L2=0.076, the only optimiser below the production target at this training budget. NSGA-II (L2=0.252) and NSGA-III (L2=0.513) both fail the target, with NSGA-III performing worst due to its small 3&times;75 architecture (only 12k parameters). The green dashed line at L2=0.10 marks the engineering acceptability threshold; any bar below this line represents a usable model for thermal prediction.</p>
     </div>
 
-    <div style="margin-top:20px;" class="card">
-      <h3>Cooling Curves — FEM Reference vs PINN Prediction</h3>
-      <img src="../../level1_single_shot/results/fig1_cooling_curves.png" class="plot-img"
-           alt="Cooling curves FEM vs PINN">
-      <p class="plot-caption">Centre-point temperature over 30 s. Analytical reference vs PINN predictions for all three architectures.</p>
+    <div class="card" style="margin-top:1rem">
+      <div class="card-title">Architecture Search — NAS Optimiser Bar Comparison</div>
+      <img src="../../results/pres_plots/pres_l1_arch_bars.png" alt="L1 architecture comparison bars">
+      <div class="explain" style="margin-top:.75rem;border-left-color:var(--orange)">
+        <p>This plot shows the L2 error and MAE for all three NAS optimisers side by side after the full 20,000-epoch training run. Each bar pair represents one optimiser: Bayesian (blue), NSGA-II (red), NSGA-III (green). The left bar in each pair shows L2 relative error (lower is better) and the right bar shows MAE in degrees Celsius. Notice the gap between Bayesian and the evolutionary optimisers — Bayesian's deeper 5-layer architecture with relu activation outperforms both shallower tanh networks despite having fewer parameters than might be expected for its accuracy.</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:1rem">
+      <div class="card-title">Cooling Curves — FEM Reference vs PINN Predictions</div>
+      <img src="../../level1_single_shot/results/fig1_cooling_curves.png" alt="Cooling curves FEM vs PINN">
+      <div class="explain" style="margin-top:.75rem;border-left-color:var(--purple)">
+        <p>The cooling curve plot shows centre-point temperature over 30 seconds for all three PINN architectures compared to the analytical reference T(t)=20+520&middot;exp(&minus;1.75&times;10&sup3;&middot;t). The Bayesian prediction (blue) follows the reference closely throughout the entire quench, maintaining small deviations even during the initial rapid-cooling phase (t &lt; 5 s) where gradients are steepest. NSGA-II diverges more strongly in the early phase, while NSGA-III shows significant over-prediction consistent with its higher MAE=270.3&deg;C. The convergence at t=30 s for all methods is expected since the boundary conditions enforce the water temperature asymptote.</p>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- Key takeaways -->
+<!-- Key Findings -->
 <section>
   <div class="container">
-    <div class="section-label">Takeaways</div>
+    <div class="sec-label">Takeaways</div>
     <h2>Key Observations</h2>
     <ul class="finding-list">
       <li>
-        <div class="finding-icon">✓</div>
+        <div class="finding-icon">&#10003;</div>
         <div class="finding-body">
           <strong>Bayesian NAS finds the best architecture</strong>
-          <span>TPE surrogate efficiently focuses search on promising regions, reaching L2=0.076 — the only optimiser below the 0.10 target.</span>
+          <span>TPE surrogate efficiently focuses search on promising regions, reaching L2=0.076 — the only optimiser below the 0.10 target at 500 trial epochs.</span>
         </div>
       </li>
       <li>
-        <div class="finding-icon">→</div>
+        <div class="finding-icon">&#8594;</div>
         <div class="finding-body">
-          <strong>More parameters ≠ better accuracy at fixed budget</strong>
-          <span>NSGA-II found 47k params (smaller than Bayesian's 93k) but L2=0.252 — because architecture shape (5 deep layers) matters more than raw count.</span>
+          <strong>More parameters does not equal better accuracy at fixed budget</strong>
+          <span>NSGA-II found 47k params (smaller than Bayesian's 93k) but L2=0.252 — architecture depth (5 layers vs 3) matters more than raw parameter count.</span>
         </div>
       </li>
       <li>
-        <div class="finding-icon">→</div>
+        <div class="finding-icon">&#8594;</div>
         <div class="finding-body">
           <strong>relu outperforms tanh here</strong>
-          <span>Bayesian converged to relu activation. NSGA-II and NSGA-III both selected tanh and performed worse — likely due to gradient saturation in deep networks.</span>
+          <span>Bayesian converged to relu activation. Both NSGA-II and NSGA-III selected tanh and performed worse — likely due to gradient saturation in deeper networks.</span>
         </div>
       </li>
       <li>
-        <div class="finding-icon">→</div>
+        <div class="finding-icon">&#8594;</div>
         <div class="finding-body">
           <strong>NSGA-II and NSGA-III need more training epochs</strong>
-          <span>Their architectures are capable but under-trained at 500 NAS epochs. Level 5 extended training closes this gap dramatically.</span>
+          <span>Their architectures have sufficient capacity but are under-trained at 500 NAS epochs. Level 5 extended training closes this gap dramatically (NSGA-II improves 4.5&times;).</span>
         </div>
       </li>
     </ul>
   </div>
 </section>
 
-<!-- Nav to next -->
-<section style="padding:32px 0;background:var(--surface);border-top:1px solid var(--border);">
+<!-- Prev/Next -->
+<section style="padding:1.5rem 0;background:var(--surface);border-top:1px solid var(--border)">
   <div class="container">
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
-      <a href="../index.html" class="btn btn-outline">← Home</a>
-      <span style="color:var(--txt-light);font-size:.9rem;">Level 1 of 7</span>
-      <a href="level2.html" class="btn btn-primary">Level 2: Skip Operator →</a>
+    <div class="page-nav">
+      <a href="../index.html" class="btn btn-outline">&larr; Home</a>
+      <span class="page-info">Level 1 of 7</span>
+      <a href="level2.html" class="btn btn-primary">Level 2: Skip Operator &rarr;</a>
     </div>
   </div>
 </section>
 
-<footer>
-  <div class="container">
-    <strong>NAS-PINNs</strong> — Level 1: Single-Shot NAS-PINN ·
-    <a href="../index.html">Back to overview</a>
-  </div>
-</footer>
+<footer>NAS-PINNs &middot; Level 1 &middot; <a href="../index.html">Back to overview</a></footer>
 
 <script>
 new Chart(document.getElementById('l1Chart'),{
   type:'bar',
   data:{
     labels:['Bayesian','NSGA-II','NSGA-III'],
-    datasets:[
-      {label:'L2 Error',backgroundColor:['rgba(21,101,192,.8)','rgba(198,40,40,.8)','rgba(46,125,50,.8)'],
-       data:[0.076,0.252,0.513]},
-    ]
+    datasets:[{
+      label:'L2 Error',
+      backgroundColor:['rgba(88,166,255,.75)','rgba(247,129,102,.75)','rgba(163,113,247,.75)'],
+      data:[0.076,0.252,0.513],
+      borderRadius:4,
+    }]
   },
-  options:{responsive:true,plugins:{legend:{display:false},
-    annotation:{annotations:{line1:{type:'line',yMin:.10,yMax:.10,borderColor:'#16A34A',
-      borderWidth:2,borderDash:[6,4],label:{content:'Target L2 = 0.10',display:true,
-      position:'end',color:'#16A34A',font:{size:11}}}}}},
-    scales:{y:{title:{display:true,text:'L2 Relative Error'},min:0,max:.6},
-            x:{title:{display:true,text:'NAS Optimiser'}}}
+  options:{
+    responsive:true,
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{label:ctx=>'L2: '+ctx.parsed.y.toFixed(3)}}
+    },
+    scales:{
+      y:{
+        min:0,max:0.60,
+        title:{display:true,text:'L2 Relative Error',color:'#8B949E'},
+        ticks:{color:'#8B949E'},
+        grid:{color:'rgba(48,54,61,.6)'},
+        afterDraw(chart){
+          const ctx=chart.ctx,yScale=chart.scales.y,xScale=chart.scales.x;
+          const y=yScale.getPixelForValue(0.10);
+          ctx.save();ctx.setLineDash([6,4]);ctx.strokeStyle='#3FB950';ctx.lineWidth=1.5;
+          ctx.beginPath();ctx.moveTo(xScale.left,y);ctx.lineTo(xScale.right,y);ctx.stroke();
+          ctx.fillStyle='#3FB950';ctx.font='11px system-ui';ctx.fillText('Target L2 = 0.10',xScale.right-130,y-5);
+          ctx.restore();
+        }
+      },
+      x:{ticks:{color:'#8B949E'},grid:{color:'rgba(48,54,61,.6)'}}
+    }
   }
 });
 </script>

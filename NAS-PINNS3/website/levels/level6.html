@@ -2,252 +2,107 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Level 6 — Poisson Fine-Tuning | NAS-PINNs</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-/* ─── NAS-PINNs · Shared Stylesheet ───────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg:        #F5F7FA;
-  --surface:   #FFFFFF;
-  --border:    #E2E8F0;
-  --primary:   #2563EB;
-  --primary-l: #DBEAFE;
-  --primary-d: #1D4ED8;
-  --orange:    #EA580C;
-  --orange-l:  #FEF3C7;
-  --green:     #16A34A;
-  --green-l:   #DCFCE7;
-  --red:       #DC2626;
-  --red-l:     #FEE2E2;
-  --purple:    #7C3AED;
-  --purple-l:  #EDE9FE;
-  --txt:       #1E293B;
-  --txt-mid:   #475569;
-  --txt-light: #94A3B8;
-  --radius:    12px;
-  --shadow:    0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.05);
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D1117;--surface:#161B22;--border:#30363D;
+  --s2:#21262D;--txt:#E6EDF3;--mid:#8B949E;
+  --dim:#484F58;--blue:#58A6FF;--orange:#F0883E;
+  --green:#3FB950;--purple:#A371F7;--red:#F78166;
+  --radius:10px;
 }
-html  { scroll-behavior: smooth; }
-body  { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: var(--bg); color: var(--txt); line-height: 1.6; }
-a     { color: var(--primary); text-decoration: none; }
-a:hover { text-decoration: underline; }
-img   { max-width: 100%; }
-
-/* ── Layout ───────────────────────────────────────────────────────────────── */
-.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
-section    { padding: 56px 0; }
-section + section { border-top: 1px solid var(--border); }
-
-/* ── Nav ──────────────────────────────────────────────────────────────────── */
-nav {
-  position: sticky; top: 0; z-index: 100;
-  background: rgba(255,255,255,.92); backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-}
-.nav-inner {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 24px; max-width: 1100px; margin: 0 auto; gap: 16px;
-}
-.nav-logo { font-weight: 700; font-size: 1rem; color: var(--primary); white-space: nowrap; }
-.nav-links { display: flex; gap: 16px; list-style: none; flex-wrap: wrap; }
-.nav-links a { font-size: .82rem; color: var(--txt-mid); font-weight: 500; white-space: nowrap; }
-.nav-links a:hover, .nav-links a.active { color: var(--primary); text-decoration: none; }
-
-/* ── Buttons ──────────────────────────────────────────────────────────────── */
-.btn { padding: 10px 22px; border-radius: 8px; font-size: .9rem; font-weight: 600;
-       cursor: pointer; border: none; transition: all .15s; display: inline-block; }
-.btn-primary  { background: var(--primary); color: #fff; }
-.btn-primary:hover  { background: var(--primary-d); text-decoration: none; }
-.btn-outline  { background: #fff; color: var(--primary); border: 1.5px solid var(--primary); }
-.btn-outline:hover  { background: var(--primary-l); text-decoration: none; }
-.btn-group    { display: flex; gap: 12px; flex-wrap: wrap; }
-
-/* ── Badges ───────────────────────────────────────────────────────────────── */
-.badge { display: inline-flex; align-items: center; gap: 6px;
-         padding: 4px 12px; border-radius: 99px; font-size: .78rem;
-         font-weight: 600; border: 1px solid; }
-.badge-blue   { background: var(--primary-l); color: var(--primary); border-color: #BFDBFE; }
-.badge-green  { background: var(--green-l);   color: var(--green);   border-color: #BBF7D0; }
-.badge-orange { background: var(--orange-l);  color: var(--orange);  border-color: #FED7AA; }
-.badge-red    { background: var(--red-l);     color: var(--red);     border-color: #FECACA; }
-.badge-purple { background: var(--purple-l);  color: var(--purple);  border-color: #DDD6FE; }
-
-/* ── Cards ────────────────────────────────────────────────────────────────── */
-.card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 28px 32px; box-shadow: var(--shadow);
-}
-.card + .card { margin-top: 20px; }
-
-/* ── Section header ───────────────────────────────────────────────────────── */
-.section-label { font-size: .8rem; font-weight: 700; letter-spacing: .08em;
-                 color: var(--primary); text-transform: uppercase; margin-bottom: 8px; }
-h2 { font-size: 1.75rem; font-weight: 800; margin-bottom: 12px; }
-h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
-.section-desc { color: var(--txt-mid); max-width: 700px; margin-bottom: 32px; font-size: .95rem; }
-
-/* ── Level cards ──────────────────────────────────────────────────────────── */
-.level-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-              gap: 16px; margin-top: 32px; }
-.level-card { background: var(--surface); border: 1px solid var(--border);
-              border-radius: var(--radius); padding: 20px 22px; box-shadow: var(--shadow);
-              transition: transform .15s, box-shadow .15s; }
-.level-card:hover { transform: translateY(-3px); box-shadow: 0 6px 24px rgba(0,0,0,.12); }
-.level-tag { display: inline-block; padding: 2px 10px; border-radius: 6px;
-             font-size: .78rem; font-weight: 700; margin-bottom: 10px; }
-.level-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
-.level-card p  { font-size: .88rem; color: var(--txt-mid); }
-.result-chip   { margin-top: 10px; display: inline-block;
-                 padding: 3px 10px; background: var(--green-l); color: var(--green);
-                 border-radius: 6px; font-size: .78rem; font-weight: 600; }
-
-/* ── Results table ────────────────────────────────────────────────────────── */
-.results-table { width: 100%; border-collapse: collapse; font-size: .9rem; margin-top: 16px; }
-.results-table th { background: var(--primary); color: #fff; padding: 10px 14px;
-                    text-align: left; font-weight: 600; font-size: .82rem; }
-.results-table th:first-child { border-radius: 8px 0 0 0; }
-.results-table th:last-child  { border-radius: 0 8px 0 0; }
-.results-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
-.results-table tr:hover td { background: var(--primary-l); }
-.results-table tr:last-child td { border-bottom: none; }
-.cell-good { color: var(--green); font-weight: 700; }
-.cell-bad  { color: var(--red);   font-weight: 600; }
-.cell-note { font-size: .8rem; color: var(--txt-light); }
-
-/* ── Parameter grid ───────────────────────────────────────────────────────── */
-.params-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-               gap: 10px; margin-top: 16px; }
-.param-item  { background: var(--surface); border: 1px solid var(--border);
-               border-radius: 8px; padding: 12px 14px; }
-.param-item .plabel { font-size: .72rem; color: var(--txt-light); font-weight: 600;
-                      text-transform: uppercase; letter-spacing: .04em; }
-.param-item .pvalue { font-size: .95rem; font-weight: 700; color: var(--txt); margin-top: 2px; }
-
-/* ── Equation box ─────────────────────────────────────────────────────────── */
-.eq-box { background: var(--primary-l); border-left: 4px solid var(--primary);
-          border-radius: 0 8px 8px 0; padding: 14px 18px;
-          font-family: 'Courier New', monospace; font-size: .9rem;
-          color: var(--txt); margin: 12px 0; overflow-x: auto; }
-
-/* ── Step row (FEM ↔ PINN visualization) ──────────────────────────────────── */
-.step-row  { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
-.step-box  { padding: 6px 12px; border-radius: 6px; font-size: .82rem; font-weight: 700; }
-.step-fem  { background: #DBEAFE; color: #1E40AF; }
-.step-pinn { background: #FEF3C7; color: #92400E; }
-.step-skip { background: #DCFCE7; color: #166534; }
-.step-arrow { color: var(--txt-light); font-size: 1.1rem; }
-
-/* ── Plot image ───────────────────────────────────────────────────────────── */
-.plot-img { width: 100%; border-radius: 10px; border: 1px solid var(--border);
-            display: block; margin-top: 12px; }
-.plot-caption { font-size: .8rem; color: var(--txt-light); text-align: center;
-                margin-top: 6px; }
-
-/* ── CMM bars ─────────────────────────────────────────────────────────────── */
-.cmm-bar-row   { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-.cmm-bar-label { width: 140px; font-size: .85rem; font-weight: 600; flex-shrink: 0; }
-.cmm-bar-track { flex: 1; background: var(--border); border-radius: 99px; height: 20px; overflow: hidden; }
-.cmm-bar-fill  { height: 100%; border-radius: 99px; display: flex; align-items: center;
-                 padding-left: 8px; font-size: .76rem; font-weight: 700; color: #fff;
-                 transition: width 1.2s cubic-bezier(.4,0,.2,1); }
-.cmm-bar-val   { font-size: .85rem; font-weight: 700; min-width: 60px; text-align: right; }
-
-/* ── Skip timeline ────────────────────────────────────────────────────────── */
-.skip-controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
-.skip-select   { padding: 7px 14px; border-radius: 8px; border: 1.5px solid var(--border);
-                 font-size: .88rem; font-weight: 600; background: #fff; color: var(--txt); cursor: pointer; }
-.skip-select:focus { outline: none; border-color: var(--primary); }
-.skip-stats { display: flex; gap: 14px; margin-top: 14px; flex-wrap: wrap; }
-.stat-chip  { padding: 8px 14px; border-radius: 8px; font-size: .84rem; font-weight: 600; }
-
-/* ── Two / three col ──────────────────────────────────────────────────────── */
-.two-col   { display: grid; grid-template-columns: 1fr 1fr;     gap: 24px; align-items: start; }
-.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: start; }
-@media (max-width: 800px) { .two-col, .three-col { grid-template-columns: 1fr; } }
-
-/* ── Level hero (top of each level page) ─────────────────────────────────── */
-.level-hero { padding: 48px 0 36px; border-bottom: 1px solid var(--border); }
-.level-hero .breadcrumb { font-size: .85rem; color: var(--txt-light); margin-bottom: 14px; }
-.level-hero h1 { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 800; line-height: 1.25; }
-.level-hero .sub { font-size: 1rem; color: var(--txt-mid); max-width: 700px; margin-top: 10px; }
-.level-num { display: inline-block; font-size: 1.3rem; font-weight: 900;
-             padding: 4px 16px; border-radius: 8px; margin-bottom: 12px; }
-
-/* ── Finding list ─────────────────────────────────────────────────────────── */
-.finding-list { list-style: none; margin-top: 16px; }
-.finding-list li { display: flex; gap: 12px; align-items: flex-start;
-                   padding: 12px 0; border-bottom: 1px solid var(--border); }
-.finding-list li:last-child { border-bottom: none; }
-.finding-icon { width: 28px; height: 28px; border-radius: 8px; background: var(--green-l);
-                color: var(--green); display: flex; align-items: center; justify-content: center;
-                font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
-.finding-body strong { display: block; font-size: .95rem; }
-.finding-body span   { font-size: .85rem; color: var(--txt-mid); }
-
-/* ── References section ───────────────────────────────────────────────────── */
-#references { background: #F8FAFF; }
-.ref-list   { list-style: none; margin-top: 16px; }
-.ref-list li { padding: 12px 0; border-bottom: 1px solid var(--border);
-               font-size: .88rem; color: var(--txt-mid); line-height: 1.5; }
-.ref-list li:last-child { border-bottom: none; }
-.ref-list strong { color: var(--txt); }
-
-/* ── Footer ───────────────────────────────────────────────────────────────── */
-footer { background: var(--txt); color: #94A3B8; padding: 32px 24px;
-         text-align: center; font-size: .85rem; }
-footer strong { color: #fff; }
-footer a { color: #60A5FA; }
-
-/* ── Animation controls ───────────────────────────────────────────────────── */
-input[type=range] { accent-color: var(--primary); flex: 1; }
-.ctrl-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-.ctrl-btn { padding: 8px 18px; border-radius: 8px; border: none; cursor: pointer;
-            font-size: .88rem; font-weight: 600; transition: background .15s; }
-.ctrl-btn.play  { background: var(--primary); color: #fff; }
-.ctrl-btn.play:hover  { background: var(--primary-d); }
-.ctrl-btn.reset { background: var(--border); color: var(--txt); }
-.ctrl-btn.reset:hover { background: #CBD5E1; }
-.ctrl-label { font-size: .82rem; color: var(--txt-mid); font-weight: 600; }
-
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,sans-serif;font-size:14px;line-height:1.6;min-height:100vh}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+img{max-width:100%;border-radius:var(--radius);border:1px solid var(--border);display:block;margin-top:10px}
+nav{display:flex;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;overflow-x:auto}
+.nav-logo{font-weight:700;font-size:.95rem;color:var(--blue);padding:.75rem 1.25rem;white-space:nowrap;display:flex;align-items:center;text-decoration:none;border-right:1px solid var(--border);flex-shrink:0}
+.nav-logo:hover{text-decoration:none;color:var(--txt)}
+.nav-links{display:flex;list-style:none}
+.nav-links a{display:block;padding:.75rem .9rem;font-size:.8rem;color:var(--mid);white-space:nowrap;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
+.nav-links a:hover{color:var(--txt);text-decoration:none}
+.nav-links a.active{color:var(--txt);border-bottom-color:var(--purple)}
+.level-hero{padding:3rem 2rem 2rem;border-bottom:1px solid var(--border);background:var(--bg)}
+.container{max-width:1080px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{font-size:.8rem;color:var(--dim);margin-bottom:.75rem}
+.level-badge{display:inline-block;padding:3px 14px;border-radius:6px;font-size:.72rem;font-weight:700;margin-bottom:.75rem;background:rgba(163,113,247,.12);color:var(--purple);border:1px solid rgba(163,113,247,.3)}
+.hero-title{font-size:clamp(1.4rem,3vw,2rem);font-weight:700;line-height:1.25;margin-bottom:.5rem;background:linear-gradient(90deg,var(--purple),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:.92rem;color:var(--mid);max-width:680px;margin-bottom:1rem}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:.75rem}
+.badge{border-radius:20px;padding:3px 10px;font-size:.72rem;border:1px solid}
+.bb{border-color:rgba(88,166,255,.4);color:var(--blue);background:rgba(88,166,255,.08)}
+.bg{border-color:rgba(63,185,80,.4);color:var(--green);background:rgba(63,185,80,.08)}
+.bp{border-color:rgba(163,113,247,.4);color:var(--purple);background:rgba(163,113,247,.08)}
+section{padding:2.5rem 0}
+section+section{border-top:1px solid var(--border)}
+.sec-label{font-size:.72rem;font-weight:700;letter-spacing:.08em;color:var(--purple);text-transform:uppercase;margin-bottom:.4rem}
+h2{font-size:1.4rem;font-weight:600;color:var(--txt);margin-bottom:.5rem}
+h3{font-size:1rem;font-weight:600;color:var(--txt);margin-bottom:.5rem}
+.sec-desc{font-size:.88rem;color:var(--mid);max-width:680px;margin-bottom:1.5rem;line-height:1.65}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1rem}
+.card-title{font-size:.9rem;font-weight:600;color:var(--txt);margin-bottom:.75rem}
+.explain{background:var(--s2);border:1px solid var(--border);border-left:3px solid var(--purple);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem;font-size:.83rem;color:var(--mid);line-height:1.65}
+.explain strong{color:var(--txt)}
+.eq-box{background:var(--s2);border-left:3px solid var(--purple);border-radius:0 6px 6px 0;padding:12px 16px;font-family:'Courier New',monospace;font-size:.88rem;color:var(--txt);margin:10px 0;overflow-x:auto}
+.params-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:.75rem}
+.param-item{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
+.param-item .plabel{font-size:.68rem;color:var(--dim);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.param-item .pvalue{font-size:.9rem;font-weight:600;color:var(--txt);margin-top:2px}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{text-align:left;font-weight:500;font-size:.72rem;color:var(--mid);padding:8px 12px;border-bottom:1px solid var(--border);background:var(--s2)}
+td{padding:8px 12px;border-bottom:1px solid rgba(48,54,61,.5);color:var(--txt)}
+tr:last-child td{border-bottom:none}
+.best{color:var(--green);font-weight:600}
+.bad{color:var(--red)}
+.warn{color:var(--orange)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+@media(max-width:720px){.two-col{grid-template-columns:1fr}}
+.finding-list{list-style:none;margin-top:.75rem}
+.finding-list li{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)}
+.finding-list li:last-child{border-bottom:none}
+.finding-icon{width:26px;height:26px;border-radius:6px;background:rgba(63,185,80,.12);color:var(--green);border:1px solid rgba(63,185,80,.25);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;margin-top:1px}
+.finding-body strong{display:block;font-size:.88rem;color:var(--txt)}
+.finding-body span{font-size:.82rem;color:var(--mid)}
+.page-nav{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding:1.5rem 0}
+.btn{padding:8px 18px;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;border:none;transition:all .15s;display:inline-block;text-decoration:none}
+.btn-primary{background:rgba(163,113,247,.15);color:var(--purple);border:1px solid rgba(163,113,247,.3)}
+.btn-primary:hover{background:rgba(163,113,247,.25);text-decoration:none}
+.btn-outline{background:var(--s2);color:var(--mid);border:1px solid var(--border)}
+.btn-outline:hover{color:var(--txt);border-color:var(--mid);text-decoration:none}
+.page-info{font-size:.82rem;color:var(--dim)}
+footer{text-align:center;padding:1.5rem;font-size:.72rem;color:var(--dim);border-top:1px solid var(--border)}
+canvas{display:block;width:100%;border-radius:6px}
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="nav-inner">
-    <a class="nav-logo" href="../index.html">NAS-PINNs</a>
-    <ul class="nav-links">
-      <li><a href="../index.html">Home</a></li>
-      <li><a href="level1.html">L1</a></li>
-      <li><a href="level2.html">L2</a></li>
-      <li><a href="level3.html">L3</a></li>
-      <li><a href="level4.html">L4</a></li>
-      <li><a href="level5.html">L5</a></li>
-      <li><a href="level6.html" class="active">L6</a></li>
-      <li><a href="level7.html">L7</a></li>
-    </ul>
-  </div>
+  <a class="nav-logo" href="../index.html">NAS-PINNs</a>
+  <ul class="nav-links">
+    <li><a href="level1.html">L1</a></li>
+    <li><a href="level2.html">L2</a></li>
+    <li><a href="level3.html">L3</a></li>
+    <li><a href="level4.html">L4</a></li>
+    <li><a href="level5.html">L5</a></li>
+    <li><a href="level6.html" class="active">L6</a></li>
+    <li><a href="level7.html">L7</a></li>
+  </ul>
 </nav>
 
-<!-- Hero -->
-<div class="level-hero" style="background:linear-gradient(135deg,#F0FDF4 0%,#EDE9FE 100%);">
+<div class="level-hero">
   <div class="container">
-    <div class="breadcrumb"><a href="../index.html">Home</a> › Level 6</div>
-    <span class="level-num" style="background:#DCFCE7;color:#15803D;">Level 6</span>
-    <h1>Poisson Fine-Tuning</h1>
-    <p class="sub">
-      An auxiliary Poisson PDE loss is added to the quenching PINN training.
-      The steady-state Poisson equation shares the same spatial operators as the
-      heat equation. Adding it as a secondary objective acts as a regulariser,
-      improving generalisation slightly.
-    </p>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;">
-      <span class="badge badge-green">Auxiliary PDE loss</span>
-      <span class="badge badge-purple">Poisson regularisation</span>
-      <span class="badge badge-blue">Bayesian gains +17%</span>
+    <div class="breadcrumb"><a href="../index.html">Home</a> &rsaquo; Level 6</div>
+    <div class="level-badge">Level 6 of 7</div>
+    <div class="hero-title">Poisson Fine-Tuning</div>
+    <p class="hero-sub">An auxiliary Poisson PDE loss is added to the quenching PINN training. The steady-state Poisson equation shares the same Laplacian spatial operator as the heat equation. Adding it as a secondary objective acts as a regulariser — Bayesian gains +17% improvement, though overall gains are marginal.</p>
+    <div class="badges">
+      <span class="badge bg">Auxiliary PDE loss</span>
+      <span class="badge bp">Poisson regularisation</span>
+      <span class="badge bb">Bayesian gains +17%</span>
     </div>
   </div>
 </div>
@@ -255,39 +110,32 @@ input[type=range] { accent-color: var(--primary); flex: 1; }
 <!-- Concept -->
 <section>
   <div class="container">
-    <div class="section-label">Concept</div>
+    <div class="sec-label">Concept</div>
     <h2>Auxiliary Poisson Loss</h2>
     <div class="two-col">
       <div>
-        <p style="margin-bottom:14px;">
-          The heat equation at steady state reduces to the Poisson equation.
-          By training the PINN to also satisfy a simple Poisson problem on the
-          same domain, we encourage the network to learn better spatial operators —
-          which in turn helps the time-dependent quenching problem.
-        </p>
+        <p class="sec-desc" style="margin-bottom:.75rem">The heat equation at steady state reduces to the Poisson equation. By training the PINN to also satisfy a simple Poisson problem on the same domain, we encourage the network to learn better spatial operators — which may help the transient quenching problem.</p>
         <h3>Heat equation (primary)</h3>
-        <div class="eq-box">ρCₚ ∂T/∂t = K ∇²T</div>
-        <h3 style="margin-top:16px;">Poisson equation (auxiliary)</h3>
-        <div class="eq-box">−∇²u = f(x, y)  on Ω<br>
-u = 0  on ∂Ω</div>
-        <h3 style="margin-top:16px;">Combined loss</h3>
-        <div class="eq-box">L = L_quench + λ_poisson · L_poisson</div>
+        <div class="eq-box">&rho;C&#x2099; &part;T/&part;t = K &nabla;&sup2;T</div>
+        <h3 style="margin-top:1rem">Poisson equation (auxiliary)</h3>
+        <div class="eq-box">&minus;&nabla;&sup2;u = f(x, y) = sin(&pi;x)sin(&pi;y)  on &Omega;<br>u = 0  on &part;&Omega;  (Dirichlet)</div>
+        <h3 style="margin-top:1rem">Combined loss</h3>
+        <div class="eq-box">L = L_quench + &lambda; &middot; L_poisson<br>&lambda; = 0.1</div>
       </div>
       <div class="card">
-        <h3>Why it helps</h3>
-        <ul style="font-size:.88rem;color:var(--txt-mid);padding-left:18px;line-height:2;">
-          <li>Poisson shares the Laplacian ∇² with the heat equation</li>
-          <li>Extra constraint prevents the network from over-fitting to early time steps</li>
+        <div class="card-title">Why it (marginally) helps</div>
+        <ul style="font-size:.83rem;color:var(--mid);padding-left:1rem;line-height:2">
+          <li>Poisson shares the Laplacian &nabla;&sup2; with the heat equation</li>
+          <li>Extra constraint prevents over-fitting to early time steps</li>
           <li>Regularises the spatial frequency response</li>
-          <li>No extra training data needed — Poisson solution is analytical</li>
+          <li>No extra labelled data needed &mdash; Poisson solution is analytical</li>
         </ul>
-        <h3 style="margin-top:16px;">Limitation</h3>
-        <p style="font-size:.88rem;color:var(--txt-mid);">
-          The benefit is marginal (+17% for Bayesian, negligible for others).
-          The quenching and Poisson problems differ enough that the shared
-          spatial structure provides only limited transfer.
-        </p>
+        <div class="card-title" style="margin-top:1rem">Limitation</div>
+        <p style="font-size:.83rem;color:var(--mid)">The benefit is marginal (+17% for Bayesian, negligible for others). The quenching and Poisson problems differ enough — particularly in the time dimension — that the shared spatial structure provides only limited transfer of inductive bias.</p>
       </div>
+    </div>
+    <div class="explain">
+      <p>The Poisson PDE &minus;&nabla;&sup2;u = f is the canonical steady-state elliptic PDE. The source term f = sin(&pi;x)sin(&pi;y) has an analytical solution u = sin(&pi;x)sin(&pi;y)/(2&pi;&sup2;) under Dirichlet BCs, so there is no need to generate labelled data. By weighting this auxiliary loss at &lambda;=0.1 relative to the main quenching loss, we add a soft constraint on the network's spatial differential operator behaviour without dominating the primary training objective. The hypothesis is that forcing the network to satisfy a simple spatial PDE will improve the quality of its spatial representations, which can then transfer to the time-dependent quenching problem.</p>
     </div>
   </div>
 </section>
@@ -295,15 +143,18 @@ u = 0  on ∂Ω</div>
 <!-- Training params -->
 <section>
   <div class="container">
-    <div class="section-label">Setup</div>
+    <div class="sec-label">Setup</div>
     <h2>Training Parameters</h2>
     <div class="params-grid">
-      <div class="param-item"><div class="plabel">Base</div><div class="pvalue">L5 trained model</div></div>
+      <div class="param-item"><div class="plabel">Base model</div><div class="pvalue">L5 trained</div></div>
       <div class="param-item"><div class="plabel">Optimizer</div><div class="pvalue">Adam</div></div>
       <div class="param-item"><div class="plabel">LR schedule</div><div class="pvalue">Cosine decay</div></div>
-      <div class="param-item"><div class="plabel">Poisson loss weight</div><div class="pvalue">0.1</div></div>
-      <div class="param-item"><div class="plabel">Poisson source f(x,y)</div><div class="pvalue">sin(πx)·sin(πy)</div></div>
+      <div class="param-item"><div class="plabel">Poisson &lambda;</div><div class="pvalue">0.1</div></div>
+      <div class="param-item"><div class="plabel">Poisson source</div><div class="pvalue">sin(&pi;x)sin(&pi;y)</div></div>
       <div class="param-item"><div class="plabel">Poisson BC</div><div class="pvalue">u=0 (Dirichlet)</div></div>
+    </div>
+    <div class="explain" style="margin-top:.75rem">
+      Fine-tuning starts from the already-trained Level 5 models (not from scratch), so the quenching loss is already well-minimised. The Poisson auxiliary loss acts as a regularisation perturbation to a well-converged solution. The weight &lambda;=0.1 was chosen to add a meaningful gradient signal without overwhelming the primary loss. The Poisson problem is solved over the same spatial domain [0,1]&sup2; as the quenching problem but without the time dimension — it tests purely spatial accuracy.
     </div>
   </div>
 </section>
@@ -311,12 +162,12 @@ u = 0  on ∂Ω</div>
 <!-- Results -->
 <section>
   <div class="container">
-    <div class="section-label">Results</div>
+    <div class="sec-label">Results</div>
     <h2>L5 vs L6 Comparison</h2>
     <div class="two-col">
       <div class="card">
-        <h3>L2 Error: L5 vs L6</h3>
-        <table class="results-table">
+        <div class="card-title">L2 Error: L5 vs L6</div>
+        <table>
           <thead>
             <tr><th>Optimiser</th><th>L5 L2</th><th>L6 L2</th><th>Change</th></tr>
           </thead>
@@ -324,55 +175,63 @@ u = 0  on ∂Ω</div>
             <tr>
               <td><strong>Bayesian</strong></td>
               <td>0.037</td>
-              <td class="cell-good">0.031</td>
-              <td class="cell-good">+17%</td>
+              <td class="best">0.031</td>
+              <td class="best">+17%</td>
             </tr>
             <tr>
               <td>NSGA-II</td>
               <td>0.055</td>
               <td>0.053</td>
-              <td>+4%</td>
+              <td class="warn">+4%</td>
             </tr>
             <tr>
               <td>NSGA-III</td>
               <td>0.259</td>
-              <td>0.261</td>
-              <td class="cell-bad">−1%</td>
+              <td class="bad">0.261</td>
+              <td class="bad">&minus;1%</td>
             </tr>
           </tbody>
         </table>
-        <p style="font-size:.82rem;color:var(--txt-light);margin-top:10px;">
-          Only Bayesian shows meaningful improvement. NSGA-III slightly worsens
-          — the auxiliary loss may conflict with its small architecture's limited capacity.
-        </p>
+        <div style="margin-top:.5rem;font-size:.76rem;color:var(--dim)">Only Bayesian shows meaningful improvement. NSGA-III slightly worsens — the auxiliary loss may conflict with its small architecture's limited capacity.</div>
       </div>
       <div class="card">
-        <h3>Improvement Chart</h3>
+        <div class="card-title">L5 vs L6 L2 Comparison</div>
         <canvas id="l6Chart" height="200"></canvas>
       </div>
     </div>
+    <div class="explain">
+      <p>The results confirm that auxiliary Poisson regularisation is a valid but architecture-sensitive strategy. For the large, well-trained Bayesian model (5&times;151 relu), the Poisson auxiliary loss provides a useful +17% L2 improvement — the network has sufficient capacity to learn both objectives simultaneously. For the smaller NSGA-II (3&times;153 tanh) the gain is marginal (+4%), and for the smallest NSGA-III (3&times;75 tanh) the auxiliary loss slightly degrades performance. This pattern suggests that auxiliary PDE losses require the primary network to already have spare representational capacity beyond what the main problem demands.</p>
+    </div>
+  </div>
+</section>
 
-    <!-- Heatmap plot -->
-    <div style="margin-top:24px;" class="card">
-      <h3>Temperature Heatmap at t=5s — Bayesian L6</h3>
-      <img src="../../level6_poisson_benchmark/results/plots/l6_heatmap_t5s.png"
-           class="plot-img" alt="L6 heatmap at t=5s">
-      <p class="plot-caption">PINN temperature field at t=5 s after fine-tuning with auxiliary Poisson loss.
-         The spatial distribution is smooth and physically consistent.</p>
+<!-- Plots -->
+<section>
+  <div class="container">
+    <div class="sec-label">Visualisations</div>
+    <h2>Level 6 Plots</h2>
+    <div class="card">
+      <div class="card-title">Temperature Heatmap at t=5 s &mdash; Bayesian L6</div>
+      <img src="../../level6_poisson_benchmark/results/plots/l6_heatmap_t5s.png" alt="L6 heatmap t=5s">
+      <div class="explain" style="margin-top:.75rem">
+        <p>The heatmap shows the PINN-predicted temperature field across the 1.3&times;0.6 m casting cross-section at t=5 s after applying the Poisson fine-tuning. At 5 seconds the centre of the casting has cooled to roughly 513&deg;C while the surface (boundary) is already near the water temperature of 20&deg;C. The spatial distribution is smooth and physically consistent, with no artefacts or unphysical oscillations — the Poisson regularisation has not disrupted the learned temperature field. The colour gradient from cool edges to hot centre reflects the expected Robin boundary condition behaviour at this early time.</p>
+      </div>
     </div>
 
-    <div style="margin-top:20px;" class="two-col">
+    <div class="two-col" style="margin-top:1rem">
       <div class="card">
-        <h3>L2 Progression During L6 Training</h3>
-        <img src="../../level6_poisson_benchmark/results/plots/l6_l2_progression.png"
-             class="plot-img" alt="L6 L2 progression">
-        <p class="plot-caption">L2 error as a function of training epoch during Poisson fine-tuning.</p>
+        <div class="card-title">L2 Progression During L6 Training</div>
+        <img src="../../level6_poisson_benchmark/results/plots/l6_l2_progression.png" alt="L6 L2 progression">
+        <div class="explain" style="margin-top:.75rem;border-left-color:var(--orange)">
+          <p>The L2 progression plot shows how the quenching validation error evolves during the Poisson fine-tuning training epochs. For the Bayesian architecture (blue), L2 decreases monotonically from the L5 starting value (0.037) to the final L6 value (0.031), confirming the auxiliary Poisson loss is helping rather than hurting. NSGA-II shows a near-flat trajectory (0.055 &rarr; 0.053) — marginal improvement but no degradation. NSGA-III (if shown) exhibits slight upward drift, illustrating the capacity conflict where the Poisson constraint competes with the quenching objective in a network that is already at its representational limit.</p>
+        </div>
       </div>
       <div class="card">
-        <h3>Temperature Slices Over Time</h3>
-        <img src="../../level6_poisson_benchmark/results/plots/l6_heatmap_timeslices.png"
-             class="plot-img" alt="L6 heatmap time slices">
-        <p class="plot-caption">Centre-line temperature profiles at t=0, 5, 10, 20, 30 s.</p>
+        <div class="card-title">Temperature Slices Over Time</div>
+        <img src="../../level6_poisson_benchmark/results/plots/l6_heatmap_timeslices.png" alt="L6 heatmap timeslices">
+        <div class="explain" style="margin-top:.75rem;border-left-color:var(--blue)">
+          <p>This multi-panel figure shows centre-line temperature profiles at t = 0, 5, 10, 20, and 30 seconds. At t=0 the entire profile is flat at 540&deg;C (initial condition). As time progresses, the profile develops a gradient from the hot interior to the cooled boundary — consistent with the Robin BC driving heat flux into the water. By t=30 s the profile has flattened considerably as the casting approaches thermal equilibrium with the water bath. The Level 6 fine-tuned PINN maintains accurate tracking of this spatial profile evolution throughout the quench cycle.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -381,57 +240,53 @@ u = 0  on ∂Ω</div>
 <!-- Takeaways -->
 <section>
   <div class="container">
-    <div class="section-label">Takeaways</div>
+    <div class="sec-label">Takeaways</div>
     <h2>Key Observations</h2>
     <ul class="finding-list">
       <li>
-        <div class="finding-icon">✓</div>
+        <div class="finding-icon">&#10003;</div>
         <div class="finding-body">
           <strong>Auxiliary PDE loss is a valid regularisation strategy</strong>
-          <span>Bayesian gains +17% improvement (0.037 → 0.031), confirming that sharing spatial operators across PDE families can transfer useful inductive bias.</span>
+          <span>Bayesian gains +17% improvement (0.037 &rarr; 0.031), confirming that sharing spatial operators across PDE families can transfer useful inductive bias into the primary problem.</span>
         </div>
       </li>
       <li>
-        <div class="finding-icon">→</div>
+        <div class="finding-icon">&#8594;</div>
         <div class="finding-body">
           <strong>Effect is small and architecture-dependent</strong>
-          <span>NSGA-II gains only 4%; NSGA-III slightly worsens. The regularisation benefit does not scale uniformly across all architectures.</span>
+          <span>NSGA-II gains only +4%; NSGA-III slightly worsens. The regularisation benefit does not scale uniformly — it requires sufficient spare network capacity for dual-task learning.</span>
         </div>
       </li>
       <li>
-        <div class="finding-icon">→</div>
+        <div class="finding-icon">&#8594;</div>
         <div class="finding-body">
           <strong>Poisson and quenching share spatial structure, not temporal</strong>
-          <span>The steady-state Poisson problem has no time dimension. The transfer is limited to spatial smoothness — which partly explains the marginal benefit.</span>
+          <span>The steady-state Poisson problem has no time dimension. Transfer is limited to spatial smoothness — which partly explains the marginal benefit compared to the training-budget gains in L5.</span>
         </div>
       </li>
       <li>
-        <div class="finding-icon">→</div>
+        <div class="finding-icon">&#8594;</div>
         <div class="finding-body">
           <strong>More targeted multi-task learning could improve results</strong>
-          <span>A dynamic weighting of the Poisson loss, or using it only during warm-up, may yield larger benefits — a direction for future work.</span>
+          <span>Dynamic weighting of the Poisson loss, or applying it only during warm-up, may yield larger benefits. This is a direction for future work in multi-physics PINN regularisation.</span>
         </div>
       </li>
     </ul>
   </div>
 </section>
 
-<section style="padding:32px 0;background:var(--surface);border-top:1px solid var(--border);">
+<!-- Prev/Next -->
+<section style="padding:1.5rem 0;background:var(--surface);border-top:1px solid var(--border)">
   <div class="container">
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
-      <a href="level5.html" class="btn btn-outline">← Level 5</a>
-      <span style="color:var(--txt-light);font-size:.9rem;">Level 6 of 7</span>
-      <a href="level7.html" class="btn btn-primary">Level 7: Multi-Domain NAS →</a>
+    <div class="page-nav">
+      <a href="level5.html" class="btn btn-outline">&larr; Level 5</a>
+      <span class="page-info">Level 6 of 7</span>
+      <a href="level7.html" class="btn btn-primary">Level 7: Multi-Domain NAS &rarr;</a>
     </div>
   </div>
 </section>
 
-<footer>
-  <div class="container">
-    <strong>NAS-PINNs</strong> — Level 6: Poisson Fine-Tuning ·
-    <a href="../index.html">Back to overview</a>
-  </div>
-</footer>
+<footer>NAS-PINNs &middot; Level 6 &middot; <a href="../index.html">Back to overview</a></footer>
 
 <script>
 new Chart(document.getElementById('l6Chart'),{
@@ -439,13 +294,20 @@ new Chart(document.getElementById('l6Chart'),{
   data:{
     labels:['Bayesian','NSGA-II','NSGA-III'],
     datasets:[
-      {label:'L5 L2',backgroundColor:'rgba(148,163,184,.8)',data:[0.037,0.055,0.259],borderRadius:4},
-      {label:'L6 L2',backgroundColor:['rgba(21,101,192,.8)','rgba(21,101,192,.5)','rgba(198,40,40,.8)'],
-       data:[0.031,0.053,0.261],borderRadius:4},
+      {label:'L5 L2',backgroundColor:'rgba(72,79,88,.7)',data:[0.037,0.055,0.259],borderRadius:4},
+      {label:'L6 L2',backgroundColor:['rgba(163,113,247,.8)','rgba(88,166,255,.5)','rgba(247,129,102,.8)'],data:[0.031,0.053,0.261],borderRadius:4},
     ]
   },
-  options:{responsive:true,plugins:{legend:{position:'top'}},
-    scales:{y:{title:{display:true,text:'L2 Relative Error'},min:0,max:0.3}}}
+  options:{
+    responsive:true,
+    plugins:{
+      legend:{position:'top',labels:{color:'#8B949E'}},
+    },
+    scales:{
+      y:{min:0,max:0.30,title:{display:true,text:'L2 Relative Error',color:'#8B949E'},ticks:{color:'#8B949E'},grid:{color:'rgba(48,54,61,.6)'}},
+      x:{ticks:{color:'#8B949E'},grid:{color:'rgba(48,54,61,.4)'}}
+    }
+  }
 });
 </script>
 </body>

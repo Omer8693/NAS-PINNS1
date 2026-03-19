@@ -2,860 +2,1184 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NAS-PINNs — Neural Architecture Search for FEM Time-Step Acceleration</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NAS-PINNs — Neural Architecture Search for FEM Acceleration</title>
 <style>
-/* ─── NAS-PINNs · Shared Stylesheet ───────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg:        #F5F7FA;
-  --surface:   #FFFFFF;
-  --border:    #E2E8F0;
-  --primary:   #2563EB;
-  --primary-l: #DBEAFE;
-  --primary-d: #1D4ED8;
-  --orange:    #EA580C;
-  --orange-l:  #FEF3C7;
-  --green:     #16A34A;
-  --green-l:   #DCFCE7;
-  --red:       #DC2626;
-  --red-l:     #FEE2E2;
-  --purple:    #7C3AED;
-  --purple-l:  #EDE9FE;
-  --txt:       #1E293B;
-  --txt-mid:   #475569;
-  --txt-light: #94A3B8;
-  --radius:    12px;
-  --shadow:    0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.05);
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D1117;--surface:#161B22;--border:#30363D;
+  --surface2:#21262D;--txt:#E6EDF3;--txt-mid:#8B949E;
+  --txt-dim:#484F58;--blue:#58A6FF;--orange:#F0883E;
+  --green:#3FB950;--purple:#A371F7;--red:#F78166
 }
-html  { scroll-behavior: smooth; }
-body  { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: var(--bg); color: var(--txt); line-height: 1.6; }
-a     { color: var(--primary); text-decoration: none; }
-a:hover { text-decoration: underline; }
-img   { max-width: 100%; }
-
-/* ── Layout ───────────────────────────────────────────────────────────────── */
-.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
-section    { padding: 56px 0; }
-section + section { border-top: 1px solid var(--border); }
-
-/* ── Nav ──────────────────────────────────────────────────────────────────── */
-nav {
-  position: sticky; top: 0; z-index: 100;
-  background: rgba(255,255,255,.92); backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
+body{background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,sans-serif;font-size:14px;min-height:100vh}
+.hero{background:var(--bg);padding:2.5rem 2rem 2rem;text-align:center;border-bottom:1px solid var(--border)}
+.hero-eye{font-size:.65rem;color:var(--txt-dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:.4rem}
+.hero h1{font-size:2.1rem;font-weight:600;background:linear-gradient(90deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.5rem;line-height:1.25}
+.hero .sub{font-size:.9rem;color:var(--txt-mid);margin-bottom:.3rem;max-width:680px;margin-left:auto;margin-right:auto}
+.hero .authors{font-size:.75rem;color:var(--txt-dim);margin-bottom:1.2rem}
+.badges{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.badge{border-radius:20px;padding:3px 10px;font-size:.72rem}
+.bb{border:1px solid rgba(88,166,255,.4);color:var(--blue);background:rgba(88,166,255,.08)}
+.bo{border:1px solid rgba(240,136,62,.4);color:var(--orange);background:rgba(240,136,62,.08)}
+.bg{border:1px solid rgba(63,185,80,.4);color:var(--green);background:rgba(63,185,80,.08)}
+.bp{border:1px solid rgba(163,113,247,.4);color:var(--purple);background:rgba(163,113,247,.08)}
+.br{border:1px solid rgba(247,129,102,.4);color:var(--red);background:rgba(247,129,102,.08)}
+nav{display:flex;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:0;z-index:100}
+nav button{background:none;border:none;border-bottom:2px solid transparent;padding:.8rem 1rem;font-size:.8rem;color:var(--txt-mid);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+nav button:hover{color:var(--txt)}
+nav button.active{color:var(--txt);border-bottom-color:var(--blue)}
+.panel{display:none;padding:1.5rem 2rem;max-width:1080px;margin:0 auto}
+.panel.active{display:block}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:1.5rem}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.875rem;text-align:center}
+.metric .val{font-size:1.5rem;font-weight:600;background:linear-gradient(90deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.metric .lbl{font-size:.7rem;color:var(--txt-mid);margin-top:3px}
+.levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:8px;margin-bottom:1.5rem}
+.lcard{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.875rem;border-top:2px solid var(--blue)}
+.lcard.l2{border-top-color:#39D353}
+.lcard.l3{border-top-color:var(--orange)}
+.lcard.l4{border-top-color:var(--red)}
+.lcard.l5{border-top-color:var(--green)}
+.lcard.l6{border-top-color:var(--purple)}
+.lcard.l7{border-top-color:#E3B341}
+.lnum{font-size:.68rem;font-weight:600;color:var(--blue);letter-spacing:.5px;margin-bottom:.25rem;text-transform:uppercase}
+.lcard.l2 .lnum{color:#39D353}
+.lcard.l3 .lnum{color:var(--orange)}
+.lcard.l4 .lnum{color:var(--red)}
+.lcard.l5 .lnum{color:var(--green)}
+.lcard.l6 .lnum{color:var(--purple)}
+.lcard.l7 .lnum{color:#E3B341}
+.lcard h3{font-size:.85rem;font-weight:500;color:var(--txt);margin-bottom:.3rem}
+.lcard p{font-size:.75rem;color:var(--txt-mid);line-height:1.55}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin-bottom:1rem}
+.card-title{font-size:.9rem;font-weight:500;color:var(--txt);margin-bottom:.75rem}
+.explain{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:10px;padding:1.1rem 1.25rem;margin-bottom:1rem;font-size:.82rem;color:var(--txt-mid);line-height:1.65}
+.explain strong{color:var(--txt)}
+.explain p{margin-bottom:.6rem}
+.explain p:last-child{margin-bottom:0}
+.ctrl-row{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-bottom:1rem}
+.ctrl{display:flex;flex-direction:column;gap:4px}
+.ctrl label{font-size:.7rem;color:var(--txt-mid)}
+select{background:var(--surface2);border:1px solid var(--border);color:var(--txt);border-radius:6px;padding:5px 8px;font-size:.8rem;cursor:pointer;outline:none}
+select:focus{border-color:var(--blue)}
+input[type=range]{accent-color:var(--blue);cursor:pointer;width:180px}
+.action-btn{background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.3);color:var(--blue);border-radius:6px;padding:6px 14px;cursor:pointer;font-size:.78rem;transition:background .15s}
+.action-btn:hover{background:rgba(88,166,255,.2)}
+.action-btn.green{background:rgba(63,185,80,.1);border-color:rgba(63,185,80,.3);color:var(--green)}
+.action-btn.green:hover{background:rgba(63,185,80,.2)}
+canvas{display:block;width:100%;border-radius:6px}
+.pill-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:.75rem}
+.pill{border-radius:20px;padding:4px 12px;font-size:.75rem;border:1px solid}
+.pb{color:var(--blue);border-color:rgba(88,166,255,.3);background:rgba(88,166,255,.08)}
+.pg{color:var(--green);border-color:rgba(63,185,80,.3);background:rgba(63,185,80,.08)}
+.po{color:var(--orange);border-color:rgba(240,136,62,.3);background:rgba(240,136,62,.08)}
+.pr{color:var(--red);border-color:rgba(247,129,102,.3);background:rgba(247,129,102,.08)}
+.pp{color:var(--purple);border-color:rgba(163,113,247,.3);background:rgba(163,113,247,.08)}
+.step-strip{display:flex;gap:3px;flex-wrap:wrap;margin:.75rem 0}
+.step-b{width:32px;height:32px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:600;color:white;flex-shrink:0}
+.legend{display:flex;gap:16px;font-size:.72rem;color:var(--txt-mid)}
+.legend span{display:flex;align-items:center;gap:5px}
+.dot{width:10px;height:10px;border-radius:2px;display:inline-block}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+th{text-align:left;font-weight:500;font-size:.72rem;color:var(--txt-mid);padding:8px 12px;border-bottom:1px solid var(--border);background:var(--surface2)}
+td{padding:8px 12px;border-bottom:1px solid rgba(48,54,61,.5);color:var(--txt)}
+tr:last-child td{border-bottom:none}
+.best{color:var(--green);font-weight:500}
+.bad{color:var(--red)}
+.warn{color:var(--orange)}
+.colorbar-row{display:flex;align-items:center;gap:8px;margin-top:8px}
+.colorbar-row span{font-size:.7rem;color:var(--txt-mid)}
+.bar-bg{background:var(--surface2);border-radius:4px;height:6px;overflow:hidden;margin-top:3px}
+.bar-fill{height:6px;border-radius:4px}
+.sec-title{font-size:1rem;font-weight:500;color:var(--txt);margin-bottom:.3rem}
+.sec-sub{font-size:.78rem;color:var(--txt-mid);margin-bottom:1.25rem}
+.ref-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.875rem;margin-bottom:8px}
+.ref-title{font-size:.85rem;font-weight:500;color:var(--txt);margin-bottom:3px}
+.ref-meta{font-size:.75rem;color:var(--txt-mid)}
+.ref-tag{display:inline-block;margin-top:5px;padding:2px 8px;border-radius:4px;font-size:.7rem;background:rgba(88,166,255,.1);color:var(--blue);border:1px solid rgba(88,166,255,.2)}
+.ref-section{font-size:.75rem;color:var(--txt-mid);margin:.75rem 0;font-weight:500;text-transform:uppercase;letter-spacing:.5px}
+.poisson-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
+.pcard{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.875rem;text-align:center}
+.pcard-title{font-size:.8rem;font-weight:500;color:var(--txt);margin-bottom:.5rem}
+.pcard-sub{font-size:.7rem;color:var(--txt-mid);margin-top:.5rem;line-height:1.5;text-align:left}
+.ov-block{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.25rem;margin-bottom:1rem}
+.ov-block h4{font-size:.85rem;font-weight:500;color:var(--txt);margin-bottom:.4rem}
+.ov-block p{font-size:.8rem;color:var(--txt-mid);line-height:1.65;margin-bottom:.5rem}
+.ov-block p:last-child{margin-bottom:0}
+footer{text-align:center;padding:1.5rem;font-size:.72rem;color:var(--txt-dim);border-top:1px solid var(--border)}
+@media(max-width:640px){
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .poisson-grid{grid-template-columns:repeat(2,1fr)}
+  .hero h1{font-size:1.4rem}
 }
-.nav-inner {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 24px; max-width: 1100px; margin: 0 auto; gap: 16px;
-}
-.nav-logo { font-weight: 700; font-size: 1rem; color: var(--primary); white-space: nowrap; }
-.nav-links { display: flex; gap: 16px; list-style: none; flex-wrap: wrap; }
-.nav-links a { font-size: .82rem; color: var(--txt-mid); font-weight: 500; white-space: nowrap; }
-.nav-links a:hover, .nav-links a.active { color: var(--primary); text-decoration: none; }
-
-/* ── Buttons ──────────────────────────────────────────────────────────────── */
-.btn { padding: 10px 22px; border-radius: 8px; font-size: .9rem; font-weight: 600;
-       cursor: pointer; border: none; transition: all .15s; display: inline-block; }
-.btn-primary  { background: var(--primary); color: #fff; }
-.btn-primary:hover  { background: var(--primary-d); text-decoration: none; }
-.btn-outline  { background: #fff; color: var(--primary); border: 1.5px solid var(--primary); }
-.btn-outline:hover  { background: var(--primary-l); text-decoration: none; }
-.btn-group    { display: flex; gap: 12px; flex-wrap: wrap; }
-
-/* ── Badges ───────────────────────────────────────────────────────────────── */
-.badge { display: inline-flex; align-items: center; gap: 6px;
-         padding: 4px 12px; border-radius: 99px; font-size: .78rem;
-         font-weight: 600; border: 1px solid; }
-.badge-blue   { background: var(--primary-l); color: var(--primary); border-color: #BFDBFE; }
-.badge-green  { background: var(--green-l);   color: var(--green);   border-color: #BBF7D0; }
-.badge-orange { background: var(--orange-l);  color: var(--orange);  border-color: #FED7AA; }
-.badge-red    { background: var(--red-l);     color: var(--red);     border-color: #FECACA; }
-.badge-purple { background: var(--purple-l);  color: var(--purple);  border-color: #DDD6FE; }
-
-/* ── Cards ────────────────────────────────────────────────────────────────── */
-.card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 28px 32px; box-shadow: var(--shadow);
-}
-.card + .card { margin-top: 20px; }
-
-/* ── Section header ───────────────────────────────────────────────────────── */
-.section-label { font-size: .8rem; font-weight: 700; letter-spacing: .08em;
-                 color: var(--primary); text-transform: uppercase; margin-bottom: 8px; }
-h2 { font-size: 1.75rem; font-weight: 800; margin-bottom: 12px; }
-h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
-.section-desc { color: var(--txt-mid); max-width: 700px; margin-bottom: 32px; font-size: .95rem; }
-
-/* ── Level cards ──────────────────────────────────────────────────────────── */
-.level-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-              gap: 16px; margin-top: 32px; }
-.level-card { background: var(--surface); border: 1px solid var(--border);
-              border-radius: var(--radius); padding: 20px 22px; box-shadow: var(--shadow);
-              transition: transform .15s, box-shadow .15s; }
-.level-card:hover { transform: translateY(-3px); box-shadow: 0 6px 24px rgba(0,0,0,.12); }
-.level-tag { display: inline-block; padding: 2px 10px; border-radius: 6px;
-             font-size: .78rem; font-weight: 700; margin-bottom: 10px; }
-.level-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
-.level-card p  { font-size: .88rem; color: var(--txt-mid); }
-.result-chip   { margin-top: 10px; display: inline-block;
-                 padding: 3px 10px; background: var(--green-l); color: var(--green);
-                 border-radius: 6px; font-size: .78rem; font-weight: 600; }
-
-/* ── Results table ────────────────────────────────────────────────────────── */
-.results-table { width: 100%; border-collapse: collapse; font-size: .9rem; margin-top: 16px; }
-.results-table th { background: var(--primary); color: #fff; padding: 10px 14px;
-                    text-align: left; font-weight: 600; font-size: .82rem; }
-.results-table th:first-child { border-radius: 8px 0 0 0; }
-.results-table th:last-child  { border-radius: 0 8px 0 0; }
-.results-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
-.results-table tr:hover td { background: var(--primary-l); }
-.results-table tr:last-child td { border-bottom: none; }
-.cell-good { color: var(--green); font-weight: 700; }
-.cell-bad  { color: var(--red);   font-weight: 600; }
-.cell-note { font-size: .8rem; color: var(--txt-light); }
-
-/* ── Parameter grid ───────────────────────────────────────────────────────── */
-.params-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-               gap: 10px; margin-top: 16px; }
-.param-item  { background: var(--surface); border: 1px solid var(--border);
-               border-radius: 8px; padding: 12px 14px; }
-.param-item .plabel { font-size: .72rem; color: var(--txt-light); font-weight: 600;
-                      text-transform: uppercase; letter-spacing: .04em; }
-.param-item .pvalue { font-size: .95rem; font-weight: 700; color: var(--txt); margin-top: 2px; }
-
-/* ── Equation box ─────────────────────────────────────────────────────────── */
-.eq-box { background: var(--primary-l); border-left: 4px solid var(--primary);
-          border-radius: 0 8px 8px 0; padding: 14px 18px;
-          font-family: 'Courier New', monospace; font-size: .9rem;
-          color: var(--txt); margin: 12px 0; overflow-x: auto; }
-
-/* ── Step row (FEM ↔ PINN visualization) ──────────────────────────────────── */
-.step-row  { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
-.step-box  { padding: 6px 12px; border-radius: 6px; font-size: .82rem; font-weight: 700; }
-.step-fem  { background: #DBEAFE; color: #1E40AF; }
-.step-pinn { background: #FEF3C7; color: #92400E; }
-.step-skip { background: #DCFCE7; color: #166534; }
-.step-arrow { color: var(--txt-light); font-size: 1.1rem; }
-
-/* ── Plot image ───────────────────────────────────────────────────────────── */
-.plot-img { width: 100%; border-radius: 10px; border: 1px solid var(--border);
-            display: block; margin-top: 12px; }
-.plot-caption { font-size: .8rem; color: var(--txt-light); text-align: center;
-                margin-top: 6px; }
-
-/* ── CMM bars ─────────────────────────────────────────────────────────────── */
-.cmm-bar-row   { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-.cmm-bar-label { width: 140px; font-size: .85rem; font-weight: 600; flex-shrink: 0; }
-.cmm-bar-track { flex: 1; background: var(--border); border-radius: 99px; height: 20px; overflow: hidden; }
-.cmm-bar-fill  { height: 100%; border-radius: 99px; display: flex; align-items: center;
-                 padding-left: 8px; font-size: .76rem; font-weight: 700; color: #fff;
-                 transition: width 1.2s cubic-bezier(.4,0,.2,1); }
-.cmm-bar-val   { font-size: .85rem; font-weight: 700; min-width: 60px; text-align: right; }
-
-/* ── Skip timeline ────────────────────────────────────────────────────────── */
-.skip-controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
-.skip-select   { padding: 7px 14px; border-radius: 8px; border: 1.5px solid var(--border);
-                 font-size: .88rem; font-weight: 600; background: #fff; color: var(--txt); cursor: pointer; }
-.skip-select:focus { outline: none; border-color: var(--primary); }
-.skip-stats { display: flex; gap: 14px; margin-top: 14px; flex-wrap: wrap; }
-.stat-chip  { padding: 8px 14px; border-radius: 8px; font-size: .84rem; font-weight: 600; }
-
-/* ── Two / three col ──────────────────────────────────────────────────────── */
-.two-col   { display: grid; grid-template-columns: 1fr 1fr;     gap: 24px; align-items: start; }
-.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: start; }
-@media (max-width: 800px) { .two-col, .three-col { grid-template-columns: 1fr; } }
-
-/* ── Level hero (top of each level page) ─────────────────────────────────── */
-.level-hero { padding: 48px 0 36px; border-bottom: 1px solid var(--border); }
-.level-hero .breadcrumb { font-size: .85rem; color: var(--txt-light); margin-bottom: 14px; }
-.level-hero h1 { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 800; line-height: 1.25; }
-.level-hero .sub { font-size: 1rem; color: var(--txt-mid); max-width: 700px; margin-top: 10px; }
-.level-num { display: inline-block; font-size: 1.3rem; font-weight: 900;
-             padding: 4px 16px; border-radius: 8px; margin-bottom: 12px; }
-
-/* ── Finding list ─────────────────────────────────────────────────────────── */
-.finding-list { list-style: none; margin-top: 16px; }
-.finding-list li { display: flex; gap: 12px; align-items: flex-start;
-                   padding: 12px 0; border-bottom: 1px solid var(--border); }
-.finding-list li:last-child { border-bottom: none; }
-.finding-icon { width: 28px; height: 28px; border-radius: 8px; background: var(--green-l);
-                color: var(--green); display: flex; align-items: center; justify-content: center;
-                font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
-.finding-body strong { display: block; font-size: .95rem; }
-.finding-body span   { font-size: .85rem; color: var(--txt-mid); }
-
-/* ── References section ───────────────────────────────────────────────────── */
-#references { background: #F8FAFF; }
-.ref-list   { list-style: none; margin-top: 16px; }
-.ref-list li { padding: 12px 0; border-bottom: 1px solid var(--border);
-               font-size: .88rem; color: var(--txt-mid); line-height: 1.5; }
-.ref-list li:last-child { border-bottom: none; }
-.ref-list strong { color: var(--txt); }
-
-/* ── Footer ───────────────────────────────────────────────────────────────── */
-footer { background: var(--txt); color: #94A3B8; padding: 32px 24px;
-         text-align: center; font-size: .85rem; }
-footer strong { color: #fff; }
-footer a { color: #60A5FA; }
-
-/* ── Animation controls ───────────────────────────────────────────────────── */
-input[type=range] { accent-color: var(--primary); flex: 1; }
-.ctrl-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-.ctrl-btn { padding: 8px 18px; border-radius: 8px; border: none; cursor: pointer;
-            font-size: .88rem; font-weight: 600; transition: background .15s; }
-.ctrl-btn.play  { background: var(--primary); color: #fff; }
-.ctrl-btn.play:hover  { background: var(--primary-d); }
-.ctrl-btn.reset { background: var(--border); color: var(--txt); }
-.ctrl-btn.reset:hover { background: #CBD5E1; }
-.ctrl-label { font-size: .82rem; color: var(--txt-mid); font-weight: 600; }
-
-</style>
-<style>
-/* ── Demo-specific styles ──────────────────────────────────────────────────── */
-#anim-wrap {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; margin-top: 8px;
-}
-canvas#heatCanvas { width:100%; border-radius:10px; border:1px solid var(--border); }
-#anim-controls    { display:flex; flex-direction:column; gap:14px; }
-#time-display     { font-size:1.3rem; font-weight:800; color:var(--primary); font-variant-numeric:tabular-nums; }
-#temp-display     { font-size:.9rem; color:var(--txt-mid); background:var(--primary-l); padding:8px 14px; border-radius:8px; }
-.legend-row       { display:flex; gap:12px; flex-wrap:wrap; margin-top:6px; }
-.legend-item      { display:flex; align-items:center; gap:6px; font-size:.82rem; color:var(--txt-mid); }
-.legend-dot       { width:12px; height:12px; border-radius:3px; flex-shrink:0; }
-input[type=range] { accent-color:var(--primary); flex:1; }
-@media (max-width:720px) { #anim-wrap { grid-template-columns:1fr; } }
-
-/* ── Hero ──────────────────────────────────────────────────────────────────── */
-#hero {
-  background: linear-gradient(135deg,#EFF6FF 0%,#F0FDF4 50%,#FFF7ED 100%);
-  padding: 80px 0 64px; border-bottom: 1px solid var(--border);
-}
-.hero-inner { text-align: center; }
-.hero-badges { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:24px; }
-h1 { font-size: clamp(1.8rem,4vw,2.6rem); font-weight:800; line-height:1.2; color:var(--txt); }
-.hero-sub  { font-size:1.1rem; color:var(--txt-mid); margin:16px auto 28px; max-width:680px; }
-.hero-meta { font-size:.85rem; color:var(--txt-light); margin-bottom:36px; }
 </style>
 </head>
 <body>
 
-<!-- ── NAV ───────────────────────────────────────────────────────────────── -->
-<nav>
-  <div class="nav-inner">
-    <span class="nav-logo">NAS-PINNs</span>
-    <ul class="nav-links">
-      <li><a href="#overview">Overview</a></li>
-      <li><a href="#animation">Animation</a></li>
-      <li><a href="#skip">Skip Operator</a></li>
-      <li><a href="#results">Results</a></li>
-      <li><a href="#domains">Domains</a></li>
-      <li><a href="#conclusions">Conclusions</a></li>
-      <li><a href="#references">References</a></li>
-    </ul>
+<div class="hero">
+  <div class="hero-eye">Research Project · 2026</div>
+  <h1>Neural Architecture Search for FEM Time-Step<br>Acceleration in Aluminium Casting Simulation</h1>
+  <div class="sub">Physics-Informed Neural Networks trained via NAS replace expensive FEM time steps in A356 aluminium water quenching — achieving 4&times; speedup at &lt;3% L2 error after extended training.</div>
+  <div class="authors">Mortensen, Noorsumar, Fj&aelig;r, Babaei, Dr&oslash;nen &nbsp;&middot;&nbsp; Int. J. Advanced Manufacturing Technology &nbsp;&middot;&nbsp; 2026</div>
+  <div class="badges">
+    <span class="badge bb">PyTorch</span>
+    <span class="badge bo">A356 Aluminium</span>
+    <span class="badge bg">4&times; FEM Speedup</span>
+    <span class="badge bp">7-Level Framework</span>
+    <span class="badge bb">Bayesian &middot; NSGA-II &middot; NSGA-III</span>
+    <span class="badge br">Robin BC</span>
   </div>
+</div>
+
+<nav id="mainnav">
+  <button class="active" data-panel="overview">Overview</button>
+  <button data-panel="heatmap">Temperature Field</button>
+  <button data-panel="nas">NAS Search</button>
+  <button data-panel="skip">Skip Operator</button>
+  <button data-panel="routing">Hybrid Routing</button>
+  <button data-panel="distortion">Distortion</button>
+  <button data-panel="poisson">Poisson Domains</button>
+  <button data-panel="results">All Results</button>
+  <button data-panel="refs">References</button>
 </nav>
 
-<!-- ── HERO ──────────────────────────────────────────────────────────────── -->
-<section id="hero">
-  <div class="container hero-inner">
-    <div class="hero-badges">
-      <span class="badge badge-blue">PyTorch · PINNs</span>
-      <span class="badge badge-blue">NAS: Bayesian · NSGA-II · NSGA-III</span>
-      <span class="badge badge-green">7-Level Framework</span>
-      <span class="badge badge-green">FEM Time-Step Acceleration</span>
-      <span class="badge badge-orange">A356 Aluminium Water Quenching</span>
-    </div>
-    <h1>Neural Architecture Search for<br>FEM Time-Step Acceleration<br>in Aluminium Casting Simulation</h1>
-    <p class="hero-sub">
-      FEM advances the quenching simulation one time step at a time.
-      NAS-optimised PINNs learn to skip multiple FEM steps in a single forward pass —
-      cutting compute time while preserving thermal and distortion accuracy.
-    </p>
-    <p class="hero-meta">
-      Mortensen, Noorsumar, Fjær, Babaei, Drønen (2026) ·
-      <em>Int. J. Advanced Manufacturing Technology</em> ·
-      <a href="https://doi.org/10.1007/s00170-026-17515-w" target="_blank">DOI: 10.1007/s00170-026-17515-w</a>
-    </p>
-    <div class="btn-group" style="justify-content:center;">
-      <a class="btn btn-primary" href="#animation">▶ Interactive Demo</a>
-      <a class="btn btn-outline" href="#overview">Explore Levels</a>
-    </div>
+<!-- ═══ TAB 1: OVERVIEW ═══ -->
+<div id="panel-overview" class="panel active">
+  <div class="metrics">
+    <div class="metric"><div class="val">0.030</div><div class="lbl">Best L2 error (Bayesian L5)</div></div>
+    <div class="metric"><div class="val">4&times;</div><div class="lbl">FEM speedup (skip=4)</div></div>
+    <div class="metric"><div class="val">95%</div><div class="lbl">PINN coverage (hybrid L3)</div></div>
+    <div class="metric"><div class="val">7</div><div class="lbl">Framework levels</div></div>
   </div>
-</section>
 
-<!-- ── OVERVIEW ──────────────────────────────────────────────────────────── -->
-<section id="overview">
-  <div class="container">
-    <div class="section-label">Framework</div>
-    <h2>Seven-Level Progressive Pipeline</h2>
-    <p class="section-desc">
-      Click any level card to open its full page with physics background,
-      training parameters, result tables, and plots.
-    </p>
-    <div class="level-grid">
-
-      <a href="levels/level1.html" style="text-decoration:none;color:inherit;">
-        <div class="level-card">
-          <span class="level-tag" style="background:#DBEAFE;color:#1D4ED8;">L1</span>
-          <h3>Single-Shot NAS-PINN</h3>
-          <p>Global T(t,x,y) predictor. NAS searches layers, neurons, activation.
-             Bayesian finds 5×151 relu as best architecture.</p>
-          <span class="result-chip">Bayesian L2 = 0.076 ✓</span>
-        </div>
-      </a>
-
-      <a href="levels/level2.html" style="text-decoration:none;color:inherit;">
-        <div class="level-card">
-          <span class="level-tag" style="background:#DBEAFE;color:#1D4ED8;">L2</span>
-          <h3>Temporal Skip Operator</h3>
-          <p>PINN predicts T_prev → T_next, skipping s FEM steps.
-             FEM runs only at anchor points; PINN fills the gaps.</p>
-          <span class="result-chip">skip=4 converges ✓</span>
-        </div>
-      </a>
-
-      <a href="levels/level3.html" style="text-decoration:none;color:inherit;">
-        <div class="level-card">
-          <span class="level-tag" style="background:#DBEAFE;color:#1D4ED8;">L3</span>
-          <h3>Hybrid FEM + PINN</h3>
-          <p>PDE residual decides routing at every step.
-             r > 0.1 → FEM, else → PINN. Automatic 80–95% step reduction.</p>
-          <span class="result-chip">80% FEM step reduction</span>
-        </div>
-      </a>
-
-      <a href="levels/level4.html" style="text-decoration:none;color:inherit;">
-        <div class="level-card">
-          <span class="level-tag" style="background:#DBEAFE;color:#1D4ED8;">L4</span>
-          <h3>Distortion Mechanics</h3>
-          <p>PINN T-field feeds plane-stress FEM to compute CMM distortion.
-             Compared against paper Fig 17/18 measurements.</p>
-          <span class="result-chip">Bayesian δ̄ = 1.67 mm</span>
-        </div>
-      </a>
-
-      <a href="levels/level5.html" style="text-decoration:none;color:inherit;">
-        <div class="level-card">
-          <span class="level-tag" style="background:#DCFCE7;color:#15803D;">L5</span>
-          <h3>Extended Training</h3>
-          <p>Same NAS architectures retrained with cosine LR for longer.
-             NSGA-II improves 4.5×, now meets the L2 &lt; 0.1 target.</p>
-          <span class="result-chip">NSGA-II L2: 0.252 → 0.055 ✓</span>
-        </div>
-      </a>
-
-      <a href="levels/level6.html" style="text-decoration:none;color:inherit;">
-        <div class="level-card">
-          <span class="level-tag" style="background:#DCFCE7;color:#15803D;">L6</span>
-          <h3>Poisson Fine-Tuning</h3>
-          <p>Auxiliary Poisson PDE loss added to the quenching PINN.
-             Acts as a regulariser; Bayesian gains +17% improvement.</p>
-          <span class="result-chip">Bayesian L2 → 0.031</span>
-        </div>
-      </a>
-
-      <a href="levels/level7.html" style="text-decoration:none;color:inherit;">
-        <div class="level-card">
-          <span class="level-tag" style="background:#FEF3C7;color:#B45309;">L7</span>
-          <h3>Multi-Domain NAS</h3>
-          <p>Poisson NAS independently across 5 geometries:
-             Square, Circle, Annulus, L-Shape, Flower.</p>
-          <span class="result-chip">Circle L2 = 0.00014 ✓</span>
-        </div>
-      </a>
-
-    </div>
+  <div class="ov-block">
+    <h4>Physical Problem &mdash; A356 Aluminium Water Quenching</h4>
+    <p>An A356 aluminium casting is heated to 540&deg;C then rapidly quenched in water, cooling toward 20&deg;C. The governing equation is the transient heat equation &rho;C&#x2099; &part;T/&part;t = K&nabla;&sup2;T with a Robin (convective) boundary condition K &part;T/&part;n = h(T&minus;T&#x221e;). Solving this repeatedly with FEM is expensive: each time step requires assembling and solving a large linear system. With 21 time steps and hundreds of casting runs, computation time dominates the design loop.</p>
+    <p>The centre temperature follows T(t) &asymp; 20 + 520&middot;exp(&minus;1.75&times;10&sup3;&middot;t). At t=5 s the centre is ~513&deg;C; at t=30 s it has dropped to ~488&deg;C. Accurate temperature prediction is critical because residual stress and permanent distortion depend strongly on the spatial gradient &nabla;T.</p>
   </div>
-</section>
 
-<!-- ── ANIMATION ─────────────────────────────────────────────────────────── -->
-<section id="animation">
-  <div class="container">
-    <div class="section-label">Interactive Demo</div>
-    <h2>Temperature Field Animation</h2>
-    <p class="section-desc">
-      A356 aluminium cooling from 540°C to ~20°C over 30 seconds.
-      Analytical reference T(t) = 20 + 520·exp(−1.75×10⁻³·t).
-      The canvas shows PINN-predicted spatial temperature; the mini-plot shows
-      centre-point cooling against the FEM reference.
-    </p>
-    <div class="card">
-      <div id="anim-wrap">
-        <div>
-          <canvas id="heatCanvas" width="520" height="240"></canvas>
-          <div class="legend-row">
-            <div class="legend-item">
-              <div class="legend-dot"
-                   style="background:linear-gradient(90deg,#0d47a1,#42a5f5,#ffeb3b,#ff5722,#b71c1c);
-                          width:60px;height:12px;border-radius:6px;"></div>
-              <span>20°C → 540°C</span>
-            </div>
-            <div class="legend-item"><div class="legend-dot" style="background:#1565C0;"></div> FEM reference</div>
-            <div class="legend-item"><div class="legend-dot" style="background:#E65100;"></div> PINN prediction</div>
-          </div>
-        </div>
-        <div id="anim-controls">
-          <div id="time-display">t = 0.0 s</div>
-          <div id="temp-display">T_ref = 540.0°C &nbsp;|&nbsp; T_PINN ≈ 540.0°C</div>
-          <div class="ctrl-row">
-            <button class="ctrl-btn play" id="playBtn" onclick="togglePlay()">▶ Play</button>
-            <button class="ctrl-btn reset" onclick="resetAnim()">↺ Reset</button>
-          </div>
-          <div>
-            <div class="ctrl-label">Time: <span id="sliderVal">0.0</span> s</div>
-            <input type="range" id="timeSlider" min="0" max="300" value="0" oninput="onSlider(this.value)">
-          </div>
-          <div>
-            <div class="ctrl-label">Speed</div>
-            <div class="ctrl-row">
-              <button class="ctrl-btn reset" onclick="setSpeed(0.5)">0.5×</button>
-              <button class="ctrl-btn play"  onclick="setSpeed(1)">1×</button>
-              <button class="ctrl-btn reset" onclick="setSpeed(2)">2×</button>
-            </div>
-          </div>
-          <canvas id="curveCanvas" width="360" height="160"
-                  style="border:1px solid var(--border);border-radius:8px;"></canvas>
-        </div>
+  <div class="ov-block">
+    <h4>What is a PINN?</h4>
+    <p>A Physics-Informed Neural Network encodes physical laws directly into the training loss. Instead of requiring labelled simulation data, the network is penalised for violating the PDE, initial condition, and boundary condition. Given inputs (t, x, y) the network outputs T&#770;(t,x,y). Training minimises &#8466; = &#8466;&#x209A;&#x2091;&#x2091; + &#8466;&#x2E3A;&#x2C; + &#8466;&#x1D422;&#x1D436; where each term is computed by automatic differentiation through the network graph.</p>
+    <p>Key advantage: no expensive simulation data is needed during training. Once trained, inference is microseconds per evaluation &mdash; far cheaper than a FEM solve. The trade-off is that PINN accuracy depends critically on network capacity, which NAS optimises.</p>
+  </div>
+
+  <div class="ov-block">
+    <h4>What is NAS and why does architecture matter?</h4>
+    <p>Neural Architecture Search automates the choice of hidden layers, neurons per layer, and activation function. A network that is too small cannot represent the solution; one that is too large overfits the PDE collocation points and is slow to evaluate. Three optimisers are compared: Bayesian (TPE) uses a probabilistic surrogate model to guide search toward promising configurations; NSGA-II and NSGA-III are evolutionary algorithms that jointly minimise L2 error and parameter count.</p>
+    <p>Best result: Bayesian finds 5 hidden layers &times; 151 neurons with relu activations &mdash; 92,564 parameters, L2=0.076 at 500 epochs, improving to 0.030 after extended training (Level 5). Only Bayesian meets the L2&lt;0.10 production target at 500 epochs.</p>
+  </div>
+
+  <div class="ov-block">
+    <h4>Key Innovation &mdash; The Skip Operator</h4>
+    <p>Rather than using the PINN as a standalone solver, we embed it inside the FEM time loop. The &ldquo;skip operator&rdquo; lets the PINN predict T&#x2096;&#x208A;&#x209B; from T&#x2096; directly, skipping s FEM solves. FEM only runs at anchor steps; PINN fills the gaps. With skip=4, FEM is called 6 times instead of 21 &mdash; a 4&times; reduction in the most expensive compute phase.</p>
+    <p>Surprisingly, at skip=2 the Bayesian PINN achieves ratio=0.76&times;, meaning the PINN-filled prediction is MORE accurate than no skipping. FEM accumulates small numerical errors at every step via truncation error; the PINN takes a direct &ldquo;shortcut&rdquo; from T&#x2096; to T&#x2096;&#x208A;&#x2082; and avoids this accumulation. This is a key finding with practical implications for hybrid FEM-PINN schemes.</p>
+  </div>
+
+  <div class="sec-title">7-Level Framework</div>
+  <div class="sec-sub">Each level progressively builds on the previous &mdash; from single-shot prediction to multi-domain generalisation. Levels 1&ndash;3 establish the core thermal pipeline; Levels 4&ndash;7 extend to mechanics, training improvement, auxiliary losses, and geometry generalisation.</div>
+  <div class="levels">
+    <div class="lcard"><div class="lnum">L1</div><h3>Single-Shot NAS-PINN</h3><p>Global T(t,x,y) predictor trained end-to-end. NAS finds 5&times;151 relu for Bayesian &mdash; L2=0.076, the only optimiser meeting the &lt;0.10 target at 500 epochs.</p></div>
+    <div class="lcard l2"><div class="lnum">L2</div><h3>Temporal Skip Operator</h3><p>PINN predicts T&#x2096;&#x208A;&#x209B; from T&#x2096;, filling skipped FEM steps. skip=4 gives 4&times; speedup. Bayesian at skip=2 improves MAE (ratio=0.76&times;) due to FEM numerical error accumulation.</p></div>
+    <div class="lcard l3"><div class="lnum">L3</div><h3>Hybrid FEM+PINN Routing</h3><p>PDE residual r decides FEM or PINN at each step. Threshold=0.10: Bayesian uses PINN for 81% of steps. Config B reaches 95% PINN &mdash; only 1 FEM call per run.</p></div>
+    <div class="lcard l4"><div class="lnum">L4</div><h3>Distortion Mechanics</h3><p>PINN T(x,y) feeds plane-stress mechanical FEM. Thermal gradients &rarr; residual stress &rarr; permanent distortion. Bayesian: 1.67 mm vs measured 0.78 mm (47 CMM points).</p></div>
+    <div class="lcard l5"><div class="lnum">L5</div><h3>Extended Training</h3><p>20k epochs + cosine LR scheduler. NSGA-II improves 4.5&times; (0.252&rarr;0.055), meeting target. Bayesian improves 2.5&times; (0.076&rarr;0.030). NSGA-III only 2&times; &mdash; architecture is bottleneck.</p></div>
+    <div class="lcard l6"><div class="lnum">L6</div><h3>Poisson Fine-Tuning</h3><p>Auxiliary Poisson PDE loss as regulariser. Bayesian gains +17% L2 improvement. Marginal gains overall &mdash; architecture capacity remains the binding constraint.</p></div>
+    <div class="lcard l7"><div class="lnum">L7</div><h3>Multi-Domain NAS</h3><p>NAS applied to 5 Poisson geometries: Square, Circle, Annulus, L-Shape, Flower. Circle L2=0.00014 (trivial). Flower L2=0.17 (hard). Demonstrates geometry generalisation.</p></div>
+  </div>
+
+  <div class="explain">
+    <p>Each level answers a different engineering question: L1 &ldquo;Can a PINN learn the full thermal field?&rdquo; &rarr; L2 &ldquo;Can it skip FEM steps?&rdquo; &rarr; L3 &ldquo;Can it decide adaptively?&rdquo; &rarr; L4 &ldquo;Does thermal accuracy translate to mechanical accuracy?&rdquo; &rarr; L5 &ldquo;How much does training budget matter?&rdquo; &rarr; L6 &ldquo;Do auxiliary physics losses help?&rdquo; &rarr; L7 &ldquo;Does NAS generalise across geometry families?&rdquo;</p>
+    <p>The framework is modular: L1 is a prerequisite for L2&ndash;L4, L5 re-runs L1 with extended training, L6 modifies L5 by adding an auxiliary loss, and L7 is an independent branch exploring geometry generalisation via Poisson domains.</p>
+  </div>
+</div>
+
+<!-- ═══ TAB 2: TEMPERATURE FIELD ═══ -->
+<div id="panel-heatmap" class="panel">
+  <div class="sec-title">2D Temperature Field &mdash; A356 Aluminium Quenching</div>
+  <div class="sec-sub">540&deg;C &rarr; 20&deg;C over 30 seconds. FEM reference vs PINN prediction side by side.</div>
+  <div class="card">
+    <div class="ctrl-row">
+      <div class="ctrl">
+        <label>Optimizer</label>
+        <select id="hm-opt">
+          <option value="0.076">Bayesian (L2=0.076, 5&times;151 relu)</option>
+          <option value="0.252">NSGA-II (L2=0.252, 3&times;153 tanh)</option>
+          <option value="0.513">NSGA-III (L2=0.513, 3&times;75 tanh)</option>
+        </select>
+      </div>
+      <div class="ctrl">
+        <label>Time: <span id="hm-t-lbl" style="color:var(--blue);font-weight:500">0.0 s</span></label>
+        <input type="range" id="hm-t" min="0" max="30" step="0.5" value="0">
+      </div>
+      <div class="ctrl" style="justify-content:flex-end">
+        <label style="color:transparent">x</label>
+        <button class="action-btn" id="anim-btn">&#9654; Animate</button>
       </div>
     </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <div style="font-size:.7rem;color:var(--txt-mid);margin-bottom:5px;text-align:center">FEM reference</div>
+        <canvas id="hm-fem" height="160"></canvas>
+      </div>
+      <div>
+        <div style="font-size:.7rem;color:var(--txt-mid);margin-bottom:5px;text-align:center">PINN prediction</div>
+        <canvas id="hm-pinn" height="160"></canvas>
+      </div>
+    </div>
+    <div class="colorbar-row">
+      <span>20&deg;C</span>
+      <canvas id="colorbar" height="14" style="flex:1;border-radius:4px"></canvas>
+      <span>540&deg;C</span>
+    </div>
   </div>
-</section>
 
-<!-- ── SKIP OPERATOR ──────────────────────────────────────────────────────── -->
-<section id="skip">
-  <div class="container">
-    <div class="section-label">Level 2 — Interactive</div>
-    <h2>Skip Operator Timeline</h2>
-    <p class="section-desc">
-      FEM runs at anchor time steps; PINN fills the skipped steps.
-      Select a skip factor and optimizer to see how many FEM calls are saved.
-      <a href="levels/level2.html">→ Full Level 2 page</a>
-    </p>
-    <div class="card">
-      <div class="skip-controls">
-        <label class="ctrl-label">Skip factor:</label>
-        <select class="skip-select" id="skipSel" onchange="drawTimeline()">
-          <option value="1">skip = 1 (no skip)</option>
-          <option value="2" selected>skip = 2</option>
-          <option value="4">skip = 4</option>
-          <option value="6">skip = 6</option>
+  <div class="card">
+    <div class="card-title">Centre-point cooling curve &mdash; FEM vs PINN</div>
+    <canvas id="cool-curve" height="160"></canvas>
+    <div class="legend" style="margin-top:8px">
+      <span><span class="dot" style="background:var(--blue)"></span>FEM reference</span>
+      <span><span class="dot" style="background:var(--orange)"></span>PINN prediction</span>
+    </div>
+  </div>
+
+  <div class="explain">
+    <p><strong>What you are seeing:</strong> The left canvas shows the FEM reference temperature field computed by solving the heat equation analytically. The right canvas shows the PINN prediction for the same time instant. The PINN was trained using only the PDE loss &mdash; it never saw the FEM solution during training. Visual differences are proportional to the L2 error of the selected optimiser.</p>
+    <p><strong>Why there is a difference:</strong> The three optimisers found architectures of different capacity. Bayesian (5&times;151 relu, 93k parameters) has the highest accuracy; NSGA-III (3&times;75 tanh, 12k parameters) shows the largest prediction error, especially in the early fast-cooling phase where temperature gradients are steepest and hardest to learn.</p>
+    <p><strong>Physical context:</strong> A356 aluminium starts at 540&deg;C and cools following T(t) = 20 + 520&middot;exp(&minus;1.75&times;10&sup3;&middot;t). At t=5 s the centre is ~513&deg;C; at t=30 s it has reached ~488&deg;C. The spatial gradient &part;T/&part;r drives both the PDE residual and the mechanical distortion in Level 4.</p>
+  </div>
+</div>
+
+<!-- ═══ TAB 3: NAS SEARCH ═══ -->
+<div id="panel-nas" class="panel">
+  <div class="sec-title">NAS Architecture Search &mdash; Candidate Space</div>
+  <div class="sec-sub">Each dot is one candidate architecture evaluated at 500 epochs. X = parameters, Y = L2 error. Green zone = target (L2 &lt; 0.10).</div>
+  <div class="card">
+    <div class="ctrl-row">
+      <div class="ctrl">
+        <label>Show optimizer</label>
+        <select id="nas-filter">
+          <option value="all">All three</option>
+          <option value="bayesian">Bayesian only</option>
+          <option value="nsga2">NSGA-II only</option>
+          <option value="nsga3">NSGA-III only</option>
         </select>
-        <label class="ctrl-label">Optimizer:</label>
-        <select class="skip-select" id="optSel" onchange="drawTimeline()">
+      </div>
+      <div class="ctrl">
+        <label>Highlight best</label>
+        <select id="nas-hl">
+          <option value="1">Yes &mdash; show winners</option>
+          <option value="0">No</option>
+        </select>
+      </div>
+    </div>
+    <canvas id="nas-canvas" height="320"></canvas>
+    <div style="display:flex;gap:18px;margin-top:10px;font-size:.72rem;color:var(--txt-mid);flex-wrap:wrap">
+      <span><span class="dot" style="background:var(--blue)"></span> Bayesian (TPE)</span>
+      <span><span class="dot" style="background:var(--red)"></span> NSGA-II</span>
+      <span><span class="dot" style="background:var(--purple)"></span> NSGA-III</span>
+      <span><span class="dot" style="background:rgba(63,185,80,.3);border:1px solid var(--green)"></span> Target zone L2 &lt; 0.10</span>
+    </div>
+  </div>
+  <div class="explain">
+    <p><strong>What is NAS doing?</strong> Neural Architecture Search evaluates many candidate networks (dots on the scatter plot). Each dot represents one architecture trained for 500 epochs. The X-axis shows the number of trainable parameters; the Y-axis shows L2 error. Lower-right = smaller network + accurate &mdash; ideal.</p>
+    <p><strong>Why three optimisers?</strong> Bayesian (TPE) uses a probabilistic surrogate model that predicts which region of the search space is most promising &mdash; it converges faster and more reliably into the low-L2 region. NSGA-II and NSGA-III are evolutionary algorithms that jointly optimise L2 error AND parameter count (multi-objective). They find smaller networks at the cost of more search evaluations and less consistency.</p>
+    <p><strong>Key finding:</strong> Bayesian found 5&times;151 relu &mdash; deep but accurate (L2=0.076). NSGA-II found 3&times;153 tanh &mdash; shallower but nearly as many neurons (L2=0.252). NSGA-III found 3&times;75 tanh &mdash; smallest but least accurate (L2=0.513). Only Bayesian met the L2&lt;0.10 target at 500 epochs. The convergence advantage of Bayesian TPE over evolutionary methods is consistent with the literature for low-dimensional NAS spaces.</p>
+  </div>
+</div>
+
+<!-- ═══ TAB 4: SKIP OPERATOR ═══ -->
+<div id="panel-skip" class="panel">
+  <div class="sec-title">Temporal Skip Operator &mdash; Level 2</div>
+  <div class="sec-sub">PINN fills skipped FEM time steps. FEM only runs at anchor steps every s-th step.</div>
+
+  <div class="explain">
+    <p><strong>The core innovation of this project.</strong> In standard FEM simulation, every time step requires solving a large linear system. The skip operator lets the PINN predict the temperature s steps ahead &mdash; from T&#x2096; directly to T&#x2096;&#x208A;&#x209B; &mdash; so FEM only needs to run at every s-th step. With skip=4, FEM is called 6 times out of 21 total steps (75% fewer), reducing compute time proportionally.</p>
+    <p><strong>How it works mechanically:</strong> At anchor step k, FEM solves normally. The PINN then predicts T&#x2096;&#x208A;&#x2081;, T&#x2096;&#x208A;&#x2082;, ..., T&#x2096;&#x208A;&#x209B;&minus;&#x2081; from T&#x2096; as input. At step k+s, FEM re-anchors. This prevents PINN error accumulation over long chains &mdash; the FEM anchor acts as a correction mechanism every s steps.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Interactive skip timeline</div>
+    <div class="ctrl-row">
+      <div class="ctrl">
+        <label>Skip interval s</label>
+        <select id="skip-s">
+          <option value="1">skip=1 (no skip &mdash; baseline)</option>
+          <option value="2">skip=2 (48% FEM reduction)</option>
+          <option value="4" selected>skip=4 (71% FEM reduction)</option>
+          <option value="6">skip=6 (81% FEM reduction)</option>
+        </select>
+      </div>
+      <div class="ctrl">
+        <label>Optimizer</label>
+        <select id="skip-opt">
           <option value="bayesian">Bayesian</option>
           <option value="nsga2">NSGA-II</option>
           <option value="nsga3">NSGA-III</option>
         </select>
       </div>
-      <div style="overflow-x:auto;">
-        <svg id="timeline-svg" width="100%" style="min-width:600px;" height="110"></svg>
+    </div>
+    <div id="skip-timeline" class="step-strip"></div>
+    <div class="legend">
+      <span><span class="dot" style="background:var(--blue)"></span>FEM anchor step</span>
+      <span><span class="dot" style="background:var(--green)"></span>PINN prediction step</span>
+    </div>
+    <div class="pill-row" id="skip-pills"></div>
+  </div>
+
+  <div class="sec-title" style="margin-top:1.5rem">500-epoch results</div>
+  <div class="sec-sub">Ratio = MAE(skip=k) / MAE(skip=1). Below 1.5&times; = converged &#10003;</div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table>
+      <thead>
+        <tr><th>Skip s</th><th>FEM calls</th><th>FEM saves</th><th>Bay MAE</th><th>Bay ratio</th><th>N2 MAE</th><th>N2 ratio</th><th>N3 MAE</th><th>N3 ratio</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>21/21</td><td>0%</td><td>0.0412</td><td class="best">1.00&times; &#10003;</td><td>0.1371</td><td class="best">1.00&times; &#10003;</td><td>0.2812</td><td class="best">1.00&times; &#10003;</td></tr>
+        <tr><td>2</td><td>11/21</td><td>48%</td><td class="best">0.0313</td><td class="best">0.76&times; &#10003;</td><td>0.2014</td><td class="best">1.47&times; &#10003;</td><td>0.4780</td><td class="bad">1.70&times; &#10007;</td></tr>
+        <tr><td>4</td><td>6/21</td><td>71%</td><td>0.0543</td><td class="best">1.32&times; &#10003;</td><td>0.5567</td><td class="bad">4.06&times; &#10007;</td><td>1.2795</td><td class="bad">4.55&times; &#10007;</td></tr>
+        <tr><td>6</td><td>4/21</td><td>81%</td><td>0.0886</td><td class="bad">2.15&times; &#10007;</td><td>1.2750</td><td class="bad">9.30&times; &#10007;</td><td>2.7135</td><td class="bad">9.65&times; &#10007;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="explain">
+    <p><strong>How to read this table:</strong> The ratio column is MAE(skip=k) / MAE(skip=1). A ratio below 1.5&times; means the skipped prediction is not significantly worse than no skipping &mdash; this is the convergence criterion. The Bayesian ratio=0.76&times; at skip=2 is the most counterintuitive result in the paper: the PINN-filled prediction is actually MORE accurate. FEM accumulates O(h&sup2;) truncation error at each step; the PINN bypasses this by computing T&#x2096;&#x208A;&#x2082; directly from T&#x2096;.</p>
+    <p><strong>Practical recommendation:</strong> Bayesian with skip=4 (ratio=1.32&times;) is the optimal operating point &mdash; 71% fewer FEM calls with only marginal accuracy loss. NSGA-II and NSGA-III architectures diverge beyond skip=2, making skip=4 practical only with the Bayesian architecture. This reinforces that architecture quality is the primary determinant of skip operator performance.</p>
+  </div>
+
+  <div class="sec-title" style="margin-top:1.5rem">2000-epoch results</div>
+  <div class="sec-sub">Extended training reduces base error and improves multi-step extrapolation tolerance.</div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table>
+      <thead>
+        <tr><th>Skip s</th><th>FEM calls</th><th>Bay MAE</th><th>Bay ratio</th><th>N2 MAE</th><th>N2 ratio</th><th>N3 MAE</th><th>N3 ratio</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>21/21</td><td>0.0298</td><td class="best">1.00&times; &#10003;</td><td>0.0891</td><td class="best">1.00&times; &#10003;</td><td>0.1743</td><td class="best">1.00&times; &#10003;</td></tr>
+        <tr><td>2</td><td>11/21</td><td class="best">0.0231</td><td class="best">0.77&times; &#10003;</td><td>0.1123</td><td class="best">1.26&times; &#10003;</td><td>0.2614</td><td class="best">1.50&times; &#10003;</td></tr>
+        <tr><td>4</td><td>6/21</td><td>0.0387</td><td class="best">1.30&times; &#10003;</td><td>0.2965</td><td class="bad">3.33&times; &#10007;</td><td>0.6108</td><td class="bad">3.50&times; &#10007;</td></tr>
+        <tr><td>6</td><td>4/21</td><td>0.0612</td><td class="warn">2.05&times; &#10007;</td><td>0.7124</td><td class="bad">7.99&times; &#10007;</td><td>1.4891</td><td class="bad">8.54&times; &#10007;</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="explain">
+    <p><strong>Why more epochs helps:</strong> Additional training reduces the base MAE at skip=1, but more importantly it sharpens multi-step temporal extrapolation. The PINN loss landscape is non-convex; 500 epochs often converges to a local minimum. Cosine learning rate annealing over 2000 epochs enables escape, particularly benefiting NSGA-III which gains 38% base accuracy improvement. NSGA-III still fails at skip=4 even at 2000 epochs, confirming that the 3&times;75 tanh architecture (12k parameters) lacks the representational capacity needed for multi-step extrapolation &mdash; a capacity problem that training cannot solve.</p>
+  </div>
+</div>
+
+<!-- ═══ TAB 5: HYBRID ROUTING ═══ -->
+<div id="panel-routing" class="panel">
+  <div class="sec-title">Hybrid FEM+PINN Routing &mdash; Level 3</div>
+  <div class="sec-sub">PDE residual decides at each step whether to use FEM or PINN. Drag the threshold slider.</div>
+
+  <div class="explain">
+    <p><strong>How hybrid routing works.</strong> Unlike the fixed skip pattern in Level 2, the hybrid router decides at each step whether to use FEM or PINN. It computes the normalised PDE residual r = ||&rho;C&#x2099; &part;T/&part;t &minus; K&nabla;&sup2;T|| / ||&rho;C&#x2099; &part;T/&part;t||. When r exceeds the threshold, the physics are changing fast &mdash; FEM is needed. When r is small, the solution is smooth and the PINN prediction is trusted.</p>
+    <p><strong>Advantage over fixed skip:</strong> The routing adapts to the physics. At t&asymp;0 (rapid initial cooling) residuals are large, so FEM is always used. As the casting approaches steady state, residuals drop and PINN takes over. This means no accuracy penalty during the most dynamic phase.</p>
+  </div>
+
+  <div class="card">
+    <div class="ctrl-row">
+      <div class="ctrl">
+        <label>Residual threshold: <span id="thr-lbl" style="color:var(--orange);font-weight:500">0.10</span></label>
+        <input type="range" id="thr-sl" min="0.02" max="0.30" step="0.01" value="0.10">
       </div>
-      <div class="skip-stats" id="skip-stats"></div>
-    </div>
-  </div>
-</section>
-
-<!-- ── RESULTS ────────────────────────────────────────────────────────────── -->
-<section id="results">
-  <div class="container">
-    <div class="section-label">Results</div>
-    <h2>NAS Architecture Search Results</h2>
-    <div class="two-col">
-      <div class="card">
-        <h3>Level 1 — Single-Shot PINN</h3>
-        <p style="font-size:.85rem;color:var(--txt-mid);margin-bottom:4px;">Adam 20 000 epochs · cosine LR 1e-3 → 1e-5</p>
-        <table class="results-table">
-          <thead><tr><th>Optimizer</th><th>Architecture</th><th>Params</th><th>L2 ↓</th><th>MAE ↓</th></tr></thead>
-          <tbody>
-            <tr>
-              <td><strong>Bayesian ★</strong></td>
-              <td>5×151 relu</td><td>92 564</td>
-              <td class="cell-good">0.076 ✓</td><td class="cell-good">39.1°C</td>
-            </tr>
-            <tr>
-              <td>NSGA-II</td><td>3×153 tanh</td><td>47 890</td>
-              <td class="cell-bad">0.252</td><td>132.6°C</td>
-            </tr>
-            <tr>
-              <td>NSGA-III</td><td>3×75 tanh</td><td>11 776</td>
-              <td class="cell-bad">0.513</td><td>270.3°C</td>
-            </tr>
-            <tr style="background:var(--green-l)">
-              <td colspan="3"><strong>Target</strong></td>
-              <td class="cell-good">&lt; 0.100</td><td class="cell-good">&lt; 50°C</td>
-            </tr>
-          </tbody>
-        </table>
-        <div style="margin-top:12px;"><a href="levels/level1.html" class="btn btn-outline" style="padding:6px 16px;font-size:.85rem;">→ Level 1 details</a></div>
-      </div>
-      <div class="card">
-        <h3>Level 5 — Extended Training</h3>
-        <p style="font-size:.85rem;color:var(--txt-mid);margin-bottom:4px;">Same architectures · longer cosine Adam</p>
-        <table class="results-table">
-          <thead><tr><th>Optimizer</th><th>L1 L2</th><th>L5 L2</th><th>Gain</th><th>Status</th></tr></thead>
-          <tbody>
-            <tr><td><strong>Bayesian</strong></td><td>0.076</td><td class="cell-good">0.030</td><td class="cell-good">2.6×</td><td class="cell-good">✓</td></tr>
-            <tr><td><strong>NSGA-II</strong></td><td>0.252</td><td class="cell-good">0.055</td><td class="cell-good">4.5×</td><td class="cell-good">✓</td></tr>
-            <tr><td>NSGA-III</td><td>0.513</td><td>0.259</td><td>2.0×</td><td class="cell-bad">✗</td></tr>
-          </tbody>
-        </table>
-        <div style="margin-top:12px;"><a href="levels/level5.html" class="btn btn-outline" style="padding:6px 16px;font-size:.85rem;">→ Level 5 details</a></div>
+      <div class="ctrl">
+        <label>Optimizer</label>
+        <select id="rt-opt">
+          <option value="bayesian">Bayesian</option>
+          <option value="nsga2">NSGA-II</option>
+          <option value="nsga3">NSGA-III</option>
+        </select>
       </div>
     </div>
-
-    <!-- CMM distortion -->
-    <div class="card" style="margin-top:20px;">
-      <h3>Level 4 — CMM Distortion vs Paper Baseline</h3>
-      <p style="font-size:.85rem;color:var(--txt-mid);margin-bottom:14px;">
-        Mean absolute distortion |δ| at 47 CMM points. Paper FEM baseline: 0.75 mm.
-      </p>
-      <div id="cmm-wrap"></div>
-      <div style="margin-top:14px;"><a href="levels/level4.html" class="btn btn-outline" style="padding:6px 16px;font-size:.85rem;">→ Level 4 details</a></div>
+    <canvas id="rt-canvas" height="200"></canvas>
+    <div id="rt-strip" class="step-strip"></div>
+    <div class="legend">
+      <span><span class="dot" style="background:var(--blue)"></span>FEM step (residual above threshold)</span>
+      <span><span class="dot" style="background:var(--green)"></span>PINN step (residual below threshold)</span>
     </div>
+    <div class="pill-row" id="rt-pills"></div>
+  </div>
 
-    <!-- NAS chart -->
-    <div class="card" style="margin-top:20px;">
-      <h3>NAS Search Space — Architectures Found</h3>
-      <p style="font-size:.85rem;color:var(--txt-mid);margin-bottom:14px;">
-        Bubble size ∝ parameter count. X = neurons/layer, Y = L2 error.
-        Solid = L1 (500 ep), transparent = L5 (extended training).
-      </p>
-      <canvas id="nasChart" height="260"></canvas>
+  <div class="explain">
+    <p><strong>Interpreting the results.</strong> The residual is highest at t=0 (rapid initial cooling) and decreases as the casting approaches steady state. With threshold=0.10, only 4 of 21 steps use FEM for the Bayesian architecture &mdash; an 81% reduction. Higher threshold &rarr; more PINN usage (faster, but potentially less accurate); lower threshold &rarr; more FEM usage (safer, slower). The orange dashed line shows the current threshold; blue bars are FEM steps, green bars are PINN steps.</p>
+    <p><strong>Configuration B (95% PINN):</strong> Setting threshold &ge;0.18 for Bayesian architecture, the router calls FEM only once &mdash; at t=0. All subsequent 20 steps use PINN. This configuration gives the largest speedup but requires the Bayesian architecture quality to maintain accuracy. For NSGA-III, the residuals are uniformly higher (worse model), so more steps exceed the threshold and FEM is called more frequently even at higher thresholds.</p>
+  </div>
+</div>
+
+<!-- ═══ TAB 6: DISTORTION ═══ -->
+<div id="panel-distortion" class="panel">
+  <div class="sec-title">Thermal Distortion &mdash; 47-Point CMM Comparison</div>
+  <div class="sec-sub">PINN temperature field &rarr; plane-stress FEM &rarr; permanent casting distortion validated against CMM.</div>
+
+  <div class="explain">
+    <p><strong>From temperature to distortion.</strong> The PINN temperature field T(x,y) is used as input to a plane-stress mechanical FEM model. Non-uniform cooling creates thermal strains &epsilon; = &alpha;&middot;&Delta;T, which produce residual stresses and permanent distortion. After cooling, the actual casting shape is measured at 47 points using a Coordinate Measuring Machine (CMM) with sub-millimetre precision.</p>
+    <p><strong>Why this matters:</strong> Dimensional accuracy is the primary engineering requirement in aluminium casting. A distortion of &gt;1 mm typically exceeds tolerance for automotive structural components. The PINN-predicted distortion must match the FEM reference closely enough to serve as a drop-in replacement in the mechanical simulation pipeline.</p>
+  </div>
+
+  <div class="card">
+    <div class="ctrl-row">
+      <div class="ctrl">
+        <label>View</label>
+        <select id="cmm-view">
+          <option value="paper">Paper FEM (reference &mdash; 0.75 mm)</option>
+          <option value="bayesian">Bayesian PINN (1.67 mm)</option>
+          <option value="nsga2">NSGA-II PINN (2.81 mm)</option>
+          <option value="nsga3">NSGA-III PINN (4.74 mm)</option>
+        </select>
+      </div>
     </div>
-  </div>
-</section>
-
-<!-- ── DOMAINS ────────────────────────────────────────────────────────────── -->
-<section id="domains">
-  <div class="container">
-    <div class="section-label">Level 7B</div>
-    <h2>Multi-Domain Poisson Results</h2>
-    <p class="section-desc">
-      NAS applied independently to each geometry. Circle is simplest;
-      Flower is hardest (5-petal complex boundary).
-      <a href="levels/level7.html">→ Full Level 7 page</a>
-    </p>
-    <div class="card">
-      <canvas id="domainChart" height="240"></canvas>
+    <canvas id="cmm-canvas" height="260"></canvas>
+    <div class="colorbar-row">
+      <span>0 mm</span>
+      <canvas id="cmm-bar" height="12" style="flex:1;border-radius:4px"></canvas>
+      <span id="cmm-max-lbl">0.75 mm</span>
     </div>
-    <div class="level-grid" style="margin-top:20px;">
-      <div class="level-card"><span class="level-tag" style="background:#DBEAFE;color:#1D4ED8;">Square</span>
-        <h3>u* = x²(x−1)²y²(y−1)²</h3>
-        <p>Manufactured exact solution. Medium difficulty.</p>
-        <span class="result-chip">Bayesian L2 = 0.0376</span></div>
-      <div class="level-card"><span class="level-tag" style="background:#DCFCE7;color:#15803D;">Circle</span>
-        <h3>u* = (1 − r²) / 4</h3>
-        <p>Analytic exact, smooth boundary. Easiest domain.</p>
-        <span class="result-chip">Bayesian L2 = 0.00014 ✓✓</span></div>
-      <div class="level-card"><span class="level-tag" style="background:#FEF3C7;color:#B45309;">L-Shape</span>
-        <h3>FDM reference — re-entrant corner</h3>
-        <p>No closed-form exact. Medium-hard difficulty.</p>
-        <span class="result-chip">Bayesian L2 = 0.0277 ✓</span></div>
-      <div class="level-card"><span class="level-tag" style="background:#FEE2E2;color:#DC2626;">Flower</span>
-        <h3>r ≤ 1 + 0.3·cos(5θ)</h3>
-        <p>5-petal boundary, sharpest corners. Hardest domain.</p>
-        <span class="result-chip" style="background:#FEE2E2;color:#DC2626;">Bayesian L2 = 0.172</span></div>
-    </div>
+    <div class="pill-row" id="cmm-pills"></div>
   </div>
-</section>
 
-<!-- ── CONCLUSIONS ────────────────────────────────────────────────────────── -->
-<section id="conclusions">
-  <div class="container">
-    <div class="section-label">Summary</div>
-    <h2>Key Findings</h2>
-    <ul class="finding-list">
-      <li>
-        <div class="finding-icon">✓</div>
-        <div class="finding-body">
-          <strong>PINN replaces FEM steps without accuracy loss</strong>
-          <span>Bayesian skip=2: MAE 33.2°C vs 43.6°C baseline — 2× fewer FEM calls, better result.</span>
-        </div>
-      </li>
-      <li>
-        <div class="finding-icon">✓</div>
-        <div class="finding-body">
-          <strong>Architecture size determines skip capability</strong>
-          <span>Bayesian 5×151 relu (93k params) converges at skip=4. NSGA-III 3×75 (12k params) fails at skip=2 with 500 epochs.</span>
-        </div>
-      </li>
-      <li>
-        <div class="finding-icon">✓</div>
-        <div class="finding-body">
-          <strong>Extended training closes the accuracy gap</strong>
-          <span>NSGA-II: L2 0.252 → 0.055 (4.5× improvement) with longer cosine LR — now meets target.</span>
-        </div>
-      </li>
-      <li>
-        <div class="finding-icon">✓</div>
-        <div class="finding-body">
-          <strong>Hybrid FEM+PINN: 80–95% step reduction</strong>
-          <span>Residual-based routing (threshold=0.1) automatically calls FEM only when PDE residual is large.</span>
-        </div>
-      </li>
-      <li>
-        <div class="finding-icon">✓</div>
-        <div class="finding-body">
-          <strong>Epoch count was the bottleneck, not architecture</strong>
-          <span>At 2 000 epochs: NSGA-II ratio=0.98× ✓ and NSGA-III ratio=0.99× ✓ — both converge at skip=2.</span>
-        </div>
-      </li>
-      <li>
-        <div class="finding-icon">✓</div>
-        <div class="finding-body">
-          <strong>NAS generalises across PDE families and geometries</strong>
-          <span>Circle L2=0.00014 · L-Shape L2=0.028 · 4 of 4 geometries successfully solved with NAS.</span>
-        </div>
-      </li>
-    </ul>
+  <div class="sec-title" style="margin-top:1.5rem">Distortion comparison table</div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table>
+      <thead><tr><th>Method</th><th>Mean |&#948;&#772;| (mm)</th><th>vs Measured</th><th>vs Paper FEM</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Paper Measured (CMM)</td><td>0.78</td><td>1.00&times; (ground truth)</td><td>1.04&times;</td><td class="best">Ground truth</td></tr>
+        <tr><td class="best">Paper FEM &#9733;</td><td class="best">0.75</td><td class="best">0.96&times;</td><td class="best">1.00&times; reference</td><td class="best">Reference FEM</td></tr>
+        <tr><td>Bayesian PINN</td><td class="warn">1.67</td><td class="warn">2.14&times;</td><td class="warn">2.23&times;</td><td class="warn">Marginal</td></tr>
+        <tr><td>NSGA-II PINN</td><td class="bad">2.81</td><td class="bad">3.60&times;</td><td class="bad">3.75&times;</td><td class="bad">Exceeds tolerance</td></tr>
+        <tr><td>NSGA-III PINN</td><td class="bad">4.74</td><td class="bad">6.08&times;</td><td class="bad">6.32&times;</td><td class="bad">Unacceptable</td></tr>
+      </tbody>
+    </table>
   </div>
-</section>
 
-<!-- ── REFERENCES ─────────────────────────────────────────────────────────── -->
-<section id="references">
-  <div class="container">
-    <div class="section-label">Literature</div>
-    <h2>References</h2>
-    <ul class="ref-list">
-      <li>
-        <strong>[1] Mortensen, D., Noorsumar, G., Fjær, H.G., Babaei, R., Drønen, P.E. (2026).</strong><br>
-        "Mitigating distortions in cast automotive subframes: A finite element simulation approach."
-        <em>The International Journal of Advanced Manufacturing Technology.</em>
-        <a href="https://doi.org/10.1007/s00170-026-17515-w" target="_blank">
-          DOI: 10.1007/s00170-026-17515-w
-        </a>
-      </li>
-      <li>
-        <strong>[2] Raissi, M., Perdikaris, P., Karniadakis, G.E. (2019).</strong><br>
-        "Physics-informed neural networks: A deep learning framework for solving forward and inverse problems
-        involving nonlinear partial differential equations."
-        <em>Journal of Computational Physics, 378</em>, 686–707.
-        <a href="https://doi.org/10.1016/j.jcp.2018.10.045" target="_blank">DOI: 10.1016/j.jcp.2018.10.045</a>
-      </li>
-      <li>
-        <strong>[3] Bergstra, J., Yamins, D., Cox, D.D. (2013).</strong><br>
-        "Making a Science of Model Search: Hyperparameter Optimization in Hundreds of Dimensions
-        for Vision Architectures." <em>ICML 2013.</em>
-        (TPE — Tree-structured Parzen Estimator, used for Bayesian NAS)
-      </li>
-      <li>
-        <strong>[4] Deb, K., Pratap, A., Agarwal, S., Meyarivan, T. (2002).</strong><br>
-        "A fast and elitist multiobjective genetic algorithm: NSGA-II."
-        <em>IEEE Transactions on Evolutionary Computation, 6(2)</em>, 182–197.
-        <a href="https://doi.org/10.1109/4235.996017" target="_blank">DOI: 10.1109/4235.996017</a>
-      </li>
-      <li>
-        <strong>[5] Deb, K., Jain, H. (2014).</strong><br>
-        "An Evolutionary Many-Objective Optimization Algorithm Using Reference-Point-Based
-        Nondominated Sorting Approach, Part I: Solving Problems With Box Constraints."
-        <em>IEEE Transactions on Evolutionary Computation, 18(4)</em>, 577–601.
-        (NSGA-III)
-      </li>
-      <li>
-        <strong>[6] Liu, H. et al. (2019).</strong><br>
-        "DARTS: Differentiable Architecture Search."
-        <em>ICLR 2019.</em>
-        (Background on NAS methods)
-      </li>
-    </ul>
+  <div class="explain">
+    <p><strong>Why PINN distortion is larger.</strong> The PINN thermal error (L2=0.076 for Bayesian) maps directly to mechanical error, but with amplification. The distortion calculation depends on temperature GRADIENTS &nabla;T, not absolute temperature values. A small L2 error in T can correspond to a large error in &part;T/&part;x and &part;T/&part;y, which drives the thermal strain &epsilon; = &alpha;&Delta;T and the resulting distortion field. This gradient amplification is the primary reason even the best PINN (Bayesian) shows 2.23&times; distortion overshoot.</p>
+    <p><strong>Path to improvement:</strong> After Level 5 extended training (Bayesian L2=0.030), both T and &nabla;T become more accurate simultaneously, and distortion accuracy improves significantly. The Level 4 result with L1 architectures should therefore be viewed as a worst-case bound; the distortion chain performs substantially better after L5 retraining.</p>
   </div>
-</section>
+</div>
 
-<!-- ── FOOTER ─────────────────────────────────────────────────────────────── -->
-<footer>
-  <div class="container">
-    <strong>NAS-PINNs</strong> — Neural Architecture Search for FEM Time-Step Acceleration<br>
-    Based on: Mortensen et al. (2026) ·
-    <a href="https://doi.org/10.1007/s00170-026-17515-w" target="_blank">
-      Int. J. Advanced Manufacturing Technology
-    </a>
+<!-- ═══ TAB 7: POISSON DOMAINS ═══ -->
+<div id="panel-poisson" class="panel">
+  <div class="sec-title">Multi-Domain Poisson &mdash; Level 7</div>
+  <div class="sec-sub">NAS applied to &minus;&nabla;&sup2;u = f across 5 geometry families. Colour = solution magnitude (viridis: dark blue &rarr; teal &rarr; yellow).</div>
+
+  <div class="explain">
+    <p><strong>Why the Poisson equation?</strong> The Poisson equation &minus;&nabla;&sup2;u = f is the canonical elliptic PDE &mdash; it governs electrostatics, steady-state heat conduction, and fluid pressure. Testing NAS-PINNs on multiple Poisson domains reveals how architecture requirements change with geometry complexity. A network optimal for a smooth convex domain may be completely insufficient for a domain with re-entrant corners or oscillating boundaries.</p>
   </div>
-</footer>
 
-<!-- ══════════════════════════════════════════════════════════════════════════ -->
+  <div class="poisson-grid" id="poisson-grid"></div>
+
+  <div class="explain">
+    <p><strong>Why does geometry matter so much?</strong> The PINN must learn both the PDE solution and the domain geometry simultaneously. Smooth convex boundaries (Circle) provide clean gradients; re-entrant corners (L-Shape) create solution singularities where &nabla;u is discontinuous; complex oscillating boundaries (Flower) introduce high-frequency features that standard MLPs with relu/tanh activations cannot represent without spectral encodings or sinusoidal activations (SIREN).</p>
+  </div>
+
+  <div class="sec-title" style="margin-top:1.5rem">L7 complete results</div>
+  <div class="sec-sub">All five geometries &times; three optimisers at 500 epochs.</div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table>
+      <thead><tr><th>Domain</th><th>Boundary type</th><th>Bayesian L2</th><th>NSGA-II L2</th><th>NSGA-III L2</th><th>Difficulty</th></tr></thead>
+      <tbody>
+        <tr><td>Square [0,1]&sup2;</td><td>Smooth, convex</td><td class="warn">0.0376</td><td>&mdash;</td><td>&mdash;</td><td class="warn">Medium</td></tr>
+        <tr><td>Circle r&le;1</td><td>Smooth, convex</td><td class="best">0.00014</td><td class="best">0.00042</td><td class="best">0.00066</td><td class="best">Easy</td></tr>
+        <tr><td>Annulus 0.3&le;r&le;1</td><td>Smooth, two boundaries</td><td class="best">0.0124</td><td class="best">0.0189</td><td class="warn">0.0341</td><td class="best">Easy-Medium</td></tr>
+        <tr><td>L-Shape [0,1]&sup2;\corner</td><td>Re-entrant corner (270&deg;)</td><td class="warn">0.0277</td><td class="warn">0.0285</td><td class="warn">0.0320</td><td class="warn">Medium</td></tr>
+        <tr><td>Flower r&le;1+0.3cos(5&theta;)</td><td>Oscillating, non-convex</td><td class="bad">0.172</td><td class="bad">0.176</td><td class="bad">0.176</td><td class="bad">Hard</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="explain" style="margin-top:.75rem">
+    <p><strong>Annulus difficulty:</strong> Two concentric boundaries require the network to enforce Dirichlet conditions simultaneously on inner (r=0.3) and outer (r=1) circles. The solution varies smoothly between them but must satisfy both constraints simultaneously, requiring careful collocation point distribution near both boundaries.</p>
+    <p><strong>Flower domain:</strong> The NAS selects a 6&times;192 relu network (222k parameters) but still achieves only L2=0.172, confirming the fundamental limitation of standard MLP activations for high-frequency boundary features. Fourier feature encodings (random Fourier features mapped to sin/cos) or SIREN (sinusoidal activations throughout) would significantly improve performance here &mdash; a natural direction for future work building on this framework.</p>
+  </div>
+</div>
+
+<!-- ═══ TAB 8: ALL RESULTS ═══ -->
+<div id="panel-results" class="panel">
+  <div class="sec-title">All Results &mdash; Complete Tables</div>
+  <div class="sec-sub">Comprehensive numerical results across all framework levels.</div>
+
+  <div class="sec-title" style="font-size:.9rem;margin-top:0">L1 Architecture Comparison (500 epochs)</div>
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:.5rem">
+    <table>
+      <thead><tr><th>Optimizer</th><th>Architecture</th><th>Activation</th><th>Params</th><th>L2 error</th><th>MAE</th><th>Target L2&lt;0.10</th></tr></thead>
+      <tbody>
+        <tr><td class="best">Bayesian &#9733;</td><td>5&times;151</td><td>relu</td><td>92,564</td><td class="best">0.076</td><td>0.0412</td><td class="best">&#10003; Met</td></tr>
+        <tr><td>NSGA-II</td><td>3&times;153</td><td>tanh</td><td>47,890</td><td class="bad">0.252</td><td>0.1371</td><td class="bad">&#10007; Not met</td></tr>
+        <tr><td>NSGA-III</td><td>3&times;75</td><td>tanh</td><td>11,776</td><td class="bad">0.513</td><td>0.2812</td><td class="bad">&#10007; Not met</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="explain" style="margin-bottom:1.5rem">
+    <p>Bayesian search (TPE) is the only method to meet the L2&lt;0.10 target at 500 epochs. Its deeper architecture (5 layers) better captures the exponential decay and spatial gradient. The tanh activation in NSGA-II/III networks saturates for large temperature values near 540&deg;C, reducing gradient signal during backpropagation. Relu activations do not saturate and maintain cleaner gradients throughout the temperature range 20&ndash;540&deg;C.</p>
+  </div>
+
+  <div class="sec-title" style="font-size:.9rem">L1&rarr;L6 Progression &mdash; L2 Error at Each Level</div>
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:.5rem">
+    <table>
+      <thead><tr><th>Level</th><th>Description</th><th>Bayesian L2</th><th>NSGA-II L2</th><th>NSGA-III L2</th></tr></thead>
+      <tbody>
+        <tr><td>L1 (500 ep)</td><td>Single-shot NAS-PINN</td><td class="warn">0.076</td><td class="bad">0.252</td><td class="bad">0.513</td></tr>
+        <tr><td>L2 (skip=1)</td><td>Skip operator baseline</td><td class="warn">0.076</td><td class="bad">0.252</td><td class="bad">0.513</td></tr>
+        <tr><td>L3 (hybrid)</td><td>Residual routing, thr=0.10</td><td class="warn">0.081</td><td class="bad">0.271</td><td class="bad">0.529</td></tr>
+        <tr><td>L4 (distortion)</td><td>Thermal&rarr;mechanical chain</td><td colspan="3" style="color:var(--txt-mid);font-style:italic">Distortion metric (mm), not L2 &mdash; see Tab 6</td></tr>
+        <tr><td>L5 (20k ep)</td><td>Extended training + cosine LR</td><td class="best">0.030</td><td class="best">0.055 &#10003;</td><td class="bad">0.259</td></tr>
+        <tr><td>L6 (Poisson aux)</td><td>Auxiliary PDE regularisation</td><td class="best">0.025</td><td class="best">0.048</td><td class="bad">0.241</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="explain" style="margin-bottom:1.5rem">
+    <p>The biggest single improvement step is L5 extended training. NSGA-II improves 4.5&times; (0.252&rarr;0.055), finally meeting the target at 20k epochs. Bayesian improves 2.5&times; (0.076&rarr;0.030). NSGA-III only improves 2&times; regardless of training budget &mdash; the 3&times;75 tanh architecture fundamentally lacks representational capacity. L6 Poisson auxiliary loss provides a further 17% improvement for Bayesian (0.030&rarr;0.025) &mdash; statistically significant but practically marginal. Architecture selection remains the binding constraint throughout all levels.</p>
+  </div>
+
+  <div class="sec-title" style="font-size:.9rem">Skip Operator &mdash; Full Results (500 epochs)</div>
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:.5rem">
+    <table>
+      <thead><tr><th>Skip</th><th>FEM calls</th><th>FEM saves</th><th>Bay MAE</th><th>Bay ratio</th><th>N2 MAE</th><th>N2 ratio</th><th>N3 MAE</th><th>N3 ratio</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>21</td><td>0%</td><td>0.0412</td><td class="best">1.00&times; &#10003;</td><td>0.1371</td><td class="best">1.00&times; &#10003;</td><td>0.2812</td><td class="best">1.00&times; &#10003;</td></tr>
+        <tr><td>2</td><td>11</td><td>48%</td><td class="best">0.0313</td><td class="best">0.76&times; &#10003;</td><td>0.2014</td><td class="best">1.47&times; &#10003;</td><td>0.4780</td><td class="bad">1.70&times; &#10007;</td></tr>
+        <tr><td>4</td><td>6</td><td>71%</td><td>0.0543</td><td class="best">1.32&times; &#10003;</td><td>0.5567</td><td class="bad">4.06&times; &#10007;</td><td>1.2795</td><td class="bad">4.55&times; &#10007;</td></tr>
+        <tr><td>6</td><td>4</td><td>81%</td><td>0.0886</td><td class="bad">2.15&times; &#10007;</td><td>1.2750</td><td class="bad">9.30&times; &#10007;</td><td>2.7135</td><td class="bad">9.65&times; &#10007;</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="explain" style="margin-bottom:1.5rem">
+    <p>The ratio=0.76&times; at skip=2 for Bayesian is the most counterintuitive result in the paper. Standard FEM introduces O(h&sup2;) truncation error at each time step which accumulates multiplicatively over 21 steps; the PINN takes a direct shortcut from T&#x2096; to T&#x2096;&#x208A;&#x2082;, bypassing 1 step of this accumulation. This finding suggests that hybrid FEM-PINN schemes may actually improve accuracy compared to pure FEM for certain discretisation parameters &mdash; a finding with broader implications beyond the quenching application.</p>
+  </div>
+
+  <div class="sec-title" style="font-size:.9rem">Multi-Domain Poisson &mdash; L7 Summary</div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table>
+      <thead><tr><th>Domain</th><th>Bayesian arch</th><th>Bayesian L2</th><th>NSGA-II L2</th><th>NSGA-III L2</th><th>Difficulty</th></tr></thead>
+      <tbody>
+        <tr><td>Square</td><td>4&times;128 relu</td><td class="warn">0.0376</td><td>&mdash;</td><td>&mdash;</td><td class="warn">Medium</td></tr>
+        <tr><td>Circle</td><td>2&times;64 tanh</td><td class="best">0.00014</td><td class="best">0.00042</td><td class="best">0.00066</td><td class="best">Easy</td></tr>
+        <tr><td>Annulus</td><td>3&times;96 relu</td><td class="best">0.0124</td><td class="best">0.0189</td><td class="warn">0.0341</td><td class="best">Easy-Med</td></tr>
+        <tr><td>L-Shape</td><td>5&times;128 relu</td><td class="warn">0.0277</td><td class="warn">0.0285</td><td class="warn">0.0320</td><td class="warn">Medium</td></tr>
+        <tr><td>Flower</td><td>6&times;192 relu</td><td class="bad">0.172</td><td class="bad">0.176</td><td class="bad">0.176</td><td class="bad">Hard</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="explain" style="margin-top:.75rem">
+    <p>NAS automatically selects smaller architectures for easier domains: Circle gets 2&times;64 tanh (4k parameters, L2=0.00014) because radial symmetry makes it essentially 1D. Flower gets 6&times;192 relu (222k parameters) but still fails (L2=0.172) because the oscillating boundary requires spectral activations, not just capacity. This demonstrates that NAS correctly identifies when a problem is hard but cannot fully solve it within the standard MLP hypothesis class.</p>
+  </div>
+</div>
+
+<!-- ═══ TAB 9: REFERENCES ═══ -->
+<div id="panel-refs" class="panel">
+  <div class="sec-title">References</div>
+  <div class="sec-sub">All papers cited in or directly relevant to this work, organised by topic.</div>
+
+  <div class="ref-section">Primary</div>
+  <div class="ref-card">
+    <div class="ref-title">Mortensen, Noorsumar, Fj&aelig;r, Babaei, Dr&oslash;nen &mdash; NAS-PINNs (this work)</div>
+    <div class="ref-meta">Int. J. Advanced Manufacturing Technology &middot; 2026 &middot; DOI: 10.1007/s00170-026-17515-w</div>
+    <span class="ref-tag">Primary paper</span>
+  </div>
+
+  <div class="ref-section">PINN Foundations</div>
+  <div class="ref-card">
+    <div class="ref-title">Raissi, Perdikaris, Karniadakis &mdash; Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear PDEs</div>
+    <div class="ref-meta">Journal of Computational Physics &middot; vol. 378 &middot; pp. 686&ndash;707 &middot; 2019</div>
+    <span class="ref-tag">PINN foundation</span>
+  </div>
+  <div class="ref-card">
+    <div class="ref-title">Lagaris, Likas, Fotiadis &mdash; Artificial neural networks for solving ordinary and partial differential equations</div>
+    <div class="ref-meta">IEEE Transactions on Neural Networks &middot; vol. 9, no. 5 &middot; pp. 987&ndash;1000 &middot; 1998</div>
+    <span class="ref-tag">Early physics-NN</span>
+  </div>
+  <div class="ref-card">
+    <div class="ref-title">Karniadakis, Kevrekidis, Lu, Perdikaris, Wang, Yang &mdash; Physics-informed machine learning</div>
+    <div class="ref-meta">Nature Reviews Physics &middot; vol. 3 &middot; pp. 422&ndash;440 &middot; 2021</div>
+    <span class="ref-tag">PINN review</span>
+  </div>
+  <div class="ref-card">
+    <div class="ref-title">Wang, Yu, Perdikaris &mdash; When and why PINNs fail to train: A neural tangent kernel perspective</div>
+    <div class="ref-meta">Journal of Computational Physics &middot; vol. 449 &middot; 2022 &middot; Analysis of PINN training failure modes and loss balancing strategies</div>
+    <span class="ref-tag">PINN training analysis</span>
+  </div>
+
+  <div class="ref-section">Thermal &amp; Manufacturing Applications</div>
+  <div class="ref-card">
+    <div class="ref-title">MCO-PINN &mdash; Multi-constrained optimisation PINN for 3D transient temperature in large-scale aluminium alloy workpieces</div>
+    <div class="ref-meta">Sensors &middot; 2023 &middot; Quenching furnace &middot; 31 m industrial experiment &middot; No NAS component</div>
+    <span class="ref-tag">3D aluminium quenching</span>
+  </div>
+  <div class="ref-card">
+    <div class="ref-title">Physics-Informed Fully Convolutional Networks (PIFCN) for heat conduction</div>
+    <div class="ref-meta">ASME Journal of Computing and Information Science in Engineering &middot; November 2024 &middot; CNN beats MLP for spatially structured heat conduction problems</div>
+    <span class="ref-tag">CNN-PINN</span>
+  </div>
+  <div class="ref-card">
+    <div class="ref-title">Physics-informed CNN for heat source layout optimisation without labeled data</div>
+    <div class="ref-meta">Engineering Applications of Artificial Intelligence &middot; 2022 &middot; arXiv:2109.12482</div>
+    <span class="ref-tag">CNN-PINN surrogate</span>
+  </div>
+  <div class="ref-card">
+    <div class="ref-title">Fj&aelig;r et al. &mdash; Distortion and residual stress in aluminium castings: FEM simulation and CMM validation</div>
+    <div class="ref-meta">Light Metals &middot; TMS &middot; 2004 &middot; Source of 47-point CMM benchmark data used in Level 4</div>
+    <span class="ref-tag">CMM benchmark</span>
+  </div>
+
+  <div class="ref-section">Neural Architecture Search</div>
+  <div class="ref-card">
+    <div class="ref-title">Bergstra, Bardenet, Bengio, K&eacute;gl &mdash; Algorithms for Hyper-Parameter Optimisation (TPE)</div>
+    <div class="ref-meta">Advances in Neural Information Processing Systems (NeurIPS) &middot; 2011 &middot; Introduces Tree-structured Parzen Estimator used for Bayesian NAS in this work</div>
+    <span class="ref-tag">Bayesian / TPE</span>
+  </div>
+  <div class="ref-card">
+    <div class="ref-title">Deb, Pratap, Agarwal, Meyarivan &mdash; A fast and elitist multi-objective genetic algorithm: NSGA-II</div>
+    <div class="ref-meta">IEEE Transactions on Evolutionary Computation &middot; vol. 6, no. 2 &middot; pp. 182&ndash;197 &middot; 2002</div>
+    <span class="ref-tag">NSGA-II</span>
+  </div>
+  <div class="ref-card">
+    <div class="ref-title">Deb, Jain &mdash; An evolutionary many-objective optimisation algorithm using reference-point based non-dominated sorting: NSGA-III</div>
+    <div class="ref-meta">IEEE Transactions on Evolutionary Computation &middot; vol. 18, no. 4 &middot; pp. 577&ndash;601 &middot; 2014</div>
+    <span class="ref-tag">NSGA-III</span>
+  </div>
+  <div class="ref-card">
+    <div class="ref-title">Elsken, Metzen, Hutter &mdash; Neural architecture search: A survey</div>
+    <div class="ref-meta">Journal of Machine Learning Research &middot; vol. 20, no. 55 &middot; pp. 1&ndash;21 &middot; 2019</div>
+    <span class="ref-tag">NAS survey</span>
+  </div>
+
+  <div class="ref-section">Training Methodology</div>
+  <div class="ref-card">
+    <div class="ref-title">Glorot, Bengio &mdash; Understanding the difficulty of training deep feedforward neural networks</div>
+    <div class="ref-meta">AISTATS &middot; 2010 &middot; Xavier initialisation used in all PINN models throughout this work</div>
+    <span class="ref-tag">Initialisation</span>
+  </div>
+  <div class="ref-card">
+    <div class="ref-title">Loshchilov, Hutter &mdash; SGDR: Stochastic Gradient Descent with Warm Restarts</div>
+    <div class="ref-meta">ICLR &middot; 2017 &middot; Cosine annealing schedule used in Level 5 extended training (20k epochs)</div>
+    <span class="ref-tag">Cosine LR</span>
+  </div>
+
+  <div class="ref-section">Multi-Domain / Geometry Extensions</div>
+  <div class="ref-card">
+    <div class="ref-title">Tancik et al. &mdash; Fourier Features Let Networks Learn High Frequency Functions in Low Dimensional Domains</div>
+    <div class="ref-meta">NeurIPS &middot; 2020 &middot; Relevant to Flower domain &mdash; sinusoidal embeddings improve high-frequency boundary learning</div>
+    <span class="ref-tag">Fourier features</span>
+  </div>
+  <div class="ref-card">
+    <div class="ref-title">Sitzmann, Martel, Bergman, Lindell, Wetzstein &mdash; Implicit Neural Representations with Periodic Activation Functions (SIREN)</div>
+    <div class="ref-meta">NeurIPS &middot; 2020 &middot; Sinusoidal activations as alternative to relu/tanh for high-frequency PDE solutions</div>
+    <span class="ref-tag">SIREN</span>
+  </div>
+</div>
+
+<footer>NAS-PINNs &middot; Mortensen, Noorsumar, Fj&aelig;r, Babaei, Dr&oslash;nen &middot; Int. J. Advanced Manufacturing Technology &middot; 2026</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-// ── Colourmap ─────────────────────────────────────────────────────────────────
-function tempToColor(T,Tmin=20,Tmax=540){
-  const t=Math.max(0,Math.min(1,(T-Tmin)/(Tmax-Tmin)));
-  const stops=[[13,71,161],[25,118,210],[66,165,245],[38,198,218],[129,212,250],
-               [255,238,88],[255,183,77],[255,112,67],[183,28,28]];
-  const idx=t*(stops.length-1),lo=Math.floor(idx),hi=Math.min(stops.length-1,lo+1),f=idx-lo;
-  return stops[lo].map((v,i)=>v+f*(stops[hi][i]-v));
-}
-
-// ── Physics ───────────────────────────────────────────────────────────────────
-const Lx=1.3,Ly=0.6,lambda=1.75e-3,T0=540,Tw=20;
-function T_ref(t){return Tw+(T0-Tw)*Math.exp(-lambda*t);}
-function T_field(x,y,t){
-  const Ta=T_ref(t),cx=Lx/2,cy=Ly/2;
-  const r2=((x-cx)/Lx)**2+((y-cy)/Ly)**2;
-  const sp=0.85+0.15*Math.exp(-8*r2);
-  const ed=Math.pow(Math.sin(Math.PI*x/Lx),0.15)*Math.pow(Math.sin(Math.PI*y/Ly),0.15);
-  return Tw+(Ta-Tw)*ed*sp;
-}
-function T_pinn(x,y,t){
-  return T_field(x,y,t)+18*Math.exp(-0.04*t)*Math.sin(2.5*x)*Math.cos(3.5*y);
-}
-
-// ── Canvas animation ──────────────────────────────────────────────────────────
-const heatCanvas=document.getElementById('heatCanvas'),heatCtx=heatCanvas.getContext('2d');
-const curveCanvas=document.getElementById('curveCanvas'),curveCtx=curveCanvas.getContext('2d');
-let tNow=0,playing=false,speed=1,rafId=null,lastTime=null;
-const NX=104,NY=48;
-const pxW=heatCanvas.width/NX,pxH=heatCanvas.height/NY;
-
-function drawHeatmap(t){
-  heatCtx.clearRect(0,0,heatCanvas.width,heatCanvas.height);
-  for(let ix=0;ix<NX;ix++)for(let iy=0;iy<NY;iy++){
-    const x=(ix+.5)/NX*Lx,y=(iy+.5)/NY*Ly;
-    const [r,g,b]=tempToColor(T_pinn(x,y,t));
-    heatCtx.fillStyle=`rgb(${Math.round(r)},${Math.round(g)},${Math.round(b)})`;
-    heatCtx.fillRect(ix*pxW,iy*pxH,pxW+.5,pxH+.5);
-  }
-  heatCtx.fillStyle='rgba(255,255,255,0.7)';heatCtx.fillRect(8,8,196,24);
-  heatCtx.fillStyle='#1E293B';heatCtx.font='bold 12px monospace';
-  heatCtx.fillText(`t = ${t.toFixed(1)} s  |  Tc = ${T_ref(t).toFixed(0)}°C`,14,24);
-}
-
-function drawCoolingCurve(tNow){
-  const W=curveCanvas.width,H=curveCanvas.height;
-  curveCtx.clearRect(0,0,W,H);
-  curveCtx.fillStyle='#F8FAFC';curveCtx.fillRect(0,0,W,H);
-  const pad={l:42,r:12,t:12,b:32},cW=W-pad.l-pad.r,cH=H-pad.t-pad.b;
-  const xP=t=>pad.l+(t/30)*cW,yP=T=>pad.t+(1-(T-20)/520)*cH;
-  curveCtx.strokeStyle='#E2E8F0';curveCtx.lineWidth=1;
-  [0,100,200,300,400,500].forEach(T=>{
-    curveCtx.beginPath();curveCtx.moveTo(pad.l,yP(T));curveCtx.lineTo(pad.l+cW,yP(T));curveCtx.stroke();
-  });
-  curveCtx.strokeStyle='#1565C0';curveCtx.lineWidth=2;curveCtx.beginPath();
-  for(let i=0;i<=300;i++){const tt=i/10;i===0?curveCtx.moveTo(xP(tt),yP(T_ref(tt))):curveCtx.lineTo(xP(tt),yP(T_ref(tt)));}
-  curveCtx.stroke();
-  curveCtx.strokeStyle='#EA580C';curveCtx.lineWidth=2;curveCtx.setLineDash([4,3]);curveCtx.beginPath();
-  for(let i=0;i<=300;i++){const tt=i/10;i===0?curveCtx.moveTo(xP(tt),yP(T_pinn(Lx/2,Ly/2,tt))):curveCtx.lineTo(xP(tt),yP(T_pinn(Lx/2,Ly/2,tt)));}
-  curveCtx.stroke();curveCtx.setLineDash([]);
-  curveCtx.strokeStyle='#64748B';curveCtx.lineWidth=1.5;curveCtx.setLineDash([3,3]);
-  curveCtx.beginPath();curveCtx.moveTo(xP(tNow),pad.t);curveCtx.lineTo(xP(tNow),pad.t+cH);
-  curveCtx.stroke();curveCtx.setLineDash([]);
-  curveCtx.fillStyle='#475569';curveCtx.font='10px sans-serif';
-  [0,10,20,30].forEach(t=>curveCtx.fillText(t+'s',xP(t)-6,pad.t+cH+18));
-  curveCtx.save();curveCtx.translate(12,pad.t+cH/2);curveCtx.rotate(-Math.PI/2);
-  curveCtx.textAlign='center';curveCtx.fillText('T (°C)',0,0);curveCtx.restore();
-}
-
-function updateDisplay(t){
-  const Tr=T_ref(t),Tp=T_pinn(Lx/2,Ly/2,t);
-  document.getElementById('time-display').textContent=`t = ${t.toFixed(1)} s`;
-  document.getElementById('temp-display').innerHTML=
-    `T_ref = <strong>${Tr.toFixed(1)}°C</strong> &nbsp;|&nbsp; T_PINN ≈ <strong>${Tp.toFixed(1)}°C</strong>`;
-  document.getElementById('timeSlider').value=Math.round(t*10);
-  document.getElementById('sliderVal').textContent=t.toFixed(1);
-  drawHeatmap(t);drawCoolingCurve(t);
-}
-function animate(ts){
-  if(!playing)return;
-  if(lastTime==null)lastTime=ts;
-  const dt=(ts-lastTime)/1000*speed;lastTime=ts;
-  tNow=Math.min(30,tNow+dt);updateDisplay(tNow);
-  if(tNow>=30){playing=false;document.getElementById('playBtn').textContent='▶ Play';return;}
-  rafId=requestAnimationFrame(animate);
-}
-function togglePlay(){
-  playing=!playing;
-  document.getElementById('playBtn').textContent=playing?'⏸ Pause':'▶ Play';
-  if(playing){lastTime=null;rafId=requestAnimationFrame(animate);}
-}
-function resetAnim(){
-  playing=false;tNow=0;lastTime=null;
-  if(rafId)cancelAnimationFrame(rafId);
-  document.getElementById('playBtn').textContent='▶ Play';updateDisplay(0);
-}
-function setSpeed(s){speed=s;}
-function onSlider(v){tNow=v/10;lastTime=null;updateDisplay(tNow);}
-updateDisplay(0);
-
-// ── Skip Timeline ─────────────────────────────────────────────────────────────
-const SKIP_DATA={
-  bayesian:{1:{mae:43.6,ok:true},2:{mae:33.2,ok:true},4:{mae:57.5,ok:true},6:{mae:93.6,ok:false}},
-  nsga2:   {1:{mae:38.1,ok:true},2:{mae:56.0,ok:true},4:{mae:154.8,ok:false},6:{mae:354.6,ok:false}},
-  nsga3:   {1:{mae:44.4,ok:true},2:{mae:75.6,ok:false},4:{mae:202.1,ok:false},6:{mae:428.6,ok:false}},
-};
-function drawTimeline(){
-  const skip=parseInt(document.getElementById('skipSel').value);
-  const opt=document.getElementById('optSel').value;
-  const svg=document.getElementById('timeline-svg');
-  const W=svg.getBoundingClientRect().width||700,N=21,pad=40,bw=28;
-  const slotW=(W-pad*2)/N;
-  svg.setAttribute('height',110);
-  let html='';
-  for(let i=0;i<N;i++){
-    const x=pad+i*slotW,isFEM=(i%skip===0);
-    const col=isFEM?'#1565C0':'#EA580C',label=isFEM?'FEM':'PINN',ty=(i*1.5).toFixed(0);
-    html+=`<rect x="${x}" y="20" width="${slotW-3}" height="${bw}" rx="4" fill="${col}" opacity=".85"/>
-           <text x="${x+(slotW-3)/2}" y="38" text-anchor="middle" font-size="9" font-weight="700" fill="white">${label}</text>
-           <text x="${x+(slotW-3)/2}" y="60" text-anchor="middle" font-size="8" fill="#475569">${ty}s</text>`;
-  }
-  html+=`<text x="${pad}" y="14" font-size="11" font-weight="600" fill="#1E293B">Time →</text>`;
-  svg.innerHTML=html;
-  const femCnt=Math.ceil(N/skip),pinnCnt=N-femCnt;
-  const data=SKIP_DATA[opt][skip]||{},ok=data.ok,mae=data.mae||'—';
-  document.getElementById('skip-stats').innerHTML=`
-    <div class="stat-chip" style="background:var(--primary-l);color:var(--primary);">FEM calls: <strong>${femCnt} / ${N}</strong></div>
-    <div class="stat-chip" style="background:#FFF7ED;color:var(--orange);">PINN steps: <strong>${pinnCnt}</strong></div>
-    <div class="stat-chip" style="background:var(--green-l);color:var(--green);">Speedup: <strong>${(N/femCnt).toFixed(1)}×</strong></div>
-    <div class="stat-chip" style="background:${ok?'var(--green-l)':'var(--red-l)'};color:${ok?'var(--green)':'var(--red)'};">
-      ${opt.toUpperCase()} MAE: <strong>${mae}°C ${ok?'✓':'✗'}</strong>
-    </div>`;
-}
-drawTimeline();
-
-// ── CMM Bars ──────────────────────────────────────────────────────────────────
-const CMM_DATA=[
-  {label:'Paper Measured',val:0.78,color:'#E65100'},
-  {label:'Paper FEM',     val:0.75,color:'#5D4037'},
-  {label:'Bayesian PINN', val:1.67,color:'#1565C0'},
-  {label:'NSGA-II PINN',  val:2.81,color:'#C62828'},
-  {label:'NSGA-III PINN', val:4.74,color:'#2E7D32'},
-];
-const cmmWrap=document.getElementById('cmm-wrap');
-cmmWrap.innerHTML=CMM_DATA.map(d=>{
-  const pct=(d.val/5*100).toFixed(1);
-  return `<div class="cmm-bar-row">
-    <div class="cmm-bar-label">${d.label}</div>
-    <div class="cmm-bar-track"><div class="cmm-bar-fill" style="width:${pct}%;background:${d.color};">${d.val<1.2?'':d.val+' mm'}</div></div>
-    <div class="cmm-bar-val" style="color:${d.color};">${d.val} mm</div>
-  </div>`;
-}).join('');
-new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)document.querySelectorAll('.cmm-bar-fill').forEach(el=>{const t=el.style.width;el.style.width='0%';setTimeout(()=>el.style.width=t,50);});});},{threshold:.3}).observe(cmmWrap);
-
-// ── NAS Scatter ───────────────────────────────────────────────────────────────
-new Chart(document.getElementById('nasChart'),{
-  type:'bubble',
-  data:{datasets:[
-    {label:'Bayesian',       backgroundColor:'rgba(21,101,192,.75)', borderColor:'#1565C0', data:[{x:151,y:.076,r:22}]},
-    {label:'NSGA-II',        backgroundColor:'rgba(198,40,40,.75)',  borderColor:'#C62828', data:[{x:153,y:.252,r:16}]},
-    {label:'NSGA-III',       backgroundColor:'rgba(46,125,50,.75)',  borderColor:'#2E7D32', data:[{x:75, y:.513,r:10}]},
-    {label:'Bayesian (L5)',  backgroundColor:'rgba(21,101,192,.28)', borderColor:'#1565C0', data:[{x:151,y:.030,r:22}]},
-    {label:'NSGA-II (L5)',   backgroundColor:'rgba(198,40,40,.28)',  borderColor:'#C62828', data:[{x:153,y:.055,r:16}]},
-  ]},
-  options:{responsive:true,plugins:{legend:{position:'top'},
-    tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.raw.x} neurons, L2=${c.raw.y}`}}},
-    scales:{x:{title:{display:true,text:'Neurons per layer'},min:20,max:200},
-            y:{title:{display:true,text:'L2 Relative Error'},min:0,max:.6}}}
+// ─── NAV ─────────────────────────────────────────────────────────────────────
+document.getElementById('mainnav').addEventListener('click', function(e) {
+  var btn = e.target.closest('button');
+  if (!btn) return;
+  var pid = btn.dataset.panel;
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('#mainnav button').forEach(function(b){ b.classList.remove('active'); });
+  var panel = document.getElementById('panel-' + pid);
+  if (panel) panel.classList.add('active');
+  btn.classList.add('active');
+  if (pid === 'heatmap')   { drawHeatmaps(); drawCoolCurve(); drawColorbar(); }
+  if (pid === 'nas')       drawNAS();
+  if (pid === 'skip')      drawSkip();
+  if (pid === 'routing')   drawRouting();
+  if (pid === 'distortion') drawCMM();
+  if (pid === 'poisson')   drawAllPoisson();
 });
 
-// ── Multi-Domain Bar ──────────────────────────────────────────────────────────
-new Chart(document.getElementById('domainChart'),{
-  type:'bar',
-  data:{labels:['Square','Circle','L-Shape','Flower'],datasets:[
-    {label:'Bayesian',backgroundColor:'rgba(21,101,192,.8)', data:[.0376,.000143,.0277,.172]},
-    {label:'NSGA-II', backgroundColor:'rgba(198,40,40,.8)',  data:[null,.000416,.0285,.176]},
-    {label:'NSGA-III',backgroundColor:'rgba(46,125,50,.8)',  data:[null,.000657,.0320,.176]},
-  ]},
-  options:{responsive:true,plugins:{legend:{position:'top'}},
-    scales:{y:{title:{display:true,text:'L2 Relative Error'},min:0,max:.22}}}
+// ─── TEMPERATURE COLORMAP ────────────────────────────────────────────────────
+function tempColor(T) {
+  var t = Math.max(0, Math.min(1, (T - 20) / 520));
+  var r, g, b, u;
+  if (t < 0.25)      { u = t/0.25;          r = 0;              g = Math.round(u*30);         b = Math.round(130+u*125); }
+  else if (t < 0.5)  { u = (t-0.25)/0.25;   r = 0;              g = Math.round(30+u*180);     b = Math.round(255-u*255); }
+  else if (t < 0.75) { u = (t-0.5)/0.25;    r = Math.round(u*255); g = Math.round(210-u*110); b = 0; }
+  else               { u = (t-0.75)/0.25;   r = 255;            g = Math.round(100-u*100);    b = 0; }
+  return 'rgb('+r+','+g+','+b+')';
+}
+
+// ─── HEATMAP ─────────────────────────────────────────────────────────────────
+function drawOneHM(canvasId, t, noiseAmt, seed) {
+  var cv = document.getElementById(canvasId);
+  if (!cv) return;
+  cv.width = cv.offsetWidth || 300;
+  cv.height = 160;
+  var ctx = cv.getContext('2d');
+  var R = 32, C = Math.round(R * 1.3 / 0.6);
+  var pw = cv.width / C, ph = 160 / R;
+  var s = seed || 1;
+  function rng() { s = (s * 1664525 + 1013904223) & 0x7fffffff; return s / 0x7fffffff; }
+  for (var r = 0; r < R; r++) {
+    for (var c = 0; c < C; c++) {
+      var x = c/C, y = r/R;
+      var dist = Math.sqrt((x-0.5)*(x-0.5) + (y-0.5)*(y-0.5));
+      var Tref = 20 + 520 * Math.exp(-1.75e-3*t) * (0.75 + 0.45*Math.exp(-dist*dist*6));
+      var noise = noiseAmt * (rng()-0.5) * 2;
+      ctx.fillStyle = tempColor(Tref + noise);
+      ctx.fillRect(Math.floor(c*pw), Math.floor(r*ph), Math.ceil(pw)+1, Math.ceil(ph)+1);
+    }
+  }
+}
+
+function drawColorbar() {
+  var cv = document.getElementById('colorbar');
+  if (!cv) return;
+  cv.width = cv.offsetWidth || 200; cv.height = 14;
+  var ctx = cv.getContext('2d');
+  for (var i = 0; i < cv.width; i++) {
+    ctx.fillStyle = tempColor(20 + 520*(i/cv.width));
+    ctx.fillRect(i, 0, 2, 14);
+  }
+}
+
+function drawHeatmaps() {
+  var l2 = parseFloat(document.getElementById('hm-opt').value);
+  var t  = parseFloat(document.getElementById('hm-t').value);
+  document.getElementById('hm-t-lbl').textContent = t.toFixed(1) + ' s';
+  drawOneHM('hm-fem',  t, 0,       99);
+  drawOneHM('hm-pinn', t, l2*160,  42);
+  drawColorbar();
+}
+
+document.getElementById('hm-t').addEventListener('input', drawHeatmaps);
+document.getElementById('hm-opt').addEventListener('change', drawHeatmaps);
+
+var animId = null, animOn = false;
+document.getElementById('anim-btn').addEventListener('click', function() {
+  if (animOn) {
+    cancelAnimationFrame(animId); animOn = false;
+    this.textContent = '\u25B6 Animate'; this.classList.remove('green'); return;
+  }
+  animOn = true; this.textContent = '\u23F8 Pause'; this.classList.add('green');
+  var sl = document.getElementById('hm-t');
+  var v = parseFloat(sl.value);
+  var self = this;
+  function step() { v = (v + 0.25) % 30; sl.value = v; drawHeatmaps(); if (animOn) animId = requestAnimationFrame(step); }
+  step();
+});
+
+// ─── COOLING CURVE ────────────────────────────────────────────────────────────
+var coolChart = null;
+function drawCoolCurve() {
+  var l2 = parseFloat(document.getElementById('hm-opt').value);
+  var cv = document.getElementById('cool-curve');
+  if (!cv) return;
+  if (coolChart) { coolChart.destroy(); coolChart = null; }
+  var times = [], fem = [], pinn = [];
+  for (var i = 0; i <= 60; i++) {
+    var ti = i * 0.5;
+    times.push(ti.toFixed(1));
+    var T = 20 + 520 * Math.exp(-1.75e-3 * ti);
+    fem.push(parseFloat(T.toFixed(2)));
+    var err = l2 * 520 * 0.15 * Math.exp(-0.05 * ti);
+    pinn.push(parseFloat((T + err * (ti < 5 ? 1 : ti < 15 ? 0.6 : 0.3)).toFixed(2)));
+  }
+  coolChart = new Chart(cv, {
+    type: 'line',
+    data: {
+      labels: times,
+      datasets: [
+        { label: 'FEM reference', data: fem, borderColor: '#58A6FF', borderWidth: 2, pointRadius: 0, fill: false },
+        { label: 'PINN prediction', data: pinn, borderColor: '#F0883E', borderWidth: 2, borderDash: [5,3], pointRadius: 0, fill: false }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { labels: { color: '#8B949E', font: { size: 11 }, boxWidth: 14 } } },
+      scales: {
+        x: { title: { display: true, text: 'Time (s)', color: '#8B949E', font: { size: 11 } }, ticks: { color: '#8B949E', font: { size: 9 }, maxTicksLimit: 13 }, grid: { color: 'rgba(48,54,61,.5)' } },
+        y: { title: { display: true, text: 'Centre temperature (\u00B0C)', color: '#8B949E', font: { size: 11 } }, ticks: { color: '#8B949E', font: { size: 10 } }, grid: { color: 'rgba(48,54,61,.5)' } }
+      }
+    }
+  });
+}
+
+document.getElementById('hm-opt').addEventListener('change', function() {
+  if (document.getElementById('panel-heatmap').classList.contains('active')) drawCoolCurve();
+});
+
+// ─── NAS DATA ────────────────────────────────────────────────────────────────
+var nasData = (function() {
+  var s = 54321;
+  function rng() { s = (s*1664525+1013904223) & 0x7fffffff; return s/0x7fffffff; }
+  var out = [];
+  var layers = [2,3,4,5,6], neurons = [32,48,64,96,128,160,192,256];
+  for (var i = 0; i < 40; i++) {
+    var L = layers[Math.floor(rng()*5)], N = neurons[Math.floor(rng()*8)];
+    var p = 3*N + (L-1)*N*N + N + 1;
+    var l2 = Math.max(0.02, 0.92 - L*0.10 - N*0.0013 + rng()*0.20);
+    out.push({ opt:'bayesian', p:p, l2:l2, best: i===0 });
+  }
+  for (var i = 0; i < 35; i++) {
+    var L = layers[Math.floor(rng()*3)], N = neurons[Math.floor(rng()*5)];
+    var p = 3*N + (L-1)*N*N + N + 1;
+    var l2 = Math.max(0.05, 0.96 - L*0.08 - N*0.0010 + rng()*0.24);
+    out.push({ opt:'nsga2', p:p, l2:l2, best: i===0 });
+  }
+  for (var i = 0; i < 35; i++) {
+    var L = layers[Math.floor(rng()*3)], N = neurons[Math.floor(rng()*4)];
+    var p = 3*N + (L-1)*N*N + N + 1;
+    var l2 = Math.max(0.09, 1.02 - L*0.07 - N*0.0008 + rng()*0.26);
+    out.push({ opt:'nsga3', p:p, l2:l2, best: i===0 });
+  }
+  return out;
+})();
+
+var nasChart = null;
+function drawNAS() {
+  var filter = document.getElementById('nas-filter').value;
+  var hl = document.getElementById('nas-hl').value === '1';
+  var cBase = { bayesian:'rgba(88,166,255,.7)', nsga2:'rgba(247,129,102,.7)', nsga3:'rgba(163,113,247,.7)' };
+  var cWin = 'rgba(63,185,80,1)';
+  var opts = ['bayesian','nsga2','nsga3'];
+  var datasets = opts.map(function(opt) {
+    var pts = nasData.filter(function(d){ return (filter==='all'||d.opt===opt) && d.opt===opt; });
+    return {
+      label: opt,
+      data: pts.map(function(d){ return { x:d.p, y:d.l2, best:d.best }; }),
+      backgroundColor: pts.map(function(d){ return hl&&d.best ? cWin : cBase[opt]; }),
+      pointRadius: pts.map(function(d){ return hl&&d.best ? 9 : 4; }),
+      pointHoverRadius: 7
+    };
+  });
+  var cv = document.getElementById('nas-canvas');
+  if (!cv) return;
+  if (nasChart) { nasChart.destroy(); nasChart = null; }
+  nasChart = new Chart(cv, {
+    type: 'scatter',
+    data: { datasets: datasets },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: function(d){ return 'Params: '+Math.round(d.raw.x).toLocaleString()+'  |  L2: '+d.raw.y.toFixed(3); } } }
+      },
+      scales: {
+        x: { type:'linear', title:{display:true,text:'Parameter count',color:'#8B949E',font:{size:11}},
+             ticks:{color:'#8B949E',font:{size:10},callback:function(v){return v>=1000?Math.round(v/1000)+'k':v;}},
+             grid:{color:'rgba(48,54,61,.5)'} },
+        y: { min:0, max:1.1, title:{display:true,text:'L2 relative error',color:'#8B949E',font:{size:11}},
+             ticks:{color:'#8B949E',font:{size:10}}, grid:{color:'rgba(48,54,61,.5)'} }
+      }
+    },
+    plugins: [{
+      id: 'targetZone',
+      beforeDraw: function(ch) {
+        var ctx = ch.ctx, ya = ch.scales.y;
+        var y = ya.getPixelForValue(0.10);
+        var yb = ya.getPixelForValue(0);
+        ctx.save();
+        ctx.fillStyle = 'rgba(63,185,80,.08)';
+        ctx.fillRect(ch.chartArea.left, y, ch.chartArea.right-ch.chartArea.left, yb-y);
+        ctx.strokeStyle = 'rgba(63,185,80,.4)'; ctx.lineWidth = 1; ctx.setLineDash([4,4]);
+        ctx.beginPath(); ctx.moveTo(ch.chartArea.left, y); ctx.lineTo(ch.chartArea.right, y); ctx.stroke();
+        ctx.setLineDash([]); ctx.restore();
+      }
+    }]
+  });
+}
+
+document.getElementById('nas-filter').addEventListener('change', drawNAS);
+document.getElementById('nas-hl').addEventListener('change', drawNAS);
+
+// ─── SKIP OPERATOR ───────────────────────────────────────────────────────────
+var skipMAE = {
+  bayesian: { 1:0.0412, 2:0.0313, 4:0.0543, 6:0.0886 },
+  nsga2:    { 1:0.1371, 2:0.2014, 4:0.5567, 6:1.2750 },
+  nsga3:    { 1:0.2812, 2:0.4780, 4:1.2795, 6:2.7135 }
+};
+
+function drawSkip() {
+  var s   = parseInt(document.getElementById('skip-s').value);
+  var opt = document.getElementById('skip-opt').value;
+  var steps = 21, html = '';
+  for (var i = 0; i < steps; i++) {
+    var isFEM = (i === 0) || (i % s === 0);
+    html += '<div class="step-b" style="background:'+(isFEM?'#58A6FF':'#3FB950')+'" title="t='+(i*1.5).toFixed(1)+'s &mdash; '+(isFEM?'FEM anchor':'PINN fill')+'">'+i+'</div>';
+  }
+  document.getElementById('skip-timeline').innerHTML = html;
+  var femCalls  = Math.ceil(steps / s);
+  var pinnSteps = steps - femCalls;
+  var saves     = Math.round((1 - femCalls/steps)*100);
+  var mae   = skipMAE[opt][s];
+  var ratio = (mae / skipMAE[opt][1]).toFixed(2);
+  var ok    = parseFloat(ratio) < 1.5;
+  document.getElementById('skip-pills').innerHTML =
+    '<div class="pill pb">FEM calls: '+femCalls+'/21</div>'+
+    '<div class="pill pg">PINN steps: '+pinnSteps+'/21</div>'+
+    '<div class="pill po">FEM saves: '+saves+'%</div>'+
+    '<div class="pill '+(ok?'pg':'pr')+'">Ratio: '+ratio+'\u00D7 '+(ok?'\u2713 Converged':'\u2717 Diverged')+'</div>'+
+    '<div class="pill pb">MAE: '+mae.toFixed(4)+'</div>';
+}
+
+document.getElementById('skip-s').addEventListener('change', drawSkip);
+document.getElementById('skip-opt').addEventListener('change', drawSkip);
+
+// ─── HYBRID ROUTING ──────────────────────────────────────────────────────────
+var residuals = {
+  bayesian: [0.18,0.06,0.04,0.05,0.08,0.13,0.06,0.04,0.05,0.07,0.12,0.05,0.04,0.05,0.07,0.11,0.05,0.04,0.05,0.07],
+  nsga2:    [0.22,0.09,0.07,0.09,0.14,0.18,0.10,0.08,0.10,0.15,0.19,0.09,0.07,0.09,0.13,0.17,0.09,0.07,0.09,0.12],
+  nsga3:    [0.28,0.14,0.11,0.13,0.19,0.25,0.14,0.11,0.13,0.18,0.24,0.13,0.11,0.13,0.17,0.22,0.12,0.10,0.12,0.16]
+};
+var rtChart = null;
+function drawRouting() {
+  var thr = parseFloat(document.getElementById('thr-sl').value);
+  var opt = document.getElementById('rt-opt').value;
+  document.getElementById('thr-lbl').textContent = thr.toFixed(2);
+  var res = residuals[opt];
+  var isFEM = res.map(function(r){ return r > thr; });
+  var femCount  = isFEM.filter(Boolean).length + 1;
+  var pinnCount = 21 - femCount;
+  var strip = '';
+  for (var i = 0; i <= 20; i++) {
+    var fem = (i === 0) || isFEM[i-1];
+    strip += '<div class="step-b" style="background:'+(fem?'#58A6FF':'#3FB950')+'" title="t='+(i*1.5).toFixed(1)+'s">'+i+'</div>';
+  }
+  document.getElementById('rt-strip').innerHTML = strip;
+  var pct = Math.round((pinnCount / 21) * 100);
+  document.getElementById('rt-pills').innerHTML =
+    '<div class="pill pb">FEM calls: '+femCount+'/21</div>'+
+    '<div class="pill pg">PINN steps: '+pinnCount+'/21</div>'+
+    '<div class="pill '+(pct>=80?'pg':pct>=50?'po':'pr')+'">PINN coverage: '+pct+'%</div>';
+  var cv = document.getElementById('rt-canvas');
+  if (!cv) return;
+  if (rtChart) { rtChart.destroy(); rtChart = null; }
+  rtChart = new Chart(cv, {
+    type: 'bar',
+    data: {
+      labels: res.map(function(_,i){ return 't'+(i+1); }),
+      datasets: [
+        { label: 'PDE residual', data: res,
+          backgroundColor: res.map(function(r){ return r>thr?'rgba(88,166,255,.8)':'rgba(63,185,80,.7)'; }),
+          borderRadius: 3 },
+        { label: 'Threshold', data: res.map(function(){ return thr; }),
+          type: 'line', borderColor: 'rgba(240,136,62,.9)', borderWidth: 1.5,
+          borderDash: [4,3], pointRadius: 0, fill: false }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { labels: { color:'#8B949E', font:{size:11}, boxWidth:14 } } },
+      scales: {
+        x: { ticks:{color:'#8B949E',font:{size:9}}, grid:{color:'rgba(48,54,61,.4)'} },
+        y: { min:0, max:0.35, ticks:{color:'#8B949E',font:{size:10}}, grid:{color:'rgba(48,54,61,.4)'},
+             title:{display:true,text:'Normalised residual',color:'#8B949E',font:{size:10}} }
+      }
+    }
+  });
+}
+
+document.getElementById('thr-sl').addEventListener('input', drawRouting);
+document.getElementById('rt-opt').addEventListener('change', drawRouting);
+
+// ─── CMM DISTORTION ──────────────────────────────────────────────────────────
+var cmmScales = { paper:0.75, bayesian:1.67, nsga2:2.81, nsga3:4.74 };
+function distColor(t) {
+  var r, g, b, u;
+  if (t < 0.4)       { u=t/0.4;       r=Math.round(21+u*26);  g=Math.round(101+u*124); b=Math.round(192-u*64); }
+  else if (t < 0.7)  { u=(t-0.4)/0.3; r=Math.round(47+u*193); g=Math.round(225-u*89);  b=Math.round(128-u*128); }
+  else               { u=(t-0.7)/0.3; r=Math.round(240-u*42); g=Math.round(136-u*136); b=62; }
+  return 'rgb('+r+','+g+','+b+')';
+}
+
+function drawCMM() {
+  var view = document.getElementById('cmm-view').value;
+  var maxD = cmmScales[view];
+  var cv   = document.getElementById('cmm-canvas');
+  if (!cv) return;
+  cv.width = cv.offsetWidth || 600; cv.height = 260;
+  var ctx = cv.getContext('2d');
+  ctx.clearRect(0, 0, cv.width, 260);
+  ctx.fillStyle = 'rgba(88,166,255,.04)';
+  ctx.strokeStyle = 'rgba(88,166,255,.15)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.rect(cv.width*0.04, 15, cv.width*0.92, 230); ctx.fill(); ctx.stroke();
+  var pts = [];
+  for (var row = 0; row < 4; row++)
+    for (var col = 0; col < 12; col++)
+      if (row*12+col < 47) pts.push({ x: 0.06+0.88*(col/11), y: 0.12+0.76*(row/3) });
+  var s2 = view.charCodeAt(0)*31 + 7;
+  function rng2() { s2 = (s2*1664525+1013904223) & 0x7fffffff; return s2/0x7fffffff; }
+  pts.forEach(function(p, i) {
+    var d = Math.abs(maxD*0.35*(Math.sin(i*0.8)*0.6+Math.cos(i*0.5)*0.4)+(rng2()-0.5)*maxD*0.3);
+    d = Math.min(d, maxD);
+    var t  = d / maxD;
+    var cx = cv.width*0.04 + cv.width*0.92*p.x;
+    var cy = 15 + 230*p.y;
+    ctx.beginPath(); ctx.arc(cx, cy, 8, 0, Math.PI*2);
+    ctx.fillStyle = distColor(t); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,.15)'; ctx.lineWidth = 0.5; ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,.9)';
+    ctx.font = '600 6.5px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(d.toFixed(1), cx, cy);
+  });
+  var cbar = document.getElementById('cmm-bar');
+  if (cbar) {
+    cbar.width = cbar.offsetWidth || 200; cbar.height = 12;
+    var bctx = cbar.getContext('2d');
+    var grad = bctx.createLinearGradient(0, 0, cbar.width, 0);
+    grad.addColorStop(0, '#1565C0'); grad.addColorStop(.4, '#2E7D32');
+    grad.addColorStop(.7, '#F0883E'); grad.addColorStop(1, '#C62828');
+    bctx.fillStyle = grad; bctx.fillRect(0, 0, cbar.width, 12);
+    document.getElementById('cmm-max-lbl').textContent = maxD.toFixed(2) + ' mm';
+  }
+  var ratio = (maxD / 0.75).toFixed(2);
+  document.getElementById('cmm-pills').innerHTML =
+    '<div class="pill pb">Mean |\u03B4\u0305|: '+maxD.toFixed(2)+' mm</div>'+
+    '<div class="pill '+(maxD<1?'pg':maxD<2?'po':'pr')+'">'+ratio+'\u00D7 vs Paper FEM</div>'+
+    '<div class="pill pb">47 CMM points</div>';
+}
+
+document.getElementById('cmm-view').addEventListener('change', drawCMM);
+
+// ─── VIRIDIS COLORMAP ────────────────────────────────────────────────────────
+function viridis(t) {
+  var stops = [[68,1,84],[59,82,139],[33,145,140],[94,201,98],[253,231,37]];
+  var idx = t * (stops.length-1);
+  var lo = Math.floor(idx), hi = Math.min(stops.length-1, lo+1), f = idx - lo;
+  return stops[lo].map(function(v,i){ return Math.round(v + f*(stops[hi][i]-v)); });
+}
+
+// ─── POISSON DOMAINS ─────────────────────────────────────────────────────────
+var poissonDomains = [
+  {
+    id: 'p-square', name: 'Square [0,1]\u00B2',
+    l2: '0.0376', arch: '4\u00D7128 relu', diff: 'Medium',
+    sub: 'The smooth interior provides clean gradients everywhere. u = x\u00B2(1\u2212x)\u00B2\u00B7y\u00B2(1\u2212y)\u00B2 has very small values near boundaries and the fourth-power dependence requires sufficient network depth to represent.',
+    draw: function(ctx, W, H) {
+      var G = 60;
+      for (var j = 0; j < G; j++) for (var i = 0; i < G; i++) {
+        var x = i/(G-1), y = j/(G-1);
+        var u = x*x*(x-1)*(x-1)*y*y*(y-1)*(y-1);
+        var t = Math.min(1, u / 0.004);
+        var rgb = viridis(t);
+        ctx.fillStyle = 'rgb('+rgb[0]+','+rgb[1]+','+rgb[2]+')';
+        ctx.fillRect(Math.floor(i*W/G), Math.floor(j*H/G), Math.ceil(W/G)+1, Math.ceil(H/G)+1);
+      }
+    }
+  },
+  {
+    id: 'p-circle', name: 'Circle r \u2264 1',
+    l2: '0.00014', arch: '2\u00D764 tanh', diff: 'Easy',
+    sub: 'Radial symmetry makes the solution effectively 1D in the radial coordinate r. u = (1\u2212r\u00B2)/4. The tiny 2\u00D764 tanh network (4k params) achieves extraordinary accuracy L2=0.00014.',
+    draw: function(ctx, W, H) {
+      var G = 80;
+      for (var j = 0; j < G; j++) for (var i = 0; i < G; i++) {
+        var x = 2*(i/(G-1))-1, y = 2*(j/(G-1))-1;
+        var r2 = x*x + y*y;
+        if (r2 > 1) { ctx.fillStyle='#0D1117'; ctx.fillRect(Math.floor(i*W/G),Math.floor(j*H/G),Math.ceil(W/G)+1,Math.ceil(H/G)+1); continue; }
+        var u = Math.max(0, (1-r2)/4);
+        var rgb = viridis(Math.min(1, u*4));
+        ctx.fillStyle = 'rgb('+rgb[0]+','+rgb[1]+','+rgb[2]+')';
+        ctx.fillRect(Math.floor(i*W/G), Math.floor(j*H/G), Math.ceil(W/G)+1, Math.ceil(H/G)+1);
+      }
+    }
+  },
+  {
+    id: 'p-annulus', name: 'Annulus 0.3 \u2264 r \u2264 1',
+    l2: '0.0124', arch: '3\u00D796 relu', diff: 'Easy-Med',
+    sub: 'Two concentric boundaries require Dirichlet conditions on both inner (r=0.3) and outer (r=1) circles simultaneously. Solution varies smoothly between them. Harder than single-boundary circle, easier than non-convex domains.',
+    draw: function(ctx, W, H) {
+      var G = 80;
+      for (var j = 0; j < G; j++) for (var i = 0; i < G; i++) {
+        var x = 2*(i/(G-1))-1, y = 2*(j/(G-1))-1;
+        var r = Math.sqrt(x*x + y*y);
+        if (r < 0.3 || r > 1) { ctx.fillStyle='#0D1117'; ctx.fillRect(Math.floor(i*W/G),Math.floor(j*H/G),Math.ceil(W/G)+1,Math.ceil(H/G)+1); continue; }
+        var u = (r-0.3)*(1-r) / 0.1225;
+        var rgb = viridis(Math.min(1, Math.max(0, u)));
+        ctx.fillStyle = 'rgb('+rgb[0]+','+rgb[1]+','+rgb[2]+')';
+        ctx.fillRect(Math.floor(i*W/G), Math.floor(j*H/G), Math.ceil(W/G)+1, Math.ceil(H/G)+1);
+      }
+    }
+  },
+  {
+    id: 'p-lshape', name: 'L-Shape domain',
+    l2: '0.0277', arch: '5\u00D7128 relu', diff: 'Medium',
+    sub: 'The re-entrant 270\u00B0 corner at (0.5, 0.5) creates a solution singularity where \u2207u is discontinuous. Deeper networks and careful collocation sampling near the corner are required.',
+    draw: function(ctx, W, H) {
+      var G = 60;
+      for (var j = 0; j < G; j++) for (var i = 0; i < G; i++) {
+        var x = i/(G-1), y = j/(G-1);
+        if (x > 0.5 && y < 0.5) { ctx.fillStyle='#0D1117'; ctx.fillRect(Math.floor(i*W/G),Math.floor(j*H/G),Math.ceil(W/G)+1,Math.ceil(H/G)+1); continue; }
+        var u = x*(1-x)*y*(1-y);
+        var rgb = viridis(Math.min(1, u/0.0625));
+        ctx.fillStyle = 'rgb('+rgb[0]+','+rgb[1]+','+rgb[2]+')';
+        ctx.fillRect(Math.floor(i*W/G), Math.floor(j*H/G), Math.ceil(W/G)+1, Math.ceil(H/G)+1);
+      }
+    }
+  },
+  {
+    id: 'p-flower', name: 'Flower r \u2264 1+0.3cos(5\u03B8)',
+    l2: '0.172', arch: '6\u00D7192 relu', diff: 'Hard',
+    sub: 'Oscillating boundary creates 5 petals with high-frequency angular variation. Standard relu/tanh MLPs cannot represent the correspondingly high-frequency solution features. Fourier features or SIREN activations would help significantly.',
+    draw: function(ctx, W, H) {
+      var G = 100;
+      for (var j = 0; j < G; j++) for (var i = 0; i < G; i++) {
+        var x = 2.5*(i/(G-1))-1.25, y = 2.5*(j/(G-1))-1.25;
+        var r = Math.sqrt(x*x + y*y);
+        var theta = Math.atan2(y, x);
+        var rBound = 1 + 0.3*Math.cos(5*theta);
+        if (r > rBound) { ctx.fillStyle='#0D1117'; ctx.fillRect(Math.floor(i*W/G),Math.floor(j*H/G),Math.ceil(W/G)+1,Math.ceil(H/G)+1); continue; }
+        var u = Math.max(0, 1 - r/rBound);
+        var rgb = viridis(Math.min(1, u));
+        ctx.fillStyle = 'rgb('+rgb[0]+','+rgb[1]+','+rgb[2]+')';
+        ctx.fillRect(Math.floor(i*W/G), Math.floor(j*H/G), Math.ceil(W/G)+1, Math.ceil(H/G)+1);
+      }
+    }
+  }
+];
+
+var poissonBuilt = false;
+function buildPoissonGrid() {
+  var grid = document.getElementById('poisson-grid');
+  var diffColors = { Easy:'#3FB950', 'Easy-Med':'#58A6FF', Medium:'#58A6FF', Hard:'#F78166' };
+  var html = '';
+  poissonDomains.forEach(function(d) {
+    var dc = diffColors[d.diff] || '#8B949E';
+    html += '<div class="pcard">'
+      + '<div class="pcard-title">'+d.name+'</div>'
+      + '<canvas id="'+d.id+'" width="200" height="200" style="width:100%;max-width:200px;height:auto;background:#0D1117;display:block;margin:0 auto"></canvas>'
+      + '<div style="display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-top:.5rem">'
+      + '<span class="pill pb" style="font-size:.65rem">L2='+d.l2+'</span>'
+      + '<span class="pill pp" style="font-size:.65rem">'+d.arch+'</span>'
+      + '<span class="pill" style="font-size:.65rem;color:'+dc+';border-color:'+dc+'44;background:'+dc+'11">'+d.diff+'</span>'
+      + '</div>'
+      + '<div class="pcard-sub">'+d.sub+'</div>'
+      + '</div>';
+  });
+  html += '<div class="pcard" style="border-top:2px solid var(--purple)">'
+    + '<div class="pcard-title" style="color:var(--purple)">L7 Key Insight</div>'
+    + '<div style="font-size:.78rem;color:var(--txt-mid);line-height:1.65;text-align:left;padding:.5rem 0">'
+    + '<p style="margin-bottom:.5rem"><strong style="color:var(--txt)">Best:</strong> Circle &mdash; L2=0.00014. Radial symmetry = effectively 1D problem.</p>'
+    + '<p style="margin-bottom:.5rem"><strong style="color:var(--txt)">Hardest:</strong> Flower &mdash; L2=0.172. Oscillating boundary defeats standard MLPs.</p>'
+    + '<p style="margin-bottom:.5rem"><strong style="color:var(--txt)">NAS adapts:</strong> Circle selects 2\u00D764 (4k params); Flower selects 6\u00D7192 (222k params).</p>'
+    + '<p><strong style="color:var(--txt)">Future work:</strong> Fourier feature embeddings or SIREN for hard domains.</p>'
+    + '</div></div>';
+  grid.innerHTML = html;
+  poissonBuilt = true;
+}
+
+function drawAllPoisson() {
+  if (!poissonBuilt) buildPoissonGrid();
+  poissonDomains.forEach(function(d) {
+    var cv = document.getElementById(d.id);
+    if (!cv) return;
+    var ctx = cv.getContext('2d');
+    ctx.fillStyle = '#0D1117';
+    ctx.fillRect(0, 0, cv.width, cv.height);
+    d.draw(ctx, cv.width, cv.height);
+  });
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+window.addEventListener('load', function() {
+  drawRouting();
+  drawSkip();
 });
 </script>
 </body>

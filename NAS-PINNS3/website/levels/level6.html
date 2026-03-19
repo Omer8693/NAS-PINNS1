@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Level 6 — Poisson Fine-Tuning | NAS-PINNs</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="../index.html">NAS-PINNs</a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="level1.html">L1</a></li>
+      <li><a href="level2.html">L2</a></li>
+      <li><a href="level3.html">L3</a></li>
+      <li><a href="level4.html">L4</a></li>
+      <li><a href="level5.html">L5</a></li>
+      <li><a href="level6.html" class="active">L6</a></li>
+      <li><a href="level7.html">L7</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="level-hero" style="background:linear-gradient(135deg,#F0FDF4 0%,#EDE9FE 100%);">
+  <div class="container">
+    <div class="breadcrumb"><a href="../index.html">Home</a> › Level 6</div>
+    <span class="level-num" style="background:#DCFCE7;color:#15803D;">Level 6</span>
+    <h1>Poisson Fine-Tuning</h1>
+    <p class="sub">
+      An auxiliary Poisson PDE loss is added to the quenching PINN training.
+      The steady-state Poisson equation shares the same spatial operators as the
+      heat equation. Adding it as a secondary objective acts as a regulariser,
+      improving generalisation slightly.
+    </p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;">
+      <span class="badge badge-green">Auxiliary PDE loss</span>
+      <span class="badge badge-purple">Poisson regularisation</span>
+      <span class="badge badge-blue">Bayesian gains +17%</span>
+    </div>
+  </div>
+</div>
+
+<!-- Concept -->
+<section>
+  <div class="container">
+    <div class="section-label">Concept</div>
+    <h2>Auxiliary Poisson Loss</h2>
+    <div class="two-col">
+      <div>
+        <p style="margin-bottom:14px;">
+          The heat equation at steady state reduces to the Poisson equation.
+          By training the PINN to also satisfy a simple Poisson problem on the
+          same domain, we encourage the network to learn better spatial operators —
+          which in turn helps the time-dependent quenching problem.
+        </p>
+        <h3>Heat equation (primary)</h3>
+        <div class="eq-box">ρCₚ ∂T/∂t = K ∇²T</div>
+        <h3 style="margin-top:16px;">Poisson equation (auxiliary)</h3>
+        <div class="eq-box">−∇²u = f(x, y)  on Ω<br>
+u = 0  on ∂Ω</div>
+        <h3 style="margin-top:16px;">Combined loss</h3>
+        <div class="eq-box">L = L_quench + λ_poisson · L_poisson</div>
+      </div>
+      <div class="card">
+        <h3>Why it helps</h3>
+        <ul style="font-size:.88rem;color:var(--txt-mid);padding-left:18px;line-height:2;">
+          <li>Poisson shares the Laplacian ∇² with the heat equation</li>
+          <li>Extra constraint prevents the network from over-fitting to early time steps</li>
+          <li>Regularises the spatial frequency response</li>
+          <li>No extra training data needed — Poisson solution is analytical</li>
+        </ul>
+        <h3 style="margin-top:16px;">Limitation</h3>
+        <p style="font-size:.88rem;color:var(--txt-mid);">
+          The benefit is marginal (+17% for Bayesian, negligible for others).
+          The quenching and Poisson problems differ enough that the shared
+          spatial structure provides only limited transfer.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Training params -->
+<section>
+  <div class="container">
+    <div class="section-label">Setup</div>
+    <h2>Training Parameters</h2>
+    <div class="params-grid">
+      <div class="param-item"><div class="plabel">Base</div><div class="pvalue">L5 trained model</div></div>
+      <div class="param-item"><div class="plabel">Optimizer</div><div class="pvalue">Adam</div></div>
+      <div class="param-item"><div class="plabel">LR schedule</div><div class="pvalue">Cosine decay</div></div>
+      <div class="param-item"><div class="plabel">Poisson loss weight</div><div class="pvalue">0.1</div></div>
+      <div class="param-item"><div class="plabel">Poisson source f(x,y)</div><div class="pvalue">sin(πx)·sin(πy)</div></div>
+      <div class="param-item"><div class="plabel">Poisson BC</div><div class="pvalue">u=0 (Dirichlet)</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Results -->
+<section>
+  <div class="container">
+    <div class="section-label">Results</div>
+    <h2>L5 vs L6 Comparison</h2>
+    <div class="two-col">
+      <div class="card">
+        <h3>L2 Error: L5 vs L6</h3>
+        <table class="results-table">
+          <thead>
+            <tr><th>Optimiser</th><th>L5 L2</th><th>L6 L2</th><th>Change</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Bayesian</strong></td>
+              <td>0.037</td>
+              <td class="cell-good">0.031</td>
+              <td class="cell-good">+17%</td>
+            </tr>
+            <tr>
+              <td>NSGA-II</td>
+              <td>0.055</td>
+              <td>0.053</td>
+              <td>+4%</td>
+            </tr>
+            <tr>
+              <td>NSGA-III</td>
+              <td>0.259</td>
+              <td>0.261</td>
+              <td class="cell-bad">−1%</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="font-size:.82rem;color:var(--txt-light);margin-top:10px;">
+          Only Bayesian shows meaningful improvement. NSGA-III slightly worsens
+          — the auxiliary loss may conflict with its small architecture's limited capacity.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Improvement Chart</h3>
+        <canvas id="l6Chart" height="200"></canvas>
+      </div>
+    </div>
+
+    <!-- Heatmap plot -->
+    <div style="margin-top:24px;" class="card">
+      <h3>Temperature Heatmap at t=5s — Bayesian L6</h3>
+      <img src="../../level6_poisson_benchmark/results/plots/l6_heatmap_t5s.png"
+           class="plot-img" alt="L6 heatmap at t=5s">
+      <p class="plot-caption">PINN temperature field at t=5 s after fine-tuning with auxiliary Poisson loss.
+         The spatial distribution is smooth and physically consistent.</p>
+    </div>
+
+    <div style="margin-top:20px;" class="two-col">
+      <div class="card">
+        <h3>L2 Progression During L6 Training</h3>
+        <img src="../../level6_poisson_benchmark/results/plots/l6_l2_progression.png"
+             class="plot-img" alt="L6 L2 progression">
+        <p class="plot-caption">L2 error as a function of training epoch during Poisson fine-tuning.</p>
+      </div>
+      <div class="card">
+        <h3>Temperature Slices Over Time</h3>
+        <img src="../../level6_poisson_benchmark/results/plots/l6_heatmap_timeslices.png"
+             class="plot-img" alt="L6 heatmap time slices">
+        <p class="plot-caption">Centre-line temperature profiles at t=0, 5, 10, 20, 30 s.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Takeaways -->
+<section>
+  <div class="container">
+    <div class="section-label">Takeaways</div>
+    <h2>Key Observations</h2>
+    <ul class="finding-list">
+      <li>
+        <div class="finding-icon">✓</div>
+        <div class="finding-body">
+          <strong>Auxiliary PDE loss is a valid regularisation strategy</strong>
+          <span>Bayesian gains +17% improvement (0.037 → 0.031), confirming that sharing spatial operators across PDE families can transfer useful inductive bias.</span>
+        </div>
+      </li>
+      <li>
+        <div class="finding-icon">→</div>
+        <div class="finding-body">
+          <strong>Effect is small and architecture-dependent</strong>
+          <span>NSGA-II gains only 4%; NSGA-III slightly worsens. The regularisation benefit does not scale uniformly across all architectures.</span>
+        </div>
+      </li>
+      <li>
+        <div class="finding-icon">→</div>
+        <div class="finding-body">
+          <strong>Poisson and quenching share spatial structure, not temporal</strong>
+          <span>The steady-state Poisson problem has no time dimension. The transfer is limited to spatial smoothness — which partly explains the marginal benefit.</span>
+        </div>
+      </li>
+      <li>
+        <div class="finding-icon">→</div>
+        <div class="finding-body">
+          <strong>More targeted multi-task learning could improve results</strong>
+          <span>A dynamic weighting of the Poisson loss, or using it only during warm-up, may yield larger benefits — a direction for future work.</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section style="padding:32px 0;background:var(--surface);border-top:1px solid var(--border);">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <a href="level5.html" class="btn btn-outline">← Level 5</a>
+      <span style="color:var(--txt-light);font-size:.9rem;">Level 6 of 7</span>
+      <a href="level7.html" class="btn btn-primary">Level 7: Multi-Domain NAS →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <strong>NAS-PINNs</strong> — Level 6: Poisson Fine-Tuning ·
+    <a href="../index.html">Back to overview</a>
+  </div>
+</footer>
+
+<script>
+new Chart(document.getElementById('l6Chart'),{
+  type:'bar',
+  data:{
+    labels:['Bayesian','NSGA-II','NSGA-III'],
+    datasets:[
+      {label:'L5 L2',backgroundColor:'rgba(148,163,184,.8)',data:[0.037,0.055,0.259],borderRadius:4},
+      {label:'L6 L2',backgroundColor:['rgba(21,101,192,.8)','rgba(21,101,192,.5)','rgba(198,40,40,.8)'],
+       data:[0.031,0.053,0.261],borderRadius:4},
+    ]
+  },
+  options:{responsive:true,plugins:{legend:{position:'top'}},
+    scales:{y:{title:{display:true,text:'L2 Relative Error'},min:0,max:0.3}}}
+});
+</script>
+</body>
+</html>

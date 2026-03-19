@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Level 4 — Distortion Mechanics | NAS-PINNs</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="../index.html">NAS-PINNs</a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="level1.html">L1</a></li>
+      <li><a href="level2.html">L2</a></li>
+      <li><a href="level3.html">L3</a></li>
+      <li><a href="level4.html" class="active">L4</a></li>
+      <li><a href="level5.html">L5</a></li>
+      <li><a href="level6.html">L6</a></li>
+      <li><a href="level7.html">L7</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="level-hero" style="background:linear-gradient(135deg,#FFF7ED 0%,#FFFBEB 100%);">
+  <div class="container">
+    <div class="breadcrumb"><a href="../index.html">Home</a> › Level 4</div>
+    <span class="level-num" style="background:#FEF3C7;color:#92400E;">Level 4</span>
+    <h1>Distortion Mechanics</h1>
+    <p class="sub">
+      The PINN temperature field from Level 1 feeds a plane-stress mechanical FEM model.
+      Thermal gradients produce non-uniform expansion, causing permanent distortion in the casting.
+      Results are compared against CMM measurements and paper baseline (Fig 17/18).
+    </p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;">
+      <span class="badge badge-orange">PINN T-field → FEM mechanics</span>
+      <span class="badge badge-blue">47 CMM measurement points</span>
+      <span class="badge badge-green">Paper baseline: 0.75 mm</span>
+    </div>
+  </div>
+</div>
+
+<!-- Physics -->
+<section>
+  <div class="container">
+    <div class="section-label">Problem Setup</div>
+    <h2>Thermal Distortion Pipeline</h2>
+    <div class="two-col">
+      <div>
+        <h3>Pipeline</h3>
+        <div class="step-row" style="flex-direction:column;align-items:flex-start;gap:10px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="step-box step-fem" style="min-width:130px;text-align:center;">PINN T(t,x,y)</span>
+            <span class="step-arrow">→</span>
+            <span style="font-size:.85rem;color:var(--txt-mid);">Temperature field from Level 1 NAS-PINN</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="step-box step-pinn" style="min-width:130px;text-align:center;">Thermal FEM</span>
+            <span class="step-arrow">→</span>
+            <span style="font-size:.85rem;color:var(--txt-mid);">Plane-stress mechanical solve on casting mesh</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="step-box step-skip" style="min-width:130px;text-align:center;">CMM comparison</span>
+            <span class="step-arrow">→</span>
+            <span style="font-size:.85rem;color:var(--txt-mid);">47-point coordinate comparison vs measurements</span>
+          </div>
+        </div>
+        <h3 style="margin-top:20px;">Mechanical Equations</h3>
+        <div class="eq-box">σ = E/(1−ν²) · [ε − εᵢₙₜₑₗ]<br>
+εᵢₙₜₑₗ = α · ΔT (thermal strain)<br>
+∇·σ = 0 (equilibrium)</div>
+      </div>
+      <div>
+        <h3>Material Parameters</h3>
+        <div class="params-grid" style="grid-template-columns:1fr 1fr;">
+          <div class="param-item"><div class="plabel">Young's modulus</div><div class="pvalue">E = 69 GPa</div></div>
+          <div class="param-item"><div class="plabel">Poisson's ratio</div><div class="pvalue">ν = 0.33</div></div>
+          <div class="param-item"><div class="plabel">Thermal expansion</div><div class="pvalue">α = 22×10⁻⁶ /°C</div></div>
+          <div class="param-item"><div class="plabel">Stress state</div><div class="pvalue">Plane stress</div></div>
+          <div class="param-item"><div class="plabel">CMM points</div><div class="pvalue">47</div></div>
+          <div class="param-item"><div class="plabel">Reference</div><div class="pvalue">Paper Fig 17/18</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Results -->
+<section>
+  <div class="container">
+    <div class="section-label">Results</div>
+    <h2>CMM Distortion Comparison</h2>
+    <div class="two-col">
+      <div class="card">
+        <h3>Mean Absolute Distortion |δ̄|</h3>
+        <table class="results-table">
+          <thead><tr><th>Method</th><th>Source</th><th>|δ̄| (mm) ↓</th></tr></thead>
+          <tbody>
+            <tr style="background:#FFF7ED;">
+              <td><strong>Paper Measured</strong></td><td>CMM scan</td><td>0.78 mm</td>
+            </tr>
+            <tr style="background:#F0FDF4;">
+              <td><strong>Paper FEM ★</strong></td><td>FEM baseline</td>
+              <td class="cell-good">0.75 mm</td>
+            </tr>
+            <tr>
+              <td><strong>Bayesian PINN</strong></td><td>L1 arch, Adam</td>
+              <td>1.67 mm</td>
+            </tr>
+            <tr>
+              <td>NSGA-II PINN</td><td>L1 arch, Adam</td>
+              <td class="cell-bad">2.81 mm</td>
+            </tr>
+            <tr>
+              <td>NSGA-III PINN</td><td>L1 arch, Adam</td>
+              <td class="cell-bad">4.74 mm</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="font-size:.82rem;color:var(--txt-light);margin-top:10px;">
+          ★ Paper FEM baseline is the reference. Bayesian PINN is 2.2× larger but in the
+          same order of magnitude. NSGA-II and NSGA-III over-estimate heavily due to their
+          larger thermal prediction errors carrying through to mechanics.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Distortion Bar Chart</h3>
+        <div id="cmm-wrap"></div>
+      </div>
+    </div>
+
+    <!-- Plots -->
+    <div style="margin-top:24px;" class="card">
+      <h3>Distortion Analysis Plots</h3>
+      <img src="../../results/pres_plots/pres_l4_distortion.png" class="plot-img" alt="L4 distortion grouped bars">
+      <p class="plot-caption">Grouped bar chart: PINN distortion vs paper FEM vs paper CMM measurements.</p>
+    </div>
+
+    <div style="margin-top:20px;" class="card">
+      <h3>Paper Comparison — Signed Error at CMM Points</h3>
+      <img src="../../level4_distortion/results/paper_comparison_signed.png" class="plot-img" alt="Paper comparison signed">
+      <p class="plot-caption">Signed distortion error at each of the 47 CMM points. Paper FEM (brown) vs PINN predictions.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Chart section -->
+<section>
+  <div class="container">
+    <div class="section-label">Interactive</div>
+    <h2>Distortion by Method</h2>
+    <div class="card">
+      <canvas id="distortionChart" height="260"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- Takeaways -->
+<section>
+  <div class="container">
+    <div class="section-label">Takeaways</div>
+    <h2>Key Observations</h2>
+    <ul class="finding-list">
+      <li>
+        <div class="finding-icon">✓</div>
+        <div class="finding-body">
+          <strong>Bayesian PINN distortion is in the right order of magnitude</strong>
+          <span>|δ̄| = 1.67 mm vs paper FEM 0.75 mm — 2.2× larger, but feasible for engineering use after Level 5 refinement.</span>
+        </div>
+      </li>
+      <li>
+        <div class="finding-icon">→</div>
+        <div class="finding-body">
+          <strong>Thermal accuracy directly controls distortion accuracy</strong>
+          <span>NSGA-III has L2=0.513 thermal error (7× worse than Bayesian) and 4.74 mm distortion (6× worse). The mapping is nearly linear.</span>
+        </div>
+      </li>
+      <li>
+        <div class="finding-icon">→</div>
+        <div class="finding-body">
+          <strong>NSGA-II and NSGA-III need thermal refinement first</strong>
+          <span>Improving their L2 thermal error (Level 5) should dramatically reduce distortion overshoot — which is confirmed in subsequent levels.</span>
+        </div>
+      </li>
+      <li>
+        <div class="finding-icon">✓</div>
+        <div class="finding-body">
+          <strong>End-to-end pipeline validated</strong>
+          <span>The full chain (NAS → PINN → thermal field → plane-stress FEM → CMM) runs without any manual correction steps.</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section style="padding:32px 0;background:var(--surface);border-top:1px solid var(--border);">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <a href="level3.html" class="btn btn-outline">← Level 3</a>
+      <span style="color:var(--txt-light);font-size:.9rem;">Level 4 of 7</span>
+      <a href="level5.html" class="btn btn-primary">Level 5: Extended Training →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <strong>NAS-PINNs</strong> — Level 4: Distortion Mechanics ·
+    <a href="../index.html">Back to overview</a>
+  </div>
+</footer>
+
+<script>
+// CMM animated bars
+const CMM_DATA=[
+  {label:'Paper Measured',val:0.78,color:'#E65100'},
+  {label:'Paper FEM',     val:0.75,color:'#5D4037'},
+  {label:'Bayesian PINN', val:1.67,color:'#1565C0'},
+  {label:'NSGA-II PINN',  val:2.81,color:'#C62828'},
+  {label:'NSGA-III PINN', val:4.74,color:'#2E7D32'},
+];
+const cmmWrap=document.getElementById('cmm-wrap');
+cmmWrap.innerHTML=CMM_DATA.map(d=>{
+  const pct=(d.val/5.5*100).toFixed(1);
+  return `<div class="cmm-bar-row">
+    <div class="cmm-bar-label">${d.label}</div>
+    <div class="cmm-bar-track"><div class="cmm-bar-fill" style="width:0%;background:${d.color};" data-target="${pct}">${d.val>1.5?d.val+' mm':''}</div></div>
+    <div class="cmm-bar-val" style="color:${d.color};">${d.val} mm</div>
+  </div>`;
+}).join('');
+new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)
+  document.querySelectorAll('.cmm-bar-fill').forEach(el=>{const t=el.getAttribute('data-target');setTimeout(()=>el.style.width=t+'%',50);});
+});},{threshold:.3}).observe(cmmWrap);
+
+// Bar chart
+new Chart(document.getElementById('distortionChart'),{
+  type:'bar',
+  data:{
+    labels:['Paper Measured','Paper FEM','Bayesian PINN','NSGA-II PINN','NSGA-III PINN'],
+    datasets:[{
+      label:'Mean Absolute Distortion (mm)',
+      backgroundColor:['rgba(230,81,0,.8)','rgba(93,64,55,.8)','rgba(21,101,192,.8)','rgba(198,40,40,.8)','rgba(46,125,50,.8)'],
+      data:[0.78,0.75,1.67,2.81,4.74],
+      borderRadius:4,
+    }]
+  },
+  options:{responsive:true,plugins:{legend:{display:false}},
+    scales:{y:{title:{display:true,text:'|δ̄| (mm)'},min:0,max:5.2}}}
+});
+</script>
+</body>
+</html>

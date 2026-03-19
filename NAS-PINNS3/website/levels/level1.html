@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Level 1 — Single-Shot NAS-PINN | NAS-PINNs</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="../index.html">NAS-PINNs</a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="level1.html" class="active">L1</a></li>
+      <li><a href="level2.html">L2</a></li>
+      <li><a href="level3.html">L3</a></li>
+      <li><a href="level4.html">L4</a></li>
+      <li><a href="level5.html">L5</a></li>
+      <li><a href="level6.html">L6</a></li>
+      <li><a href="level7.html">L7</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="level-hero" style="background:linear-gradient(135deg,#EFF6FF 0%,#F8FAFF 100%);">
+  <div class="container">
+    <div class="breadcrumb"><a href="../index.html">Home</a> › Level 1</div>
+    <span class="level-num" style="background:#DBEAFE;color:#1D4ED8;">Level 1</span>
+    <h1>Single-Shot NAS-PINN</h1>
+    <p class="sub">
+      A single neural network predicts the full 3-D temperature field T(t, x, y) for
+      A356 aluminium water quenching. Neural Architecture Search selects the optimal
+      number of layers, neurons per layer, and activation function.
+    </p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;">
+      <span class="badge badge-blue">Global predictor</span>
+      <span class="badge badge-blue">Bayesian · NSGA-II · NSGA-III</span>
+      <span class="badge badge-green">Target L2 &lt; 0.10</span>
+      <span class="badge badge-orange">A356 · Robin BC</span>
+    </div>
+  </div>
+</div>
+
+<!-- Physics -->
+<section>
+  <div class="container">
+    <div class="section-label">Problem Setup</div>
+    <h2>Physical Problem</h2>
+    <p class="section-desc">
+      An A356 aluminium casting (1.3 m × 0.6 m rectangle) is quenched from 540°C in 20°C water
+      for 30 seconds. The PINN is trained to reproduce the FEM temperature field at every
+      spatial point and every time step using only the PDE loss and boundary conditions —
+      no labelled FEM data.
+    </p>
+    <div class="two-col">
+      <div>
+        <h3>Governing PDE</h3>
+        <div class="eq-box">ρCₚ ∂T/∂t = K (∂²T/∂x² + ∂²T/∂y²)</div>
+        <h3 style="margin-top:18px;">Boundary Condition (Robin)</h3>
+        <div class="eq-box">−K ∂T/∂n = h (T − T<sub>water</sub>)</div>
+        <h3 style="margin-top:18px;">Analytical Reference</h3>
+        <div class="eq-box">T(t) = 20 + 520 · exp(−1.75×10⁻³ · t)</div>
+      </div>
+      <div>
+        <h3>Material &amp; Process Parameters</h3>
+        <div class="params-grid" style="grid-template-columns:1fr 1fr;">
+          <div class="param-item"><div class="plabel">Thermal conductivity</div><div class="pvalue">K = 150 W/mK</div></div>
+          <div class="param-item"><div class="plabel">Volumetric heat cap.</div><div class="pvalue">ρCₚ = 2.4×10⁶ J/m³K</div></div>
+          <div class="param-item"><div class="plabel">Initial temperature</div><div class="pvalue">T₀ = 540°C</div></div>
+          <div class="param-item"><div class="plabel">Water temperature</div><div class="pvalue">T_w = 20°C</div></div>
+          <div class="param-item"><div class="plabel">Heat transfer coeff.</div><div class="pvalue">h = 500 W/m²K</div></div>
+          <div class="param-item"><div class="plabel">Duration</div><div class="pvalue">t ∈ [0, 30] s</div></div>
+          <div class="param-item"><div class="plabel">Domain</div><div class="pvalue">1.3 m × 0.6 m</div></div>
+          <div class="param-item"><div class="plabel">Decay constant</div><div class="pvalue">λ = 1.75×10⁻³ s⁻¹</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NAS Search Space -->
+<section>
+  <div class="container">
+    <div class="section-label">Neural Architecture Search</div>
+    <h2>Search Space &amp; Optimisers</h2>
+    <p class="section-desc">
+      Three NAS algorithms independently search the same architecture space.
+      Each trial trains a PINN candidate for 500 epochs and reports L2 error.
+    </p>
+    <div class="two-col">
+      <div class="card">
+        <h3>Search Space</h3>
+        <table class="results-table" style="margin-top:8px;">
+          <thead><tr><th>Hyperparameter</th><th>Range / Choices</th></tr></thead>
+          <tbody>
+            <tr><td>Hidden layers</td><td>2 – 8</td></tr>
+            <tr><td>Neurons per layer</td><td>32, 64, 96, 128, 192, 256</td></tr>
+            <tr><td>Activation function</td><td>relu, tanh, silu, gelu</td></tr>
+            <tr><td>Number of NAS trials</td><td>50 per optimiser</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h3>NAS Optimisers</h3>
+        <table class="results-table" style="margin-top:8px;">
+          <thead><tr><th>Optimiser</th><th>Strategy</th><th>Objective</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Bayesian (TPE)</strong></td><td>Probabilistic surrogate model</td><td>Minimise L2</td></tr>
+            <tr><td><strong>NSGA-II</strong></td><td>Multi-objective genetic</td><td>L2 + params</td></tr>
+            <tr><td><strong>NSGA-III</strong></td><td>Reference-point NSGA</td><td>L2 + params</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Training -->
+<section>
+  <div class="container">
+    <div class="section-label">Training Setup</div>
+    <h2>Training Parameters</h2>
+    <div class="params-grid">
+      <div class="param-item"><div class="plabel">Optimizer</div><div class="pvalue">Adam</div></div>
+      <div class="param-item"><div class="plabel">Epochs</div><div class="pvalue">20 000</div></div>
+      <div class="param-item"><div class="plabel">LR schedule</div><div class="pvalue">Cosine decay</div></div>
+      <div class="param-item"><div class="plabel">LR range</div><div class="pvalue">1×10⁻³ → 1×10⁻⁵</div></div>
+      <div class="param-item"><div class="plabel">Collocation points</div><div class="pvalue">10 000 (interior)</div></div>
+      <div class="param-item"><div class="plabel">Boundary points</div><div class="pvalue">2 000</div></div>
+      <div class="param-item"><div class="plabel">Initial condition pts</div><div class="pvalue">1 000</div></div>
+      <div class="param-item"><div class="plabel">PDE loss weight</div><div class="pvalue">1.0</div></div>
+    </div>
+    <div style="margin-top:16px;" class="eq-box">
+      Loss = λ_pde · ||PDE residual||² + λ_bc · ||BC error||² + λ_ic · ||IC error||²
+    </div>
+  </div>
+</section>
+
+<!-- Results -->
+<section>
+  <div class="container">
+    <div class="section-label">Results</div>
+    <h2>NAS Results</h2>
+    <div class="two-col">
+      <div class="card">
+        <h3>Best Architectures Found</h3>
+        <table class="results-table">
+          <thead>
+            <tr><th>Optimiser</th><th>Architecture</th><th>Activation</th><th>Params</th><th>L2 ↓</th><th>MAE ↓</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Bayesian ★</strong></td>
+              <td>5 × 151</td><td>relu</td><td>92 564</td>
+              <td class="cell-good">0.076</td><td class="cell-good">39.1°C</td>
+            </tr>
+            <tr>
+              <td>NSGA-II</td>
+              <td>3 × 153</td><td>tanh</td><td>47 890</td>
+              <td class="cell-bad">0.252</td><td>132.6°C</td>
+            </tr>
+            <tr>
+              <td>NSGA-III</td>
+              <td>3 × 75</td><td>tanh</td><td>11 776</td>
+              <td class="cell-bad">0.513</td><td>270.3°C</td>
+            </tr>
+            <tr style="background:var(--green-l);">
+              <td colspan="4"><strong>Accuracy Target</strong></td>
+              <td class="cell-good"><strong>&lt; 0.100</strong></td>
+              <td class="cell-good"><strong>&lt; 50°C</strong></td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="font-size:.82rem;color:var(--txt-light);margin-top:10px;">
+          ★ Only Bayesian meets the L2 &lt; 0.10 target at 500 NAS trial epochs.
+          NSGA-II and NSGA-III improve significantly with extended training (→ Level 5).
+        </p>
+      </div>
+      <div class="card">
+        <h3>L2 Error Comparison</h3>
+        <canvas id="l1Chart" height="220"></canvas>
+      </div>
+    </div>
+
+    <!-- Plot -->
+    <div style="margin-top:24px;" class="card">
+      <h3>Architecture Search — Neurons vs L2</h3>
+      <img src="../../results/pres_plots/pres_l1_arch_bars.png" class="plot-img" alt="L1 architecture comparison bars">
+      <p class="plot-caption">L2 and MAE bar chart for all three NAS optimisers (Level 1, 20 000 training epochs).</p>
+    </div>
+
+    <div style="margin-top:20px;" class="card">
+      <h3>Cooling Curves — FEM Reference vs PINN Prediction</h3>
+      <img src="../../level1_single_shot/results/fig1_cooling_curves.png" class="plot-img"
+           alt="Cooling curves FEM vs PINN">
+      <p class="plot-caption">Centre-point temperature over 30 s. Analytical reference vs PINN predictions for all three architectures.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Key takeaways -->
+<section>
+  <div class="container">
+    <div class="section-label">Takeaways</div>
+    <h2>Key Observations</h2>
+    <ul class="finding-list">
+      <li>
+        <div class="finding-icon">✓</div>
+        <div class="finding-body">
+          <strong>Bayesian NAS finds the best architecture</strong>
+          <span>TPE surrogate efficiently focuses search on promising regions, reaching L2=0.076 — the only optimiser below the 0.10 target.</span>
+        </div>
+      </li>
+      <li>
+        <div class="finding-icon">→</div>
+        <div class="finding-body">
+          <strong>More parameters ≠ better accuracy at fixed budget</strong>
+          <span>NSGA-II found 47k params (smaller than Bayesian's 93k) but L2=0.252 — because architecture shape (5 deep layers) matters more than raw count.</span>
+        </div>
+      </li>
+      <li>
+        <div class="finding-icon">→</div>
+        <div class="finding-body">
+          <strong>relu outperforms tanh here</strong>
+          <span>Bayesian converged to relu activation. NSGA-II and NSGA-III both selected tanh and performed worse — likely due to gradient saturation in deep networks.</span>
+        </div>
+      </li>
+      <li>
+        <div class="finding-icon">→</div>
+        <div class="finding-body">
+          <strong>NSGA-II and NSGA-III need more training epochs</strong>
+          <span>Their architectures are capable but under-trained at 500 NAS epochs. Level 5 extended training closes this gap dramatically.</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- Nav to next -->
+<section style="padding:32px 0;background:var(--surface);border-top:1px solid var(--border);">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <a href="../index.html" class="btn btn-outline">← Home</a>
+      <span style="color:var(--txt-light);font-size:.9rem;">Level 1 of 7</span>
+      <a href="level2.html" class="btn btn-primary">Level 2: Skip Operator →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <strong>NAS-PINNs</strong> — Level 1: Single-Shot NAS-PINN ·
+    <a href="../index.html">Back to overview</a>
+  </div>
+</footer>
+
+<script>
+new Chart(document.getElementById('l1Chart'),{
+  type:'bar',
+  data:{
+    labels:['Bayesian','NSGA-II','NSGA-III'],
+    datasets:[
+      {label:'L2 Error',backgroundColor:['rgba(21,101,192,.8)','rgba(198,40,40,.8)','rgba(46,125,50,.8)'],
+       data:[0.076,0.252,0.513]},
+    ]
+  },
+  options:{responsive:true,plugins:{legend:{display:false},
+    annotation:{annotations:{line1:{type:'line',yMin:.10,yMax:.10,borderColor:'#16A34A',
+      borderWidth:2,borderDash:[6,4],label:{content:'Target L2 = 0.10',display:true,
+      position:'end',color:'#16A34A',font:{size:11}}}}}},
+    scales:{y:{title:{display:true,text:'L2 Relative Error'},min:0,max:.6},
+            x:{title:{display:true,text:'NAS Optimiser'}}}
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Level 5 — Extended Training | NAS-PINNs</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="../index.html">NAS-PINNs</a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="level1.html">L1</a></li>
+      <li><a href="level2.html">L2</a></li>
+      <li><a href="level3.html">L3</a></li>
+      <li><a href="level4.html">L4</a></li>
+      <li><a href="level5.html" class="active">L5</a></li>
+      <li><a href="level6.html">L6</a></li>
+      <li><a href="level7.html">L7</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="level-hero" style="background:linear-gradient(135deg,#F0FDF4 0%,#ECFDF5 100%);">
+  <div class="container">
+    <div class="breadcrumb"><a href="../index.html">Home</a> › Level 5</div>
+    <span class="level-num" style="background:#DCFCE7;color:#15803D;">Level 5</span>
+    <h1>Extended Training</h1>
+    <p class="sub">
+      The best NAS-found architectures from Level 1 are retrained with a longer cosine
+      learning-rate schedule. No architecture changes — only more training time.
+      NSGA-II improves 4.5× and finally meets the L2 &lt; 0.10 target.
+    </p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;">
+      <span class="badge badge-green">Same architectures as L1</span>
+      <span class="badge badge-blue">Cosine LR decay · Adam</span>
+      <span class="badge badge-green">Note: L-BFGS not used (lbfgs_iters=0)</span>
+    </div>
+  </div>
+</div>
+
+<!-- Setup -->
+<section>
+  <div class="container">
+    <div class="section-label">Training Setup</div>
+    <h2>Extended Training Configuration</h2>
+    <div class="two-col">
+      <div>
+        <p style="margin-bottom:14px;">
+          Level 5 answers a key question: were the Level 1 architectures fundamentally
+          limited, or just under-trained? The answer — confirmed here — is that
+          <strong>epoch count was the bottleneck</strong>, not architecture capacity.
+        </p>
+        <p style="margin-bottom:14px;color:var(--txt-mid);font-size:.9rem;">
+          Note: L-BFGS second-order optimisation was planned but not executed
+          (lbfgs_iters=0 in config). All improvements here come from extended Adam
+          with cosine LR.
+        </p>
+        <div class="eq-box">LR(epoch) = LR_min + ½(LR_max − LR_min)(1 + cos(π·epoch/N_epochs))</div>
+      </div>
+      <div>
+        <div class="params-grid" style="grid-template-columns:1fr 1fr;">
+          <div class="param-item"><div class="plabel">Optimizer</div><div class="pvalue">Adam</div></div>
+          <div class="param-item"><div class="plabel">LR schedule</div><div class="pvalue">Cosine decay</div></div>
+          <div class="param-item"><div class="plabel">LR start</div><div class="pvalue">1×10⁻³</div></div>
+          <div class="param-item"><div class="plabel">LR end</div><div class="pvalue">1×10⁻⁶</div></div>
+          <div class="param-item"><div class="plabel">L1 epochs</div><div class="pvalue">20 000</div></div>
+          <div class="param-item"><div class="plabel">L5 total epochs</div><div class="pvalue">~50 000</div></div>
+          <div class="param-item"><div class="plabel">Architectures</div><div class="pvalue">L1 NAS best</div></div>
+          <div class="param-item"><div class="plabel">L-BFGS</div><div class="pvalue">Not used (0 iters)</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Results -->
+<section>
+  <div class="container">
+    <div class="section-label">Results</div>
+    <h2>L1 vs L5 Comparison</h2>
+    <div class="two-col">
+      <div class="card">
+        <h3>L2 Error: Before and After</h3>
+        <table class="results-table">
+          <thead>
+            <tr><th>Optimiser</th><th>L1 L2</th><th>L5 L2</th><th>Improvement</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Bayesian</strong></td>
+              <td>0.076</td>
+              <td class="cell-good">0.030</td>
+              <td class="cell-good">2.6×</td>
+              <td class="cell-good">✓</td>
+            </tr>
+            <tr>
+              <td><strong>NSGA-II</strong></td>
+              <td>0.252</td>
+              <td class="cell-good">0.055</td>
+              <td class="cell-good">4.5×</td>
+              <td class="cell-good">✓</td>
+            </tr>
+            <tr>
+              <td>NSGA-III</td>
+              <td>0.513</td>
+              <td>0.259</td>
+              <td>2.0×</td>
+              <td class="cell-bad">✗</td>
+            </tr>
+            <tr style="background:var(--green-l);">
+              <td colspan="3"><strong>Target</strong></td>
+              <td colspan="2" class="cell-good"><strong>L2 &lt; 0.100</strong></td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="font-size:.82rem;color:var(--txt-light);margin-top:10px;">
+          NSGA-III still misses the target even with extended training.
+          Its small 3×75 architecture (12k params) appears to be the real capacity limit.
+        </p>
+      </div>
+      <div class="card">
+        <h3>MAE: Before and After</h3>
+        <table class="results-table">
+          <thead>
+            <tr><th>Optimiser</th><th>L1 MAE</th><th>L5 MAE</th><th>Reduction</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Bayesian</strong></td>
+              <td>39.1°C</td>
+              <td class="cell-good">15.6°C</td>
+              <td class="cell-good">2.5×</td>
+            </tr>
+            <tr>
+              <td><strong>NSGA-II</strong></td>
+              <td>132.6°C</td>
+              <td class="cell-good">28.6°C</td>
+              <td class="cell-good">4.6×</td>
+            </tr>
+            <tr>
+              <td>NSGA-III</td>
+              <td>270.3°C</td>
+              <td>136.0°C</td>
+              <td>2.0×</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Plots -->
+    <div style="margin-top:24px;" class="two-col">
+      <div class="card">
+        <h3>L2 Improvement — L1 vs L5</h3>
+        <img src="../../results/pres_plots/pres_l5_improvement.png" class="plot-img" alt="L5 improvement bars">
+        <p class="plot-caption">Before/after L2 error for all three optimisers. Green = meets target.</p>
+      </div>
+      <div class="card">
+        <h3>L2 vs Training Epoch</h3>
+        <img src="../../level5_refinement/results/level5_l2_comparison.png" class="plot-img" alt="L5 L2 vs epoch">
+        <p class="plot-caption">L2 error as a function of training epoch for all three architectures.</p>
+      </div>
+    </div>
+
+    <!-- Chart -->
+    <div style="margin-top:20px;" class="card">
+      <h3>Improvement Factor by Optimiser</h3>
+      <canvas id="l5Chart" height="220"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- Takeaways -->
+<section>
+  <div class="container">
+    <div class="section-label">Takeaways</div>
+    <h2>Key Observations</h2>
+    <ul class="finding-list">
+      <li>
+        <div class="finding-icon">✓</div>
+        <div class="finding-body">
+          <strong>NSGA-II finally meets the accuracy target</strong>
+          <span>L2 drops from 0.252 → 0.055 (4.5× improvement). Now well below the L2 &lt; 0.10 threshold with extended cosine Adam training.</span>
+        </div>
+      </li>
+      <li>
+        <div class="finding-icon">✓</div>
+        <div class="finding-body">
+          <strong>Bayesian reaches L2 = 0.030 — 3× below target</strong>
+          <span>The best architecture, trained longer, achieves outstanding accuracy. MAE drops to 15.6°C — suitable for engineering distortion prediction.</span>
+        </div>
+      </li>
+      <li>
+        <div class="finding-icon">→</div>
+        <div class="finding-body">
+          <strong>NSGA-III architecture is the true bottleneck</strong>
+          <span>Even with extended training, 3×75 tanh (12k params) cannot achieve L2 &lt; 0.10. Architecture capacity — not training time — limits this model.</span>
+        </div>
+      </li>
+      <li>
+        <div class="finding-icon">→</div>
+        <div class="finding-body">
+          <strong>L-BFGS was not tested (lbfgs_iters=0)</strong>
+          <span>All gains here are from Adam + cosine LR. Second-order L-BFGS optimisation may further improve convergence speed but was not implemented.</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section style="padding:32px 0;background:var(--surface);border-top:1px solid var(--border);">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <a href="level4.html" class="btn btn-outline">← Level 4</a>
+      <span style="color:var(--txt-light);font-size:.9rem;">Level 5 of 7</span>
+      <a href="level6.html" class="btn btn-primary">Level 6: Poisson Fine-Tuning →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <strong>NAS-PINNs</strong> — Level 5: Extended Training ·
+    <a href="../index.html">Back to overview</a>
+  </div>
+</footer>
+
+<script>
+new Chart(document.getElementById('l5Chart'),{
+  type:'bar',
+  data:{
+    labels:['Bayesian','NSGA-II','NSGA-III'],
+    datasets:[
+      {label:'L1 L2 Error', backgroundColor:'rgba(148,163,184,.8)', data:[0.076,0.252,0.513], borderRadius:4},
+      {label:'L5 L2 Error', backgroundColor:['rgba(21,101,192,.8)','rgba(21,101,192,.8)','rgba(198,40,40,.8)'],
+       data:[0.030,0.055,0.259], borderRadius:4},
+    ]
+  },
+  options:{responsive:true,plugins:{legend:{position:'top'}},
+    scales:{y:{title:{display:true,text:'L2 Relative Error'},min:0,max:0.55}}}
+});
+</script>
+</body>
+</html>

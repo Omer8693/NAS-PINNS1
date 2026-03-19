@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Level 2 — Temporal Skip Operator | NAS-PINNs</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="../index.html">NAS-PINNs</a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="level1.html">L1</a></li>
+      <li><a href="level2.html" class="active">L2</a></li>
+      <li><a href="level3.html">L3</a></li>
+      <li><a href="level4.html">L4</a></li>
+      <li><a href="level5.html">L5</a></li>
+      <li><a href="level6.html">L6</a></li>
+      <li><a href="level7.html">L7</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="level-hero" style="background:linear-gradient(135deg,#EFF6FF 0%,#F0FDF4 100%);">
+  <div class="container">
+    <div class="breadcrumb"><a href="../index.html">Home</a> › Level 2</div>
+    <span class="level-num" style="background:#DBEAFE;color:#1D4ED8;">Level 2</span>
+    <h1>Temporal Skip Operator</h1>
+    <p class="sub">
+      Instead of running FEM at every time step, the PINN learns to map the current
+      temperature field T<sub>k</sub> directly to T<sub>k+s</sub>, skipping s−1 FEM solves.
+      FEM runs only at anchor points; PINN fills all intermediate steps.
+    </p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;">
+      <span class="badge badge-blue">Skip factor s = 1, 2, 4, 8</span>
+      <span class="badge badge-green">Convergence: ratio &lt; 1.5×</span>
+      <span class="badge badge-orange">500 ep · 2000 ep comparison</span>
+    </div>
+  </div>
+</div>
+
+<!-- Concept -->
+<section>
+  <div class="container">
+    <div class="section-label">Concept</div>
+    <h2>How the Skip Operator Works</h2>
+    <div class="two-col">
+      <div>
+        <p style="margin-bottom:14px;">
+          FEM solves the heat equation step by step. Each FEM call is expensive.
+          With skip=s, only every s-th step uses FEM; the PINN predicts the
+          intermediate steps in milliseconds.
+        </p>
+        <h3>Without skip (s=1)</h3>
+        <div class="step-row">
+          <span class="step-box step-fem">FEM t₀</span>
+          <span class="step-arrow">→</span>
+          <span class="step-box step-fem">FEM t₁</span>
+          <span class="step-arrow">→</span>
+          <span class="step-box step-fem">FEM t₂</span>
+          <span class="step-arrow">→</span>
+          <span class="step-box step-fem">FEM t₃</span>
+          <span class="step-arrow">→ ···</span>
+        </div>
+        <h3 style="margin-top:18px;">With skip=2</h3>
+        <div class="step-row">
+          <span class="step-box step-fem">FEM t₀</span>
+          <span class="step-arrow">→</span>
+          <span class="step-box step-pinn">PINN t₁</span>
+          <span class="step-arrow">→</span>
+          <span class="step-box step-fem">FEM t₂</span>
+          <span class="step-arrow">→</span>
+          <span class="step-box step-pinn">PINN t₃</span>
+          <span class="step-arrow">→ ···</span>
+        </div>
+        <h3 style="margin-top:18px;">With skip=4</h3>
+        <div class="step-row">
+          <span class="step-box step-fem">FEM t₀</span>
+          <span class="step-arrow">→</span>
+          <span class="step-box step-pinn">PINN t₁</span>
+          <span class="step-arrow">→</span>
+          <span class="step-box step-pinn">PINN t₂</span>
+          <span class="step-arrow">→</span>
+          <span class="step-box step-pinn">PINN t₃</span>
+          <span class="step-arrow">→</span>
+          <span class="step-box step-fem">FEM t₄</span>
+          <span class="step-arrow">→ ···</span>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <h3>PINN Input / Output</h3>
+          <div class="eq-box">Input: T<sub>k</sub>(x, y) — current field<br>
+Output: T<sub>k+s</sub>(x, y) — field s steps ahead</div>
+          <h3 style="margin-top:16px;">Convergence Criterion</h3>
+          <div class="eq-box">MAE(skip=s) / MAE(skip=1) &lt; 1.5×  →  CONVERGED ✓</div>
+          <p style="font-size:.85rem;color:var(--txt-mid);margin-top:10px;">
+            A ratio above 1.5× means the skip-induced error is too large
+            compared to the baseline (no-skip) error.
+          </p>
+          <h3 style="margin-top:16px;">FEM Call Reduction</h3>
+          <div class="eq-box">Reduction = 1 − 1/s<br>
+skip=2 → 50% fewer FEM calls<br>
+skip=4 → 75% fewer FEM calls</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Training params -->
+<section>
+  <div class="container">
+    <div class="section-label">Training Setup</div>
+    <h2>Training Parameters</h2>
+    <div class="params-grid">
+      <div class="param-item"><div class="plabel">Optimizer</div><div class="pvalue">Adam</div></div>
+      <div class="param-item"><div class="plabel">Epochs (short run)</div><div class="pvalue">500</div></div>
+      <div class="param-item"><div class="plabel">Epochs (long run)</div><div class="pvalue">2 000</div></div>
+      <div class="param-item"><div class="plabel">LR schedule</div><div class="pvalue">Cosine decay</div></div>
+      <div class="param-item"><div class="plabel">LR range</div><div class="pvalue">1×10⁻³ → 1×10⁻⁵</div></div>
+      <div class="param-item"><div class="plabel">Skip values tested</div><div class="pvalue">1, 2, 4, 8</div></div>
+      <div class="param-item"><div class="plabel">Total steps</div><div class="pvalue">21 (t=0..30 s)</div></div>
+      <div class="param-item"><div class="plabel">NAS architectures</div><div class="pvalue">From Level 1</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Interactive timeline -->
+<section>
+  <div class="container">
+    <div class="section-label">Interactive Demo</div>
+    <h2>Skip Timeline — Select Skip Factor</h2>
+    <div class="card">
+      <div class="skip-controls">
+        <label class="ctrl-label">Skip factor:</label>
+        <select class="skip-select" id="skipSel" onchange="drawTimeline()">
+          <option value="1">skip = 1 (no skip)</option>
+          <option value="2" selected>skip = 2</option>
+          <option value="4">skip = 4</option>
+          <option value="8">skip = 8</option>
+        </select>
+        <label class="ctrl-label">Optimizer:</label>
+        <select class="skip-select" id="optSel" onchange="drawTimeline()">
+          <option value="bayesian">Bayesian (5×151 relu)</option>
+          <option value="nsga2">NSGA-II (3×153 tanh)</option>
+          <option value="nsga3">NSGA-III (3×75 tanh)</option>
+        </select>
+      </div>
+      <div style="overflow-x:auto;">
+        <svg id="timeline-svg" width="100%" style="min-width:600px;" height="110"></svg>
+      </div>
+      <div class="skip-stats" id="skip-stats"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Results 500 ep -->
+<section>
+  <div class="container">
+    <div class="section-label">Results — 500 Epochs</div>
+    <h2>Skip Operator Results (500 Epochs)</h2>
+    <div class="card">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th rowspan="2">Skip</th>
+            <th colspan="3" style="text-align:center;background:#1E40AF;">Bayesian (5×151 relu)</th>
+            <th colspan="3" style="text-align:center;background:#991B1B;">NSGA-II (3×153 tanh)</th>
+            <th colspan="3" style="text-align:center;background:#166534;">NSGA-III (3×75 tanh)</th>
+          </tr>
+          <tr>
+            <th>MAE ↓</th><th>Ratio</th><th>Status</th>
+            <th>MAE ↓</th><th>Ratio</th><th>Status</th>
+            <th>MAE ↓</th><th>Ratio</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>skip=1</strong></td>
+            <td>43.6°C</td><td>1.00×</td><td class="cell-good">✓</td>
+            <td>38.1°C</td><td>1.00×</td><td class="cell-good">✓</td>
+            <td>44.4°C</td><td>1.00×</td><td class="cell-good">✓</td>
+          </tr>
+          <tr>
+            <td><strong>skip=2</strong></td>
+            <td>33.2°C</td><td class="cell-good">0.76×</td><td class="cell-good">✓</td>
+            <td>56.0°C</td><td class="cell-good">1.47×</td><td class="cell-good">✓</td>
+            <td>75.6°C</td><td class="cell-bad">1.70×</td><td class="cell-bad">✗</td>
+          </tr>
+          <tr>
+            <td><strong>skip=4</strong></td>
+            <td>57.5°C</td><td class="cell-good">1.32×</td><td class="cell-good">✓</td>
+            <td>154.8°C</td><td class="cell-bad">4.06×</td><td class="cell-bad">✗</td>
+            <td>202.1°C</td><td class="cell-bad">4.55×</td><td class="cell-bad">✗</td>
+          </tr>
+          <tr>
+            <td><strong>skip=8</strong></td>
+            <td>93.6°C</td><td class="cell-bad">2.15×</td><td class="cell-bad">✗</td>
+            <td>354.6°C</td><td class="cell-bad">9.31×</td><td class="cell-bad">✗</td>
+            <td>428.6°C</td><td class="cell-bad">9.65×</td><td class="cell-bad">✗</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:.82rem;color:var(--txt-light);margin-top:10px;">
+        Ratio = MAE(skip=s) / MAE(skip=1). Convergence criterion: ratio &lt; 1.5×.
+        NSGA-II skip=2: ratio=1.47× &lt; 1.5× → CONVERGED ✓
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Results 2000 ep -->
+<section>
+  <div class="container">
+    <div class="section-label">Results — 2000 Epochs</div>
+    <h2>Skip Operator Results (2000 Epochs)</h2>
+    <p class="section-desc">
+      With more training epochs, even the smaller NSGA-II and NSGA-III architectures
+      converge at skip=2 — confirming that epoch count was the main bottleneck.
+    </p>
+    <div class="card">
+      <table class="results-table">
+        <thead>
+          <tr><th>Optimiser</th><th>skip=1 MAE</th><th>skip=2 MAE</th><th>Ratio</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Bayesian</strong></td><td>35.2°C</td><td>28.9°C</td><td class="cell-good">0.82×</td><td class="cell-good">✓</td></tr>
+          <tr><td><strong>NSGA-II</strong></td><td>33.8°C</td><td>33.1°C</td><td class="cell-good">0.98×</td><td class="cell-good">✓</td></tr>
+          <tr><td><strong>NSGA-III</strong></td><td>41.2°C</td><td>40.8°C</td><td class="cell-good">0.99×</td><td class="cell-good">✓</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:.82rem;color:var(--txt-light);margin-top:10px;">
+        All three optimisers converge at skip=2 with 2000 epochs.
+        NSGA-II and NSGA-III ratios are essentially 1.0 — the skip adds no measurable error.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Plots -->
+<section>
+  <div class="container">
+    <div class="section-label">Visualisations</div>
+    <h2>Result Plots</h2>
+    <div class="two-col">
+      <div class="card">
+        <h3>Skip Factor vs MAE — 500 ep &amp; 2000 ep</h3>
+        <img src="../../results/pres_plots/pres_l2_skip_comparison.png" class="plot-img" alt="L2 skip comparison">
+        <p class="plot-caption">MAE as a function of skip factor. Dashed = 500 ep, solid = 2000 ep.</p>
+      </div>
+      <div class="card">
+        <h3>FEM vs PINN Step Distribution</h3>
+        <img src="../../level2_timestepper/results/fem_vs_pinn_skip.png" class="plot-img" alt="FEM vs PINN skip visualisation">
+        <p class="plot-caption">Actual time steps coloured by solver used (FEM=blue, PINN=orange).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Takeaways -->
+<section>
+  <div class="container">
+    <div class="section-label">Takeaways</div>
+    <h2>Key Observations</h2>
+    <ul class="finding-list">
+      <li>
+        <div class="finding-icon">✓</div>
+        <div class="finding-body">
+          <strong>Bayesian architecture converges up to skip=4</strong>
+          <span>5×151 relu (93k params) achieves ratio=1.32× at skip=4 → 75% fewer FEM calls with no convergence failure.</span>
+        </div>
+      </li>
+      <li>
+        <div class="finding-icon">✓</div>
+        <div class="finding-body">
+          <strong>NSGA-II skip=2 converges at 500 epochs</strong>
+          <span>Ratio = 1.47× &lt; 1.5× threshold → converged. Often misreported as failing — the margin is tight but valid.</span>
+        </div>
+      </li>
+      <li>
+        <div class="finding-icon">✓</div>
+        <div class="finding-body">
+          <strong>2000 epochs: all optimisers converge at skip=2</strong>
+          <span>NSGA-II ratio=0.98×, NSGA-III ratio=0.99× — epoch count was the bottleneck, not architecture capacity.</span>
+        </div>
+      </li>
+      <li>
+        <div class="finding-icon">→</div>
+        <div class="finding-body">
+          <strong>Skip=8 fails for all architectures at 500 epochs</strong>
+          <span>Predicting 8 steps ahead is too large a jump; the PINN cannot generalise that far without much more training data and epochs.</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section style="padding:32px 0;background:var(--surface);border-top:1px solid var(--border);">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <a href="level1.html" class="btn btn-outline">← Level 1</a>
+      <span style="color:var(--txt-light);font-size:.9rem;">Level 2 of 7</span>
+      <a href="level3.html" class="btn btn-primary">Level 3: Hybrid FEM+PINN →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <strong>NAS-PINNs</strong> — Level 2: Temporal Skip Operator ·
+    <a href="../index.html">Back to overview</a>
+  </div>
+</footer>
+
+<script>
+const SKIP_DATA={
+  bayesian:{1:{mae:43.6,ok:true},2:{mae:33.2,ok:true},4:{mae:57.5,ok:true},8:{mae:93.6,ok:false}},
+  nsga2:   {1:{mae:38.1,ok:true},2:{mae:56.0,ok:true},4:{mae:154.8,ok:false},8:{mae:354.6,ok:false}},
+  nsga3:   {1:{mae:44.4,ok:true},2:{mae:75.6,ok:false},4:{mae:202.1,ok:false},8:{mae:428.6,ok:false}},
+};
+function drawTimeline(){
+  const skip=parseInt(document.getElementById('skipSel').value);
+  const opt=document.getElementById('optSel').value;
+  const svg=document.getElementById('timeline-svg');
+  const W=svg.getBoundingClientRect().width||700,N=21,pad=40,bw=28;
+  const slotW=(W-pad*2)/N;
+  svg.setAttribute('height',110);
+  let html='';
+  for(let i=0;i<N;i++){
+    const x=pad+i*slotW,isFEM=(i%skip===0);
+    const col=isFEM?'#1565C0':'#EA580C',label=isFEM?'FEM':'PINN';
+    const ty=(i*1.5).toFixed(0);
+    html+=`<rect x="${x}" y="20" width="${slotW-3}" height="${bw}" rx="4" fill="${col}" opacity=".85"/>
+           <text x="${x+(slotW-3)/2}" y="38" text-anchor="middle" font-size="9" font-weight="700" fill="white">${label}</text>
+           <text x="${x+(slotW-3)/2}" y="60" text-anchor="middle" font-size="8" fill="#475569">${ty}s</text>`;
+  }
+  html+=`<text x="${pad}" y="14" font-size="11" font-weight="600" fill="#1E293B">Time →</text>`;
+  svg.innerHTML=html;
+  const femCnt=Math.ceil(N/skip),pinnCnt=N-femCnt;
+  const data=SKIP_DATA[opt][skip]||{},ok=data.ok,mae=data.mae||'—';
+  document.getElementById('skip-stats').innerHTML=`
+    <div class="stat-chip" style="background:var(--primary-l);color:var(--primary);">FEM calls: <strong>${femCnt} / ${N}</strong></div>
+    <div class="stat-chip" style="background:#FFF7ED;color:var(--orange);">PINN steps: <strong>${pinnCnt}</strong></div>
+    <div class="stat-chip" style="background:var(--green-l);color:var(--green);">Speedup: <strong>${(N/femCnt).toFixed(1)}×</strong></div>
+    <div class="stat-chip" style="background:${ok?'var(--green-l)':'var(--red-l)'};color:${ok?'var(--green)':'var(--red)'};">
+      MAE: <strong>${mae}°C ${ok?'✓':'✗'}</strong></div>`;
+}
+drawTimeline();
+</script>
+</body>
+</html>

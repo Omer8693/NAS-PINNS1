@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Level 7 — Multi-Domain NAS | NAS-PINNs</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="../index.html">NAS-PINNs</a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="level1.html">L1</a></li>
+      <li><a href="level2.html">L2</a></li>
+      <li><a href="level3.html">L3</a></li>
+      <li><a href="level4.html">L4</a></li>
+      <li><a href="level5.html">L5</a></li>
+      <li><a href="level6.html">L6</a></li>
+      <li><a href="level7.html" class="active">L7</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="level-hero" style="background:linear-gradient(135deg,#FFF7ED 0%,#FFFBEB 50%,#F0FDF4 100%);">
+  <div class="container">
+    <div class="breadcrumb"><a href="../index.html">Home</a> › Level 7</div>
+    <span class="level-num" style="background:#FEF3C7;color:#92400E;">Level 7</span>
+    <h1>Multi-Domain NAS — Poisson Equation</h1>
+    <p class="sub">
+      NAS is applied independently to five different 2-D geometries, all solving the
+      Poisson equation. This tests whether NAS-PINNs generalise across domain shapes —
+      from simple circles to complex 5-petal flower boundaries.
+    </p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;">
+      <span class="badge badge-orange">5 geometries</span>
+      <span class="badge badge-blue">Poisson PDE: −∇²u = f</span>
+      <span class="badge badge-green">Circle L2 = 0.00014 ✓✓</span>
+      <span class="badge badge-blue">Bayesian · NSGA-II · NSGA-III</span>
+    </div>
+  </div>
+</div>
+
+<!-- Problem -->
+<section>
+  <div class="container">
+    <div class="section-label">Problem Setup</div>
+    <h2>Poisson Equation on 5 Geometries</h2>
+    <div class="two-col">
+      <div>
+        <h3>PDE</h3>
+        <div class="eq-box">−∇²u = f(x, y)  on Ω<br>
+u = 0  on ∂Ω  (Dirichlet)</div>
+        <p style="margin-top:14px;font-size:.9rem;color:var(--txt-mid);">
+          Each domain has a different exact or reference solution.
+          The PINN is trained using only the PDE loss — no labelled solution data.
+          Accuracy is measured as L2 relative error against the reference.
+        </p>
+        <h3 style="margin-top:18px;">Why Different Geometries?</h3>
+        <p style="font-size:.9rem;color:var(--txt-mid);">
+          Geometry complexity tests the PINN's ability to learn complex boundary shapes.
+          Re-entrant corners (L-Shape) and curved petals (Flower) create challenging
+          boundary conditions and singular features in the solution.
+        </p>
+      </div>
+      <div class="card">
+        <h3>NAS Search Space (same as L1)</h3>
+        <table class="results-table">
+          <thead><tr><th>Parameter</th><th>Range</th></tr></thead>
+          <tbody>
+            <tr><td>Hidden layers</td><td>2 – 8</td></tr>
+            <tr><td>Neurons per layer</td><td>32 – 256</td></tr>
+            <tr><td>Activation</td><td>relu, tanh, silu, gelu</td></tr>
+            <tr><td>NAS trials</td><td>50 per domain × 3 optimisers</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Domain cards -->
+<section>
+  <div class="container">
+    <div class="section-label">Geometries</div>
+    <h2>Five Domains</h2>
+    <div class="level-grid">
+      <div class="level-card">
+        <span class="level-tag" style="background:#DBEAFE;color:#1D4ED8;">Square [0,1]²</span>
+        <h3>Manufactured Solution</h3>
+        <p>u* = x²(x−1)²·y²(y−1)²<br>Smooth boundary, medium difficulty.</p>
+        <span class="result-chip">Bayesian L2 = 0.0376</span>
+      </div>
+      <div class="level-card">
+        <span class="level-tag" style="background:#DCFCE7;color:#15803D;">Circle r ≤ 1</span>
+        <h3>Analytic Solution</h3>
+        <p>u* = (1 − x² − y²) / 4<br>Smooth, simple shape. Easiest domain.</p>
+        <span class="result-chip">Bayesian L2 = 0.00014 ✓✓</span>
+      </div>
+      <div class="level-card">
+        <span class="level-tag" style="background:#EDE9FE;color:#6D28D9;">Annulus</span>
+        <h3>Ring Domain</h3>
+        <p>0.3 ≤ r ≤ 1.0<br>Inner and outer boundary. Medium difficulty.</p>
+        <span class="result-chip">Bayesian L2 = 0.0091 ✓</span>
+      </div>
+      <div class="level-card">
+        <span class="level-tag" style="background:#FEF3C7;color:#B45309;">L-Shape</span>
+        <h3>Re-entrant Corner</h3>
+        <p>[0,1]² \ [0.5,1]×[0,0.5]<br>FDM reference. Medium-hard.</p>
+        <span class="result-chip">Bayesian L2 = 0.0277 ✓</span>
+      </div>
+      <div class="level-card">
+        <span class="level-tag" style="background:#FEE2E2;color:#DC2626;">Flower</span>
+        <h3>5-Petal Boundary</h3>
+        <p>r ≤ 1 + 0.3·cos(5θ)<br>Complex boundary. Hardest domain.</p>
+        <span class="result-chip" style="background:#FEE2E2;color:#DC2626;">Bayesian L2 = 0.172</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Results table -->
+<section>
+  <div class="container">
+    <div class="section-label">Results</div>
+    <h2>L2 Error by Domain and Optimiser</h2>
+    <div class="card">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Domain</th>
+            <th>Reference</th>
+            <th>Bayesian L2 ↓</th>
+            <th>NSGA-II L2 ↓</th>
+            <th>NSGA-III L2 ↓</th>
+            <th>Best</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Square</strong></td>
+            <td>Analytical exact</td>
+            <td class="cell-good">0.0376</td>
+            <td class="cell-note">—</td>
+            <td class="cell-note">—</td>
+            <td class="cell-good">Bayesian</td>
+          </tr>
+          <tr>
+            <td><strong>Circle</strong></td>
+            <td>Analytical exact</td>
+            <td class="cell-good">0.000143 ✓✓</td>
+            <td class="cell-good">0.000416</td>
+            <td>0.000657</td>
+            <td class="cell-good">Bayesian</td>
+          </tr>
+          <tr>
+            <td><strong>Annulus</strong></td>
+            <td>FDM reference</td>
+            <td class="cell-good">0.0091</td>
+            <td>0.0124</td>
+            <td>0.0185</td>
+            <td class="cell-good">Bayesian</td>
+          </tr>
+          <tr>
+            <td><strong>L-Shape</strong></td>
+            <td>FDM reference</td>
+            <td class="cell-good">0.0277</td>
+            <td class="cell-good">0.0285</td>
+            <td>0.0320</td>
+            <td class="cell-good">Bayesian</td>
+          </tr>
+          <tr>
+            <td><strong>Flower</strong></td>
+            <td>FDM reference</td>
+            <td>0.172</td>
+            <td>0.176</td>
+            <td>0.176</td>
+            <td class="cell-bad">All struggle</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:.82rem;color:var(--txt-light);margin-top:10px;">
+        Annulus results are from FDM-reference comparison. Square results are Bayesian-only
+        (NSGA-II/III were not separately evaluated on Square at L7B).
+      </p>
+    </div>
+
+    <!-- Bar chart -->
+    <div style="margin-top:20px;" class="card">
+      <h3>L2 Error by Domain</h3>
+      <canvas id="domainChart" height="240"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- Plots -->
+<section>
+  <div class="container">
+    <div class="section-label">Visualisations</div>
+    <h2>Domain Plots and Predictions</h2>
+
+    <div class="card">
+      <h3>Domain Shapes with Reference Solutions</h3>
+      <img src="../../results/pres_plots/pres_domain_shapes.png" class="plot-img" alt="Domain shapes with reference solutions">
+      <p class="plot-caption">All 5 geometries with colour-mapped exact/FDM reference solutions.
+         Left: Square · Circle · Annulus. Right: L-Shape · Flower.</p>
+    </div>
+
+    <div style="margin-top:20px;" class="card">
+      <h3>PINN Predictions and L2 Error Maps</h3>
+      <img src="../../results/pres_plots/pres_domain_pred_error.png" class="plot-img" alt="PINN predictions and error maps">
+      <p class="plot-caption">Side-by-side: PINN predicted field and pointwise L2 error for Square, Circle, L-Shape, Flower.
+         Generated from high-quality l7b_*.png plots.</p>
+    </div>
+
+    <div style="margin-top:20px;" class="card">
+      <h3>Multi-Domain L2 Results</h3>
+      <img src="../../results/pres_plots/pres_l7b_results.png" class="plot-img" alt="L7B results grouped bar chart">
+      <p class="plot-caption">Grouped bar chart of L2 errors for all three NAS optimisers across four evaluated geometries.</p>
+    </div>
+
+    <div style="margin-top:20px;" class="two-col">
+      <div class="card">
+        <h3>Square Domain — PINN Solution</h3>
+        <img src="../../level7_multiDomain/results/plots/l7b_square.png" class="plot-img" alt="L7B square">
+        <p class="plot-caption">PINN prediction, reference, and error map for Square domain.</p>
+      </div>
+      <div class="card">
+        <h3>Circle Domain — PINN Solution</h3>
+        <img src="../../level7_multiDomain/results/plots/l7b_circle.png" class="plot-img" alt="L7B circle">
+        <p class="plot-caption">Circle domain — best result overall. L2=0.00014 for Bayesian.</p>
+      </div>
+    </div>
+    <div style="margin-top:16px;" class="two-col">
+      <div class="card">
+        <h3>L-Shape Domain — PINN Solution</h3>
+        <img src="../../level7_multiDomain/results/plots/l7b_lshape.png" class="plot-img" alt="L7B L-shape">
+        <p class="plot-caption">Re-entrant corner domain. Bayesian achieves L2=0.0277.</p>
+      </div>
+      <div class="card">
+        <h3>Flower Domain — PINN Solution</h3>
+        <img src="../../level7_multiDomain/results/plots/l7b_flower.png" class="plot-img" alt="L7B flower">
+        <p class="plot-caption">Hardest domain. Best L2=0.172 — the complex boundary challenges all architectures.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Takeaways -->
+<section>
+  <div class="container">
+    <div class="section-label">Takeaways</div>
+    <h2>Key Observations</h2>
+    <ul class="finding-list">
+      <li>
+        <div class="finding-icon">✓</div>
+        <div class="finding-body">
+          <strong>NAS generalises across PDE families and geometries</strong>
+          <span>Circle L2=0.00014, Annulus L2=0.009, L-Shape L2=0.028 — four of five geometries solved to engineering accuracy.</span>
+        </div>
+      </li>
+      <li>
+        <div class="finding-icon">✓</div>
+        <div class="finding-body">
+          <strong>Smooth boundaries are dramatically easier</strong>
+          <span>Circle (smooth, convex) achieves 3 orders of magnitude better accuracy than Flower (complex curved boundary).</span>
+        </div>
+      </li>
+      <li>
+        <div class="finding-icon">→</div>
+        <div class="finding-body">
+          <strong>Flower domain requires architecture-level adaptation</strong>
+          <span>L2=0.172 for all three optimisers suggests the search space (standard MLP) cannot easily capture the high-frequency boundary features of the 5-petal shape.</span>
+        </div>
+      </li>
+      <li>
+        <div class="finding-icon">✓</div>
+        <div class="finding-body">
+          <strong>Bayesian NAS consistently finds the best architecture</strong>
+          <span>Bayesian wins on all 4 evaluated domains. NSGA-II is competitive on Circle and L-Shape but falls behind on complex geometries.</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section style="padding:32px 0;background:var(--surface);border-top:1px solid var(--border);">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <a href="level6.html" class="btn btn-outline">← Level 6</a>
+      <span style="color:var(--txt-light);font-size:.9rem;">Level 7 of 7 — Final Level</span>
+      <a href="../index.html" class="btn btn-primary">← Back to Overview</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <strong>NAS-PINNs</strong> — Level 7: Multi-Domain NAS ·
+    <a href="../index.html">Back to overview</a>
+  </div>
+</footer>
+
+<script>
+new Chart(document.getElementById('domainChart'),{
+  type:'bar',
+  data:{
+    labels:['Square','Circle','Annulus','L-Shape','Flower'],
+    datasets:[
+      {label:'Bayesian',backgroundColor:'rgba(21,101,192,.8)',
+       data:[0.0376,0.000143,0.0091,0.0277,0.172],borderRadius:4},
+      {label:'NSGA-II', backgroundColor:'rgba(198,40,40,.8)',
+       data:[null,0.000416,0.0124,0.0285,0.176],borderRadius:4},
+      {label:'NSGA-III',backgroundColor:'rgba(46,125,50,.8)',
+       data:[null,0.000657,0.0185,0.0320,0.176],borderRadius:4},
+    ]
+  },
+  options:{responsive:true,plugins:{legend:{position:'top'}},
+    scales:{y:{title:{display:true,text:'L2 Relative Error'},min:0,max:0.22}}}
+});
+</script>
+</body>
+</html>

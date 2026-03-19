@@ -1105,10 +1105,7 @@ def slide_level7b_domains(prs):
     ], Inches(0.4), Inches(1.28), Inches(4.5), Inches(3.8), size=12)
 
     img(sl, PP / "pres_domain_shapes.png",
-        Inches(0.4), Inches(4.95), Inches(12.6), Inches(2.25))
-
-    img(sl, L7B / "l7b_circle.png",
-        Inches(5.0), Inches(1.28), Inches(8.1), Inches(3.5))
+        Inches(0.4), Inches(4.85), Inches(12.6), Inches(2.35))
 
     notes(sl,
         "Level 7B tests whether NAS can find good architectures for Poisson "
@@ -1124,7 +1121,45 @@ def slide_level7b_domains(prs):
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# SLIDE 19 — Level 7B: Multi-Domain Results
+# SLIDE 19 — Level 7B: Prediction + Error Maps
+# ══════════════════════════════════════════════════════════════════════════════
+
+def slide_level7b_pred_error(prs):
+    sl = blank(prs)
+    bg(sl, C_BG)
+    header(sl, "Level 7B — PINN Prediction vs Reference: Error Maps",
+           "3 rows: Reference solution  |  Bayesian PINN pred  |  |pred − ref|", tag="L7")
+    footer(sl)
+
+    bullets(sl, [
+        "Top row:    Reference — exact formula (Square, Circle) or FDM (L-Shape, Flower)",
+        "Middle row: Bayesian PINN prediction on the same grid",
+        "Bottom row: Absolute error |pred − ref|  (YlOrRd colormap — darker = bigger error)",
+        "",
+        "L2 values (blue badge) are final test errors from NAS training.",
+        "Max error (red badge) shows worst-case spatial deviation.",
+    ], Inches(0.4), Inches(1.28), Inches(12.7), Inches(1.8), size=12)
+
+    img(sl, PP / "pres_domain_pred_error.png",
+        Inches(0.3), Inches(3.05), Inches(12.8), Inches(4.15))
+
+    notes(sl,
+        "This slide shows the full comparison: reference (top), PINN prediction (middle), "
+        "and absolute error map (bottom) for all four domains. "
+        "Circle is excellent: L2=0.00014, error map nearly zero everywhere. "
+        "L-shape is good: L2=0.028, error concentrated near the inner corner. "
+        "Square: L2=0.038, error distributed across the domain. "
+        "Flower: L2=0.172, larger errors especially near petal tips — "
+        "the complex boundary is hard to learn accurately.",
+        "Bu slayt tam karşılaştırmayı gösteriyor: referans (üst), PINN tahmini "
+        "(orta) ve mutlak hata haritası (alt). Daire mükemmeldir: L2=0.00014, "
+        "hata haritası neredeyse her yerde sıfır. L-şekil iyidir: L2=0.028, "
+        "hata iç köşede yoğunlaşmış. Kare: L2=0.038. Çiçek: L2=0.172, "
+        "taç yaprakları özellikle zordur.")
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# SLIDE 20 — Level 7B: Multi-Domain L2 Bar Chart
 # ══════════════════════════════════════════════════════════════════════════════
 
 def slide_level7b_results(prs):
@@ -1330,10 +1365,11 @@ def main():
     slide_level5(prs)           # 15
     slide_level5_plot(prs)      # 16
     slide_level6(prs)           # 17
-    slide_level7b_domains(prs)  # 18
-    slide_level7b_results(prs)  # 19
-    slide_cross_level(prs)      # 20
-    slide_conclusions(prs)      # 21
+    slide_level7b_domains(prs)     # 18
+    slide_level7b_pred_error(prs)  # 19
+    slide_level7b_results(prs)     # 20
+    slide_cross_level(prs)         # 21
+    slide_conclusions(prs)         # 22
 
     out = ROOT / "results" / "NAS_PINNs_Presentation.pptx"
     out.parent.mkdir(parents=True, exist_ok=True)

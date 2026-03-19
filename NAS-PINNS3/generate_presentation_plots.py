@@ -165,9 +165,9 @@ def plot_domain_shapes():
         fig.colorbar(im, ax=ax, shrink=0.8, pad=0.04)
     except Exception:
         ax.contourf(XX, YY, np.where(mask_l, 0.5, np.nan), levels=5, cmap="YlGnBu")
-    # Outline
-    outline_x = [0,1,1,0.5,0.5,0,0]
-    outline_y = [0,0,1,1,0.5,0.5,0]
+    # Correct L-shape outline: [0,1]² minus lower-right [0.5,1]×[0,0.5]
+    outline_x = [0, 0.5, 0.5, 1,   1, 0, 0]
+    outline_y = [0, 0,   0.5, 0.5, 1, 1, 0]
     ax.plot(outline_x, outline_y, "k-", lw=1.5)
     ax.set_xlim(-0.05,1.05); ax.set_ylim(-0.05,1.05)
     ax.set_aspect("equal")
@@ -702,6 +702,52 @@ def plot_l3_skip_rates():
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+# 10.  DOMAIN SHAPES + PINN PREDICTION + ERROR  (3-row comparison)
+# ══════════════════════════════════════════════════════════════════════════════
+
+def plot_domain_pred_error():
+    """
+    Combine the 4 existing per-domain plots from plot_level7b.py into a
+    single 2×2 grid image.  Uses the already-generated high-quality PNGs:
+      level7_multiDomain/results/plots/l7b_{square,circle,lshape,flower}.png
+    """
+    from matplotlib.image import imread
+
+    L7B_PLOTS = ROOT / "level7_multiDomain/results/plots"
+    domains = [
+        ("square", "Square"),
+        ("circle", "Circle"),
+        ("lshape", "L-Shape"),
+        ("flower", "Flower"),
+    ]
+
+    # Check all source files exist
+    missing = [d for d, _ in domains if not (L7B_PLOTS / f"l7b_{d}.png").exists()]
+    if missing:
+        print(f"  [SKIP] missing source plots: {missing}")
+        return
+
+    fig, axes = plt.subplots(2, 2, figsize=(20, 14), facecolor=_FIG_BG)
+    fig.suptitle(
+        "Level 7B — Per-Domain: Reference  |  PINN Predictions  |  Error Maps  (Bayesian NAS)",
+        fontsize=14, color=_TXT, fontweight="bold", y=1.01
+    )
+
+    for ax, (dom, label) in zip(axes.ravel(), domains):
+        src = L7B_PLOTS / f"l7b_{dom}.png"
+        im  = imread(str(src))
+        ax.imshow(im)
+        ax.set_title(label, fontsize=13, color=_TXT, fontweight="bold", pad=6)
+        ax.axis("off")
+
+    plt.tight_layout(pad=1.0)
+    out = OUT_DIR / "pres_domain_pred_error.png"
+    fig.savefig(out, dpi=150, bbox_inches="tight", facecolor=_FIG_BG)
+    plt.close()
+    print(f"  [OK] {out.name}")
+
+
+# ══════════════════════════════════════════════════════════════════════════════
 # MAIN
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -710,6 +756,7 @@ if __name__ == "__main__":
     print(f"Output: {OUT_DIR}\n")
 
     plot_domain_shapes()
+    plot_domain_pred_error()
     plot_l1_arch_comparison()
     plot_l2_skip_comparison()
     plot_l4_distortion()

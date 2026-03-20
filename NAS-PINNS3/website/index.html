@@ -126,14 +126,20 @@ th{font-size:.75rem}
 .explain{font-size:.85rem;line-height:1.7}
 .lcard p{font-size:.78rem}
 .pd-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.25rem;border-left:3px solid var(--blue)}
-.pd-header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:.85rem}
+.pd-header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:1.1rem}
 .pd-name{font-size:.95rem;font-weight:600;color:var(--txt)}
 .pd-pills{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
-.pd-vis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:.85rem}
+.pd-vis-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1rem}
+.pd-opt-col{background:var(--surface2);border-radius:8px;padding:.85rem;border:1px solid var(--border)}
+.pd-opt-header{margin-bottom:.75rem;padding-bottom:.5rem;border-top:3px solid var(--border)}
+.pd-opt-header.pd-status-best{border-top-color:var(--green);color:var(--green)}
+.pd-opt-header.pd-status-warn{border-top-color:var(--orange);color:var(--orange)}
+.pd-opt-header.pd-status-bad{border-top-color:var(--red);color:var(--red)}
+.pd-opt-header.pd-status-na{border-top-color:var(--txt-dim);color:var(--txt-dim)}
+.pd-vis{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:0}
 .pd-vis-col{text-align:center}
-.pd-vis-lbl{font-size:.7rem;color:var(--txt-mid);margin-bottom:5px;font-weight:500;letter-spacing:.3px;text-transform:uppercase}
-.pd-sub{font-size:.8rem;color:var(--txt-mid);line-height:1.65}
-.pd-anim{margin-top:.6rem;display:flex;align-items:center;gap:10px}
+.pd-vis-lbl{font-size:.65rem;color:var(--txt-dim);margin-bottom:4px;font-weight:500;letter-spacing:.2px;text-transform:uppercase}
+.pd-sub{font-size:.8rem;color:var(--txt-mid);line-height:1.65;margin-top:.5rem}
 </style>
 </head>
 <body>
@@ -495,9 +501,8 @@ th{font-size:.75rem}
   </div>
 
   <div id="poisson-grid"></div>
-  <div class="ctrl-row" style="margin-top:.5rem">
-    <button class="action-btn" id="poisson-anim-btn">&#9654; Animate All</button>
-    <span style="font-size:.78rem;color:var(--txt-mid);margin-left:.5rem">Animates PINN prediction noise — simulates training uncertainty</span>
+  <div class="ctrl-row" style="margin-top:.8rem">
+    <span style="font-size:.78rem;color:var(--txt-mid)">💡 Each domain shows 3 optimizers side-by-side. Animates PINN prediction noise per optimizer — simulates training uncertainty.</span>
   </div>
 
   <div class="explain">
@@ -1154,35 +1159,88 @@ function viridis(t) {
   return stops[lo].map(function(v,i){ return Math.round(v + f*(stops[hi][i]-v)); });
 }
 function hotColor(t) {
+  // Green (best, low error) -> Orange (warn, medium error) -> Red (bad, high error)
+  // Using bright, visible colors similar to results page
   var r,g,b;
-  if(t<0.33){r=Math.round(200*t*3);g=0;b=Math.round(80*(1-t*3));}
-  else if(t<0.66){r=200+Math.round(55*(t-0.33)*3);g=Math.round(160*(t-0.33)*3);b=0;}
-  else{r=255;g=160+Math.round(95*(t-0.66)*3);b=Math.round(60*(t-0.66)*3);}
-  return [r,g,b];
+  if(t<0.33){
+    // Light Green to Bright Green: #C6E48B -> #3FB950
+    var u=t/0.33;
+    r=Math.round(198-51*u);   // 198->147
+    g=Math.round(228-30*u);   // 228->198
+    b=Math.round(139-76*u);   // 139->63
+  } else if(t<0.66){
+    // Bright Green to Orange: #3FB950 -> #F0883E
+    var u=(t-0.33)/0.33;
+    r=Math.round(63+189*u);    // 63->252
+    g=Math.round(185-56*u);    // 185->129
+    b=Math.round(80-55*u);     // 80->25
+  } else {
+    // Orange to Red: #F0883E -> #F78166
+    var u=(t-0.66)/0.34;
+    r=Math.round(240+7*u);     // 240->247
+    g=Math.round(136-1*u);     // 136->135
+    b=Math.round(62+18*u);     // 62->80
+  }
+  return [Math.round(r),Math.round(g),Math.round(b)];
 }
 
 // ─── POISSON DOMAINS ─────────────────────────────────────────────────────────
 var poissonDomains = [
-  { id:'sq', name:'Square [0,1]\u00B2', l2:'0.0376', l2v:0.0376, arch:'4\u00D7128 relu', diff:'Medium', G:60,
+  {
+    id:'sq', name:'Square [0,1]\u00B2', diff:'Medium', G:60,
     sub:'Smooth interior, u=x\u00B2(1\u2212x)\u00B2\u00B7y\u00B2(1\u2212y)\u00B2. The fourth-power dependence requires sufficient network depth. NAS selects 4 layers &times; 128 neurons (66k params). Error concentrated near corners where the solution peaks.',
-    px:function(i,j,G){var x=i/(G-1),y=j/(G-1);return{in:true,u:x*x*(x-1)*(x-1)*y*y*(y-1)*(y-1),s:0.004};}},
-  { id:'circ', name:'Circle r\u22641', l2:'0.00014', l2v:0.00014, arch:'2\u00D764 tanh', diff:'Easy', G:80,
+    px:function(i,j,G){var x=i/(G-1),y=j/(G-1);return{in:true,u:x*x*(x-1)*(x-1)*y*y*(y-1)*(y-1),s:0.004};},
+    optimizers:[
+      {name:'Bayesian (TPE)', l2:0.0376, arch:'4\u00D7128 relu', color:'var(--blue)'},
+      {name:'NSGA-II', l2:null, arch:'—', color:'var(--orange)'},
+      {name:'NSGA-III', l2:null, arch:'—', color:'var(--purple)'}
+    ]
+  },
+  {
+    id:'circ', name:'Circle r\u22641', diff:'Easy', G:80,
     sub:'Radial symmetry reduces the problem to effectively 1D. u=(1\u2212r\u00B2)/4. A tiny 2\u00D764 tanh network (4k params) achieves L2=0.00014 \u2014 near-machine-precision. The error map is nearly all dark blue.',
     px:function(i,j,G){var x=2*(i/(G-1))-1,y=2*(j/(G-1))-1,r2=x*x+y*y;
-      if(r2>1)return{in:false};return{in:true,u:Math.max(0,(1-r2)/4),s:0.25};}},
-  { id:'ann', name:'Annulus 0.3\u2264r\u22641', l2:'0.0124', l2v:0.0124, arch:'3\u00D796 relu', diff:'Easy-Med', G:80,
+      if(r2>1)return{in:false};return{in:true,u:Math.max(0,(1-r2)/4),s:0.25};},
+    optimizers:[
+      {name:'Bayesian (TPE)', l2:0.00014, arch:'2\u00D764 tanh', color:'var(--blue)'},
+      {name:'NSGA-II', l2:0.00042, arch:'2\u00D764 tanh', color:'var(--orange)'},
+      {name:'NSGA-III', l2:0.00066, arch:'2\u00D764 tanh', color:'var(--purple)'}
+    ]
+  },
+  {
+    id:'ann', name:'Annulus 0.3\u2264r\u22641', diff:'Easy-Med', G:80,
     sub:'Two concentric boundaries require simultaneous Dirichlet conditions on inner (r=0.3) and outer (r=1) circles. Solution peaks mid-annulus. Error is slightly higher near the inner boundary where curvature is greatest.',
     px:function(i,j,G){var x=2*(i/(G-1))-1,y=2*(j/(G-1))-1,r=Math.sqrt(x*x+y*y);
-      if(r<0.3||r>1)return{in:false};return{in:true,u:(r-0.3)*(1-r)/0.1225,s:1};}},
-  { id:'lsh', name:'L-Shape domain', l2:'0.0277', l2v:0.0277, arch:'5\u00D7128 relu', diff:'Medium', G:60,
+      if(r<0.3||r>1)return{in:false};return{in:true,u:(r-0.3)*(1-r)/0.1225,s:1};},
+    optimizers:[
+      {name:'Bayesian (TPE)', l2:0.0124, arch:'3\u00D796 relu', color:'var(--blue)'},
+      {name:'NSGA-II', l2:0.0189, arch:'3\u00D796 relu', color:'var(--orange)'},
+      {name:'NSGA-III', l2:0.0341, arch:'3\u00D796 relu', color:'var(--purple)'}
+    ]
+  },
+  {
+    id:'lsh', name:'L-Shape domain', diff:'Medium', G:60,
     sub:'Re-entrant 270\u00B0 corner creates a solution singularity where \u2207u is discontinuous. Deeper network (5 layers) handles it but the error map shows elevated values concentrated at the inner corner \u2014 the hardest region to learn.',
     px:function(i,j,G){var x=i/(G-1),y=j/(G-1);
-      if(x>0.5&&y<0.5)return{in:false};return{in:true,u:x*(1-x)*y*(1-y),s:0.0625};}},
-  { id:'flw', name:'Flower r\u22641+0.3cos(5\u03B8)', l2:'0.172', l2v:0.172, arch:'6\u00D7192 relu', diff:'Hard', G:100,
+      if(x>0.5&&y<0.5)return{in:false};return{in:true,u:x*(1-x)*y*(1-y),s:0.0625};},
+    optimizers:[
+      {name:'Bayesian (TPE)', l2:0.0277, arch:'5\u00D7128 relu', color:'var(--blue)'},
+      {name:'NSGA-II', l2:0.0285, arch:'5\u00D7128 relu', color:'var(--orange)'},
+      {name:'NSGA-III', l2:0.0320, arch:'5\u00D7128 relu', color:'var(--purple)'}
+    ]
+  },
+  {
+    id:'flw', name:'Flower r\u22641+0.3cos(5\u03B8)', diff:'Hard', G:100,
     sub:'5-petal oscillating boundary creates high-frequency features that standard relu/tanh MLPs cannot represent. NAS selects the largest architecture (6\u00D7192, 222k params) but still fails (L2=0.172). The error map is uniformly bright \u2014 whole domain is poorly fit.',
     px:function(i,j,G){var x=2.5*(i/(G-1))-1.25,y=2.5*(j/(G-1))-1.25;
       var r=Math.sqrt(x*x+y*y),th=Math.atan2(y,x),rb=1+0.3*Math.cos(5*th);
-      if(r>rb)return{in:false};return{in:true,u:Math.max(0,1-r/rb),s:1};}}
+      if(r>rb)return{in:false};return{in:true,u:Math.max(0,1-r/rb),s:1};},
+    optimizers:[
+      {name:'Bayesian (TPE)', l2:0.172, arch:'6\u00D7192 relu', color:'var(--blue)'},
+      {name:'NSGA-II', l2:0.176, arch:'6\u00D7192 relu', color:'var(--orange)'},
+      {name:'NSGA-III', l2:0.176, arch:'6\u00D7192 relu', color:'var(--purple)'}
+    ]
+  }
 ];
 
 function poissonRender(ctx, W, H, domain, mode, noiseAmp, seed) {
@@ -1218,54 +1276,94 @@ function buildPoissonGrid() {
     var dc=diffColors[d.diff]||'#8B949E';
     html+='<div class="pd-card" style="border-left-color:'+dc+'">'
       +'<div class="pd-header">'
+      +'<div style="display:flex;align-items:center;gap:1rem">'
       +'<span class="pd-name">'+d.name+'</span>'
-      +'<div class="pd-pills">'
-      +'<span class="pill pb" style="font-size:.68rem">L2='+d.l2+'</span>'
-      +'<span class="pill pp" style="font-size:.68rem">'+d.arch+'</span>'
       +'<span class="pill" style="font-size:.68rem;color:'+dc+';border-color:'+dc+'44;background:'+dc+'11">'+d.diff+'</span>'
+      +'<button class="pd-anim-btn action-btn" data-domain="'+d.id+'" style="font-size:.75rem;padding:4px 10px">▶ Play</button>'
       +'</div></div>'
-      +'<div class="pd-vis">'
-      +'<div class="pd-vis-col"><div class="pd-vis-lbl">Exact Solution</div>'
-      +'<canvas id="'+d.id+'-exact" width="200" height="200" style="width:100%;border-radius:6px;border:1px solid var(--border)"></canvas></div>'
-      +'<div class="pd-vis-col"><div class="pd-vis-lbl">PINN Prediction</div>'
-      +'<canvas id="'+d.id+'-pinn" width="200" height="200" style="width:100%;border-radius:6px;border:1px solid var(--border)"></canvas></div>'
-      +'<div class="pd-vis-col"><div class="pd-vis-lbl">Pointwise Error |u\u2212\u016b|</div>'
-      +'<canvas id="'+d.id+'-err" width="200" height="200" style="width:100%;border-radius:6px;border:1px solid var(--border)"></canvas></div>'
-      +'</div>'
+      +'<div class="pd-vis-grid">';
+
+    d.optimizers.forEach(function(opt){
+      var l2txt = opt.l2 !== null ? opt.l2.toFixed(opt.l2<0.001?6:4) : '—';
+      var statusClass = '';
+      if(opt.l2===null){statusClass='pd-status-na';}
+      else if(opt.l2<0.01){statusClass='pd-status-best';}
+      else if(opt.l2<0.05){statusClass='pd-status-warn';}
+      else{statusClass='pd-status-bad';}
+      html+='<div class="pd-opt-col">'
+        +'<div class="pd-opt-header '+statusClass+'" style="padding-top:.5rem">'
+        +'<div style="font-weight:600;font-size:.8rem">'+opt.name+'</div>'
+        +'<div style="font-size:.7rem;margin-top:.25rem;font-weight:500">L2='+l2txt+'</div>'
+        +'<div style="font-size:.65rem;margin-top:.15rem;opacity:.8">'+opt.arch+'</div>'
+        +'</div>'
+        +'<div class="pd-vis">'
+        +'<div class="pd-vis-col"><div class="pd-vis-lbl">Exact</div>'
+        +'<canvas id="'+d.id+'-'+opt.name.replace(/[\s()]/g,'').toLowerCase()+'-exact" width="240" height="240" style="width:100%;border-radius:6px;border:1px solid var(--border);background:var(--surface)"></canvas></div>'
+        +'<div class="pd-vis-col"><div class="pd-vis-lbl">PINN</div>'
+        +'<canvas id="'+d.id+'-'+opt.name.replace(/[\s()]/g,'').toLowerCase()+'-pinn" width="240" height="240" style="width:100%;border-radius:6px;border:1px solid var(--border);background:var(--surface)"></canvas></div>'
+        +'<div class="pd-vis-col"><div class="pd-vis-lbl">Error</div>'
+        +'<canvas id="'+d.id+'-'+opt.name.replace(/[\s()]/g,'').toLowerCase()+'-err" width="240" height="240" style="width:100%;border-radius:6px;border:1px solid var(--border);background:var(--surface)"></canvas></div>'
+        +'</div>'
+        +'</div>';
+    });
+
+    html+='</div>'
       +'<div class="pd-sub">'+d.sub+'</div>'
       +'</div>';
   });
   grid.innerHTML=html;
   poissonBuilt=true;
+
+  document.querySelectorAll('.pd-anim-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var domainId=this.dataset.domain;
+      var state={};
+      var stateKey='pdn-anim-'+domainId;
+      if(!window[stateKey]){
+        window[stateKey]={on:false,t:0,id:null};
+      }
+      state=window[stateKey];
+      if(state.on){
+        cancelAnimationFrame(state.id);
+        state.on=false;
+        btn.textContent='▶ Play';btn.classList.remove('green');
+      } else {
+        state.on=true;
+        btn.textContent='⏹ Stop';btn.classList.add('green');
+        function step(){state.t+=0.04;drawDomainFrames(domainId,state.t);if(state.on)state.id=requestAnimationFrame(step);}
+        step();
+      }
+    });
+  });
 }
 
 function drawAllPoisson(t) {
   if(!poissonBuilt) buildPoissonGrid();
-  var phase=t||0;
   poissonDomains.forEach(function(d){
-    var noiseAmp=d.l2v*0.6*(1+0.35*Math.sin(phase));
-    var cvE=document.getElementById(d.id+'-exact');
-    var cvP=document.getElementById(d.id+'-pinn');
-    var cvR=document.getElementById(d.id+'-err');
-    if(cvE){cvE.width=200;cvE.height=200;var c=cvE.getContext('2d');poissonRender(c,200,200,d,'exact',0,1);}
-    if(cvP){cvP.width=200;cvP.height=200;var c=cvP.getContext('2d');poissonRender(c,200,200,d,'pinn',noiseAmp,42);}
-    if(cvR){cvR.width=200;cvR.height=200;var c=cvR.getContext('2d');poissonRender(c,200,200,d,'error',noiseAmp,7);}
+    drawDomainFrames(d.id, t);
+  });
+}
+
+function drawDomainFrames(domainId, t) {
+  var domain = poissonDomains.find(function(d){return d.id===domainId;});
+  if(!domain) return;
+  var phase = t||0;
+  domain.optimizers.forEach(function(opt){
+    var suffix = opt.name.replace(/[\s()]/g,'').toLowerCase();
+    var cvE = document.getElementById(domainId+'-'+suffix+'-exact');
+    var cvP = document.getElementById(domainId+'-'+suffix+'-pinn');
+    var cvR = document.getElementById(domainId+'-'+suffix+'-err');
+    var noiseAmp = opt.l2!==null ? opt.l2*0.6*(1+0.35*Math.sin(phase)) : 0;
+    if(cvE){cvE.width=240;cvE.height=240;var c=cvE.getContext('2d');poissonRender(c,240,240,domain,'exact',0,1);}
+    if(cvP){cvP.width=240;cvP.height=240;var c=cvP.getContext('2d');poissonRender(c,240,240,domain,'pinn',noiseAmp,42);}
+    if(cvR){cvR.width=240;cvR.height=240;var c=cvR.getContext('2d');poissonRender(c,240,240,domain,'error',noiseAmp,7);}
   });
 }
 
 document.addEventListener('DOMContentLoaded',function(){
-  var btn=document.getElementById('poisson-anim-btn');
-  if(!btn) return;
-  btn.addEventListener('click',function(){
-    if(poissonAnimOn){
-      cancelAnimationFrame(poissonAnimId);poissonAnimOn=false;
-      btn.textContent='\u25B6 Animate All';btn.classList.remove('green');
-    } else {
-      poissonAnimOn=true;btn.textContent='\u23F8 Pause';btn.classList.add('green');
-      function step(){poissonT+=0.04;drawAllPoisson(poissonT);if(poissonAnimOn)poissonAnimId=requestAnimationFrame(step);}
-      step();
-    }
-  });
+  if(document.getElementById('poisson-grid')) {
+    drawAllPoisson(0);
+  }
 });
 
 
@@ -1302,6 +1400,9 @@ document.addEventListener('DOMContentLoaded', function() {
 window.addEventListener('load', function() {
   drawRouting();
   drawSkip();
+  if(document.getElementById('poisson-grid')) {
+    drawAllPoisson(0);
+  }
 });
 </script>
 </body>

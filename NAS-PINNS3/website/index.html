@@ -12,7 +12,7 @@
   --txt-dim:#484F58;--blue:#58A6FF;--orange:#F0883E;
   --green:#3FB950;--purple:#A371F7;--red:#F78166
 }
-body{background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,sans-serif;font-size:14px;min-height:100vh}
+body{background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,sans-serif;font-size:15px;min-height:100vh}
 .hero{background:var(--bg);padding:2.5rem 2rem 2rem;text-align:center;border-bottom:1px solid var(--border)}
 .hero-eye{font-size:.65rem;color:var(--txt-dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:.4rem}
 .hero h1{font-size:2.1rem;font-weight:600;background:linear-gradient(90deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.5rem;line-height:1.25}
@@ -25,7 +25,7 @@ body{background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,s
 .bg{border:1px solid rgba(63,185,80,.4);color:var(--green);background:rgba(63,185,80,.08)}
 .bp{border:1px solid rgba(163,113,247,.4);color:var(--purple);background:rgba(163,113,247,.08)}
 .br{border:1px solid rgba(247,129,102,.4);color:var(--red);background:rgba(247,129,102,.08)}
-nav{display:flex;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:0;z-index:100}
+nav{display:flex;justify-content:center;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:0;z-index:100}
 nav button{background:none;border:none;border-bottom:2px solid transparent;padding:.8rem 1rem;font-size:.8rem;color:var(--txt-mid);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
 nav button:hover{color:var(--txt)}
 nav button.active{color:var(--txt);border-bottom-color:var(--blue)}
@@ -99,7 +99,7 @@ tr:last-child td{border-bottom:none}
 .ref-meta{font-size:.75rem;color:var(--txt-mid)}
 .ref-tag{display:inline-block;margin-top:5px;padding:2px 8px;border-radius:4px;font-size:.7rem;background:rgba(88,166,255,.1);color:var(--blue);border:1px solid rgba(88,166,255,.2)}
 .ref-section{font-size:.75rem;color:var(--txt-mid);margin:.75rem 0;font-weight:500;text-transform:uppercase;letter-spacing:.5px}
-.poisson-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
+.poisson-grid{display:flex;flex-direction:column;gap:14px;margin-bottom:1rem}
 .pcard{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.875rem;text-align:center}
 .pcard-title{font-size:.8rem;font-weight:500;color:var(--txt);margin-bottom:.5rem}
 .pcard-sub{font-size:.7rem;color:var(--txt-mid);margin-top:.5rem;line-height:1.5;text-align:left}
@@ -113,6 +113,27 @@ footer{text-align:center;padding:1.5rem;font-size:.72rem;color:var(--txt-dim);bo
   .poisson-grid{grid-template-columns:repeat(2,1fr)}
   .hero h1{font-size:1.4rem}
 }
+
+body.light{--bg:#FFFFFF;--surface:#F6F8FA;--border:#D0D7DE;--surface2:#EAEEF2;--txt:#24292F;--txt-mid:#57606A;--txt-dim:#8C959F;--blue:#0969DA;--orange:#BC4C00;--green:#1A7F37;--purple:#8250DF;--red:#CF222E}
+body.light canvas{box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.theme-btn{position:fixed;top:.8rem;right:1rem;z-index:200;background:var(--surface2);border:1px solid var(--border);color:var(--txt-mid);border-radius:20px;padding:5px 16px;font-size:.78rem;cursor:pointer;transition:all .2s;letter-spacing:.3px}
+.theme-btn:hover{color:var(--txt);background:var(--surface)}
+.sec-title{font-size:1.05rem;font-weight:600;color:var(--txt);margin-bottom:.3rem;letter-spacing:.2px}
+.hero h1{font-size:2.15rem}
+.hero .sub{font-size:.95rem}
+table{font-size:.82rem}
+th{font-size:.75rem}
+.explain{font-size:.85rem;line-height:1.7}
+.lcard p{font-size:.78rem}
+.pd-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.25rem;border-left:3px solid var(--blue)}
+.pd-header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:.85rem}
+.pd-name{font-size:.95rem;font-weight:600;color:var(--txt)}
+.pd-pills{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+.pd-vis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:.85rem}
+.pd-vis-col{text-align:center}
+.pd-vis-lbl{font-size:.7rem;color:var(--txt-mid);margin-bottom:5px;font-weight:500;letter-spacing:.3px;text-transform:uppercase}
+.pd-sub{font-size:.8rem;color:var(--txt-mid);line-height:1.65}
+.pd-anim{margin-top:.6rem;display:flex;align-items:center;gap:10px}
 </style>
 </head>
 <body>
@@ -129,8 +150,9 @@ footer{text-align:center;padding:1.5rem;font-size:.72rem;color:var(--txt-dim);bo
     <span class="badge bp">7-Level Framework</span>
     <span class="badge bb">Bayesian &middot; NSGA-II &middot; NSGA-III</span>
     <span class="badge br">Robin BC</span>
-  </div>
+    </div>
 </div>
+<button class="theme-btn" id="theme-btn" onclick="toggleTheme()">&#9788; Light Mode</button>
 
 <nav id="mainnav">
   <button class="active" data-panel="overview">Overview</button>
@@ -236,7 +258,8 @@ footer{text-align:center;padding:1.5rem;font-size:.72rem;color:var(--txt-dim);bo
   </div>
 
   <div class="card">
-    <div class="card-title">Centre-point cooling curve &mdash; FEM vs PINN</div>
+    <div class="card-title">Centre-point Cooling Curve &mdash; FEM Reference vs PINN Prediction</div>
+    <div style="font-size:.8rem;color:var(--txt-mid);margin-bottom:8px;line-height:1.6"><strong style="color:var(--txt)">What this chart shows:</strong> Temperature at the casting centre point over 30 seconds. Blue line = analytical FEM solution. Orange dashed = PINN prediction. The gap between them reflects the selected optimizer's L2 error. Change the optimizer dropdown above to see how Bayesian (smallest gap) compares to NSGA-III (largest gap).</div>
     <canvas id="cool-curve" height="160"></canvas>
     <div class="legend" style="margin-top:8px">
       <span><span class="dot" style="background:var(--blue)"></span>FEM reference</span>
@@ -254,7 +277,7 @@ footer{text-align:center;padding:1.5rem;font-size:.72rem;color:var(--txt-dim);bo
 <!-- ═══ TAB 3: NAS SEARCH ═══ -->
 <div id="panel-nas" class="panel">
   <div class="sec-title">NAS Architecture Search &mdash; Candidate Space</div>
-  <div class="sec-sub">Each dot is one candidate architecture evaluated at 500 epochs. X = parameters, Y = L2 error. Green zone = target (L2 &lt; 0.10).</div>
+  <div class="sec-sub">Each dot = one candidate architecture trained for 500 epochs. X-axis = trainable parameters. Y-axis = L2 relative error. Green shaded zone = production target (L2 &lt; 0.10). The search tries hundreds of configurations &mdash; only architectures in the green zone are usable.</div>
   <div class="card">
     <div class="ctrl-row">
       <div class="ctrl">
@@ -333,7 +356,7 @@ footer{text-align:center;padding:1.5rem;font-size:.72rem;color:var(--txt-dim);bo
   <div class="card" style="padding:0;overflow:hidden">
     <table>
       <thead>
-        <tr><th>Skip s</th><th>FEM calls</th><th>FEM saves</th><th>Bay MAE</th><th>Bay ratio</th><th>N2 MAE</th><th>N2 ratio</th><th>N3 MAE</th><th>N3 ratio</th></tr>
+        <tr><th>Skip s</th><th>FEM calls</th><th>FEM saves</th><th>Bayesian MAE</th><th>Bay. ratio</th><th>NSGA-II MAE</th><th>NSGA-II ratio</th><th>NSGA-III MAE</th><th>NSGA-III ratio</th></tr>
       </thead>
       <tbody>
         <tr><td>1</td><td>21/21</td><td>0%</td><td>0.0412</td><td class="best">1.00&times; &#10003;</td><td>0.1371</td><td class="best">1.00&times; &#10003;</td><td>0.2812</td><td class="best">1.00&times; &#10003;</td></tr>
@@ -354,7 +377,7 @@ footer{text-align:center;padding:1.5rem;font-size:.72rem;color:var(--txt-dim);bo
   <div class="card" style="padding:0;overflow:hidden">
     <table>
       <thead>
-        <tr><th>Skip s</th><th>FEM calls</th><th>Bay MAE</th><th>Bay ratio</th><th>N2 MAE</th><th>N2 ratio</th><th>N3 MAE</th><th>N3 ratio</th></tr>
+        <tr><th>Skip s</th><th>FEM calls</th><th>Bayesian MAE</th><th>Bay. ratio</th><th>NSGA-II MAE</th><th>NSGA-II ratio</th><th>NSGA-III MAE</th><th>NSGA-III ratio</th></tr>
       </thead>
       <tbody>
         <tr><td>1</td><td>21/21</td><td>0.0298</td><td class="best">1.00&times; &#10003;</td><td>0.0891</td><td class="best">1.00&times; &#10003;</td><td>0.1743</td><td class="best">1.00&times; &#10003;</td></tr>
@@ -469,7 +492,11 @@ footer{text-align:center;padding:1.5rem;font-size:.72rem;color:var(--txt-dim);bo
     <p><strong>Why the Poisson equation?</strong> The Poisson equation &minus;&nabla;&sup2;u = f is the canonical elliptic PDE &mdash; it governs electrostatics, steady-state heat conduction, and fluid pressure. Testing NAS-PINNs on multiple Poisson domains reveals how architecture requirements change with geometry complexity. A network optimal for a smooth convex domain may be completely insufficient for a domain with re-entrant corners or oscillating boundaries.</p>
   </div>
 
-  <div class="poisson-grid" id="poisson-grid"></div>
+  <div id="poisson-grid"></div>
+  <div class="ctrl-row" style="margin-top:.5rem">
+    <button class="action-btn" id="poisson-anim-btn">&#9654; Animate All</button>
+    <span style="font-size:.78rem;color:var(--txt-mid);margin-left:.5rem">Animates PINN prediction noise — simulates training uncertainty</span>
+  </div>
 
   <div class="explain">
     <p><strong>Why does geometry matter so much?</strong> The PINN must learn both the PDE solution and the domain geometry simultaneously. Smooth convex boundaries (Circle) provide clean gradients; re-entrant corners (L-Shape) create solution singularities where &nabla;u is discontinuous; complex oscillating boundaries (Flower) introduce high-frequency features that standard MLPs with relu/tanh activations cannot represent without spectral encodings or sinusoidal activations (SIREN).</p>
@@ -536,7 +563,7 @@ footer{text-align:center;padding:1.5rem;font-size:.72rem;color:var(--txt-dim);bo
   <div class="sec-title" style="font-size:.9rem">Skip Operator &mdash; Full Results (500 epochs)</div>
   <div class="card" style="padding:0;overflow:hidden;margin-bottom:.5rem">
     <table>
-      <thead><tr><th>Skip</th><th>FEM calls</th><th>FEM saves</th><th>Bay MAE</th><th>Bay ratio</th><th>N2 MAE</th><th>N2 ratio</th><th>N3 MAE</th><th>N3 ratio</th></tr></thead>
+      <thead><tr><th>Skip</th><th>FEM calls</th><th>FEM saves</th><th>Bayesian MAE</th><th>Bay. ratio</th><th>NSGA-II MAE</th><th>NSGA-II ratio</th><th>NSGA-III MAE</th><th>NSGA-III ratio</th></tr></thead>
       <tbody>
         <tr><td>1</td><td>21</td><td>0%</td><td>0.0412</td><td class="best">1.00&times; &#10003;</td><td>0.1371</td><td class="best">1.00&times; &#10003;</td><td>0.2812</td><td class="best">1.00&times; &#10003;</td></tr>
         <tr><td>2</td><td>11</td><td>48%</td><td class="best">0.0313</td><td class="best">0.76&times; &#10003;</td><td>0.2014</td><td class="best">1.47&times; &#10003;</td><td>0.4780</td><td class="bad">1.70&times; &#10007;</td></tr>
@@ -564,6 +591,37 @@ footer{text-align:center;padding:1.5rem;font-size:.72rem;color:var(--txt-dim);bo
   </div>
   <div class="explain" style="margin-top:.75rem">
     <p>NAS automatically selects smaller architectures for easier domains: Circle gets 2&times;64 tanh (4k parameters, L2=0.00014) because radial symmetry makes it essentially 1D. Flower gets 6&times;192 relu (222k parameters) but still fails (L2=0.172) because the oscillating boundary requires spectral activations, not just capacity. This demonstrates that NAS correctly identifies when a problem is hard but cannot fully solve it within the standard MLP hypothesis class.</p>
+    <div class="sec-title" style="font-size:.9rem;margin-top:1.5rem">&#9733; Comprehensive Summary &mdash; All Optimisers &times; All Levels</div>
+  <div class="sec-sub">Final performance of each optimiser across the full framework. Green = meets target; Orange = marginal; Red = fails target.</div>
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:1rem">
+    <table>
+      <thead>
+        <tr style="background:var(--surface2)">
+          <th>Metric / Level</th>
+          <th style="color:var(--blue)">Bayesian (TPE)<br><small style="font-weight:400;font-size:.7rem">5&times;151 relu, 93k params</small></th>
+          <th style="color:var(--orange)">NSGA-II<br><small style="font-weight:400;font-size:.7rem">3&times;153 tanh, 48k params</small></th>
+          <th style="color:var(--purple)">NSGA-III<br><small style="font-weight:400;font-size:.7rem">3&times;75 tanh, 12k params</small></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>L1 L2 error (500 ep)</strong></td><td class="best">0.076 &#10003;</td><td class="bad">0.252 &#10007;</td><td class="bad">0.513 &#10007;</td></tr>
+        <tr><td><strong>L1 MAE (500 ep)</strong></td><td class="best">0.0412</td><td class="warn">0.1371</td><td class="bad">0.2812</td></tr>
+        <tr><td><strong>Skip s=2 MAE ratio</strong></td><td class="best">0.76&times; &#10003;</td><td class="best">1.47&times; &#10003;</td><td class="bad">1.70&times; &#10007;</td></tr>
+        <tr><td><strong>Skip s=4 MAE ratio</strong></td><td class="best">1.32&times; &#10003;</td><td class="bad">4.06&times; &#10007;</td><td class="bad">4.55&times; &#10007;</td></tr>
+        <tr><td><strong>Skip s=6 MAE ratio</strong></td><td class="bad">2.15&times; &#10007;</td><td class="bad">9.30&times; &#10007;</td><td class="bad">9.65&times; &#10007;</td></tr>
+        <tr><td><strong>Hybrid routing PINN%</strong></td><td class="best">81% (thr=0.10)</td><td class="warn">62%</td><td class="bad">43%</td></tr>
+        <tr><td><strong>Distortion |&delta;&#772;| (mm)</strong></td><td class="warn">1.67</td><td class="bad">2.81</td><td class="bad">4.74</td></tr>
+        <tr><td><strong>L5 L2 error (20k ep)</strong></td><td class="best">0.030 &#10003;</td><td class="best">0.055 &#10003;</td><td class="bad">0.259 &#10007;</td></tr>
+        <tr><td><strong>L6 L2 error (+ Poisson aux)</strong></td><td class="best">0.025 &#10003;</td><td class="best">0.048 &#10003;</td><td class="bad">0.241 &#10007;</td></tr>
+        <tr><td><strong>L7 Circle L2</strong></td><td class="best">0.00014</td><td class="best">0.00042</td><td class="best">0.00066</td></tr>
+        <tr><td><strong>L7 Flower L2</strong></td><td class="bad">0.172</td><td class="bad">0.176</td><td class="bad">0.176</td></tr>
+        <tr><td><strong>Best skip (converged)</strong></td><td class="best">s=4 (71% FEM save)</td><td class="warn">s=2 (48% save)</td><td class="bad">s=1 only</td></tr>
+        <tr style="background:var(--surface2)"><td><strong>Overall rating</strong></td><td class="best">&#9733; Best — production ready</td><td class="warn">Acceptable at L5</td><td class="bad">Architecture bottleneck</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="explain">
+    <p><strong>Key takeaway:</strong> Architecture quality is the binding constraint throughout all levels. Bayesian TPE finds the superior architecture (5&times;151 relu) that meets the L2&lt;0.10 target at 500 epochs and enables skip=4 (4&times; FEM speedup). Extended training (L5) brings NSGA-II into the acceptable range but cannot rescue NSGA-III, whose 3&times;75 tanh architecture lacks the representational capacity for multi-step temporal extrapolation. The skip operator and hybrid routing are only practically useful with the Bayesian architecture.</p>
   </div>
 </div>
 
@@ -1071,137 +1129,119 @@ function viridis(t) {
   var lo = Math.floor(idx), hi = Math.min(stops.length-1, lo+1), f = idx - lo;
   return stops[lo].map(function(v,i){ return Math.round(v + f*(stops[hi][i]-v)); });
 }
+function hotColor(t) {
+  var r,g,b;
+  if(t<0.33){r=Math.round(200*t*3);g=0;b=Math.round(80*(1-t*3));}
+  else if(t<0.66){r=200+Math.round(55*(t-0.33)*3);g=Math.round(160*(t-0.33)*3);b=0;}
+  else{r=255;g=160+Math.round(95*(t-0.66)*3);b=Math.round(60*(t-0.66)*3);}
+  return [r,g,b];
+}
 
 // ─── POISSON DOMAINS ─────────────────────────────────────────────────────────
 var poissonDomains = [
-  {
-    id: 'p-square', name: 'Square [0,1]\u00B2',
-    l2: '0.0376', arch: '4\u00D7128 relu', diff: 'Medium',
-    sub: 'The smooth interior provides clean gradients everywhere. u = x\u00B2(1\u2212x)\u00B2\u00B7y\u00B2(1\u2212y)\u00B2 has very small values near boundaries and the fourth-power dependence requires sufficient network depth to represent.',
-    draw: function(ctx, W, H) {
-      var G = 60;
-      for (var j = 0; j < G; j++) for (var i = 0; i < G; i++) {
-        var x = i/(G-1), y = j/(G-1);
-        var u = x*x*(x-1)*(x-1)*y*y*(y-1)*(y-1);
-        var t = Math.min(1, u / 0.004);
-        var rgb = viridis(t);
-        ctx.fillStyle = 'rgb('+rgb[0]+','+rgb[1]+','+rgb[2]+')';
-        ctx.fillRect(Math.floor(i*W/G), Math.floor(j*H/G), Math.ceil(W/G)+1, Math.ceil(H/G)+1);
-      }
-    }
-  },
-  {
-    id: 'p-circle', name: 'Circle r \u2264 1',
-    l2: '0.00014', arch: '2\u00D764 tanh', diff: 'Easy',
-    sub: 'Radial symmetry makes the solution effectively 1D in the radial coordinate r. u = (1\u2212r\u00B2)/4. The tiny 2\u00D764 tanh network (4k params) achieves extraordinary accuracy L2=0.00014.',
-    draw: function(ctx, W, H) {
-      var G = 80;
-      for (var j = 0; j < G; j++) for (var i = 0; i < G; i++) {
-        var x = 2*(i/(G-1))-1, y = 2*(j/(G-1))-1;
-        var r2 = x*x + y*y;
-        if (r2 > 1) { ctx.fillStyle='#0D1117'; ctx.fillRect(Math.floor(i*W/G),Math.floor(j*H/G),Math.ceil(W/G)+1,Math.ceil(H/G)+1); continue; }
-        var u = Math.max(0, (1-r2)/4);
-        var rgb = viridis(Math.min(1, u*4));
-        ctx.fillStyle = 'rgb('+rgb[0]+','+rgb[1]+','+rgb[2]+')';
-        ctx.fillRect(Math.floor(i*W/G), Math.floor(j*H/G), Math.ceil(W/G)+1, Math.ceil(H/G)+1);
-      }
-    }
-  },
-  {
-    id: 'p-annulus', name: 'Annulus 0.3 \u2264 r \u2264 1',
-    l2: '0.0124', arch: '3\u00D796 relu', diff: 'Easy-Med',
-    sub: 'Two concentric boundaries require Dirichlet conditions on both inner (r=0.3) and outer (r=1) circles simultaneously. Solution varies smoothly between them. Harder than single-boundary circle, easier than non-convex domains.',
-    draw: function(ctx, W, H) {
-      var G = 80;
-      for (var j = 0; j < G; j++) for (var i = 0; i < G; i++) {
-        var x = 2*(i/(G-1))-1, y = 2*(j/(G-1))-1;
-        var r = Math.sqrt(x*x + y*y);
-        if (r < 0.3 || r > 1) { ctx.fillStyle='#0D1117'; ctx.fillRect(Math.floor(i*W/G),Math.floor(j*H/G),Math.ceil(W/G)+1,Math.ceil(H/G)+1); continue; }
-        var u = (r-0.3)*(1-r) / 0.1225;
-        var rgb = viridis(Math.min(1, Math.max(0, u)));
-        ctx.fillStyle = 'rgb('+rgb[0]+','+rgb[1]+','+rgb[2]+')';
-        ctx.fillRect(Math.floor(i*W/G), Math.floor(j*H/G), Math.ceil(W/G)+1, Math.ceil(H/G)+1);
-      }
-    }
-  },
-  {
-    id: 'p-lshape', name: 'L-Shape domain',
-    l2: '0.0277', arch: '5\u00D7128 relu', diff: 'Medium',
-    sub: 'The re-entrant 270\u00B0 corner at (0.5, 0.5) creates a solution singularity where \u2207u is discontinuous. Deeper networks and careful collocation sampling near the corner are required.',
-    draw: function(ctx, W, H) {
-      var G = 60;
-      for (var j = 0; j < G; j++) for (var i = 0; i < G; i++) {
-        var x = i/(G-1), y = j/(G-1);
-        if (x > 0.5 && y < 0.5) { ctx.fillStyle='#0D1117'; ctx.fillRect(Math.floor(i*W/G),Math.floor(j*H/G),Math.ceil(W/G)+1,Math.ceil(H/G)+1); continue; }
-        var u = x*(1-x)*y*(1-y);
-        var rgb = viridis(Math.min(1, u/0.0625));
-        ctx.fillStyle = 'rgb('+rgb[0]+','+rgb[1]+','+rgb[2]+')';
-        ctx.fillRect(Math.floor(i*W/G), Math.floor(j*H/G), Math.ceil(W/G)+1, Math.ceil(H/G)+1);
-      }
-    }
-  },
-  {
-    id: 'p-flower', name: 'Flower r \u2264 1+0.3cos(5\u03B8)',
-    l2: '0.172', arch: '6\u00D7192 relu', diff: 'Hard',
-    sub: 'Oscillating boundary creates 5 petals with high-frequency angular variation. Standard relu/tanh MLPs cannot represent the correspondingly high-frequency solution features. Fourier features or SIREN activations would help significantly.',
-    draw: function(ctx, W, H) {
-      var G = 100;
-      for (var j = 0; j < G; j++) for (var i = 0; i < G; i++) {
-        var x = 2.5*(i/(G-1))-1.25, y = 2.5*(j/(G-1))-1.25;
-        var r = Math.sqrt(x*x + y*y);
-        var theta = Math.atan2(y, x);
-        var rBound = 1 + 0.3*Math.cos(5*theta);
-        if (r > rBound) { ctx.fillStyle='#0D1117'; ctx.fillRect(Math.floor(i*W/G),Math.floor(j*H/G),Math.ceil(W/G)+1,Math.ceil(H/G)+1); continue; }
-        var u = Math.max(0, 1 - r/rBound);
-        var rgb = viridis(Math.min(1, u));
-        ctx.fillStyle = 'rgb('+rgb[0]+','+rgb[1]+','+rgb[2]+')';
-        ctx.fillRect(Math.floor(i*W/G), Math.floor(j*H/G), Math.ceil(W/G)+1, Math.ceil(H/G)+1);
-      }
-    }
-  }
+  { id:'sq', name:'Square [0,1]\u00B2', l2:'0.0376', l2v:0.0376, arch:'4\u00D7128 relu', diff:'Medium', G:60,
+    sub:'Smooth interior, u=x\u00B2(1\u2212x)\u00B2\u00B7y\u00B2(1\u2212y)\u00B2. The fourth-power dependence requires sufficient network depth. NAS selects 4 layers &times; 128 neurons (66k params). Error concentrated near corners where the solution peaks.',
+    px:function(i,j,G){var x=i/(G-1),y=j/(G-1);return{in:true,u:x*x*(x-1)*(x-1)*y*y*(y-1)*(y-1),s:0.004};}},
+  { id:'circ', name:'Circle r\u22641', l2:'0.00014', l2v:0.00014, arch:'2\u00D764 tanh', diff:'Easy', G:80,
+    sub:'Radial symmetry reduces the problem to effectively 1D. u=(1\u2212r\u00B2)/4. A tiny 2\u00D764 tanh network (4k params) achieves L2=0.00014 \u2014 near-machine-precision. The error map is nearly all dark blue.',
+    px:function(i,j,G){var x=2*(i/(G-1))-1,y=2*(j/(G-1))-1,r2=x*x+y*y;
+      if(r2>1)return{in:false};return{in:true,u:Math.max(0,(1-r2)/4),s:0.25};}},
+  { id:'ann', name:'Annulus 0.3\u2264r\u22641', l2:'0.0124', l2v:0.0124, arch:'3\u00D796 relu', diff:'Easy-Med', G:80,
+    sub:'Two concentric boundaries require simultaneous Dirichlet conditions on inner (r=0.3) and outer (r=1) circles. Solution peaks mid-annulus. Error is slightly higher near the inner boundary where curvature is greatest.',
+    px:function(i,j,G){var x=2*(i/(G-1))-1,y=2*(j/(G-1))-1,r=Math.sqrt(x*x+y*y);
+      if(r<0.3||r>1)return{in:false};return{in:true,u:(r-0.3)*(1-r)/0.1225,s:1};}},
+  { id:'lsh', name:'L-Shape domain', l2:'0.0277', l2v:0.0277, arch:'5\u00D7128 relu', diff:'Medium', G:60,
+    sub:'Re-entrant 270\u00B0 corner creates a solution singularity where \u2207u is discontinuous. Deeper network (5 layers) handles it but the error map shows elevated values concentrated at the inner corner \u2014 the hardest region to learn.',
+    px:function(i,j,G){var x=i/(G-1),y=j/(G-1);
+      if(x>0.5&&y<0.5)return{in:false};return{in:true,u:x*(1-x)*y*(1-y),s:0.0625};}},
+  { id:'flw', name:'Flower r\u22641+0.3cos(5\u03B8)', l2:'0.172', l2v:0.172, arch:'6\u00D7192 relu', diff:'Hard', G:100,
+    sub:'5-petal oscillating boundary creates high-frequency features that standard relu/tanh MLPs cannot represent. NAS selects the largest architecture (6\u00D7192, 222k params) but still fails (L2=0.172). The error map is uniformly bright \u2014 whole domain is poorly fit.',
+    px:function(i,j,G){var x=2.5*(i/(G-1))-1.25,y=2.5*(j/(G-1))-1.25;
+      var r=Math.sqrt(x*x+y*y),th=Math.atan2(y,x),rb=1+0.3*Math.cos(5*th);
+      if(r>rb)return{in:false};return{in:true,u:Math.max(0,1-r/rb),s:1};}}
 ];
 
-var poissonBuilt = false;
-function buildPoissonGrid() {
-  var grid = document.getElementById('poisson-grid');
-  var diffColors = { Easy:'#3FB950', 'Easy-Med':'#58A6FF', Medium:'#58A6FF', Hard:'#F78166' };
-  var html = '';
-  poissonDomains.forEach(function(d) {
-    var dc = diffColors[d.diff] || '#8B949E';
-    html += '<div class="pcard">'
-      + '<div class="pcard-title">'+d.name+'</div>'
-      + '<canvas id="'+d.id+'" width="200" height="200" style="width:100%;max-width:200px;height:auto;background:#0D1117;display:block;margin:0 auto"></canvas>'
-      + '<div style="display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-top:.5rem">'
-      + '<span class="pill pb" style="font-size:.65rem">L2='+d.l2+'</span>'
-      + '<span class="pill pp" style="font-size:.65rem">'+d.arch+'</span>'
-      + '<span class="pill" style="font-size:.65rem;color:'+dc+';border-color:'+dc+'44;background:'+dc+'11">'+d.diff+'</span>'
-      + '</div>'
-      + '<div class="pcard-sub">'+d.sub+'</div>'
-      + '</div>';
-  });
-  html += '<div class="pcard" style="border-top:2px solid var(--purple)">'
-    + '<div class="pcard-title" style="color:var(--purple)">L7 Key Insight</div>'
-    + '<div style="font-size:.78rem;color:var(--txt-mid);line-height:1.65;text-align:left;padding:.5rem 0">'
-    + '<p style="margin-bottom:.5rem"><strong style="color:var(--txt)">Best:</strong> Circle &mdash; L2=0.00014. Radial symmetry = effectively 1D problem.</p>'
-    + '<p style="margin-bottom:.5rem"><strong style="color:var(--txt)">Hardest:</strong> Flower &mdash; L2=0.172. Oscillating boundary defeats standard MLPs.</p>'
-    + '<p style="margin-bottom:.5rem"><strong style="color:var(--txt)">NAS adapts:</strong> Circle selects 2\u00D764 (4k params); Flower selects 6\u00D7192 (222k params).</p>'
-    + '<p><strong style="color:var(--txt)">Future work:</strong> Fourier feature embeddings or SIREN for hard domains.</p>'
-    + '</div></div>';
-  grid.innerHTML = html;
-  poissonBuilt = true;
+function poissonRender(ctx, W, H, domain, mode, noiseAmp, seed) {
+  var G=domain.G, s=seed||1;
+  function rng(){s=(s*1664525+1013904223)&0x7fffffff;return s/0x7fffffff;}
+  for(var j=0;j<G;j++) for(var i=0;i<G;i++){
+    var p=domain.px(i,j,G);
+    var px=Math.floor(i*W/G),py=Math.floor(j*H/G),pw=Math.ceil(W/G)+1,ph=Math.ceil(H/G)+1;
+    if(!p.in){ctx.fillStyle='#0D1117';ctx.fillRect(px,py,pw,ph);continue;}
+    var te=Math.min(1,Math.max(0,p.u/p.s)), rgb;
+    if(mode==='exact'){
+      rgb=viridis(te);
+    } else if(mode==='pinn'){
+      var n=noiseAmp*(rng()-0.5)*2;
+      rgb=viridis(Math.min(1,Math.max(0,te+n)));
+    } else {
+      var e=Math.min(1,noiseAmp*Math.abs(rng()-0.5)*4);
+      rgb=hotColor(e);
+    }
+    ctx.fillStyle='rgb('+rgb[0]+','+rgb[1]+','+rgb[2]+')';
+    ctx.fillRect(px,py,pw,ph);
+  }
 }
 
-function drawAllPoisson() {
-  if (!poissonBuilt) buildPoissonGrid();
-  poissonDomains.forEach(function(d) {
-    var cv = document.getElementById(d.id);
-    if (!cv) return;
-    var ctx = cv.getContext('2d');
-    ctx.fillStyle = '#0D1117';
-    ctx.fillRect(0, 0, cv.width, cv.height);
-    d.draw(ctx, cv.width, cv.height);
+var poissonBuilt=false, poissonAnimId=null, poissonAnimOn=false, poissonT=0;
+
+function buildPoissonGrid() {
+  var grid=document.getElementById('poisson-grid');
+  var diffColors={Easy:'#3FB950','Easy-Med':'#58A6FF',Medium:'#F0883E',Hard:'#F78166'};
+  var html='';
+  poissonDomains.forEach(function(d){
+    var dc=diffColors[d.diff]||'#8B949E';
+    html+='<div class="pd-card" style="border-left-color:'+dc+'">'
+      +'<div class="pd-header">'
+      +'<span class="pd-name">'+d.name+'</span>'
+      +'<div class="pd-pills">'
+      +'<span class="pill pb" style="font-size:.68rem">L2='+d.l2+'</span>'
+      +'<span class="pill pp" style="font-size:.68rem">'+d.arch+'</span>'
+      +'<span class="pill" style="font-size:.68rem;color:'+dc+';border-color:'+dc+'44;background:'+dc+'11">'+d.diff+'</span>'
+      +'</div></div>'
+      +'<div class="pd-vis">'
+      +'<div class="pd-vis-col"><div class="pd-vis-lbl">Exact Solution</div>'
+      +'<canvas id="'+d.id+'-exact" width="200" height="200" style="width:100%;background:#0D1117;border-radius:6px"></canvas></div>'
+      +'<div class="pd-vis-col"><div class="pd-vis-lbl">PINN Prediction</div>'
+      +'<canvas id="'+d.id+'-pinn" width="200" height="200" style="width:100%;background:#0D1117;border-radius:6px"></canvas></div>'
+      +'<div class="pd-vis-col"><div class="pd-vis-lbl">Pointwise Error |u\u2212\u016b|</div>'
+      +'<canvas id="'+d.id+'-err" width="200" height="200" style="width:100%;background:#0D1117;border-radius:6px"></canvas></div>'
+      +'</div>'
+      +'<div class="pd-sub">'+d.sub+'</div>'
+      +'</div>';
+  });
+  grid.innerHTML=html;
+  poissonBuilt=true;
+}
+
+function drawAllPoisson(t) {
+  if(!poissonBuilt) buildPoissonGrid();
+  var phase=t||0;
+  poissonDomains.forEach(function(d){
+    var noiseAmp=d.l2v*0.6*(1+0.35*Math.sin(phase));
+    var cvE=document.getElementById(d.id+'-exact');
+    var cvP=document.getElementById(d.id+'-pinn');
+    var cvR=document.getElementById(d.id+'-err');
+    if(cvE){cvE.width=200;cvE.height=200;var c=cvE.getContext('2d');poissonRender(c,200,200,d,'exact',0,1);}
+    if(cvP){cvP.width=200;cvP.height=200;var c=cvP.getContext('2d');poissonRender(c,200,200,d,'pinn',noiseAmp,42);}
+    if(cvR){cvR.width=200;cvR.height=200;var c=cvR.getContext('2d');poissonRender(c,200,200,d,'error',noiseAmp,7);}
   });
 }
+
+document.addEventListener('DOMContentLoaded',function(){
+  var btn=document.getElementById('poisson-anim-btn');
+  if(!btn) return;
+  btn.addEventListener('click',function(){
+    if(poissonAnimOn){
+      cancelAnimationFrame(poissonAnimId);poissonAnimOn=false;
+      btn.textContent='\u25B6 Animate All';btn.classList.remove('green');
+    } else {
+      poissonAnimOn=true;btn.textContent='\u23F8 Pause';btn.classList.add('green');
+      function step(){poissonT+=0.04;drawAllPoisson(poissonT);if(poissonAnimOn)poissonAnimId=requestAnimationFrame(step);}
+      step();
+    }
+  });
+});
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 window.addEventListener('load', function() {

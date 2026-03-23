@@ -877,10 +877,13 @@ def fig_v2_summary_table():
     ]
 
     def _bg(val, lo=1.0, hi=25.0):
-        t = np.clip((val - lo) / (hi - lo), 0, 1)
+        # green (0.2,0.8,0.2) → amber (0.95,0.75,0.1) → red (0.9,0.1,0.1)
+        t = float(np.clip((val - lo) / (hi - lo), 0, 1))
         if t < 0.5:
-            return (0.55+0.9*(t*2), 0.9-0.1*(t*2), 0.55-0.4*(t*2), 1.0)
-        return (1.0, max(0,0.8-0.65*((t-0.5)*2)), max(0,0.15-0.1*((t-0.5)*2)), 1.0)
+            s = t * 2
+            return (np.clip(0.2 + 0.75*s, 0, 1), np.clip(0.8 - 0.05*s, 0, 1), np.clip(0.2 - 0.1*s, 0, 1), 1.0)
+        s = (t - 0.5) * 2
+        return (np.clip(0.95 - 0.05*s, 0, 1), np.clip(0.75 - 0.65*s, 0, 1), np.clip(0.1 - 0.0*s, 0, 1), 1.0)
 
     fig, axes = plt.subplots(1, 2, figsize=(18, 4.2))
     fig.suptitle(

@@ -2,8 +2,8 @@
 NAS-MCO-PINNs  —  Web Application
 Flask backend serving pre-computed results and interactive demo.
 """
-import os, json, glob
-from flask import Flask, render_template, jsonify, request, send_from_directory
+import os, json, glob, math
+from flask import Flask, render_template, jsonify, request, send_from_directory, Response
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "..", "level8_nas_mco_pinn", "results")
@@ -11,6 +11,22 @@ V2_DIR   = os.path.join(DATA_DIR, "v2")
 IMG_DIR  = os.path.join(BASE_DIR, "static", "img")
 
 app = Flask(__name__)
+
+
+def _nan_to_null(obj):
+    """Recursively replace float NaN/Inf with None so JSON stays valid."""
+    if isinstance(obj, float):
+        return None if (math.isnan(obj) or math.isinf(obj)) else obj
+    if isinstance(obj, dict):
+        return {k: _nan_to_null(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_nan_to_null(v) for v in obj]
+    return obj
+
+
+def json_response(data):
+    """Return a JSON response that replaces NaN with null."""
+    return Response(json.dumps(_nan_to_null(data)), mimetype="application/json")
 
 
 # ─── Pages ────────────────────────────────────────────────────────────────────
@@ -61,7 +77,7 @@ def api_slice():
         return jsonify({"error": "Data not yet available — training may still be running."}), 404
     with open(path) as f:
         data = json.load(f)
-    return jsonify(data)
+    return json_response(data)
 
 
 @app.route("/api/loss")
@@ -74,7 +90,7 @@ def api_loss():
         return jsonify({"error": "Loss data not yet available."}), 404
     with open(path) as f:
         data = json.load(f)
-    return jsonify(data)
+    return json_response(data)
 
 
 @app.route("/api/mae")

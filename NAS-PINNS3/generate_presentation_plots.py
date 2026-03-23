@@ -747,6 +747,172 @@ def plot_domain_pred_error():
     print(f"  [OK] {out.name}")
 
 
+def plot_l8_3d_results():
+    """L8: 3D MCO-PINN results summary figure."""
+    json_path = ROOT / "results" / "results_3d.json"
+    if not json_path.exists():
+        print("  [skip] results_3d.json not found"); return
+
+    with open(json_path) as f:
+        data = json.load(f)
+
+    domains = list(data.keys())
+    archs   = ["bayesian", "nsga2", "nsga3"]
+    skips   = [2, 4]
+    arch_short = {"bayesian": "Bayesian", "nsga2": "NSGA-II", "nsga3": "NSGA-III"}
+    dom_label  = {"rectangular": "Rectangular\n(1.3×0.6×0.4 m)",
+                  "cylinder":    "Cylinder\n(R=0.25 m, H=0.6 m)",
+                  "stacked":     "Stacked Cubes\n(2×0.5 m)"}
+    dom_color  = {"rectangular": C_BAY, "cylinder": C_N3, "stacked": C_N2}
+    skip_alpha = {2: 0.90, 4: 0.50}
+    skip_hatch = {2: "",   4: "///"}
+
+    fig, axes = plt.subplots(1, 3, figsize=(16, 6), sharey=True)
+    fig.patch.set_facecolor(_FIG_BG)
+    fig.suptitle("Level 8 — 3D MCO-PINN Skip Operator\n"
+                 "3 Domains · 3 Architectures · skip=2/4 | A356 Aluminum Quenching",
+                 fontsize=13, fontweight="bold", color=_TXT)
+
+    x = np.arange(len(archs))
+    w = 0.32
+
+    for col, dom in enumerate(domains):
+        ax = axes[col]
+        ax.set_facecolor(_AX_BG)
+        for sp in ax.spines.values():
+            sp.set_color(_SPINE); sp.set_linewidth(0.8)
+
+        for si, skip in enumerate(skips):
+            maes = [data[dom][a][str(skip)]["mae_C"] for a in archs]
+            bars = ax.bar(x + (si - 0.5) * w, maes, width=w - 0.04,
+                          color=dom_color[dom], alpha=skip_alpha[skip],
+                          hatch=skip_hatch[skip], edgecolor="white",
+                          label=f"skip={skip}  ({50 if skip==2 else 71:.0f}% FEM↓)")
+            for b, v in zip(bars, maes):
+                ax.text(b.get_x() + b.get_width()/2,
+                        b.get_height() + 0.3,
+                        f"{v:.1f}", ha="center", fontsize=8.5,
+                        fontweight="bold", color=_TXT)
+
+        ax.axhline(10, color=C_MEAS, lw=1.2, ls="--", alpha=0.6,
+                   label="10°C threshold")
+        ax.set_title(dom_label[dom], fontsize=10.5, color=_TXT, fontweight="bold")
+        ax.set_xticks(x)
+        ax.set_xticklabels([arch_short[a] for a in archs], fontsize=9)
+        ax.tick_params(colors=_TICK)
+        ax.set_ylim(0, 28)
+        if col == 0:
+            ax.set_ylabel("Mean MAE [°C]", fontsize=10, color=_TICK)
+        ax.grid(True, axis="y", alpha=0.25, linestyle=":")
+        ax.legend(fontsize=8, loc="upper right")
+
+    # Bottom caption
+    fig.text(0.5, -0.02,
+             "skip=2: 11 of 21 FEM steps computed (10 PINN predictions, 52% savings)  |  "
+             "skip=4: 6 FEM steps (71% savings)",
+             ha="center", fontsize=9, color=_TXT, style="italic")
+
+    plt.tight_layout()
+    out = OUT_DIR / "pres_l8_3d_results.png"
+    fig.savefig(out, dpi=150, bbox_inches="tight", facecolor=_FIG_BG)
+    plt.close(fig)
+    print(f"  → {out.name}")
+
+
+def plot_l8_fem_skip_summary():
+    """L8: 2D MCO-PINN FEM step skip summary — presentation quality."""
+    mae_data = {
+        "bayesian": {1: 1.0, 2: 2.0, 4: 5.2, 6: 7.3},
+        "nsga2":    {1: 1.5, 2: 2.9, 4: 6.5, 6: 5.6},
+        "nsga3":    {1: 8.9, 2: 3.0, 4: 4.3, 6: 5.8},
+    }
+    l2_ref = {
+        "bayesian": {1: 43.6, 2: 33.2, 4: 57.5, 6: 93.6},
+        "nsga2":    {1: 38.1, 2: 56.0, 4: 154.8, 6: 354.6},
+        "nsga3":    {1: 44.4, 2: 75.6, 4: 202.1, 6: 428.6},
+    }
+    fem_count = {1: 21, 2: 11, 4: 6, 6: 4}
+
+    fig, (ax_l, ax_r) = plt.subplots(1, 2, figsize=(15, 6))
+    fig.patch.set_facecolor(_FIG_BG)
+    fig.suptitle("Level 8: MCO-PINN Skip Operator — FEM Step Savings\n"
+                 "2D Analysis | All Architectures | A356 Aluminum",
+                 fontsize=13, fontweight="bold", color=_TXT)
+
+    # Sol: MAE vs skip
+    for arch, color in OPT_COLORS.items():
+        skips = [1, 2, 4, 6]
+        maes  = [mae_data[arch][s] for s in skips]
+        ax_l.plot(skips, maes, "o-", color=color, lw=2.2,
+                  label=OPT_SHORT[arch], ms=8)
+        for s, m in zip(skips, maes):
+            ax_l.annotate(f"{m:.1f}°C",
+                          xy=(s, m), xytext=(4, 6),
+                          textcoords="offset points", fontsize=8.5,
+                          color=color, fontweight="bold")
+
+    ax_l.axhline(5.0, color=C_MEAS, lw=1.5, ls="--", alpha=0.7,
+                 label="Acceptance threshold: 5°C")
+    ax_l.set_xlabel("Skip value", fontsize=10, color=_TICK)
+    ax_l.set_ylabel("Mean MAE [°C]", fontsize=10, color=_TICK)
+    ax_l.set_xticks([1, 2, 4, 6])
+    ax_l.set_xticklabels(["skip=1\n(21 FEM)", "skip=2\n(11 FEM)",
+                           "skip=4\n(6 FEM)", "skip=6\n(4 FEM)"])
+    ax_l.set_ylim(0, 12)
+    ax_l.legend(fontsize=9)
+    ax_l.grid(True, alpha=0.3, linestyle=":")
+    ax_l.set_facecolor(_AX_BG)
+    for sp in ax_l.spines.values():
+        sp.set_color(_SPINE)
+    ax_l.set_title("MCO-PINN MAE vs Skip Value", fontsize=11, color=_TXT)
+
+    # Right: L2 baseline vs MCO-PINN (bayesian)
+    arch = "bayesian"
+    skips = [1, 2, 4, 6]
+    l2_vals  = [l2_ref[arch][s] for s in skips]
+    mco_vals = [mae_data[arch][s] for s in skips]
+    xpos = np.arange(len(skips))
+    w = 0.35
+
+    b1 = ax_r.bar(xpos - w/2, l2_vals, width=w, color=C_GRAY, alpha=0.7,
+                  label="L2 Baseline (fixed weights)")
+    b2 = ax_r.bar(xpos + w/2, mco_vals, width=w, color=C_BAY, alpha=0.9,
+                  label="MCO-PINN (Shen 2023)")
+
+    for b, v in zip(b1, l2_vals):
+        ax_r.text(b.get_x()+b.get_width()/2, v+1, f"{v:.0f}",
+                  ha="center", fontsize=8, color=C_GRAY, fontweight="bold")
+    for b, v in zip(b2, mco_vals):
+        ax_r.text(b.get_x()+b.get_width()/2, v+1, f"{v:.1f}",
+                  ha="center", fontsize=8, color=C_BAY, fontweight="bold")
+
+    ax_r.set_xticks(xpos)
+    ax_r.set_xticklabels(["skip=1\n(21 FEM)", "skip=2\n(11 FEM)",
+                           "skip=4\n(6 FEM)", "skip=6\n(4 FEM)"])
+    ax_r.set_ylabel("Mean MAE [°C]", fontsize=10, color=_TICK)
+    ax_r.set_ylim(0, 110)
+    ax_r.legend(fontsize=9)
+    ax_r.grid(True, axis="y", alpha=0.3, linestyle=":")
+    ax_r.set_facecolor(_AX_BG)
+    for sp in ax_r.spines.values():
+        sp.set_color(_SPINE)
+    ax_r.set_title("L2 Baseline vs MCO-PINN (Bayesian)", fontsize=11, color=_TXT)
+
+    # Add improvement arrows
+    for xi, (l2v, mcov) in enumerate(zip(l2_vals, mco_vals)):
+        pct = (1 - mcov/l2v) * 100
+        ax_r.annotate(f"▼{pct:.0f}%",
+                      xy=(xi + w/2, mcov + 3),
+                      ha="center", fontsize=9, color=C_N3,
+                      fontweight="bold")
+
+    plt.tight_layout()
+    out = OUT_DIR / "pres_l8_fem_skip_summary.png"
+    fig.savefig(out, dpi=150, bbox_inches="tight", facecolor=_FIG_BG)
+    plt.close(fig)
+    print(f"  → {out.name}")
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 # MAIN
 # ══════════════════════════════════════════════════════════════════════════════
@@ -765,5 +931,7 @@ if __name__ == "__main__":
     plot_cross_level_progression()
     plot_nas_search_space()
     plot_l3_skip_rates()
+    plot_l8_3d_results()
+    plot_l8_fem_skip_summary()
 
     print(f"\nDone. All plots saved to {OUT_DIR}")

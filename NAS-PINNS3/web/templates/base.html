@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}NAS-MCO-PINNs{% endblock %}</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <!-- MathJax -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+  <!-- Plotly -->
+  <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
+  <!-- Custom CSS -->
+  <link href="/static/css/style.css" rel="stylesheet"/>
+  {% block head %}{% endblock %}
+</head>
+<body>
+
+<!-- ── Navigation ─────────────────────────────────────────────────────────── -->
+<nav class="navbar navbar-expand-lg navbar-dark" id="main-nav">
+  <div class="container-xl">
+    <a class="navbar-brand fw-600" href="/">
+      <span class="brand-icon">⚡</span> NAS-MCO-PINNs
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto gap-1">
+        <li class="nav-item">
+          <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">
+            <i class="fa-solid fa-house me-1"></i>Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.path == '/demo' %}active{% endif %}" href="/demo">
+            <i class="fa-solid fa-sliders me-1"></i>Interactive Demo
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.path == '/results' %}active{% endif %}" href="/results">
+            <i class="fa-solid fa-chart-bar me-1"></i>Results
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Page Content ──────────────────────────────────────────────────────── -->
+{% block content %}{% endblock %}
+
+<!-- ── Footer ────────────────────────────────────────────────────────────── -->
+<footer class="footer mt-auto">
+  <div class="container-xl text-center py-4">
+    <p class="mb-1 text-muted small">
+      NAS-MCO-PINNs &nbsp;|&nbsp; Neural Architecture Search + Multi-Consistency Optimization
+      for 3D Thermal Simulation
+    </p>
+    <p class="mb-0 text-muted small">
+      A356 Aluminum Water Quenching &nbsp;·&nbsp; Physics-Informed Neural Networks
+    </p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

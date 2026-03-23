@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% block title %}Interactive Demo — NAS-MCO-PINNs{% endblock %}
+
+{% block content %}
+<div class="demo-layout">
+
+  <!-- ── Sidebar ──────────────────────────────────────────────────────────── -->
+  <aside class="demo-sidebar">
+    <div class="sidebar-header">
+      <i class="fa-solid fa-sliders me-2"></i> Parameters
+    </div>
+
+    <!-- Domain -->
+    <div class="param-group">
+      <label class="param-label">
+        <i class="fa-solid fa-cube me-1"></i> Domain
+      </label>
+      <div class="domain-cards" id="domain-sel">
+        <button class="domain-btn active" data-val="rectangular">
+          <i class="fa-solid fa-box"></i>
+          <span>Rectangular</span>
+          <small>1.3×0.6×0.4m</small>
+        </button>
+        <button class="domain-btn" data-val="cylinder">
+          <i class="fa-solid fa-circle"></i>
+          <span>Cylinder</span>
+          <small>R=0.25m H=0.6m</small>
+        </button>
+        <button class="domain-btn" data-val="stacked">
+          <i class="fa-solid fa-layer-group"></i>
+          <span>Stacked</span>
+          <small>2×0.5m cubes</small>
+        </button>
+      </div>
+    </div>
+
+    <!-- Optimizer -->
+    <div class="param-group">
+      <label class="param-label">
+        <i class="fa-solid fa-brain me-1"></i> NAS Optimizer
+      </label>
+      <div class="toggle-group" id="arch-sel">
+        <button class="toggle-btn active" data-val="bayesian" style="--c:#1976D2">
+          Bayesian
+        </button>
+        <button class="toggle-btn" data-val="nsga2" style="--c:#2E7D32">
+          NSGA-II
+        </button>
+        <button class="toggle-btn" data-val="nsga3" style="--c:#D32F2F">
+          NSGA-III
+        </button>
+      </div>
+    </div>
+
+    <!-- Skip -->
+    <div class="param-group">
+      <label class="param-label">
+        <i class="fa-solid fa-forward-fast me-1"></i> Skip Value
+        <span class="param-hint" id="skip-hint">52% FEM savings</span>
+      </label>
+      <div class="toggle-group" id="skip-sel">
+        <button class="toggle-btn active" data-val="2" style="--c:#1565C0">
+          skip = 2
+        </button>
+        <button class="toggle-btn" data-val="4" style="--c:#E65100">
+          skip = 4
+        </button>
+      </div>
+    </div>
+
+    <!-- Display mode -->
+    <div class="param-group">
+      <label class="param-label">
+        <i class="fa-solid fa-eye me-1"></i> Display
+      </label>
+      <div class="toggle-group" id="mode-sel">
+        <button class="toggle-btn active" data-val="pred" style="--c:#6A1B9A">
+          PINN
+        </button>
+        <button class="toggle-btn" data-val="fem" style="--c:#00695C">
+          FEM
+        </button>
+        <button class="toggle-btn" data-val="error" style="--c:#BF360C">
+          |Error|
+        </button>
+      </div>
+    </div>
+
+    <!-- Time Window -->
+    <div class="param-group">
+      <label class="param-label">
+        <i class="fa-solid fa-clock me-1"></i> Time Window
+        <span class="param-hint" id="time-hint">—</span>
+      </label>
+      <input type="range" id="time-slider" class="time-slider" min="0" max="0" value="0"/>
+      <div class="d-flex gap-2 mt-2">
+        <button id="btn-prev" class="ctrl-btn" onclick="stepWindow(-1)">
+          <i class="fa-solid fa-step-backward"></i>
+        </button>
+        <button id="btn-play" class="ctrl-btn ctrl-play" onclick="togglePlay()">
+          <i class="fa-solid fa-play" id="play-icon"></i>
+        </button>
+        <button id="btn-next" class="ctrl-btn" onclick="stepWindow(+1)">
+          <i class="fa-solid fa-step-forward"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats box -->
+    <div class="stats-box" id="stats-box">
+      <div class="stats-row">
+        <span class="stats-key">MAE (window)</span>
+        <span class="stats-val" id="stat-mae">—</span>
+      </div>
+      <div class="stats-row">
+        <span class="stats-key">Mean MAE</span>
+        <span class="stats-val" id="stat-mae-mean">—</span>
+      </div>
+      <div class="stats-row">
+        <span class="stats-key">T range (PINN)</span>
+        <span class="stats-val" id="stat-trange">—</span>
+      </div>
+      <div class="stats-row">
+        <span class="stats-key">FEM steps saved</span>
+        <span class="stats-val" id="stat-fem">—</span>
+      </div>
+    </div>
+
+    <!-- Training status -->
+    <div id="train-status" class="train-status" style="display:none">
+      <i class="fa-solid fa-circle-notch fa-spin me-2"></i>
+      Training in progress…
+      <div class="progress mt-2" style="height:6px">
+        <div class="progress-bar bg-info" id="train-progress" style="width:0%"></div>
+      </div>
+      <small id="train-pct" class="text-muted">0 / 18 runs complete</small>
+    </div>
+  </aside>
+
+  <!-- ── Main Content ──────────────────────────────────────────────────────── -->
+  <main class="demo-main">
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs demo-tabs" id="viewTabs">
+      <li class="nav-item">
+        <button class="nav-link active" id="tab2d" onclick="showTab('2d')">
+          <i class="fa-solid fa-map me-1"></i>2D Heatmap
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" id="tab3d" onclick="showTab('3d')">
+          <i class="fa-solid fa-cube me-1"></i>3D Surface
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" id="tabloss" onclick="showTab('loss')">
+          <i class="fa-solid fa-chart-line me-1"></i>Loss Curves
+        </button>
+      </li>
+    </ul>
+
+    <!-- Loading overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+      <div class="spinner-border text-info" style="width:3rem;height:3rem;"></div>
+      <p class="mt-3 text-muted">Loading data…</p>
+    </div>
+
+    <!-- Error box -->
+    <div id="error-box" class="error-box" style="display:none">
+      <i class="fa-solid fa-triangle-exclamation me-2"></i>
+      <span id="error-msg">Data not available.</span>
+    </div>
+
+    <!-- 2D Heatmap -->
+    <div id="view-2d" class="chart-view">
+      <div class="chart-header">
+        <span id="chart2d-title">Temperature Field — z-mid slice</span>
+        <span class="chart-unit">[ °C ]</span>
+      </div>
+      <div id="plot-2d" class="chart-box"></div>
+    </div>
+
+    <!-- 3D Surface -->
+    <div id="view-3d" class="chart-view" style="display:none">
+      <div class="chart-header">
+        <span id="chart3d-title">3D Surface — z-mid slice</span>
+        <span class="chart-unit">[ °C ]</span>
+      </div>
+      <div id="plot-3d" class="chart-box"></div>
+    </div>
+
+    <!-- Loss Curves -->
+    <div id="view-loss" class="chart-view" style="display:none">
+      <div class="chart-header">
+        <span>Training Loss per Window</span>
+      </div>
+      <div id="plot-loss" class="chart-box"></div>
+    </div>
+
+  </main>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/demo.js"></script>
+{% endblock %}

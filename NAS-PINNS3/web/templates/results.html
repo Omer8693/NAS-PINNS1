@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% block title %}Results — NAS-MCO-PINNs{% endblock %}
+
+{% block content %}
+<div class="container-xl py-5">
+
+  <h2 class="section-title">Results &amp; Comparison</h2>
+  <p class="text-muted mb-4">
+    Mean Absolute Error (MAE) across all time windows and spatial points.
+    2D (single-layer), 3D v1 (800 epochs), 3D v2 (2000 epochs).
+  </p>
+
+  <!-- ── MAE Comparison Plot ──────────────────────────────────────────────── -->
+  <div class="result-card mb-5">
+    <h5 class="mb-3"><i class="fa-solid fa-chart-bar me-2 text-blue"></i>MAE Comparison — All Configurations</h5>
+    <div id="plot-mae-bar" style="height:420px;"></div>
+  </div>
+
+  <!-- ── Thermal Fields ────────────────────────────────────────────────────── -->
+  <div class="result-card mb-5">
+    <h5 class="mb-3"><i class="fa-solid fa-fire me-2 text-orange"></i>3D Thermal Fields</h5>
+    <img src="/static/img/fig1_thermal_fields.png" class="img-fluid rounded" alt="Thermal Fields"/>
+  </div>
+
+  <!-- ── Per-Arch 2D ────────────────────────────────────────────────────────── -->
+  <div class="row g-4 mb-5">
+    <div class="col-lg-6">
+      <div class="result-card h-100">
+        <h5 class="mb-3"><i class="fa-solid fa-chart-simple me-2 text-green"></i>MAE per Optimizer (3D)</h5>
+        <img src="/static/img/fig2_mae_per_arch.png" class="img-fluid rounded" alt="MAE per Arch"/>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="result-card h-100">
+        <h5 class="mb-3"><i class="fa-solid fa-chart-line me-2 text-purple"></i>2D Results per Optimizer</h5>
+        <img src="/static/img/fig3_2d_per_arch.png" class="img-fluid rounded" alt="2D Results"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Summary Table ──────────────────────────────────────────────────────── -->
+  <div class="result-card mb-5">
+    <h5 class="mb-3"><i class="fa-solid fa-table me-2 text-blue"></i>Summary Table</h5>
+    <img src="/static/img/fig4_summary_table.png" class="img-fluid rounded" alt="Summary Table"/>
+  </div>
+
+  <!-- ── Skip Timeline ──────────────────────────────────────────────────────── -->
+  <div class="result-card mb-5">
+    <h5 class="mb-3"><i class="fa-solid fa-timeline me-2 text-orange"></i>FEM vs PINN Step Timeline</h5>
+    <img src="/static/img/fig5_skip_timeline.png" class="img-fluid rounded" alt="Skip Timeline"/>
+  </div>
+
+  <!-- ── Data Table ────────────────────────────────────────────────────────── -->
+  <div class="result-card mb-5">
+    <h5 class="mb-3"><i class="fa-solid fa-database me-2 text-green"></i>Numerical Results</h5>
+    <div id="results-table-container">
+      <div class="text-center py-4 text-muted">
+        <div class="spinner-border spinner-border-sm me-2"></div>Loading data…
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// ── MAE Comparison Bar Chart ─────────────────────────────────────────────────
+fetch('/api/mae').then(r => r.json()).then(data => {
+  const domains = ['rectangular', 'cylinder', 'stacked'];
+  const archs   = ['bayesian', 'nsga2', 'nsga3'];
+  const colors  = { bayesian: '#1976D2', nsga2: '#2E7D32', nsga3: '#D32F2F' };
+  const labels  = { bayesian: 'Bayesian', nsga2: 'NSGA-II', nsga3: 'NSGA-III' };
+  const dNames  = { rectangular: 'Rectangular', cylinder: 'Cylinder', stacked: 'Stacked' };
+
+  const traces = [];
+
+  for (const arch of archs) {
+    for (const skip of ['2', '4']) {
+      const xLabels = [], yV1 = [], yV2 = [];
+      for (const dom of domains) {
+        xLabels.push(dNames[dom]);
+        yV1.push(data.v1 ? (data.v1[dom]?.[arch]?.[skip]?.mae_C ?? null) : null);
+        yV2.push(data.v2 ? (data.v2[dom]?.[arch]?.[skip]?.mae_C ?? null) : null);
+      }
+      traces.push({
+        name: `${labels[arch]} skip=${skip} (v1)`,
+        x: xLabels, y: yV1, type: 'bar',
+        marker: { color: colors[arch], opacity: 0.45 },
+        legendgroup: `${arch}-${skip}`,
+      });
+      if (data.v2) {
+        traces.push({
+          name: `${labels[arch]} skip=${skip} (v2)`,
+          x: xLabels, y: yV2, type: 'bar',
+          marker: { color: colors[arch], opacity: 0.9 },
+          legendgroup: `${arch}-${skip}`,
+        });
+      }
+    }
+  }
+
+  Plotly.newPlot('plot-mae-bar', traces, {
+    barmode: 'group',
+    paper_bgcolor: 'transparent',
+    plot_bgcolor: '#1a2035',
+    font: { color: '#ccc', family: 'Inter' },
+    xaxis: { title: 'Domain', gridcolor: '#2a3456', color: '#aaa' },
+    yaxis: { title: 'MAE [°C]', gridcolor: '#2a3456', color: '#aaa' },
+    legend: { font: { size: 10 } },
+    margin: { t: 20, b: 60, l: 60, r: 20 },
+  }, { displayModeBar: false, responsive: true });
+
+  // ── Numeric table ──
+  buildTable(data);
+});
+
+function buildTable(data) {
+  const domains = ['rectangular', 'cylinder', 'stacked'];
+  const archs   = ['bayesian', 'nsga2', 'nsga3'];
+  const lArchs  = { bayesian: 'Bayesian', nsga2: 'NSGA-II', nsga3: 'NSGA-III' };
+
+  let html = `<div class="table-responsive"><table class="table table-dark table-striped table-hover table-bordered text-center align-middle small">
+    <thead class="table-header-dark">
+      <tr>
+        <th>Domain</th><th>Optimizer</th><th>Skip</th>
+        <th class="text-info">v1 MAE [°C]</th>
+        ${data.v2 ? '<th class="text-success">v2 MAE [°C]</th><th>Δ [°C]</th>' : ''}
+        <th>Runtime v1 [s]</th>
+      </tr>
+    </thead><tbody>`;
+
+  for (const dom of domains) {
+    for (const arch of archs) {
+      for (const skip of ['2', '4']) {
+        const v1 = data.v1?.[dom]?.[arch]?.[skip];
+        const v2 = data.v2?.[dom]?.[arch]?.[skip];
+        const mae1 = v1 ? v1.mae_C.toFixed(2) : '—';
+        const mae2 = v2 ? v2.mae_C.toFixed(2) : '—';
+        const delta = (v1 && v2) ? (v2.mae_C - v1.mae_C).toFixed(2) : '—';
+        const deltaClass = (v1 && v2) ? (v2.mae_C < v1.mae_C ? 'text-success' : 'text-danger') : '';
+        const rt = v1 ? Math.round(v1.runtime_s) + 's' : '—';
+        html += `<tr>
+          <td>${dom}</td><td>${lArchs[arch]}</td><td>${skip}</td>
+          <td class="text-info">${mae1}</td>
+          ${data.v2 ? `<td class="text-success">${mae2}</td><td class="${deltaClass}">${delta}</td>` : ''}
+          <td>${rt}</td>
+        </tr>`;
+      }
+    }
+  }
+  html += `</tbody></table></div>`;
+
+  if (!data.v2) {
+    html += `<p class="text-muted small text-center mt-2">
+      <i class="fa-solid fa-circle-notch fa-spin me-1"></i>
+      v2 training in progress — refresh to update.</p>`;
+  }
+
+  document.getElementById('results-table-container').innerHTML = html;
+}
+</script>
+{% endblock %}

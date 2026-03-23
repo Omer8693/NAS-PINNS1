@@ -1,3 +1,7 @@
 {
-    "chatgpt.openOnStartup": true
+    "chatgpt.openOnStartup": true,
+    "remote.autoForwardPorts": true,
+    "remote.autoForwardPortsSource": "process",
+    "remote.forwardOnOpen": true,
+    "ports.autoForwardPorts": true
 }

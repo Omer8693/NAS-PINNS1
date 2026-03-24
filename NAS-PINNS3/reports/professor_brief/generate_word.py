@@ -277,10 +277,11 @@ fig_caption(doc, "Table 2.",
     "Green = good accuracy; red = MAE > 15 deg C.")
 
 # Bar chart image
-add_image(doc, "fig2_mae_per_arch.png", width_inches=6.0)
+add_image(doc, "fig_mae_bar_clean.png", width_inches=6.2)
 fig_caption(doc, "Figure 1.",
     "Best MAE per domain and skip value (minimum over three NAS optimizers). "
-    "Each bar group = one skip value. Dashed line at 10 deg C marks a practical accuracy threshold.")
+    "Each bar group = one skip value; four bars = four 3D domains. "
+    "Dashed line at 10 \u00b0C marks a practical accuracy threshold.")
 
 # ── Page break ────────────────────────────────────────────────────────────────
 doc.add_page_break()

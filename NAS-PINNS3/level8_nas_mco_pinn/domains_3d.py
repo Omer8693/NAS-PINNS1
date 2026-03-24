@@ -20,6 +20,8 @@ Physical constants — A356 aluminum:
 import numpy as np
 from scipy.optimize import brentq
 from scipy.special import j0, j1
+from scipy.interpolate import RegularGridInterpolator
+from scipy.ndimage import distance_transform_edt
 
 # ──────────────────────────────────────────────────────────────
 # Physical constants
@@ -298,49 +300,211 @@ class StackedCubes3D:
 
 
 # ══════════════════════════════════════════════════════════════
-# Domain 4: L-Prism (Numerical — geometric mask)
+# Domain 4: L-Shape (Numerical FD solver)
 # ══════════════════════════════════════════════════════════════
 
-class LPrism3D:
+class LShape3D:
     """
-    L-shaped 2D cross-section × z extension.
-    No exact analytical solution — approximate: full prism + corner NaN mask.
+    L-shaped 3D domain: explicit finite-difference numerical solver.
 
-    T(x,y,z,t) ≈ based on Rectangular3D, with z-direction PlaneWall1D correction.
-    This is an approximation; the exact solution requires numerical FEM.
+    Cross-section (xy) = two rectangular arms joined at corner:
+        mask: (x <= cut_x) OR (y <= cut_y)   [for all z in [0, Lz]]
 
-    Used for visualization and PINN benchmark (not exact analytical).
+    Numerical reference via 3D explicit FD:
+      - Robin (convective) BC on ALL exposed faces
+      - Precomputed at FEM time steps t_fem = 0,1.5,...,30s
+      - Trilinear interpolation via RegularGridInterpolator
+
+    Domain dimensions  (complex asymmetric casting):
+        Lx=0.8m, Ly=0.8m, Lz=0.4m
+        cut_x=0.3m, cut_y=0.3m  (remove top-right corner)
     """
 
-    name  = "L-Prism 3D"
+    name  = "L-Shape 3D"
     color = "#6A1B9A"
 
-    def __init__(self, Lx=1.3, Ly=0.6, Lz=0.4,
-                 cut_x=0.715, cut_y=0.3,
-                 h=H_CONV, k=K, alpha=ALPHA, N=8):
+    # FEM time grid (same as other domains: 0..30s every 1.5s)
+    T_FEM = np.arange(0.0, 30.0 + 1e-9, 1.5)   # 21 steps
+
+    def __init__(self, Lx=0.8, Ly=0.8, Lz=0.4,
+                 cut_x=0.3, cut_y=0.3,
+                 h=H_CONV, k=K, alpha=ALPHA, rho_cp=RHO_CP,
+                 nx=20, ny=20, nz=10):
         self.Lx, self.Ly, self.Lz = Lx, Ly, Lz
         self.cut_x, self.cut_y    = cut_x, cut_y
-        # Full prism solution (approximation)
-        self.field = Rectangular3D(Lx=Lx, Ly=Ly, Lz=Lz, h=h, k=k, alpha=alpha, N=N)
+        self.h, self.k            = h, k
+        self.alpha, self.rho_cp   = alpha, rho_cp
+        self.nx, self.ny, self.nz = nx, ny, nz
 
-    def T(self, x, y, z, t):
-        T_field = self.field.T(x, y, z, t)
-        # Mask corner region with NaN
-        corner = (x > self.cut_x) & (y > self.cut_y)
-        T_field = np.where(corner, np.nan, T_field)
-        return T_field
+        # Cell-centred uniform grid
+        dx, dy, dz  = Lx / nx, Ly / ny, Lz / nz
+        self.dx, self.dy, self.dz = dx, dy, dz
+        self.xi_c = np.linspace(dx / 2, Lx - dx / 2, nx)
+        self.yi_c = np.linspace(dy / 2, Ly - dy / 2, ny)
+        self.zi_c = np.linspace(dz / 2, Lz - dz / 2, nz)
+
+        # 3-D boolean mask on cell-centred grid
+        XX, YY, ZZ  = np.meshgrid(self.xi_c, self.yi_c, self.zi_c, indexing='ij')
+        self.inside = self._mask_3d(XX, YY, ZZ)
+
+        # Nearest-inside-cell indices (used to fill NaN boundary for interpolator).
+        # scipy EDT treats foreground=True as features and finds nearest background(=False).
+        # We want nearest INSIDE (True) cell, so we invert: ~inside makes inside=background.
+        # For inside cells: they ARE background → indices point to themselves.
+        # For outside cells: foreground → indices point to nearest inside cell.
+        self._nn_idx = distance_transform_edt(
+            ~self.inside, return_distances=False, return_indices=True)
+
+        # Run FD solver and cache T at every t_fem step
+        print(f"  LShape3D: running FD solver ({nx}×{ny}×{nz} grid)…", flush=True)
+        self._T_cache = self._run_fd()   # shape (nx, ny, nz, n_t_fem)
+
+        # Build interpolator
+        self._interp = RegularGridInterpolator(
+            (self.xi_c, self.yi_c, self.zi_c, self.T_FEM),
+            self._T_cache,
+            method='linear',
+            bounds_error=False,
+            fill_value=np.nan,
+        )
+        print("  LShape3D: FD solver done.", flush=True)
+
+    # ── Geometry ─────────────────────────────────────────────
+
+    def _mask_3d(self, x, y, z):
+        """L-shape on full grid arrays."""
+        return (((x <= self.cut_x) | (y <= self.cut_y)) &
+                (z >= 0) & (z <= self.Lz))
 
     def mask(self, x, y, z):
-        in_rect = ((x >= 0) & (x <= self.Lx) &
-                   (y >= 0) & (y <= self.Ly) &
-                   (z >= 0) & (z <= self.Lz))
-        corner  = (x > self.cut_x) & (y > self.cut_y)
-        return in_rect & ~corner
+        """Boolean mask for arbitrary (x, y, z) arrays."""
+        x, y, z = np.asarray(x), np.asarray(y), np.asarray(z)
+        return (((x <= self.cut_x) | (y <= self.cut_y)) &
+                (x >= 0) & (x <= self.Lx) &
+                (y >= 0) & (y <= self.Ly) &
+                (z >= 0) & (z <= self.Lz))
+
+    # ── Finite-difference solver ──────────────────────────────
+
+    def _fd_step(self, T, dt):
+        """One explicit FD update step (vectorised, Robin BC on exposed faces)."""
+        dx, dy, dz   = self.dx, self.dy, self.dz
+        alpha        = self.alpha
+        h            = self.h
+        rho_cp       = self.rho_cp
+        ins          = self.inside
+        dT           = np.zeros_like(T)
+
+        for axis, dh in enumerate([dx, dy, dz]):
+            for shift in (+1, -1):
+                T_n   = np.roll(T,   shift, axis=axis)
+                ins_n = np.roll(ins, shift, axis=axis).copy()
+
+                # Invalidate the wrapped boundary slice
+                if shift == +1:
+                    # rolled element at index 0 came from the far edge — mark invalid
+                    idx = [slice(None)] * 3
+                    idx[axis] = 0
+                    ins_n[tuple(idx)] = False
+                else:
+                    idx = [slice(None)] * 3
+                    idx[axis] = -1
+                    ins_n[tuple(idx)] = False
+
+                # Conductive flux (both cells inside)
+                dT += np.where(ins & ins_n,
+                               alpha / dh**2 * (T_n - T),
+                               0.0)
+                # Convective flux (current cell inside, neighbour outside / boundary)
+                dT += np.where(ins & ~ins_n,
+                               h / (rho_cp * dh) * (T_WATER - T),
+                               0.0)
+
+        return np.where(ins, T + dt * dT, T)
+
+    def _run_fd(self):
+        """Run explicit FD from T_INIT, store T at each t_fem checkpoint."""
+        dx, dy, dz = self.dx, self.dy, self.dz
+
+        # Stability: dt < 1 / (2α Σ(1/dh²) + 6h/(ρCp·dh_min))
+        sum_inv_dh2 = 1/dx**2 + 1/dy**2 + 1/dz**2
+        dh_min      = min(dx, dy, dz)
+        dt_max      = 1.0 / (2 * self.alpha * sum_inv_dh2 +
+                             6 * self.h / (self.rho_cp * dh_min))
+        dt          = dt_max * 0.40
+
+        T = np.where(self.inside, float(T_INIT), np.nan)
+
+        n_t       = len(self.T_FEM)
+        T_cache   = np.zeros((self.nx, self.ny, self.nz, n_t))
+        T_cache[:, :, :, 0] = self._fill_nearest(T)
+
+        t_now     = 0.0
+        store_idx = 1
+        n_max     = int(np.ceil(self.T_FEM[-1] / dt)) + 20
+
+        for _ in range(n_max):
+            if store_idx >= n_t:
+                break
+            T    = self._fd_step(T, dt)
+            t_now += dt
+            while (store_idx < n_t and
+                   t_now >= self.T_FEM[store_idx] - 1e-9):
+                T_cache[:, :, :, store_idx] = self._fill_nearest(T)
+                store_idx += 1
+
+        return T_cache
+
+    def _fill_nearest(self, T):
+        """Replace NaN (outside cells) with nearest inside cell value."""
+        ni = self._nn_idx
+        return T[ni[0], ni[1], ni[2]]
+
+    # ── Temperature query ─────────────────────────────────────
+
+    def T(self, x, y, z, t):
+        """
+        T(x, y, z, t) — trilinearly interpolated from FD cache.
+        Returns NaN for points outside the L-shape.
+        Query coords are clamped to the cell-centred grid (nearest cell
+        for surface/boundary points).
+        """
+        x = np.asarray(x, dtype=float)
+        y = np.asarray(y, dtype=float)
+        z = np.asarray(z, dtype=float)
+        scalar = (x.ndim == 0)
+        x, y, z = np.atleast_1d(x), np.atleast_1d(y), np.atleast_1d(z)
+        t_arr = np.full_like(x, float(t))
+
+        # Clamp to grid bounds (boundary queries get nearest cell-centre value)
+        xq = np.clip(x,     self.xi_c[0], self.xi_c[-1])
+        yq = np.clip(y,     self.yi_c[0], self.yi_c[-1])
+        zq = np.clip(z,     self.zi_c[0], self.zi_c[-1])
+        tq = np.clip(t_arr, self.T_FEM[0], self.T_FEM[-1])
+
+        pts   = np.stack([xq, yq, zq, tq], axis=-1)
+        T_out = self._interp(pts)
+        T_out = np.where(self.mask(x, y, z), T_out, np.nan)
+        return float(T_out[0]) if scalar else T_out
+
+    def theta(self, x, y, z, t):
+        """Dimensionless temperature θ = (T - T_water) / ΔT."""
+        return np.clip((self.T(x, y, z, t) - T_WATER) / DELTA_T, 0.0, 1.0)
+
+    def slice_xy(self, xx, yy, z_val, t):
+        zz = np.full_like(xx, z_val)
+        return self.T(xx.ravel(), yy.ravel(), zz.ravel(), t).reshape(xx.shape)
 
     def info(self):
-        return (f"LPrism3D  {self.Lx}×{self.Ly}×{self.Lz}m  "
-                f"(corner cut x>{self.cut_x}, y>{self.cut_y})\n"
-                f"  NOTE: approximate solution — not exact analytical")
+        vol_frac = self.inside.sum() / self.inside.size
+        return (f"LShape3D  {self.Lx}×{self.Ly}×{self.Lz}m  "
+                f"(cut x>{self.cut_x}, y>{self.cut_y},  "
+                f"vol≈{vol_frac:.0%} of bbox)\n"
+                f"  Numerical FD grid: {self.nx}×{self.ny}×{self.nz}")
+
+
+# Keep LPrism3D as a thin alias for backward compatibility
+LPrism3D = LShape3D
 
 
 # ══════════════════════════════════════════════════════════════
@@ -353,7 +517,7 @@ def all_domains():
         "rectangular": Rectangular3D(),
         "cylinder":    Cylinder3D(),
         "stacked":     StackedCubes3D(),
-        "lprism":      LPrism3D(),
+        "lshape":      LShape3D(),
     }
 
 

@@ -25,7 +25,7 @@ except ImportError:
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 from .domains_3d import (
-    Rectangular3D, Cylinder3D, StackedCubes3D, LPrism3D,
+    Rectangular3D, Cylinder3D, StackedCubes3D, LShape3D, LPrism3D,
     T_INIT, T_WATER, DELTA_T, K, RHO_CP, H_CONV, ALPHA,
 )
 from .mco_timestepper import MCOLoss
@@ -111,7 +111,7 @@ def _sample_cyl(n: int, R: float, H: float):
 
 def _get_dims(domain):
     """Return domain dimensions."""
-    if isinstance(domain, (Rectangular3D, LPrism3D)):
+    if isinstance(domain, (Rectangular3D, LPrism3D, LShape3D)):
         return domain.Lx, domain.Ly, domain.Lz
     elif isinstance(domain, StackedCubes3D):
         return domain.L_cube, domain.L_cube, domain.Lz
@@ -120,9 +120,31 @@ def _get_dims(domain):
     return 1.3, 0.6, 0.4
 
 
+def _sample_lshape(n: int, domain):
+    """Rejection sampling inside L-shape domain."""
+    Lx, Ly, Lz = domain.Lx, domain.Ly, domain.Lz
+    pts = []
+    while sum(p[0].shape[0] for p in pts) < n:
+        x = torch.rand(n * 2, 1) * Lx
+        y = torch.rand(n * 2, 1) * Ly
+        z = torch.rand(n * 2, 1) * Lz
+        x_np = x.numpy().flatten()
+        y_np = y.numpy().flatten()
+        z_np = z.numpy().flatten()
+        inside = domain.mask(x_np, y_np, z_np)
+        pts.append((x[inside], y[inside], z[inside]))
+    x_all = torch.cat([p[0] for p in pts])[:n]
+    y_all = torch.cat([p[1] for p in pts])[:n]
+    z_all = torch.cat([p[2] for p in pts])[:n]
+    return x_all, y_all, z_all
+
+
 def sample_interior(domain, n: int):
     """Interior sampling with domain type detection."""
-    if isinstance(domain, (Rectangular3D, StackedCubes3D, LPrism3D)):
+    # LShape3D check MUST come before LPrism3D since LPrism3D = LShape3D (alias)
+    if isinstance(domain, LShape3D):
+        return _sample_lshape(n, domain)
+    elif isinstance(domain, (Rectangular3D, StackedCubes3D)):
         Lx, Ly, Lz = _get_dims(domain)
         return _sample_rect(n, Lx, Ly, Lz)
     elif isinstance(domain, Cylinder3D):
@@ -363,7 +385,7 @@ def predict_field_3d(net, domain, t_start, t_end, nx=25, ny=15, nz=10):
         if isinstance(domain, Cylinder3D):
             r_flat = np.sqrt(x_flat**2 + y_flat**2)
             valid  = r_flat <= domain.R
-        elif isinstance(domain, LPrism3D):
+        elif isinstance(domain, (LPrism3D, LShape3D)):
             valid = domain.mask(x_flat, y_flat, z_flat)
         else:
             valid = np.ones(len(x_flat), dtype=bool)

@@ -20,12 +20,13 @@ warnings.filterwarnings("ignore")
 
 sys.path.insert(0, os.path.dirname(__file__))
 from level8_nas_mco_pinn.domains_3d import (
-    Rectangular3D, Cylinder3D, StackedCubes3D,
+    Rectangular3D, Cylinder3D, StackedCubes3D, LShape3D,
     T_INIT, T_WATER,
 )
 
 # ── Paths ──────────────────────────────────────────────────────
 RESULTS = os.path.join(os.path.dirname(__file__), "level8_nas_mco_pinn", "results")
+V2_DIR  = os.path.join(RESULTS, "v2")
 os.makedirs(RESULTS, exist_ok=True)
 
 # ── Professional color palette ─────────────────────────────────
@@ -50,9 +51,11 @@ DOM_LABEL  = {
     "rectangular": "Rectangular Prism\n(1.3 × 0.6 × 0.4 m)",
     "cylinder":    "Cylinder\n(R = 0.25 m, H = 0.6 m)",
     "stacked":     "Stacked Cubes\n(2 × 0.5 m)",
+    "lshape":      "L-Shape 3D\n(0.8 × 0.8 × 0.4 m)",
 }
-DOM_SHORT = {"rectangular": "Rectangular", "cylinder": "Cylinder", "stacked": "Stacked"}
-DOMAINS   = ["rectangular", "cylinder", "stacked"]
+DOM_SHORT = {"rectangular": "Rectangular", "cylinder": "Cylinder",
+             "stacked": "Stacked", "lshape": "L-Shape"}
+DOMAINS   = ["rectangular", "cylinder", "stacked", "lshape"]
 
 norm_T = Normalize(vmin=T_WATER, vmax=T_INIT)
 
@@ -79,6 +82,145 @@ with open(os.path.join(RESULTS, "level8_skip_results.json")) as f:
 baseline = data_2d["level2_ref"]
 mco_2d   = data_2d["level8_mco"]
 
+_v2_json = os.path.join(V2_DIR, "results_3d_v2.json")
+data_v2  = json.load(open(_v2_json)) if os.path.exists(_v2_json) else {}
+
+
+# ──── 3D geometry drawing helpers ─────────────────────────────────────────────
+
+def _draw_box3d(ax, T_fn, t, Lx, Ly, Lz, cmap_obj, norm, n=18, oz=0.):
+    """Draw all 6 faces of a box from (0,0,oz) to (Lx,Ly,oz+Lz) colored by T."""
+    kw = dict(shade=False, alpha=0.88, linewidth=0, antialiased=True)
+    xi = np.linspace(0, Lx, n); yi = np.linspace(0, Ly, n)
+    zi = np.linspace(oz, oz + Lz, n)
+    XX, YY = np.meshgrid(xi, yi)
+    for z0 in (oz, oz + Lz):
+        ZZ = np.full_like(XX, z0)
+        T  = T_fn(XX.ravel(), YY.ravel(), ZZ.ravel(), t).reshape(n, n)
+        ax.plot_surface(XX, YY, ZZ, facecolors=cmap_obj(norm(T)), **kw)
+    XX2, ZZ2 = np.meshgrid(xi, zi)
+    for y0 in (0., Ly):
+        YY2 = np.full_like(XX2, y0)
+        T   = T_fn(XX2.ravel(), YY2.ravel(), ZZ2.ravel(), t).reshape(n, n)
+        ax.plot_surface(XX2, YY2, ZZ2, facecolors=cmap_obj(norm(T)), **kw)
+    YY3, ZZ3 = np.meshgrid(yi, zi)
+    for x0 in (0., Lx):
+        XX3 = np.full_like(YY3, x0)
+        T   = T_fn(XX3.ravel(), YY3.ravel(), ZZ3.ravel(), t).reshape(n, n)
+        ax.plot_surface(XX3, YY3, ZZ3, facecolors=cmap_obj(norm(T)), **kw)
+
+
+def _draw_cyl3d(ax, dom, t, cmap_obj, norm, n_th=44, n_z=20, n_r=12):
+    """Draw cylinder: lateral surface + top & bottom caps."""
+    R, H = dom.R, dom.H
+    kw = dict(shade=False, alpha=0.90, linewidth=0, antialiased=True)
+    th = np.linspace(0, 2 * np.pi, n_th)
+    z  = np.linspace(0, H, n_z)
+    TH, ZZ = np.meshgrid(th, z)
+    XX = R * np.cos(TH); YY = R * np.sin(TH)
+    T  = dom.T_xyz(XX.ravel(), YY.ravel(), ZZ.ravel(), t).reshape(n_z, n_th)
+    ax.plot_surface(XX, YY, ZZ, facecolors=cmap_obj(norm(T)), **kw)
+    r_a = np.linspace(0, R, n_r)
+    RR, TH2 = np.meshgrid(r_a, th)
+    Xc = RR * np.cos(TH2); Yc = RR * np.sin(TH2)
+    for z0 in (0., H):
+        Zc = np.full_like(Xc, z0)
+        Tc = dom.T_xyz(Xc.ravel(), Yc.ravel(), Zc.ravel(), t).reshape(n_th, n_r)
+        ax.plot_surface(Xc, Yc, Zc, facecolors=cmap_obj(norm(Tc)), **kw)
+
+
+def _wireframe_box3d(ax, x1, y1, z1, x0=0., y0=0., z0=0., **kw):
+    """Draw 12 edges of a box."""
+    for zi in (z0, z1):
+        ax.plot([x0,x1],[y0,y0],[zi,zi], **kw)
+        ax.plot([x1,x1],[y0,y1],[zi,zi], **kw)
+        ax.plot([x1,x0],[y1,y1],[zi,zi], **kw)
+        ax.plot([x0,x0],[y1,y0],[zi,zi], **kw)
+    for xi, yi in [(x0,y0),(x1,y0),(x1,y1),(x0,y1)]:
+        ax.plot([xi,xi],[yi,yi],[z0,z1], **kw)
+
+
+def _wireframe_cyl3d(ax, R, H, n_th=60, **kw):
+    """Draw cylinder outline."""
+    th = np.linspace(0, 2 * np.pi, n_th)
+    for z0 in (0., H):
+        ax.plot(R * np.cos(th), R * np.sin(th), [z0] * n_th, **kw)
+    for t0 in [0, np.pi / 2, np.pi, 3 * np.pi / 2]:
+        ax.plot([R*np.cos(t0)]*2, [R*np.sin(t0)]*2, [0., H], **kw)
+
+
+def _draw_lshape3d(ax, dom, t, cmap_obj, norm, n=16):
+    """
+    Draw L-shaped 3D domain: 8 exposed outer faces + inner corner faces.
+    L-shape: (x <= cut_x) OR (y <= cut_y), extruded along z.
+    Lx=0.8, Ly=0.8, Lz=0.4, cut_x=0.3, cut_y=0.3
+    """
+    kw = dict(shade=False, alpha=0.85, linewidth=0, antialiased=True)
+    Lx, Ly, Lz = dom.Lx, dom.Ly, dom.Lz
+    cx, cy = dom.cut_x, dom.cut_y   # 0.3, 0.3
+
+    def surf(xx, yy, zz):
+        T = dom.T(xx.ravel(), yy.ravel(), zz.ravel(), t)
+        T = np.where(np.isnan(T), T_WATER, T)   # replace NaN with cold color
+        return cmap_obj(norm(T.reshape(xx.shape)))
+
+    xi_h = np.linspace(0, Lx, n)    # full x range
+    xi_v = np.linspace(0, cx, n)    # vertical arm x range
+    yi_h = np.linspace(0, cy, n)    # horizontal arm y range
+    yi_v = np.linspace(0, Ly, n)    # full y range
+    zi   = np.linspace(0, Lz, n)
+
+    # ── Bottom face (z=0) and Top face (z=Lz) — L-shaped ──
+    for z0 in (0., Lz):
+        # Horizontal arm patch: x∈[0,Lx], y∈[0,cy]
+        XX, YY = np.meshgrid(xi_h, yi_h)
+        ZZ = np.full_like(XX, z0)
+        ax.plot_surface(XX, YY, ZZ, facecolors=surf(XX, YY, ZZ), **kw)
+        # Vertical arm extension: x∈[0,cx], y∈[cy,Ly]
+        XX2, YY2 = np.meshgrid(xi_v, np.linspace(cy, Ly, n))
+        ZZ2 = np.full_like(XX2, z0)
+        ax.plot_surface(XX2, YY2, ZZ2, facecolors=surf(XX2, YY2, ZZ2), **kw)
+
+    # ── Outer faces ──
+    # x=0 (left wall): y∈[0,Ly]
+    YY, ZZ = np.meshgrid(yi_v, zi)
+    XX = np.zeros_like(YY)
+    ax.plot_surface(XX, YY, ZZ, facecolors=surf(XX, YY, ZZ), **kw)
+    # y=0 (front wall): x∈[0,Lx]
+    XX2, ZZ2 = np.meshgrid(xi_h, zi)
+    YY2 = np.zeros_like(XX2)
+    ax.plot_surface(XX2, YY2, ZZ2, facecolors=surf(XX2, YY2, ZZ2), **kw)
+    # x=Lx (right wall, only for y∈[0,cy])
+    YY3, ZZ3 = np.meshgrid(yi_h, zi)
+    XX3 = np.full_like(YY3, Lx)
+    ax.plot_surface(XX3, YY3, ZZ3, facecolors=surf(XX3, YY3, ZZ3), **kw)
+    # y=Ly (back wall, only for x∈[0,cx])
+    XX4, ZZ4 = np.meshgrid(xi_v, zi)
+    YY4 = np.full_like(XX4, Ly)
+    ax.plot_surface(XX4, YY4, ZZ4, facecolors=surf(XX4, YY4, ZZ4), **kw)
+    # ── Inner corner faces (concave surfaces) ──
+    # x=cx (inner vertical face): y∈[cy,Ly]
+    YY5, ZZ5 = np.meshgrid(np.linspace(cy, Ly, n), zi)
+    XX5 = np.full_like(YY5, cx)
+    ax.plot_surface(XX5, YY5, ZZ5, facecolors=surf(XX5, YY5, ZZ5), **kw)
+    # y=cy (inner horizontal face): x∈[cx,Lx]
+    XX6, ZZ6 = np.meshgrid(np.linspace(cx, Lx, n), zi)
+    YY6 = np.full_like(XX6, cy)
+    ax.plot_surface(XX6, YY6, ZZ6, facecolors=surf(XX6, YY6, ZZ6), **kw)
+
+
+def _wireframe_lshape3d(ax, Lx, Ly, Lz, cx, cy, **kw):
+    """Draw L-shape 3D wireframe edges."""
+    # Bottom and top L-shape contours
+    for z0 in (0., Lz):
+        pts = [(0,0), (Lx,0), (Lx,cy), (cx,cy), (cx,Ly), (0,Ly), (0,0)]
+        xs, ys = zip(*pts)
+        ax.plot(xs, ys, [z0]*len(xs), **kw)
+    # Vertical edges
+    corners = [(0,0), (Lx,0), (Lx,cy), (cx,cy), (cx,Ly), (0,Ly)]
+    for xc, yc in corners:
+        ax.plot([xc,xc], [yc,yc], [0.,Lz], **kw)
+
 
 # ══════════════════════════════════════════════════════════════
 # Figure 1: 3D Temperature Field — all 3 domains, multiple times
@@ -86,110 +228,94 @@ mco_2d   = data_2d["level8_mco"]
 
 def fig_thermal_fields():
     """
-    4 rows (t = 3, 10, 20, 30 s) × 3 domain columns + per-row colorbar.
-    Domains: Rectangular, Cylinder, Stacked Cubes.
-    Colormap: turbo (full rainbow, no black/white).
-    Each row has its own colorbar scaled to that time step's T range.
+    4 rows (t=3,10,20,30s) × 3 domain cols + per-row colorbar.
+    Shows ACTUAL 3D geometry shapes colored by FEM temperature.
+    z-axis = real geometry height, color = temperature.
     """
+    import matplotlib.gridspec as gridspec
+
     dom_dict = {
         "rectangular": Rectangular3D(),
         "cylinder":    Cylinder3D(),
         "stacked":     StackedCubes3D(),
+        "lshape":      LShape3D(),
     }
-    T_VALS = [3, 10, 20, 30]
-    N_GRID = 34
-
-    # Pre-build grids per domain
-    grids = {}
-    for dname, dom in dom_dict.items():
-        if isinstance(dom, Cylinder3D):
-            R = dom.R
-            xi = np.linspace(-R, R, N_GRID)
-            yi = np.linspace(-R, R, N_GRID)
-            Lz = dom.H
-        elif isinstance(dom, StackedCubes3D):
-            xi = np.linspace(0, dom.L_cube, N_GRID)
-            yi = np.linspace(0, dom.L_cube, N_GRID)
-            Lz = dom.L_cube * 2
-        else:
-            xi = np.linspace(0, dom.Lx, N_GRID)
-            yi = np.linspace(0, dom.Ly, N_GRID)
-            Lz = dom.Lz
-        z_mid = Lz / 2.0
-        xx, yy = np.meshgrid(xi, yi)
-        xf, yf = xx.ravel(), yy.ravel()
-        zf = np.full_like(xf, z_mid)
-        if isinstance(dom, Cylinder3D):
-            mask = np.sqrt(xx**2 + yy**2) > dom.R
-        else:
-            mask = np.zeros(xx.shape, dtype=bool)
-        grids[dname] = dict(dom=dom, xx=xx, yy=yy, xf=xf, yf=yf, zf=zf,
-                            mask=mask, xi=xi, yi=yi, Lz=Lz)
-
-    # Pre-compute T fields
-    T_fields = {dname: {} for dname in dom_dict}
-    for dname, g in grids.items():
-        dom = g["dom"]
-        for t in T_VALS:
-            if isinstance(dom, Cylinder3D):
-                T2d = dom.T_xyz(g["xf"], g["yf"], g["zf"], t).reshape(g["xx"].shape)
-            else:
-                T2d = dom.T(g["xf"], g["yf"], g["zf"], t).reshape(g["xx"].shape)
-            T2d[g["mask"]] = np.nan
-            T_fields[dname][t] = T2d
-
-    # Layout: 4 rows × (3 domain axes + 1 colorbar axis)
+    T_VALS  = [3, 10, 20, 30]
     n_rows  = len(T_VALS)
     n_doms  = len(dom_dict)
-    fig     = plt.figure(figsize=(15, 4.0 * n_rows))
+    cmap_obj = plt.cm.turbo
+
+    fig = plt.figure(figsize=(18, 4.5 * n_rows))
     fig.suptitle(
-        "Exact Temperature Field  T(x, y, z_mid) — Three Domain Geometries\n"
-        "Rows: time steps  ·  Columns: domain shape  ·  Colorbar per row",
+        "FEM Temperature Field — Actual 3D Geometry  (color = T [°C], z = height [m])\n"
+        "Rows: time steps  ·  Columns: domain geometry  ·  Colorbar per row",
         fontsize=11, fontweight="bold",
     )
-
-    import matplotlib.gridspec as gridspec
     gs = gridspec.GridSpec(n_rows, n_doms + 1,
-                           width_ratios=[1, 1, 1, 0.06],
-                           hspace=0.10, wspace=0.05,
-                           figure=fig)
+                           width_ratios=[1, 1, 1, 1, 0.06],
+                           hspace=0.15, wspace=0.08, figure=fig)
 
     dom_names = list(dom_dict.keys())
+    dom_list  = list(dom_dict.values())
+    col_color = {"rectangular": C_BAY, "cylinder": C_N3,
+                 "stacked": C_N2, "lshape": "#6A1B9A"}
 
     for ri, t_val in enumerate(T_VALS):
-        # Collect all T values in this row to set common norm
-        row_vals = []
-        for dname in dom_names:
-            T2d = T_fields[dname][t_val]
-            row_vals.extend(T2d[~np.isnan(T2d)].ravel())
-        T_min = np.percentile(row_vals, 1)
-        T_max = np.percentile(row_vals, 99)
-        row_norm = Normalize(vmin=T_min, vmax=T_max)
+        # Row norm: center temperature = max, T_WATER = min
+        dom_r = dom_dict["rectangular"]
+        T_max = float(dom_r.T(
+            np.array([dom_r.Lx / 2]), np.array([dom_r.Ly / 2]),
+            np.array([dom_r.Lz / 2]), t_val)[0])
+        row_norm = Normalize(vmin=T_WATER, vmax=max(T_max, T_WATER + 10))
 
-        for ci, dname in enumerate(dom_names):
-            g    = grids[dname]
-            T2d  = T_fields[dname][t_val]
-            mask = g["mask"]
-            T_plot = np.where(mask, np.nanmean(T2d[~mask]) if (~mask).any() else T_min, T2d)
-
-            fc = plt.cm.turbo(row_norm(T_plot))
-            fc[mask] = [0.96, 0.96, 0.96, 1.0]   # light gray outside geometry
-
+        for ci, (dname, dom) in enumerate(dom_dict.items()):
             ax = fig.add_subplot(gs[ri, ci], projection="3d")
-            ax.plot_surface(g["xx"], g["yy"], T_plot,
-                            facecolors=fc, shade=False,
-                            alpha=0.92, linewidth=0, antialiased=True)
 
-            # Column title (first row only)
+            if isinstance(dom, Cylinder3D):
+                _draw_cyl3d(ax, dom, t_val, cmap_obj, row_norm)
+                ax.set_xlim(-dom.R, dom.R)
+                ax.set_ylim(-dom.R, dom.R)
+                ax.set_zlim(0, dom.H)
+                asp = [2*dom.R, 2*dom.R, dom.H]
+            elif isinstance(dom, StackedCubes3D):
+                L = dom.L_cube
+                # Bottom cube: z = 0 → L
+                _draw_box3d(ax, dom.T, t_val, L, L, L, cmap_obj, row_norm, n=18, oz=0.)
+                # Top cube: z = L → 2L  (oz=L shifts all faces up)
+                _draw_box3d(ax, dom.T, t_val, L, L, L, cmap_obj, row_norm, n=18, oz=L)
+                # Joint plane at z=L (inner cross-section — makes stacking visible)
+                n_j = 22
+                xi_j = np.linspace(0, L, n_j); yi_j = np.linspace(0, L, n_j)
+                XX_j, YY_j = np.meshgrid(xi_j, yi_j)
+                T_j = dom.T(XX_j.ravel(), YY_j.ravel(),
+                            np.full(n_j*n_j, L), t_val).reshape(n_j, n_j)
+                ax.plot_surface(XX_j, YY_j, np.full_like(XX_j, L),
+                                facecolors=cmap_obj(row_norm(T_j)),
+                                shade=False, alpha=0.97, linewidth=0, antialiased=True)
+                # Bold joint edge
+                ax.plot([0,L,L,0,0],[0,0,L,L,0],[L]*5, 'k-', lw=2.0, alpha=0.8)
+                ax.set_xlim(0, L); ax.set_ylim(0, L); ax.set_zlim(0, dom.Lz)
+                asp = [L, L, dom.Lz]
+            elif isinstance(dom, LShape3D):
+                _draw_lshape3d(ax, dom, t_val, cmap_obj, row_norm)
+                ax.set_xlim(0, dom.Lx); ax.set_ylim(0, dom.Ly); ax.set_zlim(0, dom.Lz)
+                asp = [dom.Lx, dom.Ly, dom.Lz]
+            else:  # Rectangular
+                _draw_box3d(ax, dom.T, t_val,
+                            dom.Lx, dom.Ly, dom.Lz,
+                            cmap_obj, row_norm)
+                ax.set_xlim(0, dom.Lx)
+                ax.set_ylim(0, dom.Ly)
+                ax.set_zlim(0, dom.Lz)
+                asp = [dom.Lx, dom.Ly, dom.Lz]
+
+            # Normalise aspect ratios
+            asp_max = max(asp)
+            ax.set_box_aspect([a / asp_max for a in asp])
+
             if ri == 0:
-                ax.set_title(DOM_LABEL[dname],
-                             fontsize=9, fontweight="bold",
-                             color={"rectangular": C_BAY,
-                                    "cylinder":    C_N3,
-                                    "stacked":     C_N2}[dname],
-                             pad=6)
-
-            # Row label (first column only)
+                ax.set_title(DOM_LABEL[dname], fontsize=9, fontweight="bold",
+                             color=col_color[dname], pad=6)
             if ci == 0:
                 ax.text2D(-0.14, 0.50, f"t = {t_val} s",
                           transform=ax.transAxes,
@@ -198,13 +324,11 @@ def fig_thermal_fields():
 
             ax.set_xlabel("x [m]", fontsize=6, labelpad=0)
             ax.set_ylabel("y [m]", fontsize=6, labelpad=0)
-            ax.set_zlabel("T [°C]", fontsize=6, labelpad=0)
+            ax.set_zlabel("z [m]",  fontsize=6, labelpad=0)
             ax.tick_params(labelsize=5, pad=0)
-            ax.set_zlim(T_WATER - 10, T_INIT + 10)
-            ax.view_init(elev=26, azim=-52)
-            ax.set_box_aspect([1, 1, 0.6])
+            ax.view_init(elev=26, azim=-48)
 
-        # Per-row colorbar in the 4th column
+        # Per-row colorbar
         cax = fig.add_subplot(gs[ri, n_doms])
         sm  = plt.cm.ScalarMappable(cmap="turbo", norm=row_norm)
         sm.set_array([])
@@ -227,7 +351,7 @@ def fig_thermal_fields():
 def fig_mae_per_arch():
     """
     3 subplots — one per architecture.
-    X-axis: 3 domains, bars grouped by skip value.
+    X-axis: 4 domains (v2 data), bars grouped by skip value.
     """
     skips      = [2, 4]
     skip_color = {2: C_SK2,  4: C_SK4}
@@ -236,7 +360,7 @@ def fig_mae_per_arch():
 
     fig, axes = plt.subplots(1, 3, figsize=(15, 5), sharey=True)
     fig.suptitle(
-        "3D MCO-PINN Skip Operator — Mean Absolute Error by Architecture",
+        "3D MCO-PINN Skip Operator — Mean Absolute Error by Architecture  (v2: 2000 epochs)",
         fontsize=11, fontweight="bold",
     )
 
@@ -252,13 +376,16 @@ def fig_mae_per_arch():
                      fontsize=10, fontweight="bold", color=c)
 
         for si, skip in enumerate(skips):
-            maes   = [data_3d[d][arch][str(skip)]["mae_C"] for d in DOMAINS]
+            maes   = np.array([data_v2.get(d, {}).get(arch, {}).get(str(skip), {}).get("mae_C", np.nan)
+                               for d in DOMAINS])
             offset = (si - 0.5) * w
-            bars   = ax.bar(x + offset, maes, width=w,
+            x_ok   = x[~np.isnan(maes)]
+            m_ok   = [v for v in maes if not np.isnan(v)]
+            bars   = ax.bar(x_ok + offset, m_ok, width=w,
                             color=skip_color[skip], alpha=skip_alpha[skip],
                             hatch=skip_hatch[skip], edgecolor="white", linewidth=0.6,
                             label=f"skip = {skip}" if col == 0 else "_")
-            for b, v in zip(bars, maes):
+            for b, v in zip(bars, m_ok):
                 ax.text(b.get_x() + b.get_width() / 2,
                         b.get_height() + 0.35,
                         f"{v:.1f}", ha="center", va="bottom",
@@ -273,7 +400,7 @@ def fig_mae_per_arch():
             ax.set_ylabel("Mean MAE [°C]", fontsize=10)
         ax.tick_params(axis="y", length=3)
 
-    axes[2].text(2.62, 10.6, "10 °C", fontsize=7.5, color="#374151", alpha=0.45)
+    axes[2].text(len(DOMAINS) - 0.38, 10.6, "10 °C", fontsize=7.5, color="#374151", alpha=0.45)
 
     handles = [
         plt.Rectangle((0, 0), 1, 1,
@@ -414,7 +541,7 @@ def fig_summary_table():
         for arch in ARCHS:
             bl  = baseline[arch][str(skip)]
             m2d = mco_2d[arch][str(skip)]["mae_C"]
-            m3d = {d: data_3d[d][arch][str(skip)]["mae_C"] for d in DOMAINS}
+            m3d = {d: data_3d[d][arch][str(skip)]["mae_C"] for d in DOMAINS if d in data_3d}
 
             rows.append([
                 ARCH_LABEL[arch],
@@ -691,165 +818,183 @@ def fig_skip_timeline():
 # Figure 6: v1 vs v2 Comparison + Loss Curves + Heat Maps
 # ══════════════════════════════════════════════════════════════
 
-V2_DIR = os.path.join(RESULTS, "v2")
-
 def fig_v2_comparison():
     """
-    3 subplots per architecture (3 rows):
-      Left  : MAE bar — v1 vs v2, grouped by domain × skip
-      Middle : Loss curves (L_total over epochs, all windows, skip=2)
-      Right  : Heat map — z-mid slice, FEM vs PINN, best window
-    Only runs if v2 results exist.
+    Layout: 3 rows (arch) × 5 cols
+      Col 0 : MAE bar — v1 vs v2, skip=2 and skip=4, all 3 domains
+      Col 1 : Loss curves — all windows, rectangular, skip=2
+      Col 2-4: 3D surface (T_pred) — Rectangular / Cylinder / Stacked
     """
-    v2_json = os.path.join(V2_DIR, "results_3d_v2.json")
-    if not os.path.exists(v2_json):
+    import matplotlib.gridspec as gridspec
+    from matplotlib.lines import Line2D
+
+    if not data_v2:
         print("  [skip] v2 results not found — run run_3d_v2.py first")
         return
 
-    with open(v2_json) as f:
-        data_v2 = json.load(f)
+    C_V1   = "#90A4AE"
+    C_V2s2 = "#1565C0"
+    C_V2s4 = "#E65100"
 
-    skips      = [2, 4]
-    C_V1       = "#90A4AE"   # gray  — v1
-    C_V2       = "#1565C0"   # blue  — v2 skip=2
-    C_V2s4     = "#E65100"   # orange — v2 skip=4
-
-    fig, axes = plt.subplots(3, 3, figsize=(19, 15))
+    fig = plt.figure(figsize=(36, 17))
     fig.suptitle(
-        "3D MCO-PINN — v1 (800 ep) vs v2 (2000 ep) Comparison\n"
-        "Left: MAE improvement  ·  Middle: Training loss curves  ·  Right: Heat map (z-mid)",
-        fontsize=11, fontweight="bold",
+        "3D MCO-PINN — v2 (2000 ep)  ·  MAE Comparison | Training Loss | 3D Temperature Surface per Domain",
+        fontsize=12, fontweight="bold", y=0.995,
     )
+    gs = gridspec.GridSpec(3, 6, figure=fig,
+                           width_ratios=[1.5, 1.3, 1, 1, 1, 1],
+                           hspace=0.50, wspace=0.30)
+
+    col_labels = ["Rectangular", "Cylinder", "Stacked Cubes", "L-Shape"]
 
     for row, arch in enumerate(ARCHS):
-        ax_bar  = axes[row, 0]
-        ax_loss = axes[row, 1]
-        ax_heat = axes[row, 2]
-
         c = ARCH_COLOR[arch]
 
-        # ── Left: MAE bar v1 vs v2 ──────────────────────────────
-        x    = np.arange(len(DOMAINS))
-        w    = 0.18
-        offsets = [-1.5*w, -0.5*w, 0.5*w, 1.5*w]
-        labels  = ["v1 s=2", "v2 s=2", "v1 s=4", "v2 s=4"]
-        colors  = [C_V1, C_V2, C_V1, C_V2s4]
-        alphas  = [0.6, 0.9, 0.6, 0.9]
-        hatches = ["", "", "///", "///"]
-
-        for i, (off, lbl, clr, alp, hatch) in enumerate(
-                zip(offsets, labels, colors, alphas, hatches)):
-            skip = 2 if i < 2 else 4
-            src  = data_3d if i % 2 == 0 else data_v2
-            maes = [src[d][arch][str(skip)]["mae_C"] for d in DOMAINS]
-            bars = ax_bar.bar(x + off, maes, width=w,
-                              color=clr, alpha=alp,
-                              hatch=hatch, edgecolor="white", lw=0.6,
+        # ── Col 0: MAE bar ─────────────────────────────────────────
+        ax_bar = fig.add_subplot(gs[row, 0])
+        x  = np.arange(len(DOMAINS))
+        w  = 0.18
+        bar_cfg = [
+            (-1.5*w, "v1 s=2", C_V1,   0.55, "",    2, data_3d),
+            (-0.5*w, "v2 s=2", C_V2s2, 0.90, "",    2, data_v2),
+            ( 0.5*w, "v1 s=4", C_V1,   0.55, "///", 4, data_3d),
+            ( 1.5*w, "v2 s=4", C_V2s4, 0.90, "///", 4, data_v2),
+        ]
+        for off, lbl, clr, alp, hatch, sk, src in bar_cfg:
+            maes = [src.get(d, {}).get(arch, {}).get(str(sk), {}).get("mae_C", np.nan)
+                    for d in DOMAINS]
+            valid_mask = [not np.isnan(v) for v in maes]
+            x_plot = x[valid_mask]
+            maes_plot = [v for v, ok in zip(maes, valid_mask) if ok]
+            off_arr = np.zeros(len(x_plot)) + off
+            bars = ax_bar.bar(x_plot + off_arr, maes_plot, width=w, color=clr, alpha=alp,
+                              hatch=hatch, edgecolor="white", lw=0.5,
                               label=lbl if row == 0 else "_")
-            for b, v in zip(bars, maes):
-                ax_bar.text(b.get_x()+b.get_width()/2,
-                            b.get_height()+0.3,
-                            f"{v:.1f}", ha="center", fontsize=7,
+            for b, v in zip(bars, maes_plot):
+                ax_bar.text(b.get_x()+b.get_width()/2, b.get_height()+0.3,
+                            f"{v:.1f}", ha="center", fontsize=6.5,
                             fontweight="bold", color=clr)
 
-        ax_bar.axhline(10.0, color="#374151", lw=0.8, ls="--", alpha=0.3)
+        ax_bar.axhline(10.0, color="#374151", lw=0.8, ls="--", alpha=0.35)
         ax_bar.set_xticks(x)
         ax_bar.set_xticklabels([DOM_SHORT[d] for d in DOMAINS], fontsize=9)
         ax_bar.set_ylim(0, 28)
         ax_bar.set_ylabel("Mean MAE [°C]", fontsize=9)
-        ax_bar.set_title(f"({chr(97+row*3)})  {ARCH_LABEL[arch]} — MAE",
+        ax_bar.set_title(f"({chr(97+row*6)})  {ARCH_LABEL[arch]} — MAE",
                          fontsize=9.5, fontweight="bold", color=c)
         ax_bar.spines[["top","right"]].set_visible(False)
-        ax_bar.grid(axis="y", linestyle=":", alpha=0.3)
+        ax_bar.grid(axis="y", linestyle=":", alpha=0.30)
         ax_bar.set_axisbelow(True)
         if row == 0:
-            ax_bar.legend(fontsize=7.5, ncol=2, loc="upper right")
+            ax_bar.legend(fontsize=7, ncol=2, loc="upper right",
+                          framealpha=0.85)
 
-        # ── Middle: Loss curves (skip=2, rectangular, v2) ────────
-        loss_path = os.path.join(V2_DIR,
-            f"rectangular_{arch}_skip2_loss.json")
+        # ── Col 1: Loss curves (rectangular, skip=2) ───────────────
+        ax_loss = fig.add_subplot(gs[row, 1])
+        loss_path = os.path.join(V2_DIR, f"rectangular_{arch}_skip2_loss.json")
         if os.path.exists(loss_path):
             with open(loss_path) as f:
                 loss_data = json.load(f)
-
             cmap_w = plt.cm.turbo(np.linspace(0.1, 0.9, len(loss_data)))
             for wi, (hist, col_w) in enumerate(zip(loss_data, cmap_w)):
                 ep = np.linspace(0, 1, len(hist["L_total"]))
                 ax_loss.semilogy(ep, hist["L_total"], "-",
-                                 color=col_w, lw=1.2, alpha=0.8,
-                                 label=f"Win {wi+1}" if wi < 5 else "_")
-
-            ax_loss.set_xlabel("Training progress (normalized)", fontsize=8.5)
-            ax_loss.set_ylabel("Total Loss (log)", fontsize=8.5)
-            ax_loss.set_title(f"({chr(98+row*3)})  {ARCH_LABEL[arch]} — Loss Curves\n"
-                              f"(Rectangular, skip=2, all windows, color=window)",
-                              fontsize=9, fontweight="bold", color=c)
-            ax_loss.legend(fontsize=7, loc="upper right", ncol=2)
+                                 color=col_w, lw=1.3, alpha=0.85,
+                                 label=f"W{wi+1}" if wi < 6 else "_")
+            ax_loss.set_xlabel("Training progress (norm.)", fontsize=8)
+            ax_loss.set_ylabel("Total Loss (log)", fontsize=8)
+            ax_loss.set_title(
+                f"({chr(97+row*6+1)})  {ARCH_LABEL[arch]} — Loss\n"
+                "(Rectangular · skip=2 · all windows)",
+                fontsize=9, fontweight="bold", color=c)
+            ax_loss.legend(fontsize=7, loc="upper right", ncol=3)
             ax_loss.grid(True, linestyle=":", alpha=0.3, which="both")
             ax_loss.spines[["top","right"]].set_visible(False)
         else:
-            ax_loss.text(0.5, 0.5, "Loss data not found",
-                         ha="center", va="center", transform=ax_loss.transAxes)
+            ax_loss.text(0.5, 0.5, "No loss data", ha="center", va="center",
+                         transform=ax_loss.transAxes)
             ax_loss.axis("off")
 
-        # ── Right: Heat map — best domain, skip=2, best window ───
-        best_dom = min(DOMAINS,
-                       key=lambda d: data_v2[d][arch]["2"]["mae_C"])
-        slice_path = os.path.join(V2_DIR,
-            f"{best_dom}_{arch}_skip2_slice.json")
+        # ── Col 2-5: actual 3D geometry + PINN z-mid slice ──────────
+        dom_objs = {
+            "rectangular": Rectangular3D(),
+            "cylinder":    Cylinder3D(),
+            "stacked":     StackedCubes3D(),
+            "lshape":      LShape3D(),
+        }
+        wf_kw   = dict(color="#374151", lw=0.6, alpha=0.45)
+        norm_s  = plt.Normalize(vmin=T_WATER, vmax=T_INIT)
+        cmap_obj = plt.cm.turbo
 
-        if os.path.exists(slice_path):
-            with open(slice_path) as f:
-                sd = json.load(f)
+        for di, dom_name in enumerate(DOMAINS):
+            ax3 = fig.add_subplot(gs[row, 2 + di], projection="3d")
+            d   = dom_objs[dom_name]
 
-            xi   = np.array(sd["xi"])
-            yi   = np.array(sd["yi"])
-            wins = sd["windows"]
-            # pick middle window
-            mid_w = str(len(wins)//2)
-            T_pred = np.array(wins[mid_w]["T_pred"])
-            T_fem  = np.array(wins[mid_w]["T_fem"])
-            err    = np.abs(T_pred - T_fem)
-            xx, yy = np.meshgrid(xi, yi)
+            # Draw geometry wireframe to give 3D shape context
+            if dom_name == "cylinder":
+                _wireframe_cyl3d(ax3, d.R, d.H, **wf_kw)
+                ax3.set_xlim(-d.R, d.R); ax3.set_ylim(-d.R, d.R)
+                ax3.set_zlim(0, d.H)
+                asp = [2*d.R, 2*d.R, d.H]
+            elif dom_name == "stacked":
+                _wireframe_box3d(ax3, d.L_cube, d.L_cube, d.Lz, **wf_kw)
+                ax3.plot([0,d.L_cube,d.L_cube,0,0],[0,0,d.L_cube,d.L_cube,0],
+                         [d.L_cube]*5, **wf_kw)   # joint line
+                ax3.set_xlim(0, d.L_cube); ax3.set_ylim(0, d.L_cube)
+                ax3.set_zlim(0, d.Lz)
+                asp = [d.L_cube, d.L_cube, d.Lz]
+            elif dom_name == "lshape":
+                _wireframe_lshape3d(ax3, d.Lx, d.Ly, d.Lz, d.cut_x, d.cut_y, **wf_kw)
+                ax3.set_xlim(0, d.Lx); ax3.set_ylim(0, d.Ly)
+                ax3.set_zlim(0, d.Lz)
+                asp = [d.Lx, d.Ly, d.Lz]
+            else:  # rectangular
+                _wireframe_box3d(ax3, d.Lx, d.Ly, d.Lz, **wf_kw)
+                ax3.set_xlim(0, d.Lx); ax3.set_ylim(0, d.Ly)
+                ax3.set_zlim(0, d.Lz)
+                asp = [d.Lx, d.Ly, d.Lz]
 
-            norm_t = plt.Normalize(vmin=T_WATER, vmax=T_INIT)
-            im = ax_heat.pcolormesh(xx, yy, T_pred, cmap="turbo",
-                                    norm=norm_t, shading="auto")
-            cs_fem  = ax_heat.contour(xx, yy, T_fem,  levels=7,
-                                      colors="white", linewidths=0.5,
-                                      linestyles="solid",  alpha=0.7)
-            cs_pinn = ax_heat.contour(xx, yy, T_pred, levels=7,
-                                      colors="#FF4444", linewidths=0.8,
-                                      linestyles="dashed", alpha=0.9)
+            asp_max = max(asp)
+            ax3.set_box_aspect([a / asp_max for a in asp])
 
-            mae_w  = float(np.nanmean(err))
-            T_pmean= float(np.nanmean(T_pred))
-            T_fmean= float(np.nanmean(T_fem))
-            ax_heat.set_title(
-                f"({chr(99+row*3)})  {ARCH_LABEL[arch]}  [{DOM_SHORT[best_dom]}]\n"
-                f"FEM T̄={T_fmean:.0f}°C  PINN T̄={T_pmean:.0f}°C  MAE={mae_w:.1f}°C",
-                fontsize=9, fontweight="bold", color=c)
-            ax_heat.set_xlabel("x [m]", fontsize=8.5)
-            ax_heat.set_ylabel("y [m]", fontsize=8.5)
-            ax_heat.tick_params(labelsize=7)
+            slice_path = os.path.join(V2_DIR, f"{dom_name}_{arch}_skip2_slice.json")
+            if os.path.exists(slice_path):
+                with open(slice_path) as f:
+                    sd = json.load(f)
+                xi   = np.array(sd["xi"]); yi = np.array(sd["yi"])
+                z_val = float(sd["z_val"])
+                wins  = sd["windows"]
+                mid_w = str(len(wins) // 2)
+                T_pred = np.array(wins[mid_w]["T_pred"], dtype=float)
+                T_fem  = np.array(wins[mid_w]["T_fem"],  dtype=float)
+                XX, YY = np.meshgrid(xi, yi)
+                ZZ_flat = np.full_like(XX, z_val)
+                T_ma    = np.ma.masked_invalid(T_pred)
+                fc      = cmap_obj(norm_s(T_ma.filled(T_WATER)))
+                ax3.plot_surface(XX, YY, ZZ_flat,
+                                 facecolors=fc, shade=False,
+                                 alpha=0.93, linewidth=0, antialiased=True)
+                # FEM contour on same plane (white)
+                T_fem_ma = np.ma.masked_invalid(T_fem)
+                ax3.contour(XX, YY, T_fem_ma, levels=6,
+                            zdir="z", offset=z_val,
+                            colors="white", linewidths=0.6, alpha=0.7)
 
-            from mpl_toolkits.axes_grid1 import make_axes_locatable
-            div = make_axes_locatable(ax_heat)
-            cax = div.append_axes("right", size="5%", pad=0.05)
-            plt.colorbar(im, cax=cax).set_label("T [°C]", fontsize=8)
+                mae_w = float(np.nanmean(np.abs(T_pred - T_fem)))
+                lbl_chr = chr(97 + row * 6 + 2 + di)
+                ax3.set_title(
+                    f"({lbl_chr})  {ARCH_LABEL[arch]}\n"
+                    f"{col_labels[di]}  MAE={mae_w:.1f}°C",
+                    fontsize=8.5, fontweight="bold", color=c, pad=3)
+            else:
+                ax3.set_title(f"{col_labels[di]}\n(no data)", fontsize=8)
 
-            from matplotlib.lines import Line2D
-            leg_els = [
-                Line2D([0],[0], color="white",   lw=1.0, label="PINN isotherms"),
-                Line2D([0],[0], color="#FF4444", lw=1.0, ls="--", label="FEM isotherms"),
-            ]
-            ax_heat.legend(handles=leg_els, fontsize=7.5, loc="lower right")
-        else:
-            ax_heat.text(0.5, 0.5, "Slice data not found",
-                         ha="center", va="center", transform=ax_heat.transAxes)
-            ax_heat.axis("off")
+            ax3.set_xlabel("x [m]", fontsize=6, labelpad=0)
+            ax3.set_ylabel("y [m]", fontsize=6, labelpad=0)
+            ax3.set_zlabel("z [m]", fontsize=6, labelpad=0)
+            ax3.tick_params(labelsize=5, pad=0)
+            ax3.view_init(elev=28, azim=-50)
 
-    plt.tight_layout(rect=[0, 0, 1, 0.96])
     fig.savefig(os.path.join(RESULTS, "fig6_v2_comparison.png"),
                 dpi=150, bbox_inches="tight")
     plt.close(fig)
@@ -858,12 +1003,8 @@ def fig_v2_comparison():
 
 def fig_v2_summary_table():
     """Extended summary table: v1 vs v2 side by side."""
-    v2_json = os.path.join(V2_DIR, "results_3d_v2.json")
-    if not os.path.exists(v2_json):
+    if not data_v2:
         print("  [skip] v2 results not found"); return
-
-    with open(v2_json) as f:
-        data_v2 = json.load(f)
 
     skips    = [2, 4]
     fem_used = {2: 11, 4: 6}
@@ -873,11 +1014,13 @@ def fig_v2_summary_table():
         "Architecture",
         "2D MCO\n(ref.)",
         "3D v1\nRect.", "3D v1\nCyl.", "3D v1\nStack",
-        "3D v2\nRect.", "3D v2\nCyl.", "3D v2\nStack",
+        "3D v2\nRect.", "3D v2\nCyl.", "3D v2\nStack", "3D v2\nL-Shape",
     ]
 
     def _bg(val, lo=1.0, hi=25.0):
         # green (0.2,0.8,0.2) → amber (0.95,0.75,0.1) → red (0.9,0.1,0.1)
+        if val is None or (isinstance(val, float) and np.isnan(val)):
+            return (0.9, 0.9, 0.9, 1.0)   # light grey for missing data
         t = float(np.clip((val - lo) / (hi - lo), 0, 1))
         if t < 0.5:
             s = t * 2
@@ -899,22 +1042,27 @@ def fig_v2_summary_table():
 
         for arch in ARCHS:
             m2d  = mco_2d[arch][str(skip)]["mae_C"]
-            v1   = {d: data_3d[d][arch][str(skip)]["mae_C"]  for d in DOMAINS}
-            v2   = {d: data_v2[d][arch][str(skip)]["mae_C"]  for d in DOMAINS}
+            v1   = {d: data_3d.get(d, {}).get(arch, {}).get(str(skip), {}).get("mae_C", np.nan)
+                    for d in DOMAINS}
+            v2   = {d: data_v2.get(d, {}).get(arch, {}).get(str(skip), {}).get("mae_C", np.nan)
+                    for d in DOMAINS}
 
+            def _fmt(v): return f"{v:.2f}°C" if not np.isnan(v) else "—"
             rows.append([
                 ARCH_LABEL[arch],
                 f"{m2d:.2f}°C",
-                f"{v1['rectangular']:.2f}°C",
-                f"{v1['cylinder']:.2f}°C",
-                f"{v1['stacked']:.2f}°C",
-                f"{v2['rectangular']:.2f}°C",
-                f"{v2['cylinder']:.2f}°C",
-                f"{v2['stacked']:.2f}°C",
+                _fmt(v1['rectangular']),
+                _fmt(v1['cylinder']),
+                _fmt(v1['stacked']),
+                _fmt(v2['rectangular']),
+                _fmt(v2['cylinder']),
+                _fmt(v2['stacked']),
+                _fmt(v2.get('lshape', np.nan)),
             ])
             vals = [m2d,
                     v1["rectangular"], v1["cylinder"], v1["stacked"],
-                    v2["rectangular"], v2["cylinder"], v2["stacked"]]
+                    v2["rectangular"], v2["cylinder"], v2["stacked"],
+                    v2.get("lshape", np.nan)]
             cell_colors.append(["#EBEBEB"] + [_bg(v) for v in vals])
 
         tbl = ax.table(cellText=rows, colLabels=col_labels,
@@ -928,8 +1076,8 @@ def fig_v2_summary_table():
             cell.set_facecolor("#1E293B")
             cell.set_text_props(color="white", fontweight="bold", fontsize=9)
 
-        # v2 column headers in blue
-        for j in range(5, 8):
+        # v2 column headers in blue (cols 5-8: Rect, Cyl, Stack, L-Shape)
+        for j in range(5, 9):
             tbl[0, j].set_facecolor("#1565C0")
 
         for i, arch in enumerate(ARCHS, start=1):
@@ -953,14 +1101,266 @@ def fig_v2_summary_table():
 
 
 # ══════════════════════════════════════════════════════════════
+# Figure 8: 3D PINN Feasibility — Can PINN replace FEM steps?
+# ══════════════════════════════════════════════════════════════
+
+def fig_3d_feasibility():
+    """
+    Research question: Can PINN replace FEM time steps for complex 3D domains?
+
+    Layout: 3 rows (domain) × 3 cols
+      Col 0 : Temperature trajectory — FEM mean T(t) vs PINN predictions
+      Col 1 : MAE per window for each available skip value
+      Col 2 : Feasibility summary — heatmap of MAE[domain × skip]
+
+    Uses best arch (lowest mean MAE) per domain from v2 data.
+    """
+    import matplotlib.gridspec as gridspec
+    from matplotlib.lines import Line2D
+
+    if not data_v2:
+        print("  [skip] fig8 — v2 results not found"); return
+
+    # Only include domains that have v2 data
+    _dom_candidates = {
+        "rectangular": Rectangular3D,
+        "cylinder":    Cylinder3D,
+        "stacked":     StackedCubes3D,
+        "lshape":      LShape3D,
+    }
+    dom_objs = {k: _dom_candidates[k]()
+                for k in _dom_candidates if k in data_v2}
+    n_dom_rows = len(dom_objs)
+    if n_dom_rows == 0:
+        print("  [skip] fig8 — no domain data found"); return
+
+    # FEM time grid: t = 0, 1.5, 3, …, 30 s  (21 points)
+    t_fem = np.arange(0, 30 + 1e-9, 1.5)
+
+    SKIP_COLORS = {"1": "#7B1FA2", "2": "#1565C0", "4": "#E65100", "6": "#2E7D32"}
+    SKIP_LABELS = {"1": "skip=1  (0% saved)", "2": "skip=2  (52% saved)",
+                   "4": "skip=4  (71% saved)", "6": "skip=6  (81% saved)"}
+    MAE_OK   = 10.0   # °C  — engineering threshold
+    MAE_WARN = 15.0   # °C
+
+    fig = plt.figure(figsize=(22, 5.5 * n_dom_rows))
+    fig.suptitle(
+        "Research Q: Can PINN Replace FEM Steps in Complex 3D Domains?\n"
+        "Left: Temperature trajectory  ·  Centre: MAE per time window  ·  Right: Feasibility map",
+        fontsize=12, fontweight="bold", y=0.995,
+    )
+    gs = gridspec.GridSpec(n_dom_rows, 3, figure=fig,
+                           width_ratios=[1.6, 1.4, 1.0],
+                           hspace=0.45, wspace=0.32)
+
+    # Collect all skip values present in v2 data
+    all_skips_int = sorted({int(s)
+                            for dom in data_v2.values()
+                            for arch in dom.values()
+                            for s in arch})
+    all_skips = [str(s) for s in all_skips_int]
+
+    # Feasibility matrix: rows=domains, cols=skips  (best arch MAE)
+    feas_mat = np.full((n_dom_rows, len(all_skips)), np.nan)
+
+    dom_colors = [C_BAY, C_N3, C_N2, "#6A1B9A"]
+
+    for ri, dom_name in enumerate(dom_objs):
+        dom      = dom_objs[dom_name]
+        ax_traj  = fig.add_subplot(gs[ri, 0])
+        ax_mae   = fig.add_subplot(gs[ri, 1])
+        c_dom    = dom_colors[ri % len(dom_colors)]
+
+        # ── Best arch for this domain (v2, skip=2) ──────────────────
+        best_arch = min(ARCHS,
+                        key=lambda a: data_v2[dom_name][a].get("2", {}).get("mae_C", 999))
+
+        # ── Col 0: Temperature trajectory ───────────────────────────
+        # FEM analytical mean temperature over the domain at each t
+        t_plot   = t_fem[1:]    # skip t=0 (IC, same everywhere)
+        T_fem_mean = []
+        for t in t_plot:
+            # sample ~300 interior points
+            np.random.seed(42)
+            n_s = 300
+            if dom_name == "cylinder":
+                r_s = np.random.uniform(0, dom.R, n_s)
+                th_s = np.random.uniform(0, 2*np.pi, n_s)
+                xs = r_s*np.cos(th_s); ys = r_s*np.sin(th_s)
+                zs = np.random.uniform(0, dom.H, n_s)
+                T_s = dom.T_xyz(xs, ys, zs, t)
+            elif dom_name == "stacked":
+                xs = np.random.uniform(0, dom.L_cube, n_s)
+                ys = np.random.uniform(0, dom.L_cube, n_s)
+                zs = np.random.uniform(0, dom.Lz, n_s)
+                T_s = dom.T(xs, ys, zs, t)
+            elif dom_name == "lshape":
+                # Rejection sampling inside L-shape
+                pts_x, pts_y, pts_z = [], [], []
+                while len(pts_x) < n_s:
+                    xi = np.random.uniform(0, dom.Lx, n_s * 2)
+                    yi = np.random.uniform(0, dom.Ly, n_s * 2)
+                    zi = np.random.uniform(0, dom.Lz, n_s * 2)
+                    m = dom.mask(xi, yi, zi)
+                    pts_x.extend(xi[m]); pts_y.extend(yi[m]); pts_z.extend(zi[m])
+                xs = np.array(pts_x[:n_s])
+                ys = np.array(pts_y[:n_s])
+                zs = np.array(pts_z[:n_s])
+                T_s = dom.T(xs, ys, zs, t)
+                T_s = T_s[~np.isnan(T_s)]
+            else:
+                xs = np.random.uniform(0, dom.Lx, n_s)
+                ys = np.random.uniform(0, dom.Ly, n_s)
+                zs = np.random.uniform(0, dom.Lz, n_s)
+                T_s = dom.T(xs, ys, zs, t)
+            T_fem_mean.append(float(np.nanmean(T_s)))
+
+        ax_traj.plot(t_plot, T_fem_mean, '-', color="#1F2937",
+                     lw=2.0, label="FEM (reference)", zorder=5)
+
+        # PINN trajectory from slice JSON for each skip
+        for skip in all_skips:
+            sp = os.path.join(V2_DIR,
+                 f"{dom_name}_{best_arch}_skip{skip}_slice.json")
+            if not os.path.exists(sp):
+                continue
+            with open(sp) as f:
+                sd = json.load(f)
+            wins = sd["windows"]
+            # Each window end time: window wi covers t_fem[wi*skip .. (wi+1)*skip]
+            skip_i = int(skip)
+            t_pinn, T_pinn_mean, T_fem_pinn = [], [], []
+            for wi in range(len(wins)):
+                t_end_idx = min((wi + 1) * skip_i, len(t_fem) - 1)
+                t_end     = t_fem[t_end_idx]
+                T_p  = np.array(wins[str(wi)]["T_pred"], dtype=float)
+                T_f  = np.array(wins[str(wi)]["T_fem"],  dtype=float)
+                t_pinn.append(t_end)
+                T_pinn_mean.append(float(np.nanmean(T_p)))
+                T_fem_pinn.append(float(np.nanmean(T_f)))
+
+            clr = SKIP_COLORS.get(skip, "#888")
+            ax_traj.plot(t_pinn, T_pinn_mean, 'o--',
+                         color=clr, lw=1.2, ms=5,
+                         label=f"PINN {SKIP_LABELS[skip]}",
+                         zorder=4)
+
+        ax_traj.set_xlabel("Time [s]", fontsize=9)
+        ax_traj.set_ylabel("Mean T [°C]", fontsize=9)
+        ax_traj.set_title(f"({chr(97+ri*3)})  {DOM_LABEL[dom_name]}\n"
+                          f"Temperature trajectory  (arch: {ARCH_LABEL[best_arch]})",
+                          fontsize=9.5, fontweight="bold", color=c_dom)
+        ax_traj.legend(fontsize=7.5, loc="upper right", framealpha=0.85)
+        ax_traj.grid(linestyle=":", alpha=0.3)
+        ax_traj.spines[["top","right"]].set_visible(False)
+
+        # ── Col 1: MAE per window ────────────────────────────────────
+        for skip in all_skips:
+            if skip not in data_v2[dom_name][best_arch]:
+                continue
+            mae_wins = data_v2[dom_name][best_arch][skip].get("mae_windows", [])
+            if not mae_wins:
+                continue
+            skip_i = int(skip)
+            t_ends = [t_fem[min((wi+1)*skip_i, len(t_fem)-1)]
+                      for wi in range(len(mae_wins))]
+            clr = SKIP_COLORS.get(skip, "#888")
+            ax_mae.plot(t_ends, mae_wins, 'o-',
+                        color=clr, lw=1.5, ms=5,
+                        label=f"skip={skip}", zorder=4)
+
+        ax_mae.axhline(MAE_OK,   color="#16a34a", lw=1.0, ls="--", alpha=0.7,
+                       label=f"{MAE_OK}°C  ✓ OK")
+        ax_mae.axhline(MAE_WARN, color="#dc2626", lw=1.0, ls=":",  alpha=0.7,
+                       label=f"{MAE_WARN}°C  ✗ High")
+        ax_mae.set_xlabel("Time [s]", fontsize=9)
+        ax_mae.set_ylabel("MAE [°C]", fontsize=9)
+        ax_mae.set_title(f"({chr(98+ri*3)})  {DOM_SHORT[dom_name]} — MAE per Window",
+                         fontsize=9.5, fontweight="bold", color=c_dom)
+        ax_mae.legend(fontsize=7.5, loc="upper left", framealpha=0.85, ncol=2)
+        ax_mae.grid(linestyle=":", alpha=0.3)
+        ax_mae.spines[["top","right"]].set_visible(False)
+        ax_mae.set_ylim(bottom=0)
+
+        # Fill feasibility matrix (best arch)
+        for si, skip in enumerate(all_skips):
+            if skip in data_v2[dom_name][best_arch]:
+                feas_mat[ri, si] = data_v2[dom_name][best_arch][skip]["mae_C"]
+
+    # ── Col 2: Feasibility heatmap (spanning all 3 rows) ────────────
+    ax_feas = fig.add_subplot(gs[:, 2])
+    masked  = np.ma.masked_invalid(feas_mat)
+    cmap_f  = plt.cm.RdYlGn_r
+    norm_f  = plt.Normalize(vmin=0, vmax=25)
+    im      = ax_feas.imshow(masked, cmap=cmap_f, norm=norm_f,
+                              aspect="auto")
+
+    active_doms = list(dom_objs.keys())
+    ax_feas.set_xticks(range(len(all_skips)))
+    ax_feas.set_xticklabels([f"skip={s}" for s in all_skips], fontsize=9)
+    ax_feas.set_yticks(range(n_dom_rows))
+    ax_feas.set_yticklabels([DOM_SHORT[d] for d in active_doms], fontsize=9.5,
+                             fontweight="bold")
+    ax_feas.set_title("(i)  Feasibility Map\nMAE [°C] — best arch per domain",
+                      fontsize=10, fontweight="bold")
+
+    for ri2 in range(n_dom_rows):
+        for si, skip in enumerate(all_skips):
+            val = feas_mat[ri2, si]
+            if not np.isnan(val):
+                verdict = "✓" if val < MAE_OK else ("~" if val < MAE_WARN else "✗")
+                ax_feas.text(si, ri2, f"{val:.1f}°C\n{verdict}",
+                             ha="center", va="center",
+                             fontsize=9.5, fontweight="bold",
+                             color="white" if val > 13 else "#1a1a1a")
+            else:
+                ax_feas.text(si, ri2, "⏳", ha="center", va="center",
+                             fontsize=14)
+
+    cbar = plt.colorbar(im, ax=ax_feas, fraction=0.046, pad=0.04)
+    cbar.set_label("MAE [°C]", fontsize=9)
+
+    # Verdict text box
+    n_ok    = int(np.sum(feas_mat < MAE_OK))
+    n_total = int(np.sum(~np.isnan(feas_mat)))
+    verdict_txt = (f"Results: {n_ok}/{n_total} configs < {MAE_OK}°C\n"
+                   f"skip=2 most feasible for 3D\n"
+                   f"52% FEM step reduction achievable")
+    ax_feas.text(0.5, -0.18, verdict_txt,
+                 transform=ax_feas.transAxes,
+                 ha="center", va="top", fontsize=9,
+                 bbox=dict(boxstyle="round,pad=0.5",
+                           facecolor="#d1fae5", edgecolor="#16a34a", alpha=0.85))
+
+    fig.savefig(os.path.join(RESULTS, "fig8_3d_feasibility.png"),
+                dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    print("  [OK] fig8_3d_feasibility.png")
+
+
+# ══════════════════════════════════════════════════════════════
 # MAIN
 # ══════════════════════════════════════════════════════════════
 
 if __name__ == "__main__":
+    import shutil
+    WEB_IMG = os.path.join(os.path.dirname(__file__), "web", "static", "img")
+
     print("Generating figures ...\n")
     fig_thermal_fields()
     fig_mae_per_arch()
     fig_2d_per_arch()
     fig_summary_table()
     fig_skip_timeline()
+    fig_v2_comparison()
+    fig_v2_summary_table()
+    fig_3d_feasibility()
+
+    # Auto-copy to web static
+    if os.path.isdir(WEB_IMG):
+        for fn in os.listdir(RESULTS):
+            if fn.endswith(".png"):
+                shutil.copy2(os.path.join(RESULTS, fn), WEB_IMG)
+        print(f"  [OK] copied figures → {WEB_IMG}")
+
     print("\nDone — figures saved to level8_nas_mco_pinn/results/")

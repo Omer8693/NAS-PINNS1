@@ -17,18 +17,64 @@ import numpy as np
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-from level8_nas_mco_pinn.domains_3d import Rectangular3D, Cylinder3D, StackedCubes3D
+from level8_nas_mco_pinn.domains_3d import Rectangular3D, Cylinder3D, StackedCubes3D, LShape3D
 from level8_nas_mco_pinn.pinn_3d    import run_skip_3d
 
 # ── Output ────────────────────────────────────────────────────
 OUT_DIR = os.path.join(os.path.dirname(__file__), "level8_nas_mco_pinn", "results", "v2")
 os.makedirs(OUT_DIR, exist_ok=True)
 
+# ── Helper: Extract geometry metadata ──────────────────────────
+def get_geometry_metadata(domain):
+    """Extract geometry parameters from domain object."""
+    domain_class = type(domain).__name__
+    
+    if domain_class == "Rectangular3D":
+        return {
+            "type": "rectangular",
+            "params": {
+                "Lx": float(domain.Lx),
+                "Ly": float(domain.Ly),
+                "Lz": float(domain.Lz),
+            }
+        }
+    elif domain_class == "Cylinder3D":
+        return {
+            "type": "cylinder",
+            "params": {
+                "R": float(domain.R),
+                "H": float(domain.H),
+            }
+        }
+    elif domain_class == "StackedCubes3D":
+        return {
+            "type": "stacked",
+            "params": {
+                "L_cube": float(domain.L_cube),
+                "N_stack": int(domain.N_stack),
+                "Lz": float(domain.Lz),
+            }
+        }
+    elif domain_class == "LShape3D":
+        return {
+            "type": "lshape",
+            "params": {
+                "Lx": float(domain.Lx),
+                "Ly": float(domain.Ly),
+                "Lz": float(domain.Lz),
+                "cut_x": float(domain.cut_x),
+                "cut_y": float(domain.cut_y),
+            }
+        }
+    else:
+        return {"type": "unknown", "params": {}}
+
 # ── Config ────────────────────────────────────────────────────
 DOMAINS = {
     "rectangular": Rectangular3D(),
     "cylinder":    Cylinder3D(),
     "stacked":     StackedCubes3D(),
+    "lshape":      LShape3D(),
 }
 ARCHS     = ["bayesian", "nsga2", "nsga3"]
 SKIP_VALS = [2, 4]
@@ -88,13 +134,14 @@ for dname, domain in DOMAINS.items():
                     "T_pred": T_pred.tolist(),
                     "T_fem":  T_fem.tolist(),
                 }
-            # Also save grid axes
+            # Also save grid axes and geometry metadata
             slice_data = {
                 "xi":    grid["xi"].tolist(),
                 "yi":    grid["yi"].tolist(),
                 "zi":    grid["zi"].tolist(),
                 "k_mid": int(k_mid),
                 "z_val": float(zi[k_mid]),
+                "geometry": get_geometry_metadata(domain),
                 "windows": slices,
             }
             slice_path = os.path.join(OUT_DIR,

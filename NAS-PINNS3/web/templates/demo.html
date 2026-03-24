@@ -31,6 +31,11 @@
           <span>Stacked</span>
           <small>2×0.5m cubes</small>
         </button>
+        <button class="domain-btn" data-val="lshape">
+          <i class="fa-solid fa-shapes"></i>
+          <span>L-Shape</span>
+          <small>0.8×0.8×0.4m</small>
+        </button>
       </div>
     </div>
 
@@ -59,11 +64,17 @@
         <span class="param-hint" id="skip-hint">52% FEM savings</span>
       </label>
       <div class="toggle-group" id="skip-sel">
+        <button class="toggle-btn" data-val="1" style="--c:#7B1FA2">
+          skip = 1
+        </button>
         <button class="toggle-btn active" data-val="2" style="--c:#1565C0">
           skip = 2
         </button>
         <button class="toggle-btn" data-val="4" style="--c:#E65100">
           skip = 4
+        </button>
+        <button class="toggle-btn" data-val="6" style="--c:#2E7D32">
+          skip = 6
         </button>
       </div>
     </div>
@@ -133,7 +144,7 @@
       <div class="progress mt-2" style="height:6px">
         <div class="progress-bar bg-info" id="train-progress" style="width:0%"></div>
       </div>
-      <small id="train-pct" class="text-muted">0 / 18 runs complete</small>
+      <small id="train-pct" class="text-muted">0 / 48 runs complete</small>
     </div>
   </aside>
 

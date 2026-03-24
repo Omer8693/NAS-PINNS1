@@ -112,7 +112,7 @@ def api_mae():
 @app.route("/api/status")
 def api_status():
     """Training progress check."""
-    total = 18   # 3 domains × 3 archs × 2 skips
+    total = 48   # 4 domains × 3 archs × 4 skips
     done  = len(glob.glob(os.path.join(V2_DIR, "*_slice.json")))
     return jsonify({"total": total, "done": done, "percent": int(done / total * 100)})
 

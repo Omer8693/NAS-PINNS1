@@ -40,7 +40,42 @@
 
   <!-- ── Summary Table ──────────────────────────────────────────────────────── -->
   <div class="result-card mb-5">
-    <h5 class="mb-3"><i class="fa-solid fa-table me-2 text-blue"></i>Summary Table</h5>
+    <h5 class="mb-3"><i class="fa-solid fa-table me-2 text-blue"></i>Interactive Results Table</h5>
+    
+    <!-- Runtime & MAE Tabs -->
+    <ul class="nav nav-tabs result-tabs mb-3" id="resultTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="mae-tab" data-bs-toggle="tab" data-bs-target="#mae-pane" type="button" role="tab">
+          <i class="fa-solid fa-chart-column me-1"></i>MAE [°C]
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="runtime-tab" data-bs-toggle="tab" data-bs-target="#runtime-pane" type="button" role="tab">
+          <i class="fa-solid fa-hourglass-end me-1"></i>Runtime [s]
+        </button>
+      </li>
+    </ul>
+
+    <!-- MAE Table -->
+    <div class="tab-content" id="resultTabContent">
+      <div class="tab-pane fade show active" id="mae-pane" role="tabpanel">
+        <div id="mae-table-container" style="max-height: 500px; overflow-y: auto;">
+          <p class="text-muted text-center">Loading MAE data...</p>
+        </div>
+      </div>
+      
+      <!-- Runtime Table -->
+      <div class="tab-pane fade" id="runtime-pane" role="tabpanel">
+        <div id="runtime-table-container" style="max-height: 500px; overflow-y: auto;">
+          <p class="text-muted text-center">Loading Runtime data...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Static Summary Table ──────────────────────────────────────────────────────── -->
+  <div class="result-card mb-5">
+    <h5 class="mb-3"><i class="fa-solid fa-image me-2 text-blue"></i>Summary Table (Static)</h5>
     <img src="/static/img/fig4_summary_table.png" class="img-fluid rounded" alt="Summary Table"/>
   </div>
 
@@ -52,9 +87,27 @@
 
   <!-- ── v2 Comparison (MAE + Loss + Heat maps) ───────────────────────────── -->
   <div class="result-card mb-5">
-    <h5 class="mb-3"><i class="fa-solid fa-microscope me-2 text-blue"></i>v1 vs v2 — MAE · Loss Curves · Heat Maps</h5>
-    <p class="text-muted small mb-3">800 epochs (v1) vs 2000 epochs (v2). Each row = one optimizer. Left: MAE bars · Middle: training loss curves per window · Right: z-mid temperature field with FEM (white) and PINN (red dashed) isotherms.</p>
+    <h5 class="mb-3"><i class="fa-solid fa-microscope me-2 text-blue"></i>v1 vs v2 — MAE · Loss Curves · 3D Geometry</h5>
+    <p class="text-muted small mb-3">
+      800 epochs (v1) vs 2000 epochs (v2). Each row = one optimizer (Bayesian / NSGA-II / NSGA-III).<br>
+      <strong>Col 1:</strong> MAE bar chart (v1 gray vs v2 colored, skip=2 and skip=4) &nbsp;|&nbsp;
+      <strong>Col 2:</strong> Training loss curves per time window &nbsp;|&nbsp;
+      <strong>Cols 3–5:</strong> Actual 3D domain geometry wireframe + PINN z-mid prediction slice (turbo color) with FEM isotherms (white).
+    </p>
     <img src="/static/img/fig6_v2_comparison.png" class="img-fluid rounded" alt="v2 Comparison"/>
+  </div>
+
+  <!-- ── Feasibility Analysis ─────────────────────────────────────────────── -->
+  <div class="result-card mb-5">
+    <h5 class="mb-3"><i class="fa-solid fa-flask me-2 text-green"></i>
+      Research Question: Can PINN Replace FEM Steps in 3D?
+    </h5>
+    <p class="text-muted small mb-3">
+      Left: Mean temperature trajectory — FEM (black) vs PINN predictions (colored) per skip value.<br>
+      Centre: MAE per time window — dashed green = 10°C threshold.<br>
+      Right: Feasibility map — ✓ &lt;10°C &nbsp;|&nbsp; ~ 10–15°C &nbsp;|&nbsp; ✗ &gt;15°C
+    </p>
+    <img src="/static/img/fig8_3d_feasibility.png" class="img-fluid rounded" alt="3D Feasibility"/>
   </div>
 
   <!-- ── v2 Extended Table ─────────────────────────────────────────────────── -->
@@ -63,15 +116,7 @@
     <img src="/static/img/fig7_v2_table.png" class="img-fluid rounded" alt="v2 Summary Table"/>
   </div>
 
-  <!-- ── Data Table ────────────────────────────────────────────────────────── -->
-  <div class="result-card mb-5">
-    <h5 class="mb-3"><i class="fa-solid fa-database me-2 text-green"></i>Numerical Results</h5>
-    <div id="results-table-container">
-      <div class="text-center py-4 text-muted">
-        <div class="spinner-border spinner-border-sm me-2"></div>Loading data…
-      </div>
-    </div>
-  </div>
+
 
 </div>
 {% endblock %}
@@ -80,34 +125,39 @@
 <script>
 // ── MAE Comparison Bar Chart ─────────────────────────────────────────────────
 fetch('/api/mae').then(r => r.json()).then(data => {
-  const domains = ['rectangular', 'cylinder', 'stacked'];
+  const domains = ['rectangular', 'cylinder', 'stacked', 'lshape'];
   const archs   = ['bayesian', 'nsga2', 'nsga3'];
   const colors  = { bayesian: '#1976D2', nsga2: '#2E7D32', nsga3: '#D32F2F' };
   const labels  = { bayesian: 'Bayesian', nsga2: 'NSGA-II', nsga3: 'NSGA-III' };
-  const dNames  = { rectangular: 'Rectangular', cylinder: 'Cylinder', stacked: 'Stacked' };
+  const dNames  = { rectangular: 'Rectangular', cylinder: 'Cylinder', stacked: 'Stacked', lshape: 'L-Shape' };
+
+  // Collect all available skip values from both v1 and v2
+  const skipSet = new Set();
+  for (const src of [data.v1, data.v2]) {
+    if (!src) continue;
+    for (const dom of domains)
+      for (const arch of archs)
+        if (src[dom]?.[arch]) Object.keys(src[dom][arch]).forEach(s => skipSet.add(s));
+  }
+  const skips = [...skipSet].sort((a,b) => +a - +b);
 
   const traces = [];
+  const skipColors = { '1':'#7B1FA2','2':'#1565C0','4':'#E65100','6':'#2E7D32' };
 
   for (const arch of archs) {
-    for (const skip of ['2', '4']) {
-      const xLabels = [], yV1 = [], yV2 = [];
+    for (const skip of skips) {
+      const xLabels = [], yV2 = [];
       for (const dom of domains) {
         xLabels.push(dNames[dom]);
-        yV1.push(data.v1 ? (data.v1[dom]?.[arch]?.[skip]?.mae_C ?? null) : null);
-        yV2.push(data.v2 ? (data.v2[dom]?.[arch]?.[skip]?.mae_C ?? null) : null);
+        yV2.push(data.v2?.[dom]?.[arch]?.[skip]?.mae_C ?? null);
       }
-      traces.push({
-        name: `${labels[arch]} skip=${skip} (v1)`,
-        x: xLabels, y: yV1, type: 'bar',
-        marker: { color: colors[arch], opacity: 0.45 },
-        legendgroup: `${arch}-${skip}`,
-      });
-      if (data.v2) {
+      if (yV2.some(v => v !== null)) {
         traces.push({
-          name: `${labels[arch]} skip=${skip} (v2)`,
+          name: `${labels[arch]} · skip=${skip}`,
           x: xLabels, y: yV2, type: 'bar',
-          marker: { color: colors[arch], opacity: 0.9 },
-          legendgroup: `${arch}-${skip}`,
+          marker: { color: skipColors[skip] ?? '#888', opacity: 0.85 },
+          legendgroup: arch,
+          legendgrouptitle: { text: labels[arch] },
         });
       }
     }
@@ -119,58 +169,98 @@ fetch('/api/mae').then(r => r.json()).then(data => {
     plot_bgcolor: '#1a2035',
     font: { color: '#ccc', family: 'Inter' },
     xaxis: { title: 'Domain', gridcolor: '#2a3456', color: '#aaa' },
-    yaxis: { title: 'MAE [°C]', gridcolor: '#2a3456', color: '#aaa' },
-    legend: { font: { size: 10 } },
+    yaxis: { title: 'MAE [°C]', gridcolor: '#2a3456', color: '#aaa',
+             range: [0, 30] },
+    shapes: [{ type:'line', x0:-0.5, x1:2.5, y0:10, y1:10,
+               line:{ color:'#ff6b6b', dash:'dot', width:1.5 } }],
+    annotations: [{ x:2.4, y:10.8, text:'10°C threshold', showarrow:false,
+                    font:{ color:'#ff6b6b', size:10 } }],
+    legend: { font: { size: 10 }, tracegroupgap: 8 },
     margin: { t: 20, b: 60, l: 60, r: 20 },
   }, { displayModeBar: false, responsive: true });
 
-  // ── Numeric table ──
-  buildTable(data);
+  buildTable(data, skips);
 });
 
-function buildTable(data) {
-  const domains = ['rectangular', 'cylinder', 'stacked'];
+function buildTable(data, skips) {
+  const domains = ['rectangular', 'cylinder', 'stacked', 'lshape'];
   const archs   = ['bayesian', 'nsga2', 'nsga3'];
   const lArchs  = { bayesian: 'Bayesian', nsga2: 'NSGA-II', nsga3: 'NSGA-III' };
+  const lDoms   = { rectangular: 'Rectangular', cylinder: 'Cylinder', stacked: 'Stacked', lshape: 'L-Shape' };
+  const femSaved = { '1':'0%', '2':'52%', '4':'71%', '6':'81%' };
 
-  let html = `<div class="table-responsive"><table class="table table-dark table-striped table-hover table-bordered text-center align-middle small">
-    <thead class="table-header-dark">
-      <tr>
+  // ── MAE Table ──
+  let maeHtml = `<div class="table-responsive"><table class="table table-dark table-striped table-hover table-bordered text-center align-middle small">
+    <thead>
+      <tr class="table-secondary">
         <th>Domain</th><th>Optimizer</th><th>Skip</th>
         <th class="text-info">v1 MAE [°C]</th>
-        ${data.v2 ? '<th class="text-success">v2 MAE [°C]</th><th>Δ [°C]</th>' : ''}
-        <th>Runtime v1 [s]</th>
+        <th class="text-success">v2 MAE [°C]</th>
+        <th>Δ [°C]</th>
       </tr>
     </thead><tbody>`;
 
   for (const dom of domains) {
     for (const arch of archs) {
-      for (const skip of ['2', '4']) {
+      for (const skip of skips) {
         const v1 = data.v1?.[dom]?.[arch]?.[skip];
         const v2 = data.v2?.[dom]?.[arch]?.[skip];
-        const mae1 = v1 ? v1.mae_C.toFixed(2) : '—';
-        const mae2 = v2 ? v2.mae_C.toFixed(2) : '—';
-        const delta = (v1 && v2) ? (v2.mae_C - v1.mae_C).toFixed(2) : '—';
-        const deltaClass = (v1 && v2) ? (v2.mae_C < v1.mae_C ? 'text-success' : 'text-danger') : '';
-        const rt = v1 ? Math.round(v1.runtime_s) + 's' : '—';
-        html += `<tr>
-          <td>${dom}</td><td>${lArchs[arch]}</td><td>${skip}</td>
+        const mae1  = v1 ? v1.mae_C.toFixed(2) : '—';
+        const mae2  = v2 ? v2.mae_C.toFixed(2) : '—';
+        const delta = (v1 && v2) ? (v2.mae_C - v1.mae_C).toFixed(2) : (v2 ? 'new' : '—');
+        const dCls  = (v1 && v2) ? (v2.mae_C < v1.mae_C ? 'text-success' : 'text-danger') : 'text-muted';
+        const badgeColor = v2 && v2.mae_C < 10 ? 'success' : v2 && v2.mae_C < 15 ? 'warning' : 'danger';
+        maeHtml += `<tr>
+          <td class="fw-semibold">${lDoms[dom] || dom}</td>
+          <td>${lArchs[arch]}</td>
+          <td><span class="badge bg-secondary">s=${skip}</span></td>
           <td class="text-info">${mae1}</td>
-          ${data.v2 ? `<td class="text-success">${mae2}</td><td class="${deltaClass}">${delta}</td>` : ''}
-          <td>${rt}</td>
+          <td><span class="badge bg-${badgeColor} bg-opacity-75">${mae2}</span></td>
+          <td class="${dCls}">${delta}</td>
         </tr>`;
       }
     }
   }
-  html += `</tbody></table></div>`;
+  maeHtml += `</tbody></table></div>`;
+  document.getElementById('mae-table-container').innerHTML = maeHtml;
 
-  if (!data.v2) {
-    html += `<p class="text-muted small text-center mt-2">
-      <i class="fa-solid fa-circle-notch fa-spin me-1"></i>
-      v2 training in progress — refresh to update.</p>`;
+  // ── Runtime Table ──
+  let rtHtml = `<div class="table-responsive"><table class="table table-dark table-striped table-hover table-bordered text-center align-middle small">
+    <thead>
+      <tr class="table-secondary">
+        <th>Domain</th><th>Optimizer</th><th>Skip</th><th>FEM Saved</th>
+        <th class="text-warning">Runtime [s]</th><th>Runtime [min]</th>
+      </tr>
+    </thead><tbody>`;
+
+  for (const dom of domains) {
+    for (const arch of archs) {
+      for (const skip of skips) {
+        const v2 = data.v2?.[dom]?.[arch]?.[skip];
+        const rt_s = v2 ? Math.round(v2.runtime_s) : null;
+        const rt_m = v2 ? (v2.runtime_s / 60).toFixed(1) : null;
+        const rt_display = rt_s ? `${rt_s}s` : '—';
+        const rt_min_display = rt_m ? `${rt_m}m` : '—';
+        
+        // Color code by speed
+        let rtColor = 'text-success';
+        if (rt_s && rt_s > 600) rtColor = 'text-danger';
+        else if (rt_s && rt_s > 300) rtColor = 'text-warning';
+        
+        rtHtml += `<tr>
+          <td class="fw-semibold">${lDoms[dom] || dom}</td>
+          <td>${lArchs[arch]}</td>
+          <td><span class="badge bg-secondary">s=${skip}</span></td>
+          <td>${femSaved[skip] ?? '—'}</td>
+          <td class="${rtColor} fw-semibold">${rt_display}</td>
+          <td class="text-muted small">${rt_min_display}</td>
+        </tr>`;
+      }
+    }
   }
-
-  document.getElementById('results-table-container').innerHTML = html;
+  rtHtml += `</tbody></table></div>`;
+  document.getElementById('runtime-table-container').innerHTML = rtHtml;
 }
+
 </script>
 {% endblock %}

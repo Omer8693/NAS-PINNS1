@@ -50,8 +50,8 @@
         <div class="stat-label">FEM Step Savings</div>
       </div>
       <div class="col-6 col-md-3 stat-item">
-        <div class="stat-number">3D</div>
-        <div class="stat-label">Domains (Rect · Cyl · Stack)</div>
+        <div class="stat-number">4</div>
+        <div class="stat-label">Domains (Rect · Cyl · Stack · L-Shape)</div>
       </div>
       <div class="col-6 col-md-3 stat-item">
         <div class="stat-number">3</div>
@@ -83,9 +83,9 @@
             automatically satisfying the initial condition at \(\tau = 0\).
           </p>
           <p>
-            Applied to A356 aluminum water quenching across three 3D geometries, the framework
+            Applied to A356 aluminum water quenching across four 3D geometries (including a complex L-shaped domain with numerical FD reference), the framework
             achieves <strong>2.0°C MAE</strong> on 2D problems (94% improvement over L2 baseline)
-            and reduces finite element computation by up to 71% with skip=4.
+            and reduces finite element computation by up to 81% with skip=6.
           </p>
         </div>
       </div>
@@ -125,7 +125,7 @@
           </div>
           <h5>Skip Operator</h5>
           <p>Residual skip network predicts multiple time steps ahead, reducing FEM
-          computation by 52% (skip=2) to 71% (skip=4) while maintaining accuracy.</p>
+          computation by 52% (skip=2) to 81% (skip=6) while maintaining accuracy.</p>
         </div>
       </div>
       <div class="col-md-6 col-lg-3">
@@ -134,8 +134,8 @@
             <i class="fa-solid fa-cubes"></i>
           </div>
           <h5>3D Domains</h5>
-          <p>Validated on three 3D geometries: Rectangular Prism (1.3×0.6×0.4m),
-          Cylinder (R=0.25m, H=0.6m), and Stacked Cubes.</p>
+          <p>Validated on four 3D geometries: Rectangular Prism (1.3×0.6×0.4m),
+          Cylinder (R=0.25m, H=0.6m), Stacked Cubes, and L-Shape (0.8×0.8×0.4m, numerical FD).</p>
         </div>
       </div>
     </div>

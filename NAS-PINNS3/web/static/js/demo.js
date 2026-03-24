@@ -72,8 +72,8 @@ document.querySelectorAll("#skip-sel .toggle-btn").forEach(btn => {
     state.skip = btn.dataset.val;
     state.window = 0;
     // Update FEM savings hint
-    const pct = state.skip === "2" ? "52%" : "71%";
-    document.getElementById("skip-hint").textContent = pct + " FEM savings";
+    const femPct = {"1":"0%","2":"52%","4":"71%","6":"81%"};
+    document.getElementById("skip-hint").textContent = (femPct[state.skip] || "") + " FEM savings";
     loadData();
   });
 });
@@ -151,6 +151,12 @@ function loadData() {
     state.lossData  = loss;
     setLoading(false);
 
+    // Warn if geometry metadata is missing (old data format)
+    if (!slice.geometry) {
+      console.warn("⚠️  Geometry metadata not found. Using default visualization. " +
+                   "Please regenerate data with updated run_3d_v2.py to see domain-specific geometry.");
+    }
+
     const n = Object.keys(slice.windows).length;
     const slider = document.getElementById("time-slider");
     slider.max   = n - 1;
@@ -215,7 +221,12 @@ function render2D() {
   const d = state.sliceData;
   const cscale = state.mode === "error" ? "Hot" : "Turbo";
 
-  Plotly.react("plot-2d", [{
+  // Get geometry metadata for annotations
+  const geom = d.geometry || { type: "rectangular", params: {} };
+  const p = geom.params;
+
+  // Build traces and shapes based on domain type
+  const traces = [{
     type: "heatmap",
     x: d.xi, y: d.yi, z,
     colorscale: cscale,
@@ -225,15 +236,94 @@ function render2D() {
       tickfont: { color: "#aaa", size: 10 },
     },
     hovertemplate: "x=%{x:.3f}m  y=%{y:.3f}m<br>T=%{z:.1f}°C<extra></extra>",
-  }], {
+  }];
+
+  // Helper: convert data coordinates to plot coordinates for shapes
+  const xMin = d.xi[0], xMax = d.xi[d.xi.length - 1];
+  const yMin = d.yi[0], yMax = d.yi[d.yi.length - 1];
+
+  // Build shapes to highlight domain boundaries
+  const shapes = [];
+  let annotText = `z = ${d.z_val.toFixed(3)} m  (mid-slice)`;
+
+  if (geom.type === "lshape") {
+    // L-shape: draw boundary lines showing the cut corner
+    const cut_x = p.cut_x || 0.3;
+    const cut_y = p.cut_y || 0.3;
+    
+    // Draw the outer boundary
+    shapes.push({
+      type: "rect",
+      xref: "x", yref: "y",
+      x0: xMin, y0: yMin, x1: xMax, y1: yMax,
+      line: { color: "#888", width: 1, dash: "dash" },
+      fillcolor: "transparent",
+    });
+
+    // Draw L-shape domain boundary (show the removed quadrant)
+    shapes.push({
+      type: "rect",
+      xref: "x", yref: "y",
+      x0: cut_x, y0: cut_y, x1: xMax, y1: yMax,
+      line: { color: "#ff6b6b", width: 2, dash: "dash" },
+      fillcolor: "rgba(255, 107, 107, 0.1)",
+    });
+
+    annotText = `L-Shape: z = ${d.z_val.toFixed(3)} m  (cut_x=${cut_x}m, cut_y=${cut_y}m)`;
+    
+    // Add text annotation showing removed region
+    traces.push({
+      x: [cut_x + (xMax - cut_x) / 2],
+      y: [cut_y + (yMax - cut_y) / 2],
+      text: ["Removed"],
+      mode: "text",
+      textposition: "middle center",
+      textfont: { color: "#ff6b6b", size: 10 },
+      showlegend: false,
+      hoverinfo: "skip",
+    });
+  } else if (geom.type === "cylinder") {
+    const R = p.R || 0.25;
+    annotText = `Cylinder: z = ${d.z_val.toFixed(3)} m  (R=${R}m)`;
+    
+    // Draw circle boundary
+    const cx = xMin + (xMax - xMin) / 2;
+    const cy = yMin + (yMax - yMin) / 2;
+    // Note: Plotly's circle support via shapes is limited, so we'll just note it in the annotation
+  } else if (geom.type === "stacked") {
+    const L = p.L_cube || 0.5;
+    const N = p.N_stack || 2;
+    
+    // Draw square boundary
+    shapes.push({
+      type: "rect",
+      xref: "x", yref: "y",
+      x0: 0, y0: 0, x1: L, y1: L,
+      line: { color: "#FF9800", width: 2 },
+      fillcolor: "transparent",
+    });
+    
+    // Determine which cube we're slicing
+    let cubeNum = 1;
+    let distToCube1Mid = Math.abs(d.z_val - L/2);
+    let distToCube2Mid = Math.abs(d.z_val - 3*L/2);
+    if (distToCube2Mid < distToCube1Mid && N > 1) cubeNum = 2;
+    
+    annotText = `Stacked Cubes: ${N}×${L}m  [Cube ${cubeNum}]  z = ${d.z_val.toFixed(3)} m`;
+  } else {
+    annotText = `${geom.type}: z = ${d.z_val.toFixed(3)} m`;
+  }
+
+  Plotly.react("plot-2d", traces, {
     paper_bgcolor: "transparent",
     plot_bgcolor:  "#1a2035",
     font:  { color: "#ccc", family: "Inter" },
     xaxis: { title: "x [m]", gridcolor: "#2a3456", color: "#aaa", zeroline: false },
     yaxis: { title: "y [m]", gridcolor: "#2a3456", color: "#aaa", zeroline: false, scaleanchor: "x" },
     margin: { t: 20, b: 50, l: 60, r: 80 },
+    shapes: shapes,
     annotations: [{
-      text: `z = ${d.z_val.toFixed(3)} m  (mid-slice)`,
+      text: annotText,
       xref: "paper", yref: "paper", x: 0.01, y: 0.99,
       showarrow: false, font: { color: "#aaa", size: 11 },
     }],
@@ -244,15 +334,273 @@ function render2D() {
 }
 
 // ── 3D Surface ────────────────────────────────────────────────────────────────
+function buildLShapeMask(xi, yi, cut_x, cut_y) {
+  /**
+   * Build a 2D grid of NaN for regions outside L-shape domain.
+   * L-shape = (x <= cut_x) OR (y <= cut_y)
+   */
+  const ny = yi.length;
+  const nx = xi.length;
+  const mask = Array(ny);
+  for (let j = 0; j < ny; j++) {
+    mask[j] = Array(nx);
+    for (let i = 0; i < nx; i++) {
+      const x = xi[i];
+      const y = yi[j];
+      const inside = (x <= cut_x) || (y <= cut_y);
+      mask[j][i] = inside ? 1.0 : NaN;  // 1.0 inside, NaN outside
+    }
+  }
+  return mask;
+}
+
+function applyMaskToValues(values, mask) {
+  /**
+   * Apply mask: set values to NaN where mask is null/NaN.
+   * This makes Plotly not render those points.
+   */
+  if (!mask) return values;
+  const masked = Array(values.length);
+  for (let j = 0; j < values.length; j++) {
+    masked[j] = Array(values[j].length);
+    for (let i = 0; i < values[j].length; i++) {
+      // If value is already null, keep it
+      if (values[j][i] === null) {
+        masked[j][i] = null;
+      }
+      // If mask says this point is outside, set to NaN
+      else if (mask[j][i] === null || isNaN(mask[j][i])) {
+        masked[j][i] = NaN;
+      }
+      // Otherwise keep the value
+      else {
+        masked[j][i] = values[j][i];
+      }
+    }
+  }
+  return masked;
+}
+
+function buildDomainBoundary(geom, z_val) {
+  /**
+   * Create 3D boundary traces that show actual domain geometry
+   */
+  const traces = [];
+  
+  if (geom.type === "rectangular") {
+    const p = geom.params;
+    const Lx = p.Lx || 1.3;
+    const Ly = p.Ly || 0.6;
+    
+    // Draw rectangle boundary at z_val
+    const corners = [
+      [0, 0], [Lx, 0], [Lx, Ly], [0, Ly], [0, 0]
+    ];
+    const x_pts = corners.map(c => c[0]);
+    const y_pts = corners.map(c => c[1]);
+    const z_pts = corners.map(() => z_val);
+    
+    traces.push({
+      type: "scatter3d",
+      x: x_pts, y: y_pts, z: z_pts,
+      mode: "lines",
+      line: { color: "#1565C0", width: 4 },
+      name: "Domain Boundary",
+      showlegend: true,
+      hoverinfo: "skip",
+    });
+  }
+  else if (geom.type === "cylinder") {
+    const p = geom.params;
+    const R = p.R || 0.25;
+    const nPts = 32;
+    const x_pts = [], y_pts = [];
+    
+    // Create circle boundary
+    for (let i = 0; i <= nPts; i++) {
+      const angle = (i / nPts) * 2 * Math.PI;
+      x_pts.push(R * Math.cos(angle));
+      y_pts.push(R * Math.sin(angle));
+    }
+    const z_pts = x_pts.map(() => z_val);
+    
+    traces.push({
+      type: "scatter3d",
+      x: x_pts, y: y_pts, z: z_pts,
+      mode: "lines",
+      line: { color: "#2E7D32", width: 4 },
+      name: "Domain Boundary",
+      showlegend: true,
+      hoverinfo: "skip",
+    });
+  }
+  else if (geom.type === "stacked") {
+    const p = geom.params;
+    const L = p.L_cube || 0.5;
+    
+    // Draw square boundary at z_val
+    const corners = [
+      [0, 0], [L, 0], [L, L], [0, L], [0, 0]
+    ];
+    const x_pts = corners.map(c => c[0]);
+    const y_pts = corners.map(c => c[1]);
+    const z_pts = corners.map(() => z_val);
+    
+    traces.push({
+      type: "scatter3d",
+      x: x_pts, y: y_pts, z: z_pts,
+      mode: "lines",
+      line: { color: "#E65100", width: 4 },
+      name: "Domain Boundary",
+      showlegend: true,
+      hoverinfo: "skip",
+    });
+    
+    // Add interface line at z = L
+    if (p.N_stack > 1) {
+      traces.push({
+        type: "scatter3d",
+        x: x_pts, y: y_pts, z: corners.map(() => L),
+        mode: "lines",
+        line: { color: "#FF9800", width: 3, dash: "dash" },
+        name: "Cube Interface",
+        showlegend: true,
+        hoverinfo: "skip",
+      });
+    }
+  }
+  else if (geom.type === "lshape") {
+    const p = geom.params;
+    const Lx = p.Lx || 0.8;
+    const Ly = p.Ly || 0.8;
+    const cut_x = p.cut_x || 0.3;
+    const cut_y = p.cut_y || 0.3;
+    
+    // L-shape boundary (outer + inner notch)
+    const corners = [
+      [0, 0], [Lx, 0], [Lx, cut_y], [cut_x, cut_y], 
+      [cut_x, Ly], [0, Ly], [0, 0]
+    ];
+    const x_pts = corners.map(c => c[0]);
+    const y_pts = corners.map(c => c[1]);
+    const z_pts = corners.map(() => z_val);
+    
+    traces.push({
+      type: "scatter3d",
+      x: x_pts, y: y_pts, z: z_pts,
+      mode: "lines",
+      line: { color: "#D32F2F", width: 4 },
+      name: "Domain Boundary",
+      showlegend: true,
+      hoverinfo: "skip",
+    });
+  }
+  
+  return traces;
+}
+
+function maskDataForDomain(data, geom, Tmat, d) {
+  /**
+   * Apply geometry-specific masking to temperature data.
+   * Returns: {surfaceZ, colorData}
+   */
+  const ny = Tmat.length;
+  const nx = Tmat[0] ? Tmat[0].length : 0;
+  
+  // Filter out null/NaN values for min/max calculation
+  const validVals = Tmat.flat().filter(v => v !== null && !isNaN(v));
+  if (validVals.length === 0) return { surfaceZ: Tmat, colorData: Tmat };
+  
+  const vmin = Math.min(...validVals);
+  const vmax = Math.max(...validVals);
+  const tempRange = vmax - vmin || 1;
+  const zScale = 0.9; // Moderate 3D elevation for balance
+  
+  let surfaceZ = Tmat.map(row => 
+    row.map(t => {
+      if (t === null || isNaN(t)) return null;
+      return d.z_val + ((t - vmin) / tempRange) * zScale;
+    })
+  );
+  
+  let colorData = Tmat;
+
+  if (geom.type === "lshape") {
+    const p = geom.params;
+    const lshapeMask = buildLShapeMask(d.xi, d.yi, p.cut_x, p.cut_y);
+    surfaceZ = applyMaskToValues(surfaceZ, lshapeMask);
+    colorData = applyMaskToValues(Tmat, lshapeMask);
+  } 
+  else if (geom.type === "cylinder") {
+    const p = geom.params;
+    const R = p.R || 0.25;
+    const cylMask = Array(ny);
+    for (let j = 0; j < ny; j++) {
+      cylMask[j] = Array(nx);
+      for (let i = 0; i < nx; i++) {
+        const x = d.xi[i];
+        const y = d.yi[j];
+        const r = Math.sqrt(x*x + y*y);
+        cylMask[j][i] = (r <= R) ? 1.0 : null;
+      }
+    }
+    surfaceZ = applyMaskToValues(surfaceZ, cylMask);
+    colorData = applyMaskToValues(Tmat, cylMask);
+  }
+  else if (geom.type === "stacked") {
+    // Stacked cubes: square cross-section L_cube × L_cube
+    const p = geom.params;
+    const L = p.L_cube || 0.5;
+    const stackedMask = Array(ny);
+    for (let j = 0; j < ny; j++) {
+      stackedMask[j] = Array(nx);
+      for (let i = 0; i < nx; i++) {
+        const x = d.xi[i];
+        const y = d.yi[j];
+        // Square domain [0, L_cube] × [0, L_cube]
+        stackedMask[j][i] = (x >= 0 && x <= L && y >= 0 && y <= L) ? 1.0 : null;
+      }
+    }
+    surfaceZ = applyMaskToValues(surfaceZ, stackedMask);
+    colorData = applyMaskToValues(Tmat, stackedMask);
+  }
+  
+  return { surfaceZ, colorData };
+}
+
 function render3D() {
   if (!state.sliceData) return;
-  const { z, zmin, zmax, label } = getCurrentZ(state.window);
+  const { z: Tmat, zmin, zmax, label } = getCurrentZ(state.window);
   const d = state.sliceData;
   const cscale = state.mode === "error" ? "Hot" : "Turbo";
 
-  Plotly.react("plot-3d", [{
+  // Get geometry metadata (if available)
+  const geom = d.geometry || { type: "rectangular", params: {} };
+  
+  // Apply domain-specific masking and get 3D surface
+  const { surfaceZ, colorData } = maskDataForDomain(Tmat, geom, Tmat, d);
+  
+  // Build annotation text
+  let annotText = `${geom.type}: z-mid = ${d.z_val.toFixed(3)} m`;
+  if (geom.type === "lshape") {
+    const p = geom.params;
+    annotText = `L-Shape: z-mid = ${d.z_val.toFixed(3)} m  (cut_x=${p.cut_x}m, cut_y=${p.cut_y}m)`;
+  } else if (geom.type === "cylinder") {
+    const p = geom.params;
+    annotText = `Cylinder: z-mid = ${d.z_val.toFixed(3)} m  (R=${p.R}m)`;
+  } else if (geom.type === "stacked") {
+    const p = geom.params;
+    annotText = `Stacked Cubes: ${p.N_stack}×${p.L_cube}m cube  z-mid = ${d.z_val.toFixed(3)} m`;
+  }
+
+  const ny = Tmat.length;
+  const nx = Tmat[0] ? Tmat[0].length : 0;
+  const zScale = 0.9; // Moderate 3D elevation for balance
+
+  const traces = [{
     type: "surface",
-    x: d.xi, y: d.yi, z,
+    x: d.xi, y: d.yi, z: surfaceZ,
+    surfacecolor: colorData,
     colorscale: cscale,
     cmin: zmin, cmax: zmax,
     colorbar: {
@@ -260,21 +608,41 @@ function render3D() {
       tickfont: { color: "#aaa", size: 10 },
       thickness: 14,
     },
-    hovertemplate: "x=%{x:.3f}m<br>y=%{y:.3f}m<br>T=%{z:.1f}°C<extra></extra>",
-    contours: {
-      z: { show: true, usecolormap: true, highlightcolor: "white", project: { z: false } }
-    },
-  }], {
+    hovertemplate: "x=%{x:.3f}m<br>y=%{y:.3f}m<br>T=%{customdata:.1f}°C<extra></extra>",
+    customdata: colorData,
+  }];
+
+  // Add domain boundary visualization
+  const boundaryTraces = buildDomainBoundary(geom, d.z_val);
+  traces.push(...boundaryTraces);
+
+  // For stacked cubes, add visible wireframe edges and domain box
+  let annotations3d = [{
+    text: annotText,
+    x: d.xi[Math.floor(nx/2)], y: d.yi[Math.floor(ny/2)], z: d.z_val + zScale * 0.5,
+    showarrow: false, font: { color: "#aaa", size: 10 },
+  }];
+
+  if (geom.type === "stacked") {
+    const p = geom.params;
+    const L = p.L_cube || 0.5;
+    const interfaceZ = p.L_cube; // Interface at z = L_cube
+    // Interface is already drawn by buildDomainBoundary
+  }
+
+  Plotly.react("plot-3d", traces, {
     paper_bgcolor: "transparent",
     scene: {
       bgcolor: "#1a2035",
       xaxis: { title: "x [m]", color: "#aaa", gridcolor: "#2a3456" },
       yaxis: { title: "y [m]", color: "#aaa", gridcolor: "#2a3456" },
-      zaxis: { title: "T [°C]", color: "#aaa", gridcolor: "#2a3456" },
-      camera: { eye: { x: 1.5, y: 1.5, z: 1.2 } },
+      zaxis: { title: "z [m]", color: "#aaa", gridcolor: "#2a3456",
+               range: [d.z_val - 0.05, d.z_val + zScale + 0.15] },
+      camera: { eye: { x: 1.2, y: 1.2, z: 1.0 } },
     },
     font:   { color: "#ccc", family: "Inter" },
     margin: { t: 20, b: 20, l: 20, r: 20 },
+    annotations3d: annotations3d,
   }, { displayModeBar: true, responsive: true });
 
   initialized3d = true;
@@ -344,10 +712,16 @@ function updateCharts() {
     );
   }
   if (currentTab === "3d" && initialized3d) {
-    const { z, zmin, zmax } = getCurrentZ(state.window);
+    const { z: Tmat, zmin, zmax } = getCurrentZ(state.window);
     const cscale = state.mode === "error" ? "Hot" : "Turbo";
+    const d = state.sliceData;
+    const geom = d.geometry || { type: "rectangular", params: {} };
+    
+    // Apply domain-specific masking
+    const { surfaceZ, colorData } = maskDataForDomain(Tmat, geom, Tmat, d);
+    
     Plotly.update("plot-3d",
-      { z: [z], cmin: [zmin], cmax: [zmax], colorscale: [cscale] }
+      { z: [surfaceZ], surfacecolor: [colorData], customdata: [colorData], cmin: [zmin], cmax: [zmax], colorscale: [cscale] }
     );
   }
   if (currentTab === "loss" && initializedLoss) {

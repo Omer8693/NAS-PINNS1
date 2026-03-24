@@ -364,18 +364,18 @@ def page3(pdf):
     p.gap(0.010)
 
     # Skip Timeline
-    p.image("fig5_skip_timeline.png", height=0.270)
+    p.image("fig_timeline_clean.png", height=0.310)
     p.gap(0.005)
     p.caption("Figure 2.", [
-        "Skip Operator Timeline: MAE per time window (Rectangular domain, Bayesian NAS).",
-        "Each line = one skip value (s=1,2,4,6). x-axis = time window index; y-axis = MAE (deg C).",
-        "At skip=1 error is low and uniform. At skip=2/4 it grows moderately. At skip=6 it rises",
-        "sharply in later windows, illustrating the accuracy-efficiency trade-off.",
+        "Skip Operator Timeline: MAE per time window for all four 3D domains (best NAS optimizer per config).",
+        "Each line = one skip value (s=1,2,4,6); dashed line = 10 deg C threshold.",
+        "At skip=1 MAE decreases steadily as the network converges. Higher skip values trade",
+        "accuracy for computation savings (52% at skip=2 up to 81% at skip=6).",
     ])
     p.gap(0.012)
 
     # Thermal Fields
-    p.image("fig1_thermal_fields.png", height=0.250)
+    p.image("fig1_thermal_fields.png", height=0.220)
     p.gap(0.005)
     p.caption("Figure 3.", [
         "Predicted temperature fields on the z-midplane (Turbo colormap: blue=20 C, yellow=540 C).",

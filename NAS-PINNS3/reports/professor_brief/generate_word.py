@@ -292,11 +292,12 @@ doc.add_page_break()
 # ═══════════════════════════════════════════════════════════════════════════════
 heading(doc, 5, "Visualization")
 
-add_image(doc, "fig5_skip_timeline.png", width_inches=6.2)
+add_image(doc, "fig_timeline_clean.png", width_inches=6.4)
 fig_caption(doc, "Figure 2.",
-    "Skip Operator Timeline: MAE per time window (Rectangular domain, Bayesian NAS). "
-    "Each line = one skip value. At skip=1 error is low and uniform. At skip=2/4 it grows "
-    "moderately. At skip=6 it rises sharply in later windows.")
+    "Skip Operator Timeline: MAE per time window for all four 3D domains. "
+    "Each line = one skip value (s=1,2,4,6); best NAS optimizer selected per configuration. "
+    "Dashed line marks the 10 \u00b0C threshold. At skip=1 error decreases steadily. "
+    "Higher skip values trade accuracy for FEM computation savings (up to 81% at skip=6).")
 
 doc.add_paragraph().paragraph_format.space_after = Pt(4)
 

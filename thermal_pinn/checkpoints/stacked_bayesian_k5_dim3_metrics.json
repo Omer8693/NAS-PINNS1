@@ -1,0 +1,40 @@
+{
+  "domain": "stacked",
+  "arch": "bayesian",
+  "k": 5,
+  "dim": 3,
+  "mean_mae": 12.264218688964284,
+  "n_windows": 4,
+  "windows": [
+    {
+      "t_start": 0.0,
+      "t_end": 7.5,
+      "mae_C": 19.2723161228928,
+      "l2_rel": 0.0795307624506728,
+      "runtime_s": 11.43069314956665
+    },
+    {
+      "t_start": 7.5,
+      "t_end": 15.0,
+      "mae_C": 12.819614605019222,
+      "l2_rel": 0.06376296662319472,
+      "runtime_s": 10.811449766159058
+    },
+    {
+      "t_start": 15.0,
+      "t_end": 22.5,
+      "mae_C": 9.01877487575063,
+      "l2_rel": 0.056137791636237284,
+      "runtime_s": 11.458565473556519
+    },
+    {
+      "t_start": 22.5,
+      "t_end": 30.0,
+      "mae_C": 7.946169152194485,
+      "l2_rel": 0.040307471071232795,
+      "runtime_s": 11.244447231292725
+    }
+  ],
+  "total_s": 44.98703622817993,
+  "checkpoint": "/home/coder/NAS-PINNS1/thermal_pinn/checkpoints/stacked_bayesian_k5_dim3.pt"
+}

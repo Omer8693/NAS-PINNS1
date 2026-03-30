@@ -1,2 +1,8 @@
 __pycache__/
 *.pyc
+*.pyo
+.DS_Store
+nas_pinn_3d_extracted/
+nas_pinn_3d_skeleton*.zip
+IKT464_G_25H_Advanced_ICT_Project.pdf
+thesis-pinn-fem/

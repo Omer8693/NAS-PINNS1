@@ -1,0 +1,40 @@
+{
+  "domain": "annulus",
+  "arch": "bayesian",
+  "k": 5,
+  "dim": 2,
+  "mean_mae": 7.648193921230968,
+  "n_windows": 4,
+  "windows": [
+    {
+      "t_start": 0.0,
+      "t_end": 7.5,
+      "mae_C": 15.881708948191259,
+      "l2_rel": 0.07386897588901688,
+      "runtime_s": 10.306984663009644
+    },
+    {
+      "t_start": 7.5,
+      "t_end": 15.0,
+      "mae_C": 4.948791852014913,
+      "l2_rel": 0.024114543590733454,
+      "runtime_s": 9.857534646987915
+    },
+    {
+      "t_start": 15.0,
+      "t_end": 22.5,
+      "mae_C": 4.581730175062599,
+      "l2_rel": 0.027222274782899784,
+      "runtime_s": 11.107645988464355
+    },
+    {
+      "t_start": 22.5,
+      "t_end": 30.0,
+      "mae_C": 5.180544709655103,
+      "l2_rel": 0.03725580507492721,
+      "runtime_s": 9.946600914001465
+    }
+  ],
+  "total_s": 42.07712721824646,
+  "checkpoint": "/home/coder/NAS-PINNS1/thermal_pinn/checkpoints/annulus_bayesian_k5_dim2.pt"
+}

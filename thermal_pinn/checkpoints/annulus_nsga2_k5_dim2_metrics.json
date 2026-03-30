@@ -1,0 +1,40 @@
+{
+  "domain": "annulus",
+  "arch": "nsga2",
+  "k": 5,
+  "dim": 2,
+  "mean_mae": 31.55301732654029,
+  "n_windows": 4,
+  "windows": [
+    {
+      "t_start": 0.0,
+      "t_end": 7.5,
+      "mae_C": 72.51917431335295,
+      "l2_rel": 0.20701507917927883,
+      "runtime_s": 8.789017915725708
+    },
+    {
+      "t_start": 7.5,
+      "t_end": 15.0,
+      "mae_C": 25.457934611951853,
+      "l2_rel": 0.08845225209772561,
+      "runtime_s": 9.42829966545105
+    },
+    {
+      "t_start": 15.0,
+      "t_end": 22.5,
+      "mae_C": 14.94481221402919,
+      "l2_rel": 0.057570461606125695,
+      "runtime_s": 9.77731990814209
+    },
+    {
+      "t_start": 22.5,
+      "t_end": 30.0,
+      "mae_C": 13.290148166827166,
+      "l2_rel": 0.05858332033452089,
+      "runtime_s": 9.383951425552368
+    }
+  ],
+  "total_s": 38.25024914741516,
+  "checkpoint": "/home/coder/NAS-PINNS1/thermal_pinn/checkpoints/annulus_nsga2_k5_dim2.pt"
+}

@@ -1,0 +1,40 @@
+{
+  "domain": "stacked",
+  "arch": "nsga2",
+  "k": 5,
+  "dim": 3,
+  "mean_mae": 22.552595363117288,
+  "n_windows": 4,
+  "windows": [
+    {
+      "t_start": 0.0,
+      "t_end": 7.5,
+      "mae_C": 46.2373049770857,
+      "l2_rel": 0.1778283126093889,
+      "runtime_s": 11.033051490783691
+    },
+    {
+      "t_start": 7.5,
+      "t_end": 15.0,
+      "mae_C": 17.37542458037792,
+      "l2_rel": 0.08351780726247683,
+      "runtime_s": 10.897360801696777
+    },
+    {
+      "t_start": 15.0,
+      "t_end": 22.5,
+      "mae_C": 13.830713396884665,
+      "l2_rel": 0.08790667688648783,
+      "runtime_s": 11.15398645401001
+    },
+    {
+      "t_start": 22.5,
+      "t_end": 30.0,
+      "mae_C": 12.766938498120865,
+      "l2_rel": 0.08682200962923814,
+      "runtime_s": 10.690994501113892
+    }
+  ],
+  "total_s": 43.823362827301025,
+  "checkpoint": "/home/coder/NAS-PINNS1/thermal_pinn/checkpoints/stacked_nsga2_k5_dim3.pt"
+}

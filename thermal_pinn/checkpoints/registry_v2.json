@@ -384,38 +384,6 @@
     "version": "v2_fourier_sa"
   },
   {
-    "domain": "annulus",
-    "arch": "bayesian",
-    "dim": 2,
-    "best_k": 1,
-    "best_mae": 3.3256910279753553,
-    "best_l2": 0.02785317006655561,
-    "all_k": {
-      "1": {
-        "mae": 3.3256910279753553,
-        "l2": 0.02785317006655561
-      },
-      "2": {
-        "mae": 4.928045610880739,
-        "l2": 0.04001343642704035
-      },
-      "3": {
-        "mae": 5.0726998223865625,
-        "l2": 0.03427930761340307
-      },
-      "4": {
-        "mae": 6.911756029905673,
-        "l2": 0.048791156967343
-      },
-      "5": {
-        "mae": 7.071803778867986,
-        "l2": 0.047498165626654654
-      }
-    },
-    "checkpoint_best": "/home/coder/NAS-PINNS1/thermal_pinn/checkpoints/annulus_bayesian_k1_dim2_v2.pt",
-    "version": "v2_fourier_sa"
-  },
-  {
     "domain": "stacked",
     "arch": "bayesian",
     "dim": 3,
@@ -448,38 +416,6 @@
     "version": "v2_fourier_sa"
   },
   {
-    "domain": "annulus",
-    "arch": "nsga2",
-    "dim": 2,
-    "best_k": 1,
-    "best_mae": 16.28241598941704,
-    "best_l2": 0.07731092852260532,
-    "all_k": {
-      "1": {
-        "mae": 16.28241598941704,
-        "l2": 0.07731092852260532
-      },
-      "2": {
-        "mae": 18.151246745141055,
-        "l2": 0.08001684144685968
-      },
-      "3": {
-        "mae": 22.116956333129554,
-        "l2": 0.10258239545454909
-      },
-      "4": {
-        "mae": 21.475040429266052,
-        "l2": 0.09519738060205336
-      },
-      "5": {
-        "mae": 20.365078769834756,
-        "l2": 0.09345954409032255
-      }
-    },
-    "checkpoint_best": "/home/coder/NAS-PINNS1/thermal_pinn/checkpoints/annulus_nsga2_k1_dim2_v2.pt",
-    "version": "v2_fourier_sa"
-  },
-  {
     "domain": "stacked",
     "arch": "nsga2",
     "dim": 3,
@@ -509,38 +445,6 @@
       }
     },
     "checkpoint_best": "/home/coder/NAS-PINNS1/thermal_pinn/checkpoints/stacked_nsga2_k2_dim3_v2.pt",
-    "version": "v2_fourier_sa"
-  },
-  {
-    "domain": "annulus",
-    "arch": "nsga3",
-    "dim": 2,
-    "best_k": 1,
-    "best_mae": 15.707205230239916,
-    "best_l2": 0.0772187109020222,
-    "all_k": {
-      "1": {
-        "mae": 15.707205230239916,
-        "l2": 0.0772187109020222
-      },
-      "2": {
-        "mae": 19.88758974428159,
-        "l2": 0.09176036191419441
-      },
-      "3": {
-        "mae": 22.741012112318135,
-        "l2": 0.10615111524266188
-      },
-      "4": {
-        "mae": 22.464291858996674,
-        "l2": 0.10214052095665589
-      },
-      "5": {
-        "mae": 23.416810178190747,
-        "l2": 0.09813303706651737
-      }
-    },
-    "checkpoint_best": "/home/coder/NAS-PINNS1/thermal_pinn/checkpoints/annulus_nsga3_k1_dim2_v2.pt",
     "version": "v2_fourier_sa"
   },
   {

@@ -90,51 +90,6 @@
     "checkpoint_best": "/home/coder/NAS-PINNS1/thermal_pinn/checkpoints/circle_nsga3_k1_dim2.pt"
   },
   {
-    "domain": "annulus",
-    "arch": "bayesian",
-    "dim": 2,
-    "best_k": 1,
-    "best_mae": 4.548028407038124,
-    "all_k": {
-      "1": 4.548028407038124,
-      "2": 4.874807636683088,
-      "3": 5.235486069536495,
-      "4": 6.451198591730966,
-      "5": 7.648193921230968
-    },
-    "checkpoint_best": "/home/coder/NAS-PINNS1/thermal_pinn/checkpoints/annulus_bayesian_k1_dim2.pt"
-  },
-  {
-    "domain": "annulus",
-    "arch": "nsga2",
-    "dim": 2,
-    "best_k": 1,
-    "best_mae": 11.718058892072815,
-    "all_k": {
-      "1": 11.718058892072815,
-      "2": 18.418030495189345,
-      "3": 22.28226748741069,
-      "4": 25.071300247297195,
-      "5": 31.55301732654029
-    },
-    "checkpoint_best": "/home/coder/NAS-PINNS1/thermal_pinn/checkpoints/annulus_nsga2_k1_dim2.pt"
-  },
-  {
-    "domain": "annulus",
-    "arch": "nsga3",
-    "dim": 2,
-    "best_k": 1,
-    "best_mae": 12.6957144037594,
-    "all_k": {
-      "1": 12.6957144037594,
-      "2": 16.47826857667514,
-      "3": 25.169068140815032,
-      "4": 31.04194802632307,
-      "5": 31.087570089656452
-    },
-    "checkpoint_best": "/home/coder/NAS-PINNS1/thermal_pinn/checkpoints/annulus_nsga3_k1_dim2.pt"
-  },
-  {
     "domain": "lshape",
     "arch": "bayesian",
     "dim": 2,

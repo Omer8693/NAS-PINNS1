@@ -630,7 +630,6 @@ class LShape2D:
 DOMAINS_2D = {
     "rectangle": Rectangle2D,
     "circle":    Circle2D,
-    "annulus":   Annulus2D,
     "lshape":    LShape2D,
 }
 

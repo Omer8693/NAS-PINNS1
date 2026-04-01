@@ -1,7 +1,12 @@
 # NAS-PINN Thermal Quenching — k-Skip Framework
 
-NAS-driven PINN framework for transient thermal quenching simulation using a
-multi-step window prediction (MSWP) strategy with k-skip FEM coupling.
+A Neural Architecture Search (NAS) driven Physics-Informed Neural Network (PINN) framework
+for accelerating transient thermal quenching simulations. The framework couples FEM and PINN
+via a multi-step window prediction (MSWP) strategy: instead of solving every FEM timestep
+(Δt = 1.5 s), the PINN predicts k steps at once (k ∈ {1..5}), reducing FEM evaluations by
+a factor of k. Three NAS optimizers (Bayesian TPE, NSGA-II, NSGA-III) search for optimal
+network architectures over 2D and 3D quenching domains. Training strategies progress from
+cold-start (800 ep) → v2 Fourier+SA (1500 ep) → warm-start fine-tuning (500 ep per window).
 
 ---
 

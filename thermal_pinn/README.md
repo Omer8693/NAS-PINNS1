@@ -1,12 +1,29 @@
 # NAS-PINN Thermal Quenching — k-Skip Framework
 
 A Neural Architecture Search (NAS) driven Physics-Informed Neural Network (PINN) framework
-for accelerating transient thermal quenching simulations. The framework couples FEM and PINN
-via a multi-step window prediction (MSWP) strategy: instead of solving every FEM timestep
-(Δt = 1.5 s), the PINN predicts k steps at once (k ∈ {1..5}), reducing FEM evaluations by
-a factor of k. Three NAS optimizers (Bayesian TPE, NSGA-II, NSGA-III) search for optimal
-network architectures over 2D and 3D quenching domains. Training strategies progress from
-cold-start (800 ep) → v2 Fourier+SA (1500 ep) → warm-start fine-tuning (500 ep per window).
+for accelerating transient thermal quenching simulations. The physical problem is the cooling
+of an aluminium casting (A356 alloy) submerged in water: temperature drops from T_init = 500 °C
+to near T_water = 20 °C over 30 seconds, governed by the transient heat equation with a
+convective boundary condition (h = 5000 W/m²K).
+
+The framework couples FEM and PINN via a **multi-step window prediction (MSWP)** strategy.
+Instead of solving every FEM timestep (Δt_FEM = 1.5 s), the PINN covers k consecutive steps
+in a single forward pass (k ∈ {1, 2, 3, 4, 5}), reducing FEM evaluations by a factor of k.
+The network output is IC-consistent by construction: it exactly satisfies the initial condition
+at the start of each window, avoiding additional penalty terms.
+
+Three NAS optimizers — **Bayesian TPE**, **NSGA-II**, and **NSGA-III** — independently search
+for optimal layer depth, width, and activation function over four 2D and four 3D domain
+geometries (rectangle, circle, L-shape, cylinder, stacked, etc.). The search space follows
+Wang & Zhong (2023) adapted to the quenching problem.
+
+Training progresses through three stages:
+1. **Cold-start (v1):** 800 Adam epochs from random initialisation per window.
+2. **v2 (Fourier + SA):** Fourier feature embedding combats spectral bias; self-adaptive loss
+   weights are learned jointly with model parameters. NSGA-II/III additionally retrained with
+   1500 epochs + 150 L-BFGS iterations.
+3. **Warm-start:** Window 1 trained cold (800 ep); subsequent windows fine-tune from the
+   previous window's weights (500 ep, lr = 1e-3), achieving comparable accuracy at 38% fewer epochs.
 
 ---
 

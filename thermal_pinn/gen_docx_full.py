@@ -21,9 +21,10 @@ except ImportError:
     sys.exit(1)
 
 ROOT       = Path(__file__).resolve().parent
-SUMMARY    = ROOT / "results" / "summary"
-BEST       = ROOT / "results" / "best_results"
-WARMSTART  = ROOT / "results" / "warmstart"
+RESULTS    = ROOT.parent / "results"          # NAS-PINNS1/results/
+SUMMARY    = RESULTS / "05_summary"
+BEST       = RESULTS / "02_best_k"
+WARMSTART  = RESULTS / "06_warmstart_stats"
 REPORT_DIR = ROOT / "reports"
 REPORT_DIR.mkdir(exist_ok=True, parents=True)
 OUT        = REPORT_DIR / "NAS_PINN_Thermal_Quenching_Report.docx"
@@ -514,7 +515,7 @@ def sec_results_2d(doc):
     )
     add_fig(doc, SUMMARY / "fig_kskip_800ep_2d.png",
             "Figure 1: 2D k-skip L2 analysis — 800 epoch NAS phase.", width=6.0)
-    add_fig(doc, SUMMARY / "fig_kskip_1500ep_2d.png",
+    add_fig(doc, SUMMARY / "fig_kskip_800ep_2d.png",
             "Figure 2: 2D k-skip L2 analysis — 1500 epoch retrain.", width=6.0)
 
     h2(doc, "5.2 Detailed Results Table")
@@ -574,7 +575,7 @@ def sec_results_2d(doc):
 
     h2(doc, "5.5 Summary Table (1500 ep)")
     body(doc, "Figure 9 shows the comprehensive 2D summary table after 1500-epoch retrain.")
-    add_fig(doc, SUMMARY / "fig_table_1500ep_2d.png",
+    add_fig(doc, SUMMARY / "fig_table_800ep_2d.png",
             "Figure 9: 2D full summary table — 1500 epoch retrain.", width=6.5)
     add_page_break(doc)
 
@@ -590,7 +591,7 @@ def sec_results_3d(doc):
     )
     add_fig(doc, SUMMARY / "fig_kskip_800ep_3d.png",
             "Figure 10: 3D k-skip L2 analysis — 800 epoch NAS phase.", width=6.0)
-    add_fig(doc, SUMMARY / "fig_kskip_1500ep_3d.png",
+    add_fig(doc, SUMMARY / "fig_kskip_800ep_3d.png",
             "Figure 11: 3D k-skip L2 analysis — 1500 epoch retrain.", width=6.0)
 
     h2(doc, "6.2 Detailed Results Table")
@@ -647,7 +648,7 @@ def sec_results_3d(doc):
 
     h2(doc, "6.5 Summary Table (1500 ep)")
     body(doc, "Figure 20 shows the comprehensive 3D summary table after 1500-epoch retrain.")
-    add_fig(doc, SUMMARY / "fig_table_1500ep_3d.png",
+    add_fig(doc, SUMMARY / "fig_table_800ep_3d.png",
             "Figure 20: 3D full summary table — 1500 epoch retrain.", width=6.5)
     add_page_break(doc)
 
@@ -816,34 +817,34 @@ def sec_warmstart(doc):
     )
 
     h2(doc, "9.3 Figures")
-    p2_speed = WARMSTART / "fig_ws_speedup_heatmap_2d.png"
-    p3_speed = WARMSTART / "fig_ws_speedup_heatmap_3d.png"
-    p2_trade = WARMSTART / "fig_ws_tradeoff_2d.png"
-    p3_trade = WARMSTART / "fig_ws_tradeoff_3d.png"
-    p2_kline = WARMSTART / "fig_ws_kline_2d.png"
-    p3_kline = WARMSTART / "fig_ws_kline_3d.png"
+    p2_mae  = WARMSTART / "fig_ws_mae_comparison_2d.png"
+    p3_mae  = WARMSTART / "fig_ws_mae_comparison_3d.png"
+    p2_tbl  = WARMSTART / "fig_ws_summary_table_2d.png"
+    p3_tbl  = WARMSTART / "fig_ws_summary_table_3d.png"
+    p2_rec  = WARMSTART / "fig_ws_recommendation_2d.png"
+    p3_rec  = WARMSTART / "fig_ws_recommendation_3d.png"
 
-    if p2_speed.exists():
-        add_fig(doc, p2_speed,
-                "Figure 9.1a: Warm-start speedup heatmap — 2D domains "
-                "(average over k=1..5, ws_500ep vs cold-start).", width=5.5)
-    if p3_speed.exists():
-        add_fig(doc, p3_speed,
-                "Figure 9.1b: Warm-start speedup heatmap — 3D domains.", width=5.5)
-    if p2_trade.exists():
-        add_fig(doc, p2_trade,
-                "Figure 9.2a: Accuracy–speed trade-off scatter — 2D. Each point = "
-                "one (domain, arch, k) combination. Green shading = warm better.", width=5.5)
-    if p3_trade.exists():
-        add_fig(doc, p3_trade,
-                "Figure 9.2b: Accuracy–speed trade-off scatter — 3D.", width=5.5)
-    if p2_kline.exists():
-        add_fig(doc, p2_kline,
-                "Figure 9.3a: Mean MAE vs k — cold-start (solid) vs warm-start "
-                "ws_500ep (dashed) — 2D domains.", width=6.0)
-    if p3_kline.exists():
-        add_fig(doc, p3_kline,
-                "Figure 9.3b: Mean MAE vs k — 3D domains.", width=6.0)
+    if p2_mae.exists():
+        add_fig(doc, p2_mae,
+                "Figure 9.1a: Mean MAE vs k — cold-start (800 ep) vs v2 (Fourier+SA) vs "
+                "warm-start (500 ep) — 2D domains.", width=6.0)
+    if p3_mae.exists():
+        add_fig(doc, p3_mae,
+                "Figure 9.1b: Mean MAE vs k — 3D domains.", width=6.0)
+    if p2_tbl.exists():
+        add_fig(doc, p2_tbl,
+                "Figure 9.2a: Numeric summary table — speedup factor and ΔMAE (warm vs cold) "
+                "per (arch, domain) averaged over k=1..5 — 2D domains.", width=5.5)
+    if p3_tbl.exists():
+        add_fig(doc, p3_tbl,
+                "Figure 9.2b: Numeric summary table — 3D domains.", width=5.5)
+    if p2_rec.exists():
+        add_fig(doc, p2_rec,
+                "Figure 9.3a: Colour-coded recommendation matrix — Green = warm-start "
+                "recommended, Yellow = marginal, Red = cold-start preferred — 2D.", width=5.5)
+    if p3_rec.exists():
+        add_fig(doc, p3_rec,
+                "Figure 9.3b: Recommendation matrix — 3D domains.", width=5.5)
 
     h3(doc, "Temperature Field Comparison")
     body(doc,
@@ -853,7 +854,7 @@ def sec_warmstart(doc):
         "Row 1 = FEM reference, Row 2 = Cold-start PINN, Row 3 = Warm-start PINN, "
         "Row 4 = |Error| cold, Row 5 = |Error| warm."
     )
-    ws_dir = WARMSTART.parent / "ws_heatmaps"
+    ws_dir = RESULTS / "07_warmstart_fields"
     for arch, fig_label in [("bayesian", "9.4"), ("nsga2", "9.5"), ("nsga3", "9.6")]:
         p = ws_dir / f"{arch}_rectangle_2d_k1_ws.png"
         if p.exists():

@@ -20,9 +20,10 @@ except ImportError:
     sys.exit(1)
 
 ROOT       = Path(__file__).resolve().parent
-SUMMARY    = ROOT / "results" / "summary"
-BEST       = ROOT / "results" / "best_results"
-WARMSTART  = ROOT / "results" / "warmstart"
+RESULTS    = ROOT.parent / "results"          # NAS-PINNS1/results/
+SUMMARY    = RESULTS / "05_summary"
+BEST       = RESULTS / "02_best_k"
+WARMSTART  = RESULTS / "06_warmstart_stats"
 REPORT_DIR = ROOT / "reports"
 REPORT_DIR.mkdir(exist_ok=True, parents=True)
 OUT        = REPORT_DIR / "NAS_PINN_Thermal_Quenching.pptx"
@@ -551,7 +552,7 @@ def s07_nas(prs):
 def s08_2d_results(prs):
     slide = blank(prs)
     slide_header(slide, "2D Results — k-Skip Analysis",
-                 "L2 relative error vs. k-skip factor (800 ep and 1500 ep retrain)")
+                 "L2 relative error vs. k-skip factor (800 ep (NAS))")
     rect(slide, 0, 0.65, 13.33, 6.85, LGRAY)
     stripe(slide, NAVY, 0.65)
     txt(slide, "2D Results \u2014 k-Skip Analysis", 0.4, 0.07, 12.5, 0.55, fs=24, bold=True, color=WHITE)
@@ -561,8 +562,8 @@ def s08_2d_results(prs):
     img(slide, SUMMARY / "fig_kskip_800ep_2d.png", 0.25, 1.5, w=6.2)
 
     rect(slide, 6.8, 1.05, 6.3, 5.6, WHITE)
-    txt(slide, "1500 Epochs (Retrained)", 6.95, 1.1, 6.0, 0.35, fs=13, bold=True, color=NAVY)
-    img(slide, SUMMARY / "fig_kskip_1500ep_2d.png", 6.85, 1.5, w=6.2)
+    txt(slide, "800 ep (k-skip analysis)", 6.95, 1.1, 6.0, 0.35, fs=13, bold=True, color=NAVY)
+    img(slide, SUMMARY / "fig_kskip_800ep_2d.png", 6.85, 1.5, w=6.2)
 
     rect(slide, 0, 7.15, 13.33, 0.35, NAVY)
     txt(slide, "Best 2D: L-shape NSGA-III k=1, L2=0.83%.  Circle Bayesian k=3 gives 0.94% with 2.9\u00d7 fewer FEM calls",
@@ -618,13 +619,13 @@ def s09_2d_heatmaps(prs):
 def s10_2d_table(prs):
     slide = blank(prs)
     slide_header(slide, "2D Summary Table",
-                 "Best-k results per domain and optimizer (1500 ep retrain)")
+                 "Best-k results per domain and optimizer (800 ep (NAS))")
     rect(slide, 0, 0.65, 13.33, 6.85, LGRAY)
     stripe(slide, NAVY, 0.65)
     txt(slide, "2D Summary Table", 0.4, 0.07, 12.5, 0.55, fs=24, bold=True, color=WHITE)
 
     rect(slide, 0.2, 1.05, 12.9, 4.95, WHITE)
-    img(slide, SUMMARY / "fig_table_1500ep_2d.png", 0.25, 1.1, w=12.8)
+    img(slide, SUMMARY / "fig_table_800ep_2d.png", 0.25, 1.1, w=12.8)
 
     # Key observations
     rect(slide, 0.2, 6.2, 12.9, 0.82, RGBColor(0xE8,0xF0,0xFE))
@@ -647,7 +648,7 @@ def s10_2d_table(prs):
 def s11_3d_results(prs):
     slide = blank(prs)
     slide_header(slide, "3D Results — k-Skip Analysis",
-                 "L2 relative error vs. k-skip factor (800 ep and 1500 ep retrain)")
+                 "L2 relative error vs. k-skip factor (800 ep (NAS))")
     rect(slide, 0, 0.65, 13.33, 6.85, LGRAY)
     stripe(slide, NAVY, 0.65)
     txt(slide, "3D Results \u2014 k-Skip Analysis", 0.4, 0.07, 12.5, 0.55, fs=24, bold=True, color=WHITE)
@@ -657,8 +658,8 @@ def s11_3d_results(prs):
     img(slide, SUMMARY / "fig_kskip_800ep_3d.png", 0.25, 1.5, w=6.2)
 
     rect(slide, 6.8, 1.05, 6.3, 5.6, WHITE)
-    txt(slide, "1500 Epochs (Retrained)", 6.95, 1.1, 6.0, 0.35, fs=13, bold=True, color=NAVY)
-    img(slide, SUMMARY / "fig_kskip_1500ep_3d.png", 6.85, 1.5, w=6.2)
+    txt(slide, "800 ep (k-skip analysis)", 6.95, 1.1, 6.0, 0.35, fs=13, bold=True, color=NAVY)
+    img(slide, SUMMARY / "fig_kskip_800ep_3d.png", 6.85, 1.5, w=6.2)
 
     rect(slide, 0, 7.15, 13.33, 0.35, NAVY)
     txt(slide, "Best 3D: L-shape NSGA-III k=1, L2=0.91%.  Bayesian Rectangular k=5: L2=4.12% with 5\u00d7 fewer FEM calls",
@@ -699,13 +700,13 @@ def s12_3d_heatmaps(prs):
 def s13_3d_table(prs):
     slide = blank(prs)
     slide_header(slide, "3D Summary Table",
-                 "Best-k results per domain and optimizer (1500 ep retrain)")
+                 "Best-k results per domain and optimizer (800 ep (NAS))")
     rect(slide, 0, 0.65, 13.33, 6.85, LGRAY)
     stripe(slide, NAVY, 0.65)
     txt(slide, "3D Summary Table", 0.4, 0.07, 12.5, 0.55, fs=24, bold=True, color=WHITE)
 
     rect(slide, 0.2, 1.05, 12.9, 4.95, WHITE)
-    img(slide, SUMMARY / "fig_table_1500ep_3d.png", 0.25, 1.1, w=12.8)
+    img(slide, SUMMARY / "fig_table_800ep_3d.png", 0.25, 1.1, w=12.8)
 
     rect(slide, 0.2, 6.2, 12.9, 0.82, RGBColor(0xE8,0xF0,0xFE))
     obs3d = [
@@ -810,13 +811,13 @@ def s15_warmstart_overview(prs):
 
 
 def s16_warmstart_plots(prs):
-    """Two-image slide: speedup heatmaps 2D + 3D."""
+    """Two-image slide: MAE comparison 2D + 3D."""
     slide = blank(prs)
-    slide_header(slide, "Warm-Start Speedup Heatmaps",
-                 "Average speedup (cold / warm runtime) per domain × architecture")
+    slide_header(slide, "Warm-Start: MAE vs k (Cold / v2 / Warm)",
+                 "Mean MAE across domains — cold-start (800 ep) vs v2 (Fourier+SA) vs warm-start (500 ep)")
 
-    p2 = WARMSTART / "fig_ws_speedup_heatmap_2d.png"
-    p3 = WARMSTART / "fig_ws_speedup_heatmap_3d.png"
+    p2 = WARMSTART / "fig_ws_mae_comparison_2d.png"
+    p3 = WARMSTART / "fig_ws_mae_comparison_3d.png"
     if p2.exists():
         img(slide, p2, x=0.3,  y=1.0, w=6.1)
     if p3.exists():
@@ -827,39 +828,38 @@ def s16_warmstart_plots(prs):
     txt(slide, "3D Domains", 6.8,  6.45, 6.1, 0.35, fs=11, bold=True,
         color=NAVY, align=PP_ALIGN.CENTER)
     txt(slide,
-        "Bayesian: 1.5× speedup (fewer params → faster per epoch).  "
-        "NSGA-II/III: ~3× speedup (larger networks, more epochs saved).",
+        "Bayesian v2 (Fourier+SA): consistent improvement over cold.  "
+        "Warm-start (500 ep) matches or exceeds cold (800 ep) at 38% fewer epochs.",
         0.3, 6.85, 12.7, 0.45, fs=10, color=DGRAY, italic=True,
         align=PP_ALIGN.CENTER)
 
 
 def s17_warmstart_tradeoff(prs):
-    """Trade-off scatter + k-line plots."""
+    """Summary table + recommendation matrix."""
     slide = blank(prs)
-    slide_header(slide, "Warm-Start: Accuracy–Speed Trade-off",
-                 "Each point = one (domain, arch, k) combination")
+    slide_header(slide, "Warm-Start: Summary & Recommendation",
+                 "Numeric summary table and colour-coded recommendation per (arch, domain)")
 
-    p2 = WARMSTART / "fig_ws_tradeoff_2d.png"
-    p3 = WARMSTART / "fig_ws_tradeoff_3d.png"
-    if p2.exists():
-        img(slide, p2, x=0.2, y=1.0, w=6.3)
-    if p3.exists():
-        img(slide, p3, x=6.7, y=1.0, w=6.3)
+    p2_tbl = WARMSTART / "fig_ws_summary_table_2d.png"
+    p3_rec = WARMSTART / "fig_ws_recommendation_2d.png"
+    if p2_tbl.exists():
+        img(slide, p2_tbl, x=0.2, y=1.0, w=6.3)
+    if p3_rec.exists():
+        img(slide, p3_rec, x=6.7, y=1.0, w=6.3)
 
-    txt(slide, "2D", 0.2,  6.55, 6.3, 0.35, fs=11, bold=True,
+    txt(slide, "Summary Table (2D)", 0.2,  6.55, 6.3, 0.35, fs=11, bold=True,
         color=NAVY, align=PP_ALIGN.CENTER)
-    txt(slide, "3D", 6.7,  6.55, 6.3, 0.35, fs=11, bold=True,
+    txt(slide, "Recommendation Matrix (2D)", 6.7,  6.55, 6.3, 0.35, fs=11, bold=True,
         color=NAVY, align=PP_ALIGN.CENTER)
     txt(slide,
-        "Green shading = warm-start outperforms cold.  "
-        "3D NSGA combinations cluster high (large ΔMAE) — cold-start preferred.",
+        "Green = warm-start recommended  |  Yellow = marginal  |  Red = cold-start preferred.",
         0.2, 6.9, 12.9, 0.4, fs=10, color=DGRAY, italic=True,
         align=PP_ALIGN.CENTER)
 
 
 def s18_warmstart_heatmaps(prs):
     """One slide per arch showing cold vs warm heatmap side-by-side (rectangle 2D)."""
-    WS = ROOT / "results" / "ws_heatmaps"
+    WS = RESULTS / "07_warmstart_fields"
     cases = [
         ("Warm-Start Heatmap — Rectangle 2D  (Bayesian)",
          "Bayesian  |  k=1  |  Row1=Reference  Row2=Cold(800ep)  Row3=Warm(500ep)  Row4/5=Error",

@@ -1,0 +1,97 @@
+{
+  "domain": "lshape",
+  "arch": "bayesian",
+  "k": 2,
+  "dim": 3,
+  "mean_mae": 6.256023864262804,
+  "n_windows": 10,
+  "windows": [
+    {
+      "t_start": 0.0,
+      "t_end": 3.0,
+      "mae_C": 13.224326653539729,
+      "l2_rel": 0.041437605088829495,
+      "runtime_s": 9.701222896575928,
+      "warm": false
+    },
+    {
+      "t_start": 3.0,
+      "t_end": 6.0,
+      "mae_C": 7.8635306092053305,
+      "l2_rel": 0.024190331514240358,
+      "runtime_s": 6.086593389511108,
+      "warm": true
+    },
+    {
+      "t_start": 6.0,
+      "t_end": 9.0,
+      "mae_C": 7.103157097681086,
+      "l2_rel": 0.029322306600634947,
+      "runtime_s": 6.181586742401123,
+      "warm": true
+    },
+    {
+      "t_start": 9.0,
+      "t_end": 12.0,
+      "mae_C": 5.574256686125637,
+      "l2_rel": 0.022573453487359,
+      "runtime_s": 6.365841388702393,
+      "warm": true
+    },
+    {
+      "t_start": 12.0,
+      "t_end": 15.0,
+      "mae_C": 5.533163986982744,
+      "l2_rel": 0.025163786670093096,
+      "runtime_s": 6.649538040161133,
+      "warm": true
+    },
+    {
+      "t_start": 15.0,
+      "t_end": 18.0,
+      "mae_C": 5.513292166973357,
+      "l2_rel": 0.02285087521855591,
+      "runtime_s": 6.807451009750366,
+      "warm": true
+    },
+    {
+      "t_start": 18.0,
+      "t_end": 21.0,
+      "mae_C": 4.544635270627746,
+      "l2_rel": 0.017868925532708555,
+      "runtime_s": 6.406534433364868,
+      "warm": true
+    },
+    {
+      "t_start": 21.0,
+      "t_end": 24.0,
+      "mae_C": 4.9373745288994675,
+      "l2_rel": 0.021304173902572342,
+      "runtime_s": 6.029921531677246,
+      "warm": true
+    },
+    {
+      "t_start": 24.0,
+      "t_end": 27.0,
+      "mae_C": 4.177116065736525,
+      "l2_rel": 0.022850229534839502,
+      "runtime_s": 6.064596176147461,
+      "warm": true
+    },
+    {
+      "t_start": 27.0,
+      "t_end": 30.0,
+      "mae_C": 4.089385576856413,
+      "l2_rel": 0.020954403631295762,
+      "runtime_s": 6.866709232330322,
+      "warm": true
+    }
+  ],
+  "total_s": 67.30151224136353,
+  "checkpoint": "/home/coder/NAS-PINNS1/thermal_pinn/checkpoints/lshape_bayesian_k2_dim3_ws_500ep.pt",
+  "warm_start": true,
+  "tag": "ws_500ep",
+  "n_epochs_cold": 800,
+  "n_epochs_warm": 500,
+  "lr_warm": 0.001
+}

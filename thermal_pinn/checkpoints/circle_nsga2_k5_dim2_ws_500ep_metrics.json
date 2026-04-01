@@ -1,0 +1,49 @@
+{
+  "domain": "circle",
+  "arch": "nsga2",
+  "k": 5,
+  "dim": 2,
+  "mean_mae": 12.749779918260849,
+  "n_windows": 4,
+  "windows": [
+    {
+      "t_start": 0.0,
+      "t_end": 7.5,
+      "mae_C": 32.74515844628789,
+      "l2_rel": 0.1457363189608025,
+      "runtime_s": 8.336978912353516,
+      "warm": false
+    },
+    {
+      "t_start": 7.5,
+      "t_end": 15.0,
+      "mae_C": 9.19612037048614,
+      "l2_rel": 0.032376521996288696,
+      "runtime_s": 5.639826536178589,
+      "warm": true
+    },
+    {
+      "t_start": 15.0,
+      "t_end": 22.5,
+      "mae_C": 5.387811092129627,
+      "l2_rel": 0.023596161462116304,
+      "runtime_s": 5.6198108196258545,
+      "warm": true
+    },
+    {
+      "t_start": 22.5,
+      "t_end": 30.0,
+      "mae_C": 3.6700297641397395,
+      "l2_rel": 0.02254298623883071,
+      "runtime_s": 5.476536512374878,
+      "warm": true
+    }
+  ],
+  "total_s": 25.133248805999756,
+  "checkpoint": "/home/coder/NAS-PINNS1/thermal_pinn/checkpoints/circle_nsga2_k5_dim2_ws_500ep.pt",
+  "warm_start": true,
+  "tag": "ws_500ep",
+  "n_epochs_cold": 800,
+  "n_epochs_warm": 500,
+  "lr_warm": 0.001
+}

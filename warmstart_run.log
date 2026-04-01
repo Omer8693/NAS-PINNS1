@@ -1,0 +1,2083 @@
+[train_warmstart]  device=cuda  warm_epochs=500  warm_lr=0.001  tag=ws_500ep
+  [1/20] [0.0→1.5s]  k=1  cold(800ep)  rectangle/bayesian
+      MAE=7.78°C  L2=0.0526  (9s, 800ep)
+  [2/20] [1.5→3.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=6.29°C  L2=0.0410  (6s, 500ep)
+  [3/20] [3.0→4.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=2.97°C  L2=0.0178  (6s, 500ep)
+  [4/20] [4.5→6.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=3.34°C  L2=0.0224  (5s, 500ep)
+  [5/20] [6.0→7.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=3.06°C  L2=0.0236  (6s, 500ep)
+  [6/20] [7.5→9.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=3.05°C  L2=0.0250  (6s, 500ep)
+  [7/20] [9.0→10.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=2.63°C  L2=0.0252  (6s, 500ep)
+  [8/20] [10.5→12.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=2.31°C  L2=0.0221  (6s, 500ep)
+  [9/20] [12.0→13.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=3.55°C  L2=0.0292  (6s, 500ep)
+  [10/20] [13.5→15.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=3.07°C  L2=0.0328  (6s, 500ep)
+  [11/20] [15.0→16.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=2.23°C  L2=0.0236  (6s, 500ep)
+  [12/20] [16.5→18.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=2.87°C  L2=0.0267  (6s, 500ep)
+  [13/20] [18.0→19.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=2.78°C  L2=0.0252  (6s, 500ep)
+  [14/20] [19.5→21.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=2.19°C  L2=0.0192  (6s, 500ep)
+  [15/20] [21.0→22.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=2.53°C  L2=0.0232  (6s, 500ep)
+  [16/20] [22.5→24.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=5.25°C  L2=0.0549  (6s, 500ep)
+  [17/20] [24.0→25.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=2.46°C  L2=0.0234  (6s, 500ep)
+  [18/20] [25.5→27.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=2.04°C  L2=0.0199  (6s, 500ep)
+  [19/20] [27.0→28.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=2.64°C  L2=0.0261  (6s, 500ep)
+  [20/20] [28.5→30.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=1.68°C  L2=0.0190  (6s, 500ep)
+  → Mean MAE=3.24°C  saved: rectangle_bayesian_k1_dim2_ws_500ep.pt
+  [1/10] [0.0→3.0s]  k=2  cold(800ep)  rectangle/bayesian
+      MAE=7.89°C  L2=0.0488  (10s, 800ep)
+  [2/10] [3.0→6.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=4.09°C  L2=0.0235  (6s, 500ep)
+  [3/10] [6.0→9.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=3.02°C  L2=0.0254  (6s, 500ep)
+  [4/10] [9.0→12.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=3.74°C  L2=0.0304  (6s, 500ep)
+  [5/10] [12.0→15.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=3.69°C  L2=0.0274  (6s, 500ep)
+  [6/10] [15.0→18.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=3.00°C  L2=0.0221  (6s, 500ep)
+  [7/10] [18.0→21.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=3.12°C  L2=0.0237  (6s, 500ep)
+  [8/10] [21.0→24.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=2.76°C  L2=0.0199  (6s, 500ep)
+  [9/10] [24.0→27.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=3.27°C  L2=0.0220  (6s, 500ep)
+  [10/10] [27.0→30.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=3.61°C  L2=0.0285  (6s, 500ep)
+  → Mean MAE=3.82°C  saved: rectangle_bayesian_k2_dim2_ws_500ep.pt
+  [1/7] [0.0→4.5s]  k=3  cold(800ep)  rectangle/bayesian
+      MAE=9.66°C  L2=0.0541  (9s, 800ep)
+  [2/7] [4.5→9.0s]  k=3  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=5.39°C  L2=0.0290  (6s, 500ep)
+  [3/7] [9.0→13.5s]  k=3  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=3.54°C  L2=0.0234  (6s, 500ep)
+  [4/7] [13.5→18.0s]  k=3  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=3.40°C  L2=0.0227  (6s, 500ep)
+  [5/7] [18.0→22.5s]  k=3  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=4.08°C  L2=0.0269  (6s, 500ep)
+  [6/7] [22.5→27.0s]  k=3  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=3.74°C  L2=0.0255  (6s, 500ep)
+  [7/7] [27.0→30.0s]  k=3  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=3.47°C  L2=0.0278  (6s, 500ep)
+  → Mean MAE=4.75°C  saved: rectangle_bayesian_k3_dim2_ws_500ep.pt
+  [1/5] [0.0→6.0s]  k=4  cold(800ep)  rectangle/bayesian
+      MAE=10.36°C  L2=0.0557  (9s, 800ep)
+  [2/5] [6.0→12.0s]  k=4  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=4.89°C  L2=0.0299  (7s, 500ep)
+  [3/5] [12.0→18.0s]  k=4  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=3.70°C  L2=0.0208  (6s, 500ep)
+  [4/5] [18.0→24.0s]  k=4  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=4.45°C  L2=0.0259  (6s, 500ep)
+  [5/5] [24.0→30.0s]  k=4  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=3.94°C  L2=0.0258  (6s, 500ep)
+  → Mean MAE=5.47°C  saved: rectangle_bayesian_k4_dim2_ws_500ep.pt
+  [1/4] [0.0→7.5s]  k=5  cold(800ep)  rectangle/bayesian
+      MAE=11.13°C  L2=0.0561  (9s, 800ep)
+  [2/4] [7.5→15.0s]  k=5  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=4.50°C  L2=0.0259  (6s, 500ep)
+  [3/4] [15.0→22.5s]  k=5  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=4.28°C  L2=0.0230  (6s, 500ep)
+  [4/4] [22.5→30.0s]  k=5  warm(500ep,lr=1e-03)  rectangle/bayesian
+      MAE=3.92°C  L2=0.0247  (6s, 500ep)
+  → Mean MAE=5.96°C  saved: rectangle_bayesian_k5_dim2_ws_500ep.pt
+  [1/20] [0.0→1.5s]  k=1  cold(800ep)  rectangle/nsga2
+      MAE=12.32°C  L2=0.0939  (9s, 800ep)
+  [2/20] [1.5→3.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=13.33°C  L2=0.0871  (6s, 500ep)
+  [3/20] [3.0→4.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=8.96°C  L2=0.0470  (5s, 500ep)
+  [4/20] [4.5→6.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=5.51°C  L2=0.0239  (6s, 500ep)
+  [5/20] [6.0→7.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=2.21°C  L2=0.0251  (6s, 500ep)
+  [6/20] [7.5→9.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=2.37°C  L2=0.0221  (6s, 500ep)
+  [7/20] [9.0→10.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=1.87°C  L2=0.0207  (5s, 500ep)
+  [8/20] [10.5→12.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=1.96°C  L2=0.0206  (5s, 500ep)
+  [9/20] [12.0→13.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=1.62°C  L2=0.0182  (5s, 500ep)
+  [10/20] [13.5→15.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=1.69°C  L2=0.0173  (5s, 500ep)
+  [11/20] [15.0→16.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=2.30°C  L2=0.0283  (6s, 500ep)
+  [12/20] [16.5→18.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=2.29°C  L2=0.0306  (5s, 500ep)
+  [13/20] [18.0→19.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=2.07°C  L2=0.0292  (5s, 500ep)
+  [14/20] [19.5→21.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=2.06°C  L2=0.0281  (5s, 500ep)
+  [15/20] [21.0→22.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=2.41°C  L2=0.0276  (6s, 500ep)
+  [16/20] [22.5→24.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=2.03°C  L2=0.0314  (6s, 500ep)
+  [17/20] [24.0→25.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=2.51°C  L2=0.0367  (6s, 500ep)
+  [18/20] [25.5→27.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=2.75°C  L2=0.0340  (6s, 500ep)
+  [19/20] [27.0→28.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=2.11°C  L2=0.0328  (6s, 500ep)
+  [20/20] [28.5→30.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=4.14°C  L2=0.0417  (6s, 500ep)
+  → Mean MAE=3.83°C  saved: rectangle_nsga2_k1_dim2_ws_500ep.pt
+  [1/10] [0.0→3.0s]  k=2  cold(800ep)  rectangle/nsga2
+      MAE=15.64°C  L2=0.1014  (9s, 800ep)
+  [2/10] [3.0→6.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=8.09°C  L2=0.0517  (6s, 500ep)
+  [3/10] [6.0→9.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=2.20°C  L2=0.0223  (6s, 500ep)
+  [4/10] [9.0→12.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=4.11°C  L2=0.0235  (6s, 500ep)
+  [5/10] [12.0→15.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=2.45°C  L2=0.0184  (6s, 500ep)
+  [6/10] [15.0→18.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=2.20°C  L2=0.0267  (6s, 500ep)
+  [7/10] [18.0→21.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=3.47°C  L2=0.0296  (6s, 500ep)
+  [8/10] [21.0→24.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=2.90°C  L2=0.0281  (5s, 500ep)
+  [9/10] [24.0→27.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=2.94°C  L2=0.0300  (5s, 500ep)
+  [10/10] [27.0→30.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=3.01°C  L2=0.0322  (5s, 500ep)
+  → Mean MAE=4.70°C  saved: rectangle_nsga2_k2_dim2_ws_500ep.pt
+  [1/7] [0.0→4.5s]  k=3  cold(800ep)  rectangle/nsga2
+      MAE=17.50°C  L2=0.1000  (9s, 800ep)
+  [2/7] [4.5→9.0s]  k=3  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=6.29°C  L2=0.0324  (6s, 500ep)
+  [3/7] [9.0→13.5s]  k=3  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=4.79°C  L2=0.0246  (6s, 500ep)
+  [4/7] [13.5→18.0s]  k=3  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=6.15°C  L2=0.0264  (6s, 500ep)
+  [5/7] [18.0→22.5s]  k=3  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=3.48°C  L2=0.0286  (6s, 500ep)
+  [6/7] [22.5→27.0s]  k=3  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=3.32°C  L2=0.0301  (6s, 500ep)
+  [7/7] [27.0→30.0s]  k=3  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=3.32°C  L2=0.0329  (6s, 500ep)
+  → Mean MAE=6.41°C  saved: rectangle_nsga2_k3_dim2_ws_500ep.pt
+  [1/5] [0.0→6.0s]  k=4  cold(800ep)  rectangle/nsga2
+      MAE=21.34°C  L2=0.1148  (9s, 800ep)
+  [2/5] [6.0→12.0s]  k=4  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=7.86°C  L2=0.0380  (6s, 500ep)
+  [3/5] [12.0→18.0s]  k=4  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=5.49°C  L2=0.0326  (5s, 500ep)
+  [4/5] [18.0→24.0s]  k=4  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=6.57°C  L2=0.0307  (6s, 500ep)
+  [5/5] [24.0→30.0s]  k=4  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=4.83°C  L2=0.0316  (5s, 500ep)
+  → Mean MAE=9.22°C  saved: rectangle_nsga2_k4_dim2_ws_500ep.pt
+  [1/4] [0.0→7.5s]  k=5  cold(800ep)  rectangle/nsga2
+      MAE=26.11°C  L2=0.1308  (9s, 800ep)
+  [2/4] [7.5→15.0s]  k=5  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=10.50°C  L2=0.0429  (6s, 500ep)
+  [3/4] [15.0→22.5s]  k=5  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=8.26°C  L2=0.0376  (6s, 500ep)
+  [4/4] [22.5→30.0s]  k=5  warm(500ep,lr=1e-03)  rectangle/nsga2
+      MAE=6.25°C  L2=0.0328  (6s, 500ep)
+  → Mean MAE=12.78°C  saved: rectangle_nsga2_k5_dim2_ws_500ep.pt
+  [1/20] [0.0→1.5s]  k=1  cold(800ep)  rectangle/nsga3
+      MAE=11.75°C  L2=0.0945  (9s, 800ep)
+  [2/20] [1.5→3.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=12.62°C  L2=0.0793  (6s, 500ep)
+  [3/20] [3.0→4.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=7.76°C  L2=0.0378  (6s, 500ep)
+  [4/20] [4.5→6.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=3.46°C  L2=0.0156  (6s, 500ep)
+  [5/20] [6.0→7.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=2.11°C  L2=0.0242  (5s, 500ep)
+  [6/20] [7.5→9.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=1.78°C  L2=0.0216  (5s, 500ep)
+  [7/20] [9.0→10.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=1.76°C  L2=0.0204  (6s, 500ep)
+  [8/20] [10.5→12.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=1.53°C  L2=0.0187  (5s, 500ep)
+  [9/20] [12.0→13.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=1.78°C  L2=0.0192  (6s, 500ep)
+  [10/20] [13.5→15.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=1.54°C  L2=0.0178  (5s, 500ep)
+  [11/20] [15.0→16.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=2.23°C  L2=0.0317  (6s, 500ep)
+  [12/20] [16.5→18.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=2.21°C  L2=0.0309  (6s, 500ep)
+  [13/20] [18.0→19.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=1.97°C  L2=0.0295  (5s, 500ep)
+  [14/20] [19.5→21.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=1.76°C  L2=0.0280  (5s, 500ep)
+  [15/20] [21.0→22.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=1.72°C  L2=0.0271  (5s, 500ep)
+  [16/20] [22.5→24.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=2.29°C  L2=0.0317  (6s, 500ep)
+  [17/20] [24.0→25.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=2.09°C  L2=0.0306  (5s, 500ep)
+  [18/20] [25.5→27.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=2.28°C  L2=0.0340  (5s, 500ep)
+  [19/20] [27.0→28.5s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=2.08°C  L2=0.0327  (5s, 500ep)
+  [20/20] [28.5→30.0s]  k=1  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=2.21°C  L2=0.0322  (5s, 500ep)
+  → Mean MAE=3.35°C  saved: rectangle_nsga3_k1_dim2_ws_500ep.pt
+  [1/10] [0.0→3.0s]  k=2  cold(800ep)  rectangle/nsga3
+      MAE=15.06°C  L2=0.0990  (8s, 800ep)
+  [2/10] [3.0→6.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=8.68°C  L2=0.0469  (5s, 500ep)
+  [3/10] [6.0→9.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=4.93°C  L2=0.0266  (5s, 500ep)
+  [4/10] [9.0→12.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=4.42°C  L2=0.0236  (6s, 500ep)
+  [5/10] [12.0→15.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=3.39°C  L2=0.0202  (5s, 500ep)
+  [6/10] [15.0→18.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=3.12°C  L2=0.0319  (5s, 500ep)
+  [7/10] [18.0→21.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=3.28°C  L2=0.0294  (6s, 500ep)
+  [8/10] [21.0→24.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=2.63°C  L2=0.0279  (6s, 500ep)
+  [9/10] [24.0→27.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=2.56°C  L2=0.0298  (5s, 500ep)
+  [10/10] [27.0→30.0s]  k=2  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=2.69°C  L2=0.0322  (5s, 500ep)
+  → Mean MAE=5.08°C  saved: rectangle_nsga3_k2_dim2_ws_500ep.pt
+  [1/7] [0.0→4.5s]  k=3  cold(800ep)  rectangle/nsga3
+      MAE=18.07°C  L2=0.1067  (8s, 800ep)
+  [2/7] [4.5→9.0s]  k=3  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=10.15°C  L2=0.0455  (6s, 500ep)
+  [3/7] [9.0→13.5s]  k=3  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=7.41°C  L2=0.0307  (6s, 500ep)
+  [4/7] [13.5→18.0s]  k=3  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=3.23°C  L2=0.0176  (6s, 500ep)
+  [5/7] [18.0→22.5s]  k=3  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=3.79°C  L2=0.0289  (6s, 500ep)
+  [6/7] [22.5→27.0s]  k=3  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=3.01°C  L2=0.0298  (6s, 500ep)
+  [7/7] [27.0→30.0s]  k=3  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=2.67°C  L2=0.0321  (6s, 500ep)
+  → Mean MAE=6.91°C  saved: rectangle_nsga3_k3_dim2_ws_500ep.pt
+  [1/5] [0.0→6.0s]  k=4  cold(800ep)  rectangle/nsga3
+      MAE=22.00°C  L2=0.1160  (9s, 800ep)
+  [2/5] [6.0→12.0s]  k=4  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=8.73°C  L2=0.0322  (6s, 500ep)
+  [3/5] [12.0→18.0s]  k=4  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=5.38°C  L2=0.0228  (6s, 500ep)
+  [4/5] [18.0→24.0s]  k=4  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=6.08°C  L2=0.0308  (6s, 500ep)
+  [5/5] [24.0→30.0s]  k=4  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=4.61°C  L2=0.0314  (5s, 500ep)
+  → Mean MAE=9.36°C  saved: rectangle_nsga3_k4_dim2_ws_500ep.pt
+  [1/4] [0.0→7.5s]  k=5  cold(800ep)  rectangle/nsga3
+      MAE=26.17°C  L2=0.1311  (9s, 800ep)
+  [2/4] [7.5→15.0s]  k=5  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=8.77°C  L2=0.0395  (6s, 500ep)
+  [3/4] [15.0→22.5s]  k=5  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=7.38°C  L2=0.0376  (6s, 500ep)
+  [4/4] [22.5→30.0s]  k=5  warm(500ep,lr=1e-03)  rectangle/nsga3
+      MAE=8.96°C  L2=0.0374  (6s, 500ep)
+  → Mean MAE=12.82°C  saved: rectangle_nsga3_k5_dim2_ws_500ep.pt
+  [1/20] [0.0→1.5s]  k=1  cold(800ep)  circle/bayesian
+      MAE=7.74°C  L2=0.0370  (9s, 800ep)
+  [2/20] [1.5→3.0s]  k=1  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=1.49°C  L2=0.0103  (6s, 500ep)
+  [3/20] [3.0→4.5s]  k=1  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=2.74°C  L2=0.0135  (6s, 500ep)
+  [4/20] [4.5→6.0s]  k=1  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=2.37°C  L2=0.0184  (6s, 500ep)
+  [5/20] [6.0→7.5s]  k=1  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=1.54°C  L2=0.0107  (6s, 500ep)
+  [6/20] [7.5→9.0s]  k=1  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=2.54°C  L2=0.0144  (6s, 500ep)
+  [7/20] [9.0→10.5s]  k=1  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=2.34°C  L2=0.0162  (6s, 500ep)
+  [8/20] [10.5→12.0s]  k=1  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=1.99°C  L2=0.0124  (6s, 500ep)
+  [9/20] [12.0→13.5s]  k=1  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=2.70°C  L2=0.0152  (6s, 500ep)
+  [10/20] [13.5→15.0s]  k=1  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=1.87°C  L2=0.0118  (6s, 500ep)
+  [11/20] [15.0→16.5s]  k=1  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=1.67°C  L2=0.0079  (6s, 500ep)
+  [12/20] [16.5→18.0s]  k=1  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=2.29°C  L2=0.0169  (6s, 500ep)
+  [13/20] [18.0→19.5s]  k=1  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=1.92°C  L2=0.0112  (6s, 500ep)
+  [14/20] [19.5→21.0s]  k=1  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=2.17°C  L2=0.0114  (6s, 500ep)
+  [15/20] [21.0→22.5s]  k=1  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=2.68°C  L2=0.0165  (6s, 500ep)
+  [16/20] [22.5→24.0s]  k=1  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=3.13°C  L2=0.0180  (6s, 500ep)
+  [17/20] [24.0→25.5s]  k=1  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=3.24°C  L2=0.0157  (6s, 500ep)
+  [18/20] [25.5→27.0s]  k=1  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=2.92°C  L2=0.0148  (6s, 500ep)
+  [19/20] [27.0→28.5s]  k=1  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=1.92°C  L2=0.0118  (6s, 500ep)
+  [20/20] [28.5→30.0s]  k=1  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=1.74°C  L2=0.0140  (7s, 500ep)
+  → Mean MAE=2.55°C  saved: circle_bayesian_k1_dim2_ws_500ep.pt
+  [1/10] [0.0→3.0s]  k=2  cold(800ep)  circle/bayesian
+      MAE=9.31°C  L2=0.0429  (10s, 800ep)
+  [2/10] [3.0→6.0s]  k=2  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=4.45°C  L2=0.0175  (6s, 500ep)
+  [3/10] [6.0→9.0s]  k=2  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=2.37°C  L2=0.0117  (6s, 500ep)
+  [4/10] [9.0→12.0s]  k=2  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=2.88°C  L2=0.0176  (6s, 500ep)
+  [5/10] [12.0→15.0s]  k=2  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=2.37°C  L2=0.0129  (6s, 500ep)
+  [6/10] [15.0→18.0s]  k=2  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=1.96°C  L2=0.0084  (6s, 500ep)
+  [7/10] [18.0→21.0s]  k=2  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=2.95°C  L2=0.0136  (6s, 500ep)
+  [8/10] [21.0→24.0s]  k=2  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=2.13°C  L2=0.0104  (6s, 500ep)
+  [9/10] [24.0→27.0s]  k=2  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=3.04°C  L2=0.0179  (6s, 500ep)
+  [10/10] [27.0→30.0s]  k=2  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=1.74°C  L2=0.0116  (6s, 500ep)
+  → Mean MAE=3.32°C  saved: circle_bayesian_k2_dim2_ws_500ep.pt
+  [1/7] [0.0→4.5s]  k=3  cold(800ep)  circle/bayesian
+      MAE=10.87°C  L2=0.0487  (10s, 800ep)
+  [2/7] [4.5→9.0s]  k=3  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=2.79°C  L2=0.0131  (6s, 500ep)
+  [3/7] [9.0→13.5s]  k=3  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=2.45°C  L2=0.0103  (6s, 500ep)
+  [4/7] [13.5→18.0s]  k=3  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=2.15°C  L2=0.0115  (6s, 500ep)
+  [5/7] [18.0→22.5s]  k=3  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=2.23°C  L2=0.0122  (6s, 500ep)
+  [6/7] [22.5→27.0s]  k=3  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=1.68°C  L2=0.0075  (6s, 500ep)
+  [7/7] [27.0→30.0s]  k=3  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=1.92°C  L2=0.0091  (5s, 500ep)
+  → Mean MAE=3.44°C  saved: circle_bayesian_k3_dim2_ws_500ep.pt
+  [1/5] [0.0→6.0s]  k=4  cold(800ep)  circle/bayesian
+      MAE=11.78°C  L2=0.0511  (9s, 800ep)
+  [2/5] [6.0→12.0s]  k=4  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=5.77°C  L2=0.0213  (6s, 500ep)
+  [3/5] [12.0→18.0s]  k=4  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=3.08°C  L2=0.0122  (6s, 500ep)
+  [4/5] [18.0→24.0s]  k=4  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=2.95°C  L2=0.0151  (6s, 500ep)
+  [5/5] [24.0→30.0s]  k=4  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=2.23°C  L2=0.0108  (6s, 500ep)
+  → Mean MAE=5.16°C  saved: circle_bayesian_k4_dim2_ws_500ep.pt
+  [1/4] [0.0→7.5s]  k=5  cold(800ep)  circle/bayesian
+      MAE=12.27°C  L2=0.0529  (10s, 800ep)
+  [2/4] [7.5→15.0s]  k=5  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=6.74°C  L2=0.0234  (6s, 500ep)
+  [3/4] [15.0→22.5s]  k=5  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=3.90°C  L2=0.0137  (6s, 500ep)
+  [4/4] [22.5→30.0s]  k=5  warm(500ep,lr=1e-03)  circle/bayesian
+      MAE=3.14°C  L2=0.0159  (6s, 500ep)
+  → Mean MAE=6.51°C  saved: circle_bayesian_k5_dim2_ws_500ep.pt
+  [1/20] [0.0→1.5s]  k=1  cold(800ep)  circle/nsga2
+      MAE=12.49°C  L2=0.0874  (9s, 800ep)
+  [2/20] [1.5→3.0s]  k=1  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=15.67°C  L2=0.0779  (6s, 500ep)
+  [3/20] [3.0→4.5s]  k=1  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=7.10°C  L2=0.0422  (6s, 500ep)
+  [4/20] [4.5→6.0s]  k=1  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=4.48°C  L2=0.0383  (6s, 500ep)
+  [5/20] [6.0→7.5s]  k=1  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=4.45°C  L2=0.0328  (6s, 500ep)
+  [6/20] [7.5→9.0s]  k=1  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=7.78°C  L2=0.0312  (6s, 500ep)
+  [7/20] [9.0→10.5s]  k=1  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=1.88°C  L2=0.0200  (6s, 500ep)
+  [8/20] [10.5→12.0s]  k=1  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=2.12°C  L2=0.0186  (6s, 500ep)
+  [9/20] [12.0→13.5s]  k=1  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=1.51°C  L2=0.0163  (6s, 500ep)
+  [10/20] [13.5→15.0s]  k=1  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=1.35°C  L2=0.0176  (6s, 500ep)
+  [11/20] [15.0→16.5s]  k=1  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=2.26°C  L2=0.0140  (6s, 500ep)
+  [12/20] [16.5→18.0s]  k=1  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=1.29°C  L2=0.0197  (5s, 500ep)
+  [13/20] [18.0→19.5s]  k=1  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=0.92°C  L2=0.0134  (5s, 500ep)
+  [14/20] [19.5→21.0s]  k=1  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=1.11°C  L2=0.0141  (6s, 500ep)
+  [15/20] [21.0→22.5s]  k=1  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=1.01°C  L2=0.0117  (6s, 500ep)
+  [16/20] [22.5→24.0s]  k=1  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=0.90°C  L2=0.0160  (5s, 500ep)
+  [17/20] [24.0→25.5s]  k=1  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=0.86°C  L2=0.0117  (5s, 500ep)
+  [18/20] [25.5→27.0s]  k=1  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=0.81°C  L2=0.0110  (5s, 500ep)
+  [19/20] [27.0→28.5s]  k=1  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=0.86°C  L2=0.0114  (5s, 500ep)
+  [20/20] [28.5→30.0s]  k=1  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=1.07°C  L2=0.0110  (6s, 500ep)
+  → Mean MAE=3.50°C  saved: circle_nsga2_k1_dim2_ws_500ep.pt
+  [1/10] [0.0→3.0s]  k=2  cold(800ep)  circle/nsga2
+      MAE=19.12°C  L2=0.1050  (9s, 800ep)
+  [2/10] [3.0→6.0s]  k=2  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=16.34°C  L2=0.0526  (6s, 500ep)
+  [3/10] [6.0→9.0s]  k=2  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=12.21°C  L2=0.0500  (6s, 500ep)
+  [4/10] [9.0→12.0s]  k=2  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=3.39°C  L2=0.0242  (6s, 500ep)
+  [5/10] [12.0→15.0s]  k=2  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=4.02°C  L2=0.0217  (6s, 500ep)
+  [6/10] [15.0→18.0s]  k=2  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=2.88°C  L2=0.0197  (6s, 500ep)
+  [7/10] [18.0→21.0s]  k=2  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=1.66°C  L2=0.0172  (6s, 500ep)
+  [8/10] [21.0→24.0s]  k=2  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=1.93°C  L2=0.0175  (6s, 500ep)
+  [9/10] [24.0→27.0s]  k=2  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=1.57°C  L2=0.0156  (5s, 500ep)
+  [10/10] [27.0→30.0s]  k=2  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=1.56°C  L2=0.0167  (5s, 500ep)
+  → Mean MAE=6.47°C  saved: circle_nsga2_k2_dim2_ws_500ep.pt
+  [1/7] [0.0→4.5s]  k=3  cold(800ep)  circle/nsga2
+      MAE=24.00°C  L2=0.1177  (9s, 800ep)
+  [2/7] [4.5→9.0s]  k=3  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=12.55°C  L2=0.0511  (6s, 500ep)
+  [3/7] [9.0→13.5s]  k=3  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=7.70°C  L2=0.0339  (6s, 500ep)
+  [4/7] [13.5→18.0s]  k=3  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=2.93°C  L2=0.0214  (6s, 500ep)
+  [5/7] [18.0→22.5s]  k=3  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=2.67°C  L2=0.0194  (6s, 500ep)
+  [6/7] [22.5→27.0s]  k=3  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=2.36°C  L2=0.0177  (6s, 500ep)
+  [7/7] [27.0→30.0s]  k=3  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=2.18°C  L2=0.0160  (6s, 500ep)
+  → Mean MAE=7.77°C  saved: circle_nsga2_k3_dim2_ws_500ep.pt
+  [1/5] [0.0→6.0s]  k=4  cold(800ep)  circle/nsga2
+      MAE=28.52°C  L2=0.1327  (9s, 800ep)
+  [2/5] [6.0→12.0s]  k=4  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=9.40°C  L2=0.0325  (6s, 500ep)
+  [3/5] [12.0→18.0s]  k=4  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=6.77°C  L2=0.0261  (6s, 500ep)
+  [4/5] [18.0→24.0s]  k=4  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=3.58°C  L2=0.0221  (6s, 500ep)
+  [5/5] [24.0→30.0s]  k=4  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=3.03°C  L2=0.0190  (6s, 500ep)
+  → Mean MAE=10.26°C  saved: circle_nsga2_k4_dim2_ws_500ep.pt
+  [1/4] [0.0→7.5s]  k=5  cold(800ep)  circle/nsga2
+      MAE=32.75°C  L2=0.1457  (8s, 800ep)
+  [2/4] [7.5→15.0s]  k=5  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=9.20°C  L2=0.0324  (6s, 500ep)
+  [3/4] [15.0→22.5s]  k=5  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=5.39°C  L2=0.0236  (6s, 500ep)
+  [4/4] [22.5→30.0s]  k=5  warm(500ep,lr=1e-03)  circle/nsga2
+      MAE=3.67°C  L2=0.0225  (5s, 500ep)
+  → Mean MAE=12.75°C  saved: circle_nsga2_k5_dim2_ws_500ep.pt
+  [1/20] [0.0→1.5s]  k=1  cold(800ep)  circle/nsga3
+      MAE=12.48°C  L2=0.0898  (8s, 800ep)
+  [2/20] [1.5→3.0s]  k=1  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=17.01°C  L2=0.0869  (5s, 500ep)
+  [3/20] [3.0→4.5s]  k=1  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=12.56°C  L2=0.0546  (6s, 500ep)
+  [4/20] [4.5→6.0s]  k=1  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=2.33°C  L2=0.0222  (5s, 500ep)
+  [5/20] [6.0→7.5s]  k=1  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=1.85°C  L2=0.0209  (5s, 500ep)
+  [6/20] [7.5→9.0s]  k=1  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=2.34°C  L2=0.0174  (6s, 500ep)
+  [7/20] [9.0→10.5s]  k=1  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=2.85°C  L2=0.0162  (5s, 500ep)
+  [8/20] [10.5→12.0s]  k=1  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=1.46°C  L2=0.0151  (5s, 500ep)
+  [9/20] [12.0→13.5s]  k=1  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=1.45°C  L2=0.0135  (5s, 500ep)
+  [10/20] [13.5→15.0s]  k=1  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=1.35°C  L2=0.0139  (6s, 500ep)
+  [11/20] [15.0→16.5s]  k=1  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=1.31°C  L2=0.0103  (6s, 500ep)
+  [12/20] [16.5→18.0s]  k=1  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=1.38°C  L2=0.0212  (5s, 500ep)
+  [13/20] [18.0→19.5s]  k=1  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=1.08°C  L2=0.0106  (5s, 500ep)
+  [14/20] [19.5→21.0s]  k=1  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=0.99°C  L2=0.0121  (6s, 500ep)
+  [15/20] [21.0→22.5s]  k=1  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=0.84°C  L2=0.0085  (6s, 500ep)
+  [16/20] [22.5→24.0s]  k=1  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=1.02°C  L2=0.0132  (5s, 500ep)
+  [17/20] [24.0→25.5s]  k=1  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=0.85°C  L2=0.0091  (6s, 500ep)
+  [18/20] [25.5→27.0s]  k=1  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=0.72°C  L2=0.0074  (6s, 500ep)
+  [19/20] [27.0→28.5s]  k=1  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=0.79°C  L2=0.0085  (5s, 500ep)
+  [20/20] [28.5→30.0s]  k=1  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=1.18°C  L2=0.0236  (5s, 500ep)
+  → Mean MAE=3.29°C  saved: circle_nsga3_k1_dim2_ws_500ep.pt
+  [1/10] [0.0→3.0s]  k=2  cold(800ep)  circle/nsga3
+      MAE=19.00°C  L2=0.1030  (8s, 800ep)
+  [2/10] [3.0→6.0s]  k=2  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=8.51°C  L2=0.0346  (6s, 500ep)
+  [3/10] [6.0→9.0s]  k=2  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=5.08°C  L2=0.0261  (6s, 500ep)
+  [4/10] [9.0→12.0s]  k=2  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=4.07°C  L2=0.0237  (6s, 500ep)
+  [5/10] [12.0→15.0s]  k=2  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=2.63°C  L2=0.0202  (6s, 500ep)
+  [6/10] [15.0→18.0s]  k=2  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=2.36°C  L2=0.0168  (6s, 500ep)
+  [7/10] [18.0→21.0s]  k=2  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=2.06°C  L2=0.0159  (5s, 500ep)
+  [8/10] [21.0→24.0s]  k=2  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=2.09°C  L2=0.0169  (6s, 500ep)
+  [9/10] [24.0→27.0s]  k=2  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=1.90°C  L2=0.0143  (5s, 500ep)
+  [10/10] [27.0→30.0s]  k=2  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=1.89°C  L2=0.0156  (6s, 500ep)
+  → Mean MAE=4.96°C  saved: circle_nsga3_k2_dim2_ws_500ep.pt
+  [1/7] [0.0→4.5s]  k=3  cold(800ep)  circle/nsga3
+      MAE=23.76°C  L2=0.1167  (8s, 800ep)
+  [2/7] [4.5→9.0s]  k=3  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=7.80°C  L2=0.0317  (6s, 500ep)
+  [3/7] [9.0→13.5s]  k=3  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=3.99°C  L2=0.0210  (6s, 500ep)
+  [4/7] [13.5→18.0s]  k=3  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=2.88°C  L2=0.0217  (6s, 500ep)
+  [5/7] [18.0→22.5s]  k=3  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=2.24°C  L2=0.0179  (6s, 500ep)
+  [6/7] [22.5→27.0s]  k=3  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=2.00°C  L2=0.0164  (6s, 500ep)
+  [7/7] [27.0→30.0s]  k=3  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=1.33°C  L2=0.0153  (6s, 500ep)
+  → Mean MAE=6.29°C  saved: circle_nsga3_k3_dim2_ws_500ep.pt
+  [1/5] [0.0→6.0s]  k=4  cold(800ep)  circle/nsga3
+      MAE=28.50°C  L2=0.1324  (8s, 800ep)
+  [2/5] [6.0→12.0s]  k=4  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=16.83°C  L2=0.0630  (6s, 500ep)
+  [3/5] [12.0→18.0s]  k=4  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=10.02°C  L2=0.0371  (6s, 500ep)
+  [4/5] [18.0→24.0s]  k=4  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=9.04°C  L2=0.0329  (6s, 500ep)
+  [5/5] [24.0→30.0s]  k=4  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=3.30°C  L2=0.0189  (6s, 500ep)
+  → Mean MAE=13.54°C  saved: circle_nsga3_k4_dim2_ws_500ep.pt
+  [1/4] [0.0→7.5s]  k=5  cold(800ep)  circle/nsga3
+      MAE=32.99°C  L2=0.1465  (9s, 800ep)
+  [2/4] [7.5→15.0s]  k=5  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=11.57°C  L2=0.0475  (6s, 500ep)
+  [3/4] [15.0→22.5s]  k=5  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=7.13°C  L2=0.0271  (6s, 500ep)
+  [4/4] [22.5→30.0s]  k=5  warm(500ep,lr=1e-03)  circle/nsga3
+      MAE=4.96°C  L2=0.0243  (5s, 500ep)
+  → Mean MAE=14.16°C  saved: circle_nsga3_k5_dim2_ws_500ep.pt
+  LShape2D: solving FD reference on 40×40 grid…
+  [1/20] [0.0→1.5s]  k=1  cold(800ep)  lshape/bayesian
+      MAE=9.78°C  L2=0.0565  (9s, 800ep)
+  [2/20] [1.5→3.0s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=3.77°C  L2=0.0226  (6s, 500ep)
+  [3/20] [3.0→4.5s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=2.64°C  L2=0.0159  (6s, 500ep)
+  [4/20] [4.5→6.0s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=2.49°C  L2=0.0239  (6s, 500ep)
+  [5/20] [6.0→7.5s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=1.52°C  L2=0.0065  (6s, 500ep)
+  [6/20] [7.5→9.0s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=2.47°C  L2=0.0222  (6s, 500ep)
+  [7/20] [9.0→10.5s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=1.71°C  L2=0.0082  (6s, 500ep)
+  [8/20] [10.5→12.0s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=2.04°C  L2=0.0233  (6s, 500ep)
+  [9/20] [12.0→13.5s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=1.12°C  L2=0.0045  (6s, 500ep)
+  [10/20] [13.5→15.0s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=1.04°C  L2=0.0058  (6s, 500ep)
+  [11/20] [15.0→16.5s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=1.22°C  L2=0.0128  (6s, 500ep)
+  [12/20] [16.5→18.0s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=1.00°C  L2=0.0074  (6s, 500ep)
+  [13/20] [18.0→19.5s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=0.88°C  L2=0.0043  (6s, 500ep)
+  [14/20] [19.5→21.0s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=1.52°C  L2=0.0190  (6s, 500ep)
+  [15/20] [21.0→22.5s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=1.46°C  L2=0.0193  (6s, 500ep)
+  [16/20] [22.5→24.0s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=0.96°C  L2=0.0087  (6s, 500ep)
+  [17/20] [24.0→25.5s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=1.28°C  L2=0.0146  (6s, 500ep)
+  [18/20] [25.5→27.0s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=1.88°C  L2=0.0262  (6s, 500ep)
+  [19/20] [27.0→28.5s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=1.12°C  L2=0.0126  (6s, 500ep)
+  [20/20] [28.5→30.0s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=1.37°C  L2=0.0177  (6s, 500ep)
+  → Mean MAE=2.06°C  saved: lshape_bayesian_k1_dim2_ws_500ep.pt
+  LShape2D: solving FD reference on 40×40 grid…
+  [1/10] [0.0→3.0s]  k=2  cold(800ep)  lshape/bayesian
+      MAE=8.39°C  L2=0.0464  (10s, 800ep)
+  [2/10] [3.0→6.0s]  k=2  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=5.11°C  L2=0.0282  (6s, 500ep)
+  [3/10] [6.0→9.0s]  k=2  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=3.11°C  L2=0.0147  (6s, 500ep)
+  [4/10] [9.0→12.0s]  k=2  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=2.66°C  L2=0.0150  (6s, 500ep)
+  [5/10] [12.0→15.0s]  k=2  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=1.93°C  L2=0.0085  (6s, 500ep)
+  [6/10] [15.0→18.0s]  k=2  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=2.07°C  L2=0.0179  (7s, 500ep)
+  [7/10] [18.0→21.0s]  k=2  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=1.70°C  L2=0.0098  (6s, 500ep)
+  [8/10] [21.0→24.0s]  k=2  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=2.19°C  L2=0.0214  (6s, 500ep)
+  [9/10] [24.0→27.0s]  k=2  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=1.32°C  L2=0.0099  (6s, 500ep)
+  [10/10] [27.0→30.0s]  k=2  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=1.70°C  L2=0.0175  (6s, 500ep)
+  → Mean MAE=3.02°C  saved: lshape_bayesian_k2_dim2_ws_500ep.pt
+  LShape2D: solving FD reference on 40×40 grid…
+  [1/7] [0.0→4.5s]  k=3  cold(800ep)  lshape/bayesian
+      MAE=9.76°C  L2=0.0507  (10s, 800ep)
+  [2/7] [4.5→9.0s]  k=3  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=4.79°C  L2=0.0194  (6s, 500ep)
+  [3/7] [9.0→13.5s]  k=3  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=3.58°C  L2=0.0148  (6s, 500ep)
+  [4/7] [13.5→18.0s]  k=3  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=2.90°C  L2=0.0149  (6s, 500ep)
+  [5/7] [18.0→22.5s]  k=3  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=2.66°C  L2=0.0093  (6s, 500ep)
+  [6/7] [22.5→27.0s]  k=3  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=2.10°C  L2=0.0124  (6s, 500ep)
+  [7/7] [27.0→30.0s]  k=3  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=1.51°C  L2=0.0135  (6s, 500ep)
+  → Mean MAE=3.90°C  saved: lshape_bayesian_k3_dim2_ws_500ep.pt
+  LShape2D: solving FD reference on 40×40 grid…
+  [1/5] [0.0→6.0s]  k=4  cold(800ep)  lshape/bayesian
+      MAE=9.86°C  L2=0.0509  (10s, 800ep)
+  [2/5] [6.0→12.0s]  k=4  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=4.94°C  L2=0.0228  (7s, 500ep)
+  [3/5] [12.0→18.0s]  k=4  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=3.17°C  L2=0.0149  (6s, 500ep)
+  [4/5] [18.0→24.0s]  k=4  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=2.66°C  L2=0.0114  (6s, 500ep)
+  [5/5] [24.0→30.0s]  k=4  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=2.50°C  L2=0.0092  (6s, 500ep)
+  → Mean MAE=4.62°C  saved: lshape_bayesian_k4_dim2_ws_500ep.pt
+  LShape2D: solving FD reference on 40×40 grid…
+  [1/4] [0.0→7.5s]  k=5  cold(800ep)  lshape/bayesian
+      MAE=10.95°C  L2=0.0543  (10s, 800ep)
+  [2/4] [7.5→15.0s]  k=5  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=5.25°C  L2=0.0208  (6s, 500ep)
+  [3/4] [15.0→22.5s]  k=5  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=3.89°C  L2=0.0164  (6s, 500ep)
+  [4/4] [22.5→30.0s]  k=5  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=3.12°C  L2=0.0159  (6s, 500ep)
+  → Mean MAE=5.80°C  saved: lshape_bayesian_k5_dim2_ws_500ep.pt
+  LShape2D: solving FD reference on 40×40 grid…
+  [1/20] [0.0→1.5s]  k=1  cold(800ep)  lshape/nsga2
+      MAE=24.03°C  L2=0.1265  (8s, 800ep)
+  [2/20] [1.5→3.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=7.44°C  L2=0.0268  (6s, 500ep)
+  [3/20] [3.0→4.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=3.98°C  L2=0.0173  (6s, 500ep)
+  [4/20] [4.5→6.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=2.45°C  L2=0.0110  (6s, 500ep)
+  [5/20] [6.0→7.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=2.16°C  L2=0.0100  (6s, 500ep)
+  [6/20] [7.5→9.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=2.77°C  L2=0.0135  (6s, 500ep)
+  [7/20] [9.0→10.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=2.29°C  L2=0.0114  (6s, 500ep)
+  [8/20] [10.5→12.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=2.56°C  L2=0.0176  (6s, 500ep)
+  [9/20] [12.0→13.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=1.89°C  L2=0.0109  (5s, 500ep)
+  [10/20] [13.5→15.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=1.88°C  L2=0.0120  (5s, 500ep)
+  [11/20] [15.0→16.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=2.55°C  L2=0.0144  (6s, 500ep)
+  [12/20] [16.5→18.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=2.10°C  L2=0.0131  (5s, 500ep)
+  [13/20] [18.0→19.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=2.23°C  L2=0.0142  (5s, 500ep)
+  [14/20] [19.5→21.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=1.91°C  L2=0.0115  (5s, 500ep)
+  [15/20] [21.0→22.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=2.11°C  L2=0.0103  (6s, 500ep)
+  [16/20] [22.5→24.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=1.73°C  L2=0.0077  (6s, 500ep)
+  [17/20] [24.0→25.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=1.64°C  L2=0.0103  (5s, 500ep)
+  [18/20] [25.5→27.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=1.44°C  L2=0.0080  (5s, 500ep)
+  [19/20] [27.0→28.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=1.17°C  L2=0.0079  (6s, 500ep)
+  [20/20] [28.5→30.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=1.29°C  L2=0.0076  (5s, 500ep)
+  → Mean MAE=3.48°C  saved: lshape_nsga2_k1_dim2_ws_500ep.pt
+  LShape2D: solving FD reference on 40×40 grid…
+  [1/10] [0.0→3.0s]  k=2  cold(800ep)  lshape/nsga2
+      MAE=30.76°C  L2=0.1492  (9s, 800ep)
+  [2/10] [3.0→6.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=8.98°C  L2=0.0279  (6s, 500ep)
+  [3/10] [6.0→9.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=4.47°C  L2=0.0146  (5s, 500ep)
+  [4/10] [9.0→12.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=3.22°C  L2=0.0112  (5s, 500ep)
+  [5/10] [12.0→15.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=2.82°C  L2=0.0115  (6s, 500ep)
+  [6/10] [15.0→18.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=2.91°C  L2=0.0143  (6s, 500ep)
+  [7/10] [18.0→21.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=2.48°C  L2=0.0125  (5s, 500ep)
+  [8/10] [21.0→24.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=2.77°C  L2=0.0139  (6s, 500ep)
+  [9/10] [24.0→27.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=2.30°C  L2=0.0128  (6s, 500ep)
+  [10/10] [27.0→30.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=2.39°C  L2=0.0117  (6s, 500ep)
+  → Mean MAE=6.31°C  saved: lshape_nsga2_k2_dim2_ws_500ep.pt
+  LShape2D: solving FD reference on 40×40 grid…
+  [1/7] [0.0→4.5s]  k=3  cold(800ep)  lshape/nsga2
+      MAE=39.93°C  L2=0.1562  (9s, 800ep)
+  [2/7] [4.5→9.0s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=6.03°C  L2=0.0221  (6s, 500ep)
+  [3/7] [9.0→13.5s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=4.03°C  L2=0.0172  (6s, 500ep)
+  [4/7] [13.5→18.0s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=3.12°C  L2=0.0126  (6s, 500ep)
+  [5/7] [18.0→22.5s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=2.87°C  L2=0.0127  (6s, 500ep)
+  [6/7] [22.5→27.0s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=2.55°C  L2=0.0148  (5s, 500ep)
+  [7/7] [27.0→30.0s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=1.98°C  L2=0.0117  (6s, 500ep)
+  → Mean MAE=8.64°C  saved: lshape_nsga2_k3_dim2_ws_500ep.pt
+  LShape2D: solving FD reference on 40×40 grid…
+  [1/5] [0.0→6.0s]  k=4  cold(800ep)  lshape/nsga2
+      MAE=38.00°C  L2=0.1678  (9s, 800ep)
+  [2/5] [6.0→12.0s]  k=4  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=12.06°C  L2=0.0352  (6s, 500ep)
+  [3/5] [12.0→18.0s]  k=4  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=6.20°C  L2=0.0202  (6s, 500ep)
+  [4/5] [18.0→24.0s]  k=4  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=4.18°C  L2=0.0147  (6s, 500ep)
+  [5/5] [24.0→30.0s]  k=4  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=3.42°C  L2=0.0124  (6s, 500ep)
+  → Mean MAE=12.77°C  saved: lshape_nsga2_k4_dim2_ws_500ep.pt
+  LShape2D: solving FD reference on 40×40 grid…
+  [1/4] [0.0→7.5s]  k=5  cold(800ep)  lshape/nsga2
+      MAE=45.23°C  L2=0.1801  (9s, 800ep)
+  [2/4] [7.5→15.0s]  k=5  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=12.80°C  L2=0.0396  (6s, 500ep)
+  [3/4] [15.0→22.5s]  k=5  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=6.82°C  L2=0.0224  (6s, 500ep)
+  [4/4] [22.5→30.0s]  k=5  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=4.30°C  L2=0.0160  (6s, 500ep)
+  → Mean MAE=17.29°C  saved: lshape_nsga2_k5_dim2_ws_500ep.pt
+  LShape2D: solving FD reference on 40×40 grid…
+  [1/20] [0.0→1.5s]  k=1  cold(800ep)  lshape/nsga3
+      MAE=28.33°C  L2=0.1315  (9s, 800ep)
+  [2/20] [1.5→3.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=7.40°C  L2=0.0257  (6s, 500ep)
+  [3/20] [3.0→4.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=5.28°C  L2=0.0185  (6s, 500ep)
+  [4/20] [4.5→6.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=2.56°C  L2=0.0116  (6s, 500ep)
+  [5/20] [6.0→7.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=2.35°C  L2=0.0102  (6s, 500ep)
+  [6/20] [7.5→9.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=2.56°C  L2=0.0128  (6s, 500ep)
+  [7/20] [9.0→10.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=2.29°C  L2=0.0126  (6s, 500ep)
+  [8/20] [10.5→12.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=2.60°C  L2=0.0160  (6s, 500ep)
+  [9/20] [12.0→13.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=1.92°C  L2=0.0107  (6s, 500ep)
+  [10/20] [13.5→15.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=1.90°C  L2=0.0120  (6s, 500ep)
+  [11/20] [15.0→16.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=2.49°C  L2=0.0142  (6s, 500ep)
+  [12/20] [16.5→18.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=2.16°C  L2=0.0136  (6s, 500ep)
+  [13/20] [18.0→19.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=2.04°C  L2=0.0146  (6s, 500ep)
+  [14/20] [19.5→21.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=1.82°C  L2=0.0124  (6s, 500ep)
+  [15/20] [21.0→22.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=2.31°C  L2=0.0105  (6s, 500ep)
+  [16/20] [22.5→24.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=2.11°C  L2=0.0116  (6s, 500ep)
+  [17/20] [24.0→25.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=2.33°C  L2=0.0123  (6s, 500ep)
+  [18/20] [25.5→27.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=2.22°C  L2=0.0117  (6s, 500ep)
+  [19/20] [27.0→28.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=1.63°C  L2=0.0106  (6s, 500ep)
+  [20/20] [28.5→30.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=1.71°C  L2=0.0113  (5s, 500ep)
+  → Mean MAE=3.90°C  saved: lshape_nsga3_k1_dim2_ws_500ep.pt
+  LShape2D: solving FD reference on 40×40 grid…
+  [1/10] [0.0→3.0s]  k=2  cold(800ep)  lshape/nsga3
+      MAE=37.40°C  L2=0.1418  (9s, 800ep)
+  [2/10] [3.0→6.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=5.01°C  L2=0.0188  (6s, 500ep)
+  [3/10] [6.0→9.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=4.03°C  L2=0.0158  (6s, 500ep)
+  [4/10] [9.0→12.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=3.66°C  L2=0.0135  (6s, 500ep)
+  [5/10] [12.0→15.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=3.29°C  L2=0.0121  (6s, 500ep)
+  [6/10] [15.0→18.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=3.10°C  L2=0.0148  (5s, 500ep)
+  [7/10] [18.0→21.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=2.77°C  L2=0.0120  (5s, 500ep)
+  [8/10] [21.0→24.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=2.92°C  L2=0.0152  (5s, 500ep)
+  [9/10] [24.0→27.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=2.48°C  L2=0.0112  (6s, 500ep)
+  [10/10] [27.0→30.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=2.48°C  L2=0.0112  (6s, 500ep)
+  → Mean MAE=6.71°C  saved: lshape_nsga3_k2_dim2_ws_500ep.pt
+  LShape2D: solving FD reference on 40×40 grid…
+  [1/7] [0.0→4.5s]  k=3  cold(800ep)  lshape/nsga3
+      MAE=36.82°C  L2=0.1569  (9s, 800ep)
+  [2/7] [4.5→9.0s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=9.51°C  L2=0.0312  (6s, 500ep)
+  [3/7] [9.0→13.5s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=5.25°C  L2=0.0179  (6s, 500ep)
+  [4/7] [13.5→18.0s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=4.32°C  L2=0.0149  (6s, 500ep)
+  [5/7] [18.0→22.5s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=3.30°C  L2=0.0130  (5s, 500ep)
+  [6/7] [22.5→27.0s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=3.03°C  L2=0.0150  (5s, 500ep)
+  [7/7] [27.0→30.0s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=2.08°C  L2=0.0120  (5s, 500ep)
+  → Mean MAE=9.19°C  saved: lshape_nsga3_k3_dim2_ws_500ep.pt
+  LShape2D: solving FD reference on 40×40 grid…
+  [1/5] [0.0→6.0s]  k=4  cold(800ep)  lshape/nsga3
+      MAE=39.18°C  L2=0.1744  (8s, 800ep)
+  [2/5] [6.0→12.0s]  k=4  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=11.28°C  L2=0.0342  (5s, 500ep)
+  [3/5] [12.0→18.0s]  k=4  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=6.61°C  L2=0.0216  (5s, 500ep)
+  [4/5] [18.0→24.0s]  k=4  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=4.19°C  L2=0.0141  (6s, 500ep)
+  [5/5] [24.0→30.0s]  k=4  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=3.20°C  L2=0.0120  (6s, 500ep)
+  → Mean MAE=12.89°C  saved: lshape_nsga3_k4_dim2_ws_500ep.pt
+  LShape2D: solving FD reference on 40×40 grid…
+  [1/4] [0.0→7.5s]  k=5  cold(800ep)  lshape/nsga3
+      MAE=47.06°C  L2=0.1947  (9s, 800ep)
+  [2/4] [7.5→15.0s]  k=5  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=13.41°C  L2=0.0390  (6s, 500ep)
+  [3/4] [15.0→22.5s]  k=5  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=8.37°C  L2=0.0264  (6s, 500ep)
+  [4/4] [22.5→30.0s]  k=5  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=4.63°C  L2=0.0162  (6s, 500ep)
+  → Mean MAE=18.37°C  saved: lshape_nsga3_k5_dim2_ws_500ep.pt
+  [1/20] [0.0→1.5s]  k=1  cold(800ep)  rectangular/bayesian
+      MAE=16.87°C  L2=0.0756  (10s, 800ep)
+  [2/20] [1.5→3.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=14.11°C  L2=0.0608  (7s, 500ep)
+  [3/20] [3.0→4.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=11.32°C  L2=0.0579  (7s, 500ep)
+  [4/20] [4.5→6.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=9.89°C  L2=0.0517  (7s, 500ep)
+  [5/20] [6.0→7.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=9.11°C  L2=0.0529  (7s, 500ep)
+  [6/20] [7.5→9.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=10.00°C  L2=0.0748  (7s, 500ep)
+  [7/20] [9.0→10.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=9.83°C  L2=0.0705  (7s, 500ep)
+  [8/20] [10.5→12.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=10.17°C  L2=0.0763  (8s, 500ep)
+  [9/20] [12.0→13.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=10.23°C  L2=0.0787  (7s, 500ep)
+  [10/20] [13.5→15.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=10.70°C  L2=0.0830  (7s, 500ep)
+  [11/20] [15.0→16.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=7.38°C  L2=0.0653  (7s, 500ep)
+  [12/20] [16.5→18.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=8.11°C  L2=0.0630  (7s, 500ep)
+  [13/20] [18.0→19.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=6.42°C  L2=0.0571  (7s, 500ep)
+  [14/20] [19.5→21.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=5.99°C  L2=0.0554  (7s, 500ep)
+  [15/20] [21.0→22.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=5.67°C  L2=0.0458  (7s, 500ep)
+  [16/20] [22.5→24.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=5.20°C  L2=0.0437  (7s, 500ep)
+  [17/20] [24.0→25.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=5.41°C  L2=0.0458  (7s, 500ep)
+  [18/20] [25.5→27.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=6.09°C  L2=0.0462  (7s, 500ep)
+  [19/20] [27.0→28.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=4.64°C  L2=0.0403  (6s, 500ep)
+  [20/20] [28.5→30.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=5.92°C  L2=0.0536  (7s, 500ep)
+  → Mean MAE=8.65°C  saved: rectangular_bayesian_k1_dim3_ws_500ep.pt
+  [1/10] [0.0→3.0s]  k=2  cold(800ep)  rectangular/bayesian
+      MAE=16.70°C  L2=0.0677  (11s, 800ep)
+  [2/10] [3.0→6.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=11.73°C  L2=0.0517  (7s, 500ep)
+  [3/10] [6.0→9.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=11.03°C  L2=0.0670  (6s, 500ep)
+  [4/10] [9.0→12.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=9.92°C  L2=0.0498  (7s, 500ep)
+  [5/10] [12.0→15.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=9.54°C  L2=0.0595  (7s, 500ep)
+  [6/10] [15.0→18.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=10.21°C  L2=0.0666  (7s, 500ep)
+  [7/10] [18.0→21.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=9.58°C  L2=0.0564  (7s, 500ep)
+  [8/10] [21.0→24.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=9.19°C  L2=0.0648  (7s, 500ep)
+  [9/10] [24.0→27.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=10.09°C  L2=0.0725  (7s, 500ep)
+  [10/10] [27.0→30.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=5.97°C  L2=0.0392  (7s, 500ep)
+  → Mean MAE=10.40°C  saved: rectangular_bayesian_k2_dim3_ws_500ep.pt
+  [1/7] [0.0→4.5s]  k=3  cold(800ep)  rectangular/bayesian
+      MAE=18.96°C  L2=0.0694  (11s, 800ep)
+  [2/7] [4.5→9.0s]  k=3  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=11.26°C  L2=0.0486  (7s, 500ep)
+  [3/7] [9.0→13.5s]  k=3  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=10.22°C  L2=0.0650  (7s, 500ep)
+  [4/7] [13.5→18.0s]  k=3  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=10.11°C  L2=0.0589  (7s, 500ep)
+  [5/7] [18.0→22.5s]  k=3  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=8.74°C  L2=0.0554  (7s, 500ep)
+  [6/7] [22.5→27.0s]  k=3  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=7.55°C  L2=0.0451  (7s, 500ep)
+  [7/7] [27.0→30.0s]  k=3  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=7.02°C  L2=0.0426  (7s, 500ep)
+  → Mean MAE=10.55°C  saved: rectangular_bayesian_k3_dim3_ws_500ep.pt
+  [1/5] [0.0→6.0s]  k=4  cold(800ep)  rectangular/bayesian
+      MAE=19.31°C  L2=0.0708  (10s, 800ep)
+  [2/5] [6.0→12.0s]  k=4  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=14.24°C  L2=0.0604  (7s, 500ep)
+  [3/5] [12.0→18.0s]  k=4  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=11.29°C  L2=0.0646  (7s, 500ep)
+  [4/5] [18.0→24.0s]  k=4  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=10.49°C  L2=0.0424  (7s, 500ep)
+  [5/5] [24.0→30.0s]  k=4  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=7.76°C  L2=0.0391  (6s, 500ep)
+  → Mean MAE=12.62°C  saved: rectangular_bayesian_k4_dim3_ws_500ep.pt
+  [1/4] [0.0→7.5s]  k=5  cold(800ep)  rectangular/bayesian
+      MAE=20.96°C  L2=0.0766  (10s, 800ep)
+  [2/4] [7.5→15.0s]  k=5  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=14.23°C  L2=0.0606  (6s, 500ep)
+  [3/4] [15.0→22.5s]  k=5  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=10.08°C  L2=0.0559  (7s, 500ep)
+  [4/4] [22.5→30.0s]  k=5  warm(500ep,lr=1e-03)  rectangular/bayesian
+      MAE=10.16°C  L2=0.0575  (6s, 500ep)
+  → Mean MAE=13.86°C  saved: rectangular_bayesian_k5_dim3_ws_500ep.pt
+  [1/20] [0.0→1.5s]  k=1  cold(800ep)  rectangular/nsga2
+      MAE=30.10°C  L2=0.1259  (9s, 800ep)
+  [2/20] [1.5→3.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=25.45°C  L2=0.0923  (7s, 500ep)
+  [3/20] [3.0→4.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=20.08°C  L2=0.0808  (7s, 500ep)
+  [4/20] [4.5→6.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=16.43°C  L2=0.0710  (6s, 500ep)
+  [5/20] [6.0→7.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=14.68°C  L2=0.0726  (7s, 500ep)
+  [6/20] [7.5→9.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=14.81°C  L2=0.0868  (7s, 500ep)
+  [7/20] [9.0→10.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=13.00°C  L2=0.0798  (7s, 500ep)
+  [8/20] [10.5→12.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=11.64°C  L2=0.0796  (7s, 500ep)
+  [9/20] [12.0→13.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=11.38°C  L2=0.0807  (6s, 500ep)
+  [10/20] [13.5→15.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=11.03°C  L2=0.0798  (6s, 500ep)
+  [11/20] [15.0→16.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=9.91°C  L2=0.0771  (6s, 500ep)
+  [12/20] [16.5→18.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=9.43°C  L2=0.0744  (6s, 500ep)
+  [13/20] [18.0→19.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=8.41°C  L2=0.0643  (6s, 500ep)
+  [14/20] [19.5→21.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=9.96°C  L2=0.0735  (7s, 500ep)
+  [15/20] [21.0→22.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=8.71°C  L2=0.0659  (7s, 500ep)
+  [16/20] [22.5→24.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=8.79°C  L2=0.0652  (7s, 500ep)
+  [17/20] [24.0→25.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=10.42°C  L2=0.0744  (7s, 500ep)
+  [18/20] [25.5→27.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=7.78°C  L2=0.0614  (6s, 500ep)
+  [19/20] [27.0→28.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=7.15°C  L2=0.0476  (7s, 500ep)
+  [20/20] [28.5→30.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=7.30°C  L2=0.0576  (6s, 500ep)
+  → Mean MAE=12.82°C  saved: rectangular_nsga2_k1_dim3_ws_500ep.pt
+  [1/10] [0.0→3.0s]  k=2  cold(800ep)  rectangular/nsga2
+      MAE=39.47°C  L2=0.1622  (10s, 800ep)
+  [2/10] [3.0→6.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=21.39°C  L2=0.0828  (7s, 500ep)
+  [3/10] [6.0→9.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=18.87°C  L2=0.0878  (7s, 500ep)
+  [4/10] [9.0→12.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=14.11°C  L2=0.0887  (7s, 500ep)
+  [5/10] [12.0→15.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=15.11°C  L2=0.0999  (6s, 500ep)
+  [6/10] [15.0→18.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=15.60°C  L2=0.0992  (7s, 500ep)
+  [7/10] [18.0→21.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=14.77°C  L2=0.1016  (7s, 500ep)
+  [8/10] [21.0→24.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=14.33°C  L2=0.0968  (7s, 500ep)
+  [9/10] [24.0→27.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=13.88°C  L2=0.0991  (6s, 500ep)
+  [10/10] [27.0→30.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=13.40°C  L2=0.0923  (7s, 500ep)
+  → Mean MAE=18.09°C  saved: rectangular_nsga2_k2_dim3_ws_500ep.pt
+  [1/7] [0.0→4.5s]  k=3  cold(800ep)  rectangular/nsga2
+      MAE=39.59°C  L2=0.1558  (10s, 800ep)
+  [2/7] [4.5→9.0s]  k=3  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=20.73°C  L2=0.0784  (7s, 500ep)
+  [3/7] [9.0→13.5s]  k=3  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=22.27°C  L2=0.1029  (7s, 500ep)
+  [4/7] [13.5→18.0s]  k=3  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=17.91°C  L2=0.1047  (7s, 500ep)
+  [5/7] [18.0→22.5s]  k=3  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=17.46°C  L2=0.1051  (7s, 500ep)
+  [6/7] [22.5→27.0s]  k=3  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=16.06°C  L2=0.0999  (7s, 500ep)
+  [7/7] [27.0→30.0s]  k=3  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=15.49°C  L2=0.1022  (6s, 500ep)
+  → Mean MAE=21.36°C  saved: rectangular_nsga2_k3_dim3_ws_500ep.pt
+  [1/5] [0.0→6.0s]  k=4  cold(800ep)  rectangular/nsga2
+      MAE=41.62°C  L2=0.1618  (11s, 800ep)
+  [2/5] [6.0→12.0s]  k=4  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=25.28°C  L2=0.0877  (7s, 500ep)
+  [3/5] [12.0→18.0s]  k=4  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=18.47°C  L2=0.0941  (7s, 500ep)
+  [4/5] [18.0→24.0s]  k=4  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=17.35°C  L2=0.1019  (7s, 500ep)
+  [5/5] [24.0→30.0s]  k=4  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=14.35°C  L2=0.0898  (7s, 500ep)
+  → Mean MAE=23.42°C  saved: rectangular_nsga2_k4_dim3_ws_500ep.pt
+  [1/4] [0.0→7.5s]  k=5  cold(800ep)  rectangular/nsga2
+      MAE=31.80°C  L2=0.1078  (10s, 800ep)
+  [2/4] [7.5→15.0s]  k=5  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=26.84°C  L2=0.0897  (6s, 500ep)
+  [3/4] [15.0→22.5s]  k=5  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=25.75°C  L2=0.1021  (6s, 500ep)
+  [4/4] [22.5→30.0s]  k=5  warm(500ep,lr=1e-03)  rectangular/nsga2
+      MAE=18.27°C  L2=0.0831  (6s, 500ep)
+  → Mean MAE=25.67°C  saved: rectangular_nsga2_k5_dim3_ws_500ep.pt
+  [1/20] [0.0→1.5s]  k=1  cold(800ep)  rectangular/nsga3
+      MAE=29.95°C  L2=0.1171  (10s, 800ep)
+  [2/20] [1.5→3.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=26.32°C  L2=0.0965  (6s, 500ep)
+  [3/20] [3.0→4.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=26.61°C  L2=0.0948  (6s, 500ep)
+  [4/20] [4.5→6.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=24.98°C  L2=0.0876  (6s, 500ep)
+  [5/20] [6.0→7.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=20.35°C  L2=0.0877  (6s, 500ep)
+  [6/20] [7.5→9.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=17.64°C  L2=0.0925  (7s, 500ep)
+  [7/20] [9.0→10.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=18.41°C  L2=0.0987  (6s, 500ep)
+  [8/20] [10.5→12.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=17.99°C  L2=0.1072  (7s, 500ep)
+  [9/20] [12.0→13.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=16.98°C  L2=0.1067  (7s, 500ep)
+  [10/20] [13.5→15.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=14.98°C  L2=0.1051  (7s, 500ep)
+  [11/20] [15.0→16.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=15.88°C  L2=0.0938  (7s, 500ep)
+  [12/20] [16.5→18.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=13.71°C  L2=0.0959  (6s, 500ep)
+  [13/20] [18.0→19.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=14.84°C  L2=0.0970  (7s, 500ep)
+  [14/20] [19.5→21.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=13.51°C  L2=0.0921  (7s, 500ep)
+  [15/20] [21.0→22.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=12.50°C  L2=0.0822  (6s, 500ep)
+  [16/20] [22.5→24.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=9.92°C  L2=0.0619  (6s, 500ep)
+  [17/20] [24.0→25.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=10.15°C  L2=0.0638  (7s, 500ep)
+  [18/20] [25.5→27.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=9.43°C  L2=0.0566  (7s, 500ep)
+  [19/20] [27.0→28.5s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=8.42°C  L2=0.0539  (7s, 500ep)
+  [20/20] [28.5→30.0s]  k=1  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=8.16°C  L2=0.0534  (6s, 500ep)
+  → Mean MAE=16.54°C  saved: rectangular_nsga3_k1_dim3_ws_500ep.pt
+  [1/10] [0.0→3.0s]  k=2  cold(800ep)  rectangular/nsga3
+      MAE=31.69°C  L2=0.1135  (10s, 800ep)
+  [2/10] [3.0→6.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=22.26°C  L2=0.0876  (7s, 500ep)
+  [3/10] [6.0→9.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=19.99°C  L2=0.0934  (7s, 500ep)
+  [4/10] [9.0→12.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=14.41°C  L2=0.0883  (7s, 500ep)
+  [5/10] [12.0→15.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=15.58°C  L2=0.1054  (6s, 500ep)
+  [6/10] [15.0→18.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=16.35°C  L2=0.1070  (7s, 500ep)
+  [7/10] [18.0→21.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=15.81°C  L2=0.1061  (7s, 500ep)
+  [8/10] [21.0→24.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=15.27°C  L2=0.1067  (6s, 500ep)
+  [9/10] [24.0→27.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=16.29°C  L2=0.1028  (7s, 500ep)
+  [10/10] [27.0→30.0s]  k=2  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=15.05°C  L2=0.1007  (7s, 500ep)
+  → Mean MAE=18.27°C  saved: rectangular_nsga3_k2_dim3_ws_500ep.pt
+  [1/7] [0.0→4.5s]  k=3  cold(800ep)  rectangular/nsga3
+      MAE=31.80°C  L2=0.1112  (10s, 800ep)
+  [2/7] [4.5→9.0s]  k=3  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=19.12°C  L2=0.0822  (7s, 500ep)
+  [3/7] [9.0→13.5s]  k=3  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=14.91°C  L2=0.0878  (7s, 500ep)
+  [4/7] [13.5→18.0s]  k=3  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=15.50°C  L2=0.0973  (7s, 500ep)
+  [5/7] [18.0→22.5s]  k=3  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=15.62°C  L2=0.1033  (6s, 500ep)
+  [6/7] [22.5→27.0s]  k=3  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=15.28°C  L2=0.0964  (7s, 500ep)
+  [7/7] [27.0→30.0s]  k=3  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=12.82°C  L2=0.0810  (7s, 500ep)
+  → Mean MAE=17.87°C  saved: rectangular_nsga3_k3_dim3_ws_500ep.pt
+  [1/5] [0.0→6.0s]  k=4  cold(800ep)  rectangular/nsga3
+      MAE=33.21°C  L2=0.1155  (10s, 800ep)
+  [2/5] [6.0→12.0s]  k=4  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=26.42°C  L2=0.0967  (7s, 500ep)
+  [3/5] [12.0→18.0s]  k=4  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=22.54°C  L2=0.1002  (7s, 500ep)
+  [4/5] [18.0→24.0s]  k=4  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=16.26°C  L2=0.0922  (7s, 500ep)
+  [5/5] [24.0→30.0s]  k=4  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=14.22°C  L2=0.0846  (7s, 500ep)
+  → Mean MAE=22.53°C  saved: rectangular_nsga3_k4_dim3_ws_500ep.pt
+  [1/4] [0.0→7.5s]  k=5  cold(800ep)  rectangular/nsga3
+      MAE=33.99°C  L2=0.1167  (10s, 800ep)
+  [2/4] [7.5→15.0s]  k=5  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=25.82°C  L2=0.1003  (7s, 500ep)
+  [3/4] [15.0→22.5s]  k=5  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=18.50°C  L2=0.1027  (7s, 500ep)
+  [4/4] [22.5→30.0s]  k=5  warm(500ep,lr=1e-03)  rectangular/nsga3
+      MAE=17.03°C  L2=0.1016  (6s, 500ep)
+  → Mean MAE=23.83°C  saved: rectangular_nsga3_k5_dim3_ws_500ep.pt
+  [1/20] [0.0→1.5s]  k=1  cold(800ep)  cylinder/bayesian
+      MAE=14.83°C  L2=0.0663  (11s, 800ep)
+  [2/20] [1.5→3.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=8.51°C  L2=0.0569  (7s, 500ep)
+  [3/20] [3.0→4.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=7.87°C  L2=0.0492  (6s, 500ep)
+  [4/20] [4.5→6.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=7.47°C  L2=0.0544  (6s, 500ep)
+  [5/20] [6.0→7.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=5.86°C  L2=0.0366  (6s, 500ep)
+  [6/20] [7.5→9.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=6.93°C  L2=0.0352  (6s, 500ep)
+  [7/20] [9.0→10.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=4.77°C  L2=0.0254  (6s, 500ep)
+  [8/20] [10.5→12.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=5.48°C  L2=0.0288  (7s, 500ep)
+  [9/20] [12.0→13.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=5.18°C  L2=0.0324  (7s, 500ep)
+  [10/20] [13.5→15.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=4.86°C  L2=0.0282  (7s, 500ep)
+  [11/20] [15.0→16.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=4.80°C  L2=0.0249  (7s, 500ep)
+  [12/20] [16.5→18.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=4.48°C  L2=0.0299  (7s, 500ep)
+  [13/20] [18.0→19.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=5.45°C  L2=0.0323  (7s, 500ep)
+  [14/20] [19.5→21.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=5.35°C  L2=0.0285  (7s, 500ep)
+  [15/20] [21.0→22.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=5.27°C  L2=0.0306  (6s, 500ep)
+  [16/20] [22.5→24.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=4.02°C  L2=0.0225  (7s, 500ep)
+  [17/20] [24.0→25.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=3.84°C  L2=0.0202  (6s, 500ep)
+  [18/20] [25.5→27.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=3.13°C  L2=0.0164  (7s, 500ep)
+  [19/20] [27.0→28.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=3.87°C  L2=0.0270  (7s, 500ep)
+  [20/20] [28.5→30.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=4.03°C  L2=0.0247  (7s, 500ep)
+  → Mean MAE=5.80°C  saved: cylinder_bayesian_k1_dim3_ws_500ep.pt
+  [1/10] [0.0→3.0s]  k=2  cold(800ep)  cylinder/bayesian
+      MAE=15.35°C  L2=0.0570  (11s, 800ep)
+  [2/10] [3.0→6.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=9.70°C  L2=0.0501  (7s, 500ep)
+  [3/10] [6.0→9.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=9.10°C  L2=0.0466  (6s, 500ep)
+  [4/10] [9.0→12.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=7.36°C  L2=0.0439  (7s, 500ep)
+  [5/10] [12.0→15.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=6.64°C  L2=0.0432  (7s, 500ep)
+  [6/10] [15.0→18.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=5.77°C  L2=0.0281  (7s, 500ep)
+  [7/10] [18.0→21.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=5.33°C  L2=0.0271  (7s, 500ep)
+  [8/10] [21.0→24.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=5.21°C  L2=0.0317  (6s, 500ep)
+  [9/10] [24.0→27.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=4.90°C  L2=0.0323  (6s, 500ep)
+  [10/10] [27.0→30.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=5.65°C  L2=0.0333  (7s, 500ep)
+  → Mean MAE=7.50°C  saved: cylinder_bayesian_k2_dim3_ws_500ep.pt
+  [1/7] [0.0→4.5s]  k=3  cold(800ep)  cylinder/bayesian
+      MAE=17.47°C  L2=0.0625  (11s, 800ep)
+  [2/7] [4.5→9.0s]  k=3  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=13.57°C  L2=0.0604  (7s, 500ep)
+  [3/7] [9.0→13.5s]  k=3  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=9.47°C  L2=0.0452  (7s, 500ep)
+  [4/7] [13.5→18.0s]  k=3  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=7.36°C  L2=0.0421  (7s, 500ep)
+  [5/7] [18.0→22.5s]  k=3  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=7.10°C  L2=0.0369  (7s, 500ep)
+  [6/7] [22.5→27.0s]  k=3  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=4.62°C  L2=0.0218  (7s, 500ep)
+  [7/7] [27.0→30.0s]  k=3  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=3.53°C  L2=0.0192  (7s, 500ep)
+  → Mean MAE=9.02°C  saved: cylinder_bayesian_k3_dim3_ws_500ep.pt
+  [1/5] [0.0→6.0s]  k=4  cold(800ep)  cylinder/bayesian
+      MAE=17.88°C  L2=0.0635  (10s, 800ep)
+  [2/5] [6.0→12.0s]  k=4  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=13.41°C  L2=0.0655  (7s, 500ep)
+  [3/5] [12.0→18.0s]  k=4  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=9.30°C  L2=0.0494  (7s, 500ep)
+  [4/5] [18.0→24.0s]  k=4  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=6.98°C  L2=0.0356  (7s, 500ep)
+  [5/5] [24.0→30.0s]  k=4  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=6.05°C  L2=0.0303  (7s, 500ep)
+  → Mean MAE=10.73°C  saved: cylinder_bayesian_k4_dim3_ws_500ep.pt
+  [1/4] [0.0→7.5s]  k=5  cold(800ep)  cylinder/bayesian
+      MAE=17.44°C  L2=0.0595  (11s, 800ep)
+  [2/4] [7.5→15.0s]  k=5  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=15.05°C  L2=0.0671  (7s, 500ep)
+  [3/4] [15.0→22.5s]  k=5  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=9.53°C  L2=0.0425  (7s, 500ep)
+  [4/4] [22.5→30.0s]  k=5  warm(500ep,lr=1e-03)  cylinder/bayesian
+      MAE=6.82°C  L2=0.0351  (7s, 500ep)
+  → Mean MAE=12.21°C  saved: cylinder_bayesian_k5_dim3_ws_500ep.pt
+  [1/20] [0.0→1.5s]  k=1  cold(800ep)  cylinder/nsga2
+      MAE=25.76°C  L2=0.1362  (11s, 800ep)
+  [2/20] [1.5→3.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=21.18°C  L2=0.0896  (8s, 500ep)
+  [3/20] [3.0→4.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=16.78°C  L2=0.0891  (7s, 500ep)
+  [4/20] [4.5→6.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=15.58°C  L2=0.1009  (7s, 500ep)
+  [5/20] [6.0→7.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=16.26°C  L2=0.1213  (6s, 500ep)
+  [6/20] [7.5→9.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=12.64°C  L2=0.0941  (6s, 500ep)
+  [7/20] [9.0→10.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=16.40°C  L2=0.1250  (6s, 500ep)
+  [8/20] [10.5→12.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=17.39°C  L2=0.1324  (5s, 500ep)
+  [9/20] [12.0→13.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=12.31°C  L2=0.0942  (6s, 500ep)
+  [10/20] [13.5→15.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=13.92°C  L2=0.1125  (6s, 500ep)
+  [11/20] [15.0→16.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=11.22°C  L2=0.0900  (6s, 500ep)
+  [12/20] [16.5→18.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=18.85°C  L2=0.1436  (6s, 500ep)
+  [13/20] [18.0→19.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=16.89°C  L2=0.1286  (6s, 500ep)
+  [14/20] [19.5→21.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=13.11°C  L2=0.1055  (6s, 500ep)
+  [15/20] [21.0→22.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=9.43°C  L2=0.0689  (6s, 500ep)
+  [16/20] [22.5→24.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=10.89°C  L2=0.0671  (6s, 500ep)
+  [17/20] [24.0→25.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=10.36°C  L2=0.0671  (6s, 500ep)
+  [18/20] [25.5→27.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=9.60°C  L2=0.0657  (6s, 500ep)
+  [19/20] [27.0→28.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=9.14°C  L2=0.0586  (7s, 500ep)
+  [20/20] [28.5→30.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=10.48°C  L2=0.0703  (6s, 500ep)
+  → Mean MAE=14.41°C  saved: cylinder_nsga2_k1_dim3_ws_500ep.pt
+  [1/10] [0.0→3.0s]  k=2  cold(800ep)  cylinder/nsga2
+      MAE=40.02°C  L2=0.1602  (9s, 800ep)
+  [2/10] [3.0→6.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=24.63°C  L2=0.0914  (7s, 500ep)
+  [3/10] [6.0→9.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=18.78°C  L2=0.1084  (6s, 500ep)
+  [4/10] [9.0→12.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=18.80°C  L2=0.1090  (7s, 500ep)
+  [5/10] [12.0→15.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=14.61°C  L2=0.0870  (6s, 500ep)
+  [6/10] [15.0→18.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=14.79°C  L2=0.0941  (7s, 500ep)
+  [7/10] [18.0→21.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=12.15°C  L2=0.0715  (7s, 500ep)
+  [8/10] [21.0→24.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=13.32°C  L2=0.0840  (7s, 500ep)
+  [9/10] [24.0→27.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=11.46°C  L2=0.0702  (7s, 500ep)
+  [10/10] [27.0→30.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=9.17°C  L2=0.0568  (7s, 500ep)
+  → Mean MAE=17.77°C  saved: cylinder_nsga2_k2_dim3_ws_500ep.pt
+  [1/7] [0.0→4.5s]  k=3  cold(800ep)  cylinder/nsga2
+      MAE=53.03°C  L2=0.1883  (10s, 800ep)
+  [2/7] [4.5→9.0s]  k=3  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=18.90°C  L2=0.0953  (7s, 500ep)
+  [3/7] [9.0→13.5s]  k=3  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=18.85°C  L2=0.1149  (6s, 500ep)
+  [4/7] [13.5→18.0s]  k=3  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=19.97°C  L2=0.1289  (7s, 500ep)
+  [5/7] [18.0→22.5s]  k=3  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=11.64°C  L2=0.0695  (7s, 500ep)
+  [6/7] [22.5→27.0s]  k=3  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=10.73°C  L2=0.0670  (7s, 500ep)
+  [7/7] [27.0→30.0s]  k=3  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=9.62°C  L2=0.0658  (7s, 500ep)
+  → Mean MAE=20.39°C  saved: cylinder_nsga2_k3_dim3_ws_500ep.pt
+  [1/5] [0.0→6.0s]  k=4  cold(800ep)  cylinder/nsga2
+      MAE=67.04°C  L2=0.2199  (10s, 800ep)
+  [2/5] [6.0→12.0s]  k=4  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=19.42°C  L2=0.1060  (7s, 500ep)
+  [3/5] [12.0→18.0s]  k=4  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=21.64°C  L2=0.1260  (6s, 500ep)
+  [4/5] [18.0→24.0s]  k=4  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=19.68°C  L2=0.1288  (7s, 500ep)
+  [5/5] [24.0→30.0s]  k=4  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=11.01°C  L2=0.0690  (7s, 500ep)
+  → Mean MAE=27.76°C  saved: cylinder_nsga2_k4_dim3_ws_500ep.pt
+  [1/4] [0.0→7.5s]  k=5  cold(800ep)  cylinder/nsga2
+      MAE=63.75°C  L2=0.2146  (10s, 800ep)
+  [2/4] [7.5→15.0s]  k=5  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=27.43°C  L2=0.1013  (6s, 500ep)
+  [3/4] [15.0→22.5s]  k=5  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=21.79°C  L2=0.1111  (7s, 500ep)
+  [4/4] [22.5→30.0s]  k=5  warm(500ep,lr=1e-03)  cylinder/nsga2
+      MAE=15.51°C  L2=0.0939  (7s, 500ep)
+  → Mean MAE=32.12°C  saved: cylinder_nsga2_k5_dim3_ws_500ep.pt
+  [1/20] [0.0→1.5s]  k=1  cold(800ep)  cylinder/nsga3
+      MAE=25.30°C  L2=0.1336  (10s, 800ep)
+  [2/20] [1.5→3.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=24.17°C  L2=0.0960  (7s, 500ep)
+  [3/20] [3.0→4.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=11.67°C  L2=0.0825  (7s, 500ep)
+  [4/20] [4.5→6.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=12.47°C  L2=0.0955  (7s, 500ep)
+  [5/20] [6.0→7.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=15.51°C  L2=0.1247  (6s, 500ep)
+  [6/20] [7.5→9.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=16.51°C  L2=0.1197  (7s, 500ep)
+  [7/20] [9.0→10.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=15.72°C  L2=0.1226  (6s, 500ep)
+  [8/20] [10.5→12.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=17.20°C  L2=0.1293  (6s, 500ep)
+  [9/20] [12.0→13.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=18.98°C  L2=0.1406  (6s, 500ep)
+  [10/20] [13.5→15.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=15.82°C  L2=0.1250  (6s, 500ep)
+  [11/20] [15.0→16.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=13.82°C  L2=0.1123  (5s, 500ep)
+  [12/20] [16.5→18.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=12.46°C  L2=0.1008  (6s, 500ep)
+  [13/20] [18.0→19.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=13.25°C  L2=0.1109  (6s, 500ep)
+  [14/20] [19.5→21.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=11.51°C  L2=0.0899  (6s, 500ep)
+  [15/20] [21.0→22.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=9.53°C  L2=0.0701  (6s, 500ep)
+  [16/20] [22.5→24.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=9.66°C  L2=0.0695  (6s, 500ep)
+  [17/20] [24.0→25.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=10.64°C  L2=0.0851  (6s, 500ep)
+  [18/20] [25.5→27.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=8.59°C  L2=0.0639  (6s, 500ep)
+  [19/20] [27.0→28.5s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=8.36°C  L2=0.0665  (6s, 500ep)
+  [20/20] [28.5→30.0s]  k=1  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=10.20°C  L2=0.0792  (7s, 500ep)
+  → Mean MAE=14.07°C  saved: cylinder_nsga3_k1_dim3_ws_500ep.pt
+  [1/10] [0.0→3.0s]  k=2  cold(800ep)  cylinder/nsga3
+      MAE=37.90°C  L2=0.1509  (10s, 800ep)
+  [2/10] [3.0→6.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=23.57°C  L2=0.0891  (7s, 500ep)
+  [3/10] [6.0→9.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=16.87°C  L2=0.1099  (7s, 500ep)
+  [4/10] [9.0→12.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=18.17°C  L2=0.1161  (7s, 500ep)
+  [5/10] [12.0→15.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=16.47°C  L2=0.0986  (7s, 500ep)
+  [6/10] [15.0→18.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=12.63°C  L2=0.0832  (7s, 500ep)
+  [7/10] [18.0→21.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=9.41°C  L2=0.0644  (6s, 500ep)
+  [8/10] [21.0→24.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=11.53°C  L2=0.0850  (7s, 500ep)
+  [9/10] [24.0→27.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=10.56°C  L2=0.0754  (7s, 500ep)
+  [10/10] [27.0→30.0s]  k=2  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=9.68°C  L2=0.0674  (6s, 500ep)
+  → Mean MAE=16.68°C  saved: cylinder_nsga3_k2_dim3_ws_500ep.pt
+  [1/7] [0.0→4.5s]  k=3  cold(800ep)  cylinder/nsga3
+      MAE=51.27°C  L2=0.1826  (10s, 800ep)
+  [2/7] [4.5→9.0s]  k=3  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=27.98°C  L2=0.1071  (6s, 500ep)
+  [3/7] [9.0→13.5s]  k=3  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=20.41°C  L2=0.1152  (7s, 500ep)
+  [4/7] [13.5→18.0s]  k=3  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=19.40°C  L2=0.1195  (6s, 500ep)
+  [5/7] [18.0→22.5s]  k=3  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=17.23°C  L2=0.1112  (7s, 500ep)
+  [6/7] [22.5→27.0s]  k=3  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=12.75°C  L2=0.0731  (7s, 500ep)
+  [7/7] [27.0→30.0s]  k=3  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=9.80°C  L2=0.0657  (6s, 500ep)
+  → Mean MAE=22.69°C  saved: cylinder_nsga3_k3_dim3_ws_500ep.pt
+  [1/5] [0.0→6.0s]  k=4  cold(800ep)  cylinder/nsga3
+      MAE=60.28°C  L2=0.2022  (10s, 800ep)
+  [2/5] [6.0→12.0s]  k=4  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=20.84°C  L2=0.1068  (7s, 500ep)
+  [3/5] [12.0→18.0s]  k=4  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=22.76°C  L2=0.1296  (7s, 500ep)
+  [4/5] [18.0→24.0s]  k=4  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=19.80°C  L2=0.1291  (7s, 500ep)
+  [5/5] [24.0→30.0s]  k=4  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=17.96°C  L2=0.1304  (6s, 500ep)
+  → Mean MAE=28.33°C  saved: cylinder_nsga3_k4_dim3_ws_500ep.pt
+  [1/4] [0.0→7.5s]  k=5  cold(800ep)  cylinder/nsga3
+      MAE=66.05°C  L2=0.2201  (10s, 800ep)
+  [2/4] [7.5→15.0s]  k=5  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=25.75°C  L2=0.1130  (7s, 500ep)
+  [3/4] [15.0→22.5s]  k=5  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=21.02°C  L2=0.1194  (6s, 500ep)
+  [4/4] [22.5→30.0s]  k=5  warm(500ep,lr=1e-03)  cylinder/nsga3
+      MAE=14.69°C  L2=0.0846  (7s, 500ep)
+  → Mean MAE=31.88°C  saved: cylinder_nsga3_k5_dim3_ws_500ep.pt
+  [1/20] [0.0→1.5s]  k=1  cold(800ep)  stacked/bayesian
+      MAE=15.17°C  L2=0.0764  (11s, 800ep)
+  [2/20] [1.5→3.0s]  k=1  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=14.16°C  L2=0.0727  (6s, 500ep)
+  [3/20] [3.0→4.5s]  k=1  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=10.27°C  L2=0.0635  (7s, 500ep)
+  [4/20] [4.5→6.0s]  k=1  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=11.26°C  L2=0.0847  (7s, 500ep)
+  [5/20] [6.0→7.5s]  k=1  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=7.89°C  L2=0.0666  (6s, 500ep)
+  [6/20] [7.5→9.0s]  k=1  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=8.55°C  L2=0.0690  (6s, 500ep)
+  [7/20] [9.0→10.5s]  k=1  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=9.78°C  L2=0.0785  (6s, 500ep)
+  [8/20] [10.5→12.0s]  k=1  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=9.83°C  L2=0.0789  (7s, 500ep)
+  [9/20] [12.0→13.5s]  k=1  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=10.99°C  L2=0.0823  (7s, 500ep)
+  [10/20] [13.5→15.0s]  k=1  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=9.95°C  L2=0.0776  (7s, 500ep)
+  [11/20] [15.0→16.5s]  k=1  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=8.47°C  L2=0.0697  (7s, 500ep)
+  [12/20] [16.5→18.0s]  k=1  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=7.54°C  L2=0.0637  (7s, 500ep)
+  [13/20] [18.0→19.5s]  k=1  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=6.64°C  L2=0.0565  (7s, 500ep)
+  [14/20] [19.5→21.0s]  k=1  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=7.46°C  L2=0.0598  (6s, 500ep)
+  [15/20] [21.0→22.5s]  k=1  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=4.75°C  L2=0.0358  (6s, 500ep)
+  [16/20] [22.5→24.0s]  k=1  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=6.02°C  L2=0.0484  (6s, 500ep)
+  [17/20] [24.0→25.5s]  k=1  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=10.94°C  L2=0.0841  (7s, 500ep)
+  [18/20] [25.5→27.0s]  k=1  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=9.17°C  L2=0.0669  (6s, 500ep)
+  [19/20] [27.0→28.5s]  k=1  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=4.28°C  L2=0.0352  (6s, 500ep)
+  [20/20] [28.5→30.0s]  k=1  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=4.69°C  L2=0.0320  (6s, 500ep)
+  → Mean MAE=8.89°C  saved: stacked_bayesian_k1_dim3_ws_500ep.pt
+  [1/10] [0.0→3.0s]  k=2  cold(800ep)  stacked/bayesian
+      MAE=18.58°C  L2=0.0791  (10s, 800ep)
+  [2/10] [3.0→6.0s]  k=2  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=11.12°C  L2=0.0579  (6s, 500ep)
+  [3/10] [6.0→9.0s]  k=2  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=10.82°C  L2=0.0664  (6s, 500ep)
+  [4/10] [9.0→12.0s]  k=2  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=9.36°C  L2=0.0641  (7s, 500ep)
+  [5/10] [12.0→15.0s]  k=2  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=6.76°C  L2=0.0442  (6s, 500ep)
+  [6/10] [15.0→18.0s]  k=2  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=7.06°C  L2=0.0473  (6s, 500ep)
+  [7/10] [18.0→21.0s]  k=2  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=5.30°C  L2=0.0329  (7s, 500ep)
+  [8/10] [21.0→24.0s]  k=2  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=4.54°C  L2=0.0299  (7s, 500ep)
+  [9/10] [24.0→27.0s]  k=2  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=5.69°C  L2=0.0395  (7s, 500ep)
+  [10/10] [27.0→30.0s]  k=2  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=5.43°C  L2=0.0395  (7s, 500ep)
+  → Mean MAE=8.47°C  saved: stacked_bayesian_k2_dim3_ws_500ep.pt
+  [1/7] [0.0→4.5s]  k=3  cold(800ep)  stacked/bayesian
+      MAE=20.23°C  L2=0.0810  (11s, 800ep)
+  [2/7] [4.5→9.0s]  k=3  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=14.74°C  L2=0.0769  (7s, 500ep)
+  [3/7] [9.0→13.5s]  k=3  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=10.15°C  L2=0.0639  (7s, 500ep)
+  [4/7] [13.5→18.0s]  k=3  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=9.46°C  L2=0.0609  (7s, 500ep)
+  [5/7] [18.0→22.5s]  k=3  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=6.43°C  L2=0.0347  (7s, 500ep)
+  [6/7] [22.5→27.0s]  k=3  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=7.50°C  L2=0.0467  (7s, 500ep)
+  [7/7] [27.0→30.0s]  k=3  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=5.84°C  L2=0.0415  (7s, 500ep)
+  → Mean MAE=10.62°C  saved: stacked_bayesian_k3_dim3_ws_500ep.pt
+  [1/5] [0.0→6.0s]  k=4  cold(800ep)  stacked/bayesian
+      MAE=19.37°C  L2=0.0737  (11s, 800ep)
+  [2/5] [6.0→12.0s]  k=4  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=13.67°C  L2=0.0726  (7s, 500ep)
+  [3/5] [12.0→18.0s]  k=4  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=9.79°C  L2=0.0531  (7s, 500ep)
+  [4/5] [18.0→24.0s]  k=4  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=8.74°C  L2=0.0483  (7s, 500ep)
+  [5/5] [24.0→30.0s]  k=4  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=6.12°C  L2=0.0307  (7s, 500ep)
+  → Mean MAE=11.54°C  saved: stacked_bayesian_k4_dim3_ws_500ep.pt
+  [1/4] [0.0→7.5s]  k=5  cold(800ep)  stacked/bayesian
+      MAE=19.04°C  L2=0.0740  (10s, 800ep)
+  [2/4] [7.5→15.0s]  k=5  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=14.42°C  L2=0.0702  (6s, 500ep)
+  [3/4] [15.0→22.5s]  k=5  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=10.32°C  L2=0.0602  (7s, 500ep)
+  [4/4] [22.5→30.0s]  k=5  warm(500ep,lr=1e-03)  stacked/bayesian
+      MAE=8.48°C  L2=0.0457  (7s, 500ep)
+  → Mean MAE=13.07°C  saved: stacked_bayesian_k5_dim3_ws_500ep.pt
+  [1/20] [0.0→1.5s]  k=1  cold(800ep)  stacked/nsga2
+      MAE=31.76°C  L2=0.1614  (10s, 800ep)
+  [2/20] [1.5→3.0s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=23.53°C  L2=0.0956  (7s, 500ep)
+  [3/20] [3.0→4.5s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=21.49°C  L2=0.0865  (7s, 500ep)
+  [4/20] [4.5→6.0s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=15.69°C  L2=0.0739  (7s, 500ep)
+  [5/20] [6.0→7.5s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=11.92°C  L2=0.0747  (7s, 500ep)
+  [6/20] [7.5→9.0s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=11.63°C  L2=0.0838  (6s, 500ep)
+  [7/20] [9.0→10.5s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=16.61°C  L2=0.0987  (7s, 500ep)
+  [8/20] [10.5→12.0s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=10.33°C  L2=0.0844  (7s, 500ep)
+  [9/20] [12.0→13.5s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=11.78°C  L2=0.0934  (7s, 500ep)
+  [10/20] [13.5→15.0s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=10.99°C  L2=0.0881  (7s, 500ep)
+  [11/20] [15.0→16.5s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=10.62°C  L2=0.0921  (6s, 500ep)
+  [12/20] [16.5→18.0s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=10.04°C  L2=0.0771  (7s, 500ep)
+  [13/20] [18.0→19.5s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=11.78°C  L2=0.0975  (6s, 500ep)
+  [14/20] [19.5→21.0s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=11.16°C  L2=0.0927  (6s, 500ep)
+  [15/20] [21.0→22.5s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=10.73°C  L2=0.0758  (7s, 500ep)
+  [16/20] [22.5→24.0s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=10.15°C  L2=0.0781  (6s, 500ep)
+  [17/20] [24.0→25.5s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=11.01°C  L2=0.0878  (6s, 500ep)
+  [18/20] [25.5→27.0s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=11.57°C  L2=0.0925  (6s, 500ep)
+  [19/20] [27.0→28.5s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=9.49°C  L2=0.0772  (6s, 500ep)
+  [20/20] [28.5→30.0s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=9.06°C  L2=0.0700  (6s, 500ep)
+  → Mean MAE=13.57°C  saved: stacked_nsga2_k1_dim3_ws_500ep.pt
+  [1/10] [0.0→3.0s]  k=2  cold(800ep)  stacked/nsga2
+      MAE=35.35°C  L2=0.1644  (9s, 800ep)
+  [2/10] [3.0→6.0s]  k=2  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=20.67°C  L2=0.0926  (6s, 500ep)
+  [3/10] [6.0→9.0s]  k=2  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=13.06°C  L2=0.0781  (6s, 500ep)
+  [4/10] [9.0→12.0s]  k=2  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=14.05°C  L2=0.0867  (6s, 500ep)
+  [5/10] [12.0→15.0s]  k=2  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=11.99°C  L2=0.0806  (6s, 500ep)
+  [6/10] [15.0→18.0s]  k=2  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=11.86°C  L2=0.0867  (6s, 500ep)
+  [7/10] [18.0→21.0s]  k=2  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=12.24°C  L2=0.0980  (6s, 500ep)
+  [8/10] [21.0→24.0s]  k=2  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=11.91°C  L2=0.0941  (6s, 500ep)
+  [9/10] [24.0→27.0s]  k=2  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=11.35°C  L2=0.0918  (6s, 500ep)
+  [10/10] [27.0→30.0s]  k=2  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=10.32°C  L2=0.0867  (6s, 500ep)
+  → Mean MAE=15.28°C  saved: stacked_nsga2_k2_dim3_ws_500ep.pt
+  [1/7] [0.0→4.5s]  k=3  cold(800ep)  stacked/nsga2
+      MAE=38.08°C  L2=0.1648  (10s, 800ep)
+  [2/7] [4.5→9.0s]  k=3  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=20.82°C  L2=0.0953  (7s, 500ep)
+  [3/7] [9.0→13.5s]  k=3  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=13.33°C  L2=0.0837  (6s, 500ep)
+  [4/7] [13.5→18.0s]  k=3  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=13.26°C  L2=0.0792  (7s, 500ep)
+  [5/7] [18.0→22.5s]  k=3  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=13.98°C  L2=0.0907  (7s, 500ep)
+  [6/7] [22.5→27.0s]  k=3  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=11.87°C  L2=0.0852  (6s, 500ep)
+  [7/7] [27.0→30.0s]  k=3  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=11.55°C  L2=0.0842  (7s, 500ep)
+  → Mean MAE=17.56°C  saved: stacked_nsga2_k3_dim3_ws_500ep.pt
+  [1/5] [0.0→6.0s]  k=4  cold(800ep)  stacked/nsga2
+      MAE=41.52°C  L2=0.1717  (10s, 800ep)
+  [2/5] [6.0→12.0s]  k=4  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=23.60°C  L2=0.0940  (6s, 500ep)
+  [3/5] [12.0→18.0s]  k=4  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=19.42°C  L2=0.0891  (7s, 500ep)
+  [4/5] [18.0→24.0s]  k=4  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=15.93°C  L2=0.0906  (7s, 500ep)
+  [5/5] [24.0→30.0s]  k=4  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=12.90°C  L2=0.0853  (7s, 500ep)
+  → Mean MAE=22.67°C  saved: stacked_nsga2_k4_dim3_ws_500ep.pt
+  [1/4] [0.0→7.5s]  k=5  cold(800ep)  stacked/nsga2
+      MAE=50.24°C  L2=0.1935  (10s, 800ep)
+  [2/4] [7.5→15.0s]  k=5  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=19.98°C  L2=0.0864  (7s, 500ep)
+  [3/4] [15.0→22.5s]  k=5  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=14.51°C  L2=0.0827  (7s, 500ep)
+  [4/4] [22.5→30.0s]  k=5  warm(500ep,lr=1e-03)  stacked/nsga2
+      MAE=14.68°C  L2=0.0876  (7s, 500ep)
+  → Mean MAE=24.85°C  saved: stacked_nsga2_k5_dim3_ws_500ep.pt
+  [1/20] [0.0→1.5s]  k=1  cold(800ep)  stacked/nsga3
+      MAE=27.63°C  L2=0.1349  (10s, 800ep)
+  [2/20] [1.5→3.0s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=21.59°C  L2=0.0877  (7s, 500ep)
+  [3/20] [3.0→4.5s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=17.52°C  L2=0.0778  (7s, 500ep)
+  [4/20] [4.5→6.0s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=14.47°C  L2=0.0707  (7s, 500ep)
+  [5/20] [6.0→7.5s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=14.07°C  L2=0.0691  (7s, 500ep)
+  [6/20] [7.5→9.0s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=14.14°C  L2=0.0837  (7s, 500ep)
+  [7/20] [9.0→10.5s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=11.07°C  L2=0.0770  (7s, 500ep)
+  [8/20] [10.5→12.0s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=10.11°C  L2=0.0795  (7s, 500ep)
+  [9/20] [12.0→13.5s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=9.78°C  L2=0.0775  (6s, 500ep)
+  [10/20] [13.5→15.0s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=9.77°C  L2=0.0777  (7s, 500ep)
+  [11/20] [15.0→16.5s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=11.02°C  L2=0.0830  (7s, 500ep)
+  [12/20] [16.5→18.0s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=10.42°C  L2=0.0834  (6s, 500ep)
+  [13/20] [18.0→19.5s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=10.44°C  L2=0.0844  (7s, 500ep)
+  [14/20] [19.5→21.0s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=9.91°C  L2=0.0791  (6s, 500ep)
+  [15/20] [21.0→22.5s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=9.68°C  L2=0.0760  (7s, 500ep)
+  [16/20] [22.5→24.0s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=10.88°C  L2=0.0764  (7s, 500ep)
+  [17/20] [24.0→25.5s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=10.35°C  L2=0.0772  (6s, 500ep)
+  [18/20] [25.5→27.0s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=9.70°C  L2=0.0731  (7s, 500ep)
+  [19/20] [27.0→28.5s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=9.56°C  L2=0.0747  (7s, 500ep)
+  [20/20] [28.5→30.0s]  k=1  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=9.27°C  L2=0.0718  (6s, 500ep)
+  → Mean MAE=12.57°C  saved: stacked_nsga3_k1_dim3_ws_500ep.pt
+  [1/10] [0.0→3.0s]  k=2  cold(800ep)  stacked/nsga3
+      MAE=24.97°C  L2=0.0925  (11s, 800ep)
+  [2/10] [3.0→6.0s]  k=2  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=20.46°C  L2=0.0957  (7s, 500ep)
+  [3/10] [6.0→9.0s]  k=2  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=17.76°C  L2=0.0874  (6s, 500ep)
+  [4/10] [9.0→12.0s]  k=2  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=12.32°C  L2=0.0837  (6s, 500ep)
+  [5/10] [12.0→15.0s]  k=2  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=12.88°C  L2=0.0797  (7s, 500ep)
+  [6/10] [15.0→18.0s]  k=2  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=12.16°C  L2=0.0893  (6s, 500ep)
+  [7/10] [18.0→21.0s]  k=2  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=13.52°C  L2=0.0982  (7s, 500ep)
+  [8/10] [21.0→24.0s]  k=2  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=11.43°C  L2=0.0941  (6s, 500ep)
+  [9/10] [24.0→27.0s]  k=2  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=11.53°C  L2=0.0929  (6s, 500ep)
+  [10/10] [27.0→30.0s]  k=2  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=11.18°C  L2=0.0918  (6s, 500ep)
+  → Mean MAE=14.82°C  saved: stacked_nsga3_k2_dim3_ws_500ep.pt
+  [1/7] [0.0→4.5s]  k=3  cold(800ep)  stacked/nsga3
+      MAE=31.56°C  L2=0.1108  (10s, 800ep)
+  [2/7] [4.5→9.0s]  k=3  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=25.76°C  L2=0.1005  (7s, 500ep)
+  [3/7] [9.0→13.5s]  k=3  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=13.60°C  L2=0.0823  (7s, 500ep)
+  [4/7] [13.5→18.0s]  k=3  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=13.43°C  L2=0.0810  (7s, 500ep)
+  [5/7] [18.0→22.5s]  k=3  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=10.76°C  L2=0.0666  (6s, 500ep)
+  [6/7] [22.5→27.0s]  k=3  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=10.16°C  L2=0.0608  (7s, 500ep)
+  [7/7] [27.0→30.0s]  k=3  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=10.32°C  L2=0.0738  (7s, 500ep)
+  → Mean MAE=16.51°C  saved: stacked_nsga3_k3_dim3_ws_500ep.pt
+  [1/5] [0.0→6.0s]  k=4  cold(800ep)  stacked/nsga3
+      MAE=33.71°C  L2=0.1175  (10s, 800ep)
+  [2/5] [6.0→12.0s]  k=4  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=28.46°C  L2=0.1037  (7s, 500ep)
+  [3/5] [12.0→18.0s]  k=4  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=14.15°C  L2=0.0815  (6s, 500ep)
+  [4/5] [18.0→24.0s]  k=4  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=15.22°C  L2=0.0905  (7s, 500ep)
+  [5/5] [24.0→30.0s]  k=4  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=9.54°C  L2=0.0553  (7s, 500ep)
+  → Mean MAE=20.22°C  saved: stacked_nsga3_k4_dim3_ws_500ep.pt
+  [1/4] [0.0→7.5s]  k=5  cold(800ep)  stacked/nsga3
+      MAE=36.04°C  L2=0.1239  (11s, 800ep)
+  [2/4] [7.5→15.0s]  k=5  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=29.05°C  L2=0.1015  (7s, 500ep)
+  [3/4] [15.0→22.5s]  k=5  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=15.54°C  L2=0.0861  (7s, 500ep)
+  [4/4] [22.5→30.0s]  k=5  warm(500ep,lr=1e-03)  stacked/nsga3
+      MAE=15.08°C  L2=0.0891  (6s, 500ep)
+  → Mean MAE=23.93°C  saved: stacked_nsga3_k5_dim3_ws_500ep.pt
+  LShape3D: running FD solver (20×20×10 grid)…
+  LShape3D: FD solver done.
+  [1/20] [0.0→1.5s]  k=1  cold(800ep)  lshape/bayesian
+      MAE=17.09°C  L2=0.0508  (10s, 800ep)
+  [2/20] [1.5→3.0s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=6.25°C  L2=0.0224  (7s, 500ep)
+  [3/20] [3.0→4.5s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=5.60°C  L2=0.0210  (7s, 500ep)
+  [4/20] [4.5→6.0s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=4.71°C  L2=0.0212  (7s, 500ep)
+  [5/20] [6.0→7.5s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=9.24°C  L2=0.0398  (7s, 500ep)
+  [6/20] [7.5→9.0s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=6.34°C  L2=0.0278  (7s, 500ep)
+  [7/20] [9.0→10.5s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=7.54°C  L2=0.0306  (7s, 500ep)
+  [8/20] [10.5→12.0s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=5.73°C  L2=0.0255  (7s, 500ep)
+  [9/20] [12.0→13.5s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=7.43°C  L2=0.0345  (7s, 500ep)
+  [10/20] [13.5→15.0s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=8.31°C  L2=0.0343  (7s, 500ep)
+  [11/20] [15.0→16.5s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=7.60°C  L2=0.0356  (7s, 500ep)
+  [12/20] [16.5→18.0s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=8.71°C  L2=0.0424  (7s, 500ep)
+  [13/20] [18.0→19.5s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=5.61°C  L2=0.0241  (7s, 500ep)
+  [14/20] [19.5→21.0s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=3.67°C  L2=0.0163  (7s, 500ep)
+  [15/20] [21.0→22.5s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=4.64°C  L2=0.0218  (6s, 500ep)
+  [16/20] [22.5→24.0s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=4.13°C  L2=0.0207  (7s, 500ep)
+  [17/20] [24.0→25.5s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=4.19°C  L2=0.0211  (7s, 500ep)
+  [18/20] [25.5→27.0s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=6.99°C  L2=0.0346  (7s, 500ep)
+  [19/20] [27.0→28.5s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=4.58°C  L2=0.0226  (6s, 500ep)
+  [20/20] [28.5→30.0s]  k=1  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=4.08°C  L2=0.0239  (6s, 500ep)
+  → Mean MAE=6.62°C  saved: lshape_bayesian_k1_dim3_ws_500ep.pt
+  LShape3D: running FD solver (20×20×10 grid)…
+  LShape3D: FD solver done.
+  [1/10] [0.0→3.0s]  k=2  cold(800ep)  lshape/bayesian
+      MAE=13.22°C  L2=0.0414  (10s, 800ep)
+  [2/10] [3.0→6.0s]  k=2  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=7.86°C  L2=0.0242  (6s, 500ep)
+  [3/10] [6.0→9.0s]  k=2  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=7.10°C  L2=0.0293  (6s, 500ep)
+  [4/10] [9.0→12.0s]  k=2  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=5.57°C  L2=0.0226  (6s, 500ep)
+  [5/10] [12.0→15.0s]  k=2  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=5.53°C  L2=0.0252  (7s, 500ep)
+  [6/10] [15.0→18.0s]  k=2  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=5.51°C  L2=0.0229  (7s, 500ep)
+  [7/10] [18.0→21.0s]  k=2  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=4.54°C  L2=0.0179  (6s, 500ep)
+  [8/10] [21.0→24.0s]  k=2  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=4.94°C  L2=0.0213  (6s, 500ep)
+  [9/10] [24.0→27.0s]  k=2  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=4.18°C  L2=0.0229  (6s, 500ep)
+  [10/10] [27.0→30.0s]  k=2  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=4.09°C  L2=0.0210  (7s, 500ep)
+  → Mean MAE=6.26°C  saved: lshape_bayesian_k2_dim3_ws_500ep.pt
+  LShape3D: running FD solver (20×20×10 grid)…
+  LShape3D: FD solver done.
+  [1/7] [0.0→4.5s]  k=3  cold(800ep)  lshape/bayesian
+      MAE=15.17°C  L2=0.0487  (10s, 800ep)
+  [2/7] [4.5→9.0s]  k=3  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=7.88°C  L2=0.0282  (7s, 500ep)
+  [3/7] [9.0→13.5s]  k=3  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=5.85°C  L2=0.0198  (7s, 500ep)
+  [4/7] [13.5→18.0s]  k=3  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=5.68°C  L2=0.0206  (7s, 500ep)
+  [5/7] [18.0→22.5s]  k=3  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=5.01°C  L2=0.0216  (7s, 500ep)
+  [6/7] [22.5→27.0s]  k=3  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=4.31°C  L2=0.0197  (7s, 500ep)
+  [7/7] [27.0→30.0s]  k=3  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=4.10°C  L2=0.0202  (7s, 500ep)
+  → Mean MAE=6.86°C  saved: lshape_bayesian_k3_dim3_ws_500ep.pt
+  LShape3D: running FD solver (20×20×10 grid)…
+  LShape3D: FD solver done.
+  [1/5] [0.0→6.0s]  k=4  cold(800ep)  lshape/bayesian
+      MAE=15.22°C  L2=0.0497  (11s, 800ep)
+  [2/5] [6.0→12.0s]  k=4  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=7.70°C  L2=0.0264  (7s, 500ep)
+  [3/5] [12.0→18.0s]  k=4  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=6.96°C  L2=0.0268  (7s, 500ep)
+  [4/5] [18.0→24.0s]  k=4  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=6.54°C  L2=0.0258  (7s, 500ep)
+  [5/5] [24.0→30.0s]  k=4  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=5.62°C  L2=0.0246  (7s, 500ep)
+  → Mean MAE=8.41°C  saved: lshape_bayesian_k4_dim3_ws_500ep.pt
+  LShape3D: running FD solver (20×20×10 grid)…
+  LShape3D: FD solver done.
+  [1/4] [0.0→7.5s]  k=5  cold(800ep)  lshape/bayesian
+      MAE=17.97°C  L2=0.0596  (11s, 800ep)
+  [2/4] [7.5→15.0s]  k=5  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=8.46°C  L2=0.0293  (7s, 500ep)
+  [3/4] [15.0→22.5s]  k=5  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=7.44°C  L2=0.0277  (7s, 500ep)
+  [4/4] [22.5→30.0s]  k=5  warm(500ep,lr=1e-03)  lshape/bayesian
+      MAE=5.34°C  L2=0.0237  (7s, 500ep)
+  → Mean MAE=9.80°C  saved: lshape_bayesian_k5_dim3_ws_500ep.pt
+  LShape3D: running FD solver (20×20×10 grid)…
+  LShape3D: FD solver done.
+  [1/20] [0.0→1.5s]  k=1  cold(800ep)  lshape/nsga2
+      MAE=27.91°C  L2=0.1087  (11s, 800ep)
+  [2/20] [1.5→3.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=31.97°C  L2=0.1074  (7s, 500ep)
+  [3/20] [3.0→4.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=14.11°C  L2=0.0494  (7s, 500ep)
+  [4/20] [4.5→6.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=10.41°C  L2=0.0339  (7s, 500ep)
+  [5/20] [6.0→7.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=7.94°C  L2=0.0278  (7s, 500ep)
+  [6/20] [7.5→9.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=7.67°C  L2=0.0280  (7s, 500ep)
+  [7/20] [9.0→10.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=7.34°C  L2=0.0263  (7s, 500ep)
+  [8/20] [10.5→12.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=6.28°C  L2=0.0251  (7s, 500ep)
+  [9/20] [12.0→13.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=6.69°C  L2=0.0296  (7s, 500ep)
+  [10/20] [13.5→15.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=6.68°C  L2=0.0295  (7s, 500ep)
+  [11/20] [15.0→16.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=5.71°C  L2=0.0233  (7s, 500ep)
+  [12/20] [16.5→18.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=4.81°C  L2=0.0221  (7s, 500ep)
+  [13/20] [18.0→19.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=4.02°C  L2=0.0174  (7s, 500ep)
+  [14/20] [19.5→21.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=4.00°C  L2=0.0166  (7s, 500ep)
+  [15/20] [21.0→22.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=5.18°C  L2=0.0218  (7s, 500ep)
+  [16/20] [22.5→24.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=3.72°C  L2=0.0181  (7s, 500ep)
+  [17/20] [24.0→25.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=3.79°C  L2=0.0175  (7s, 500ep)
+  [18/20] [25.5→27.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=4.04°C  L2=0.0181  (7s, 500ep)
+  [19/20] [27.0→28.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=3.18°C  L2=0.0153  (7s, 500ep)
+  [20/20] [28.5→30.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=3.66°C  L2=0.0172  (7s, 500ep)
+  → Mean MAE=8.45°C  saved: lshape_nsga2_k1_dim3_ws_500ep.pt
+  LShape3D: running FD solver (20×20×10 grid)…
+  LShape3D: FD solver done.
+  [1/10] [0.0→3.0s]  k=2  cold(800ep)  lshape/nsga2
+      MAE=36.26°C  L2=0.1055  (10s, 800ep)
+  [2/10] [3.0→6.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=29.70°C  L2=0.0992  (7s, 500ep)
+  [3/10] [6.0→9.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=31.53°C  L2=0.1061  (7s, 500ep)
+  [4/10] [9.0→12.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=13.70°C  L2=0.0512  (7s, 500ep)
+  [5/10] [12.0→15.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=10.29°C  L2=0.0382  (7s, 500ep)
+  [6/10] [15.0→18.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=7.08°C  L2=0.0289  (7s, 500ep)
+  [7/10] [18.0→21.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=6.22°C  L2=0.0264  (7s, 500ep)
+  [8/10] [21.0→24.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=5.74°C  L2=0.0263  (6s, 500ep)
+  [9/10] [24.0→27.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=5.11°C  L2=0.0245  (6s, 500ep)
+  [10/10] [27.0→30.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=4.29°C  L2=0.0217  (6s, 500ep)
+  → Mean MAE=14.99°C  saved: lshape_nsga2_k2_dim3_ws_500ep.pt
+  LShape3D: running FD solver (20×20×10 grid)…
+  LShape3D: FD solver done.
+  [1/7] [0.0→4.5s]  k=3  cold(800ep)  lshape/nsga2
+      MAE=46.50°C  L2=0.1421  (10s, 800ep)
+  [2/7] [4.5→9.0s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=13.82°C  L2=0.0473  (8s, 500ep)
+  [3/7] [9.0→13.5s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=11.04°C  L2=0.0406  (7s, 500ep)
+  [4/7] [13.5→18.0s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=8.85°C  L2=0.0312  (6s, 500ep)
+  [5/7] [18.0→22.5s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=7.60°C  L2=0.0315  (7s, 500ep)
+  [6/7] [22.5→27.0s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=6.55°C  L2=0.0290  (7s, 500ep)
+  [7/7] [27.0→30.0s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=5.23°C  L2=0.0246  (7s, 500ep)
+  → Mean MAE=14.23°C  saved: lshape_nsga2_k3_dim3_ws_500ep.pt
+  LShape3D: running FD solver (20×20×10 grid)…
+  LShape3D: FD solver done.
+  [1/5] [0.0→6.0s]  k=4  cold(800ep)  lshape/nsga2
+      MAE=54.06°C  L2=0.1653  (10s, 800ep)
+  [2/5] [6.0→12.0s]  k=4  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=13.33°C  L2=0.0479  (7s, 500ep)
+  [3/5] [12.0→18.0s]  k=4  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=10.95°C  L2=0.0401  (7s, 500ep)
+  [4/5] [18.0→24.0s]  k=4  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=7.76°C  L2=0.0308  (7s, 500ep)
+  [5/5] [24.0→30.0s]  k=4  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=6.92°C  L2=0.0325  (7s, 500ep)
+  → Mean MAE=18.60°C  saved: lshape_nsga2_k4_dim3_ws_500ep.pt
+  LShape3D: running FD solver (20×20×10 grid)…
+  LShape3D: FD solver done.
+  [1/4] [0.0→7.5s]  k=5  cold(800ep)  lshape/nsga2
+      MAE=30.33°C  L2=0.0945  (10s, 800ep)
+  [2/4] [7.5→15.0s]  k=5  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=11.59°C  L2=0.0404  (7s, 500ep)
+  [3/4] [15.0→22.5s]  k=5  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=8.55°C  L2=0.0346  (7s, 500ep)
+  [4/4] [22.5→30.0s]  k=5  warm(500ep,lr=1e-03)  lshape/nsga2
+      MAE=7.54°C  L2=0.0310  (7s, 500ep)
+  → Mean MAE=14.50°C  saved: lshape_nsga2_k5_dim3_ws_500ep.pt
+  LShape3D: running FD solver (20×20×10 grid)…
+  LShape3D: FD solver done.
+  [1/20] [0.0→1.5s]  k=1  cold(800ep)  lshape/nsga3
+      MAE=20.27°C  L2=0.0738  (10s, 800ep)
+  [2/20] [1.5→3.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=30.52°C  L2=0.0997  (7s, 500ep)
+  [3/20] [3.0→4.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=14.71°C  L2=0.0499  (7s, 500ep)
+  [4/20] [4.5→6.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=11.45°C  L2=0.0400  (7s, 500ep)
+  [5/20] [6.0→7.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=11.25°C  L2=0.0410  (7s, 500ep)
+  [6/20] [7.5→9.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=9.30°C  L2=0.0338  (7s, 500ep)
+  [7/20] [9.0→10.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=8.90°C  L2=0.0352  (7s, 500ep)
+  [8/20] [10.5→12.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=7.27°C  L2=0.0305  (7s, 500ep)
+  [9/20] [12.0→13.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=6.82°C  L2=0.0311  (7s, 500ep)
+  [10/20] [13.5→15.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=5.88°C  L2=0.0291  (6s, 500ep)
+  [11/20] [15.0→16.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=5.93°C  L2=0.0250  (7s, 500ep)
+  [12/20] [16.5→18.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=5.09°C  L2=0.0243  (7s, 500ep)
+  [13/20] [18.0→19.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=4.71°C  L2=0.0227  (7s, 500ep)
+  [14/20] [19.5→21.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=4.54°C  L2=0.0201  (6s, 500ep)
+  [15/20] [21.0→22.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=4.01°C  L2=0.0207  (7s, 500ep)
+  [16/20] [22.5→24.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=3.44°C  L2=0.0188  (7s, 500ep)
+  [17/20] [24.0→25.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=3.72°C  L2=0.0190  (6s, 500ep)
+  [18/20] [25.5→27.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=3.39°C  L2=0.0168  (7s, 500ep)
+  [19/20] [27.0→28.5s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=3.37°C  L2=0.0181  (6s, 500ep)
+  [20/20] [28.5→30.0s]  k=1  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=2.84°C  L2=0.0159  (7s, 500ep)
+  → Mean MAE=8.37°C  saved: lshape_nsga3_k1_dim3_ws_500ep.pt
+  LShape3D: running FD solver (20×20×10 grid)…
+  LShape3D: FD solver done.
+  [1/10] [0.0→3.0s]  k=2  cold(800ep)  lshape/nsga3
+      MAE=35.23°C  L2=0.1090  (10s, 800ep)
+  [2/10] [3.0→6.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=20.98°C  L2=0.0690  (7s, 500ep)
+  [3/10] [6.0→9.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=13.57°C  L2=0.0450  (7s, 500ep)
+  [4/10] [9.0→12.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=10.01°C  L2=0.0340  (7s, 500ep)
+  [5/10] [12.0→15.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=8.08°C  L2=0.0332  (7s, 500ep)
+  [6/10] [15.0→18.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=6.86°C  L2=0.0286  (7s, 500ep)
+  [7/10] [18.0→21.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=6.36°C  L2=0.0283  (7s, 500ep)
+  [8/10] [21.0→24.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=5.12°C  L2=0.0234  (7s, 500ep)
+  [9/10] [24.0→27.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=4.10°C  L2=0.0209  (7s, 500ep)
+  [10/10] [27.0→30.0s]  k=2  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=3.64°C  L2=0.0195  (7s, 500ep)
+  → Mean MAE=11.40°C  saved: lshape_nsga3_k2_dim3_ws_500ep.pt
+  LShape3D: running FD solver (20×20×10 grid)…
+  LShape3D: FD solver done.
+  [1/7] [0.0→4.5s]  k=3  cold(800ep)  lshape/nsga3
+      MAE=48.01°C  L2=0.1448  (10s, 800ep)
+  [2/7] [4.5→9.0s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=16.18°C  L2=0.0557  (7s, 500ep)
+  [3/7] [9.0→13.5s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=10.42°C  L2=0.0404  (6s, 500ep)
+  [4/7] [13.5→18.0s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=8.29°C  L2=0.0322  (6s, 500ep)
+  [5/7] [18.0→22.5s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=7.27°C  L2=0.0315  (6s, 500ep)
+  [6/7] [22.5→27.0s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=5.25°C  L2=0.0252  (6s, 500ep)
+  [7/7] [27.0→30.0s]  k=3  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=4.81°C  L2=0.0235  (6s, 500ep)
+  → Mean MAE=14.32°C  saved: lshape_nsga3_k3_dim3_ws_500ep.pt
+  LShape3D: running FD solver (20×20×10 grid)…
+  LShape3D: FD solver done.
+  [1/5] [0.0→6.0s]  k=4  cold(800ep)  lshape/nsga3
+      MAE=37.00°C  L2=0.1027  (10s, 800ep)
+  [2/5] [6.0→12.0s]  k=4  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=12.56°C  L2=0.0416  (6s, 500ep)
+  [3/5] [12.0→18.0s]  k=4  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=8.85°C  L2=0.0341  (6s, 500ep)
+  [4/5] [18.0→24.0s]  k=4  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=8.21°C  L2=0.0320  (6s, 500ep)
+  [5/5] [24.0→30.0s]  k=4  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=6.36°C  L2=0.0300  (6s, 500ep)
+  → Mean MAE=14.60°C  saved: lshape_nsga3_k4_dim3_ws_500ep.pt
+  LShape3D: running FD solver (20×20×10 grid)…
+  LShape3D: FD solver done.
+  [1/4] [0.0→7.5s]  k=5  cold(800ep)  lshape/nsga3
+      MAE=30.57°C  L2=0.0914  (10s, 800ep)
+  [2/4] [7.5→15.0s]  k=5  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=11.92°C  L2=0.0414  (7s, 500ep)
+  [3/4] [15.0→22.5s]  k=5  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=10.02°C  L2=0.0394  (7s, 500ep)
+  [4/4] [22.5→30.0s]  k=5  warm(500ep,lr=1e-03)  lshape/nsga3
+      MAE=6.76°C  L2=0.0289  (7s, 500ep)
+  → Mean MAE=14.82°C  saved: lshape_nsga3_k5_dim3_ws_500ep.pt

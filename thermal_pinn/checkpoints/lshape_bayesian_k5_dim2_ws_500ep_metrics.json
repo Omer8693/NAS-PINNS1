@@ -1,0 +1,49 @@
+{
+  "domain": "lshape",
+  "arch": "bayesian",
+  "k": 5,
+  "dim": 2,
+  "mean_mae": 5.80169619954314,
+  "n_windows": 4,
+  "windows": [
+    {
+      "t_start": 0.0,
+      "t_end": 7.5,
+      "mae_C": 10.945687263388677,
+      "l2_rel": 0.05428838131624738,
+      "runtime_s": 10.150037050247192,
+      "warm": false
+    },
+    {
+      "t_start": 7.5,
+      "t_end": 15.0,
+      "mae_C": 5.25002776576687,
+      "l2_rel": 0.020775250190709096,
+      "runtime_s": 5.965658664703369,
+      "warm": true
+    },
+    {
+      "t_start": 15.0,
+      "t_end": 22.5,
+      "mae_C": 3.892200536529189,
+      "l2_rel": 0.016368247615927027,
+      "runtime_s": 6.207892179489136,
+      "warm": true
+    },
+    {
+      "t_start": 22.5,
+      "t_end": 30.0,
+      "mae_C": 3.1188692324878238,
+      "l2_rel": 0.01588458209509588,
+      "runtime_s": 6.251476764678955,
+      "warm": true
+    }
+  ],
+  "total_s": 28.626777172088623,
+  "checkpoint": "/home/coder/NAS-PINNS1/thermal_pinn/checkpoints/lshape_bayesian_k5_dim2_ws_500ep.pt",
+  "warm_start": true,
+  "tag": "ws_500ep",
+  "n_epochs_cold": 800,
+  "n_epochs_warm": 500,
+  "lr_warm": 0.001
+}

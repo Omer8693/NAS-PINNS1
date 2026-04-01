@@ -1,0 +1,57 @@
+{
+  "domain": "stacked",
+  "arch": "bayesian",
+  "k": 4,
+  "dim": 3,
+  "mean_mae": 11.537527550225693,
+  "n_windows": 5,
+  "windows": [
+    {
+      "t_start": 0.0,
+      "t_end": 6.0,
+      "mae_C": 19.366517189871644,
+      "l2_rel": 0.07368634800114932,
+      "runtime_s": 10.925076961517334,
+      "warm": false
+    },
+    {
+      "t_start": 6.0,
+      "t_end": 12.0,
+      "mae_C": 13.672199356613906,
+      "l2_rel": 0.07256387462204501,
+      "runtime_s": 6.696243524551392,
+      "warm": true
+    },
+    {
+      "t_start": 12.0,
+      "t_end": 18.0,
+      "mae_C": 9.786726132969132,
+      "l2_rel": 0.05312393505108091,
+      "runtime_s": 6.904685020446777,
+      "warm": true
+    },
+    {
+      "t_start": 18.0,
+      "t_end": 24.0,
+      "mae_C": 8.739698228786015,
+      "l2_rel": 0.048286974926173926,
+      "runtime_s": 7.377386569976807,
+      "warm": true
+    },
+    {
+      "t_start": 24.0,
+      "t_end": 30.0,
+      "mae_C": 6.122496842887775,
+      "l2_rel": 0.030712199909386017,
+      "runtime_s": 6.552544355392456,
+      "warm": true
+    }
+  ],
+  "total_s": 38.51373052597046,
+  "checkpoint": "/home/coder/NAS-PINNS1/thermal_pinn/checkpoints/stacked_bayesian_k4_dim3_ws_500ep.pt",
+  "warm_start": true,
+  "tag": "ws_500ep",
+  "n_epochs_cold": 800,
+  "n_epochs_warm": 500,
+  "lr_warm": 0.001
+}

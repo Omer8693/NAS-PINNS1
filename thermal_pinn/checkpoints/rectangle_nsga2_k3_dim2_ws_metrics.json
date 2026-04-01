@@ -1,0 +1,71 @@
+{
+  "domain": "rectangle",
+  "arch": "nsga2",
+  "k": 3,
+  "dim": 2,
+  "mean_mae": 12.223008334011828,
+  "n_windows": 7,
+  "windows": [
+    {
+      "t_start": 0.0,
+      "t_end": 4.5,
+      "mae_C": 19.373862954383803,
+      "l2_rel": 0.11013420929199899,
+      "runtime_s": 8.781512022018433,
+      "warm": false
+    },
+    {
+      "t_start": 4.5,
+      "t_end": 9.0,
+      "mae_C": 27.926100180202635,
+      "l2_rel": 0.13499231141414655,
+      "runtime_s": 3.3458189964294434,
+      "warm": true
+    },
+    {
+      "t_start": 9.0,
+      "t_end": 13.5,
+      "mae_C": 11.51845689881859,
+      "l2_rel": 0.05430987227555686,
+      "runtime_s": 3.90021014213562,
+      "warm": true
+    },
+    {
+      "t_start": 13.5,
+      "t_end": 18.0,
+      "mae_C": 6.685994906710054,
+      "l2_rel": 0.03408559313388007,
+      "runtime_s": 3.998324394226074,
+      "warm": true
+    },
+    {
+      "t_start": 18.0,
+      "t_end": 22.5,
+      "mae_C": 5.970939655414187,
+      "l2_rel": 0.035963431453808016,
+      "runtime_s": 3.819918155670166,
+      "warm": true
+    },
+    {
+      "t_start": 22.5,
+      "t_end": 27.0,
+      "mae_C": 8.939904219353954,
+      "l2_rel": 0.03742810587099764,
+      "runtime_s": 3.774479627609253,
+      "warm": true
+    },
+    {
+      "t_start": 27.0,
+      "t_end": 30.0,
+      "mae_C": 5.145799523199587,
+      "l2_rel": 0.04037256154332865,
+      "runtime_s": 3.301546096801758,
+      "warm": true
+    }
+  ],
+  "total_s": 32.02471375465393,
+  "checkpoint": "/home/coder/NAS-PINNS1/thermal_pinn/checkpoints/rectangle_nsga2_k3_dim2_ws.pt",
+  "warm_start": true,
+  "n_epochs_cold": 800,
+  "n_epochs_warm": 300
+}

@@ -21,7 +21,7 @@ except ImportError:
     sys.exit(1)
 
 ROOT       = Path(__file__).resolve().parent
-RESULTS    = ROOT.parent / "results"          # NAS-PINNS1/results/
+RESULTS    = ROOT / "results"                 # thermal_pinn/results/
 SUMMARY    = RESULTS / "05_summary"
 BEST       = RESULTS / "02_best_k"
 WARMSTART  = RESULTS / "06_warmstart_stats"

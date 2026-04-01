@@ -926,16 +926,16 @@ if __name__ == "__main__":
     if args.v2:
         reg    = load_registry_v2()
         suffix = "_v2"
-        res_dir = RESULT_DIR.parent / "results_v2"
+        res_dir = RESULT_DIR / "results_v2"
     else:
         reg    = load_registry()
         suffix = ""
-        res_dir = RESULT_DIR
+        res_dir = RESULT_DIR / "01_all_k_fields"
 
     ss_skip = args.skip if args.ss else 0
 
-    # Summary figures go to results[_v2]/summary/
-    summary_dir = res_dir / "summary"
+    # Summary figures go to results/05_summary/
+    summary_dir = RESULT_DIR / "05_summary"
     summary_dir.mkdir(parents=True, exist_ok=True)
 
     run_all = (args.fig == 0)

@@ -37,7 +37,10 @@ sys.path.insert(0, str(ROOT.parent))
 
 from thermal_pinn.plots.plot_results import (
     CKPT_DIR, RESULT_DIR, DEVICE,
-    eval_grid_2d, T_WATER, T_INIT, _ARCH_LABELS,
+    eval_grid_2d, eval_grid_3d_mid, T_WATER, T_INIT, _ARCH_LABELS,
+    _render_box_3d, _render_cylinder_3d, _render_lshape_3d,
+    _style_3d_ax, _make_pinn_field_fn, _surface_mae_3d,
+    _is_cylinder_3d,
 )
 from thermal_pinn.plots.plot_thesis import (
     _draw_heatmap, _draw_error_map, _add_colorbar,
@@ -48,9 +51,10 @@ from thermal_pinn.physics.domains_2d import make_domain
 from thermal_pinn.physics.domains_3d import make_domain_3d
 from thermal_pinn.network.pinn import ThermalPINN
 from matplotlib.colors import Normalize
+import matplotlib.cm as _mcm
 
 ARCHS   = ["bayesian", "nsga2", "nsga3"]
-OUT_DIR = RESULT_DIR / "ws_heatmaps"
+OUT_DIR = RESULT_DIR / "07_warmstart_fields"
 
 
 def _load_model(domain, arch, k, dim, suffix=""):
@@ -153,6 +157,113 @@ def make_2d_ws(domain_name, arch, k, out_path):
     print(f"    → {out_path.name}")
 
 
+def _render_fn(domain):
+    """Pick the right volumetric renderer for the domain type."""
+    name = type(domain).__name__.lower()
+    if _is_cylinder_3d(domain):
+        return _render_cylinder_3d
+    elif "lshape" in name:
+        return _render_lshape_3d
+    else:
+        return _render_box_3d
+
+
+def make_3d_ws(domain_name, arch, k, out_path):
+    """Volumetric 3D warm-start comparison — same style as existing best_results 3D plots."""
+    domain     = make_domain_3d(domain_name)
+    model_cold = _load_model(domain_name, arch, k, dim=3, suffix="")
+    model_warm = _load_model(domain_name, arch, k, dim=3, suffix="_ws_500ep")
+
+    if model_cold is None or model_warm is None:
+        print(f"    SKIP {domain_name}/{arch}/k={k} — checkpoint missing")
+        return
+
+    times      = _HEATMAP_TIMES   # [3, 10, 20, 30]
+    render_fn  = _render_fn(domain)
+    arch_label = _ARCH_LABELS.get(arch, arch)
+    cmap_obj   = _mcm.get_cmap(CMAP_T)   # convert string → callable colormap
+
+    # Fixed physical range — same approach as fig16_pinn_volumetric which works for all domains
+    norm = Normalize(vmin=T_WATER, vmax=T_INIT)
+
+    # 3 rows × 4 cols: row0=Reference, row1=Cold, row2=Warm
+    n_cols = len(times)
+    fig = plt.figure(figsize=(16, 10))
+    fig.patch.set_facecolor(_WHITE)
+    fig.suptitle(
+        f"3D Volumetric Temperature — {domain_name.capitalize()}\n"
+        f"Optimizer: {arch_label}  |  k={k} (Δt={k*1.5:.1f}s/window)\n"
+        f"Row 1: FEM Reference   Row 2: PINN Cold (800 ep)   Row 3: PINN Warm (500 ep)",
+        fontsize=11, fontweight="bold",
+    )
+
+    row_labels = ["Reference\n(FEM)", f"PINN cold\n(800 ep)", f"PINN warm\n(500 ep)"]
+
+    mae_rows = []
+    for row, (label, model) in enumerate(
+        [("ref", None), ("cold", model_cold), ("warm", model_warm)]
+    ):
+        maes = []
+        for col, t in enumerate(times):
+            ax = fig.add_subplot(3, n_cols, row * n_cols + col + 1, projection="3d")
+            field_fn = None if model is None else _make_pinn_field_fn(model, domain, k)
+            render_fn(ax, domain, t, cmap_obj, norm, field_fn=field_fn)
+            _style_3d_ax(ax, domain)
+            ax.view_init(elev=25, azim=-60)   # consistent angle (same as fig16)
+            # Set explicit axis limits
+            if hasattr(domain, "R"):
+                ax.set_xlim(-domain.R, domain.R)
+                ax.set_ylim(-domain.R, domain.R)
+                ax.set_zlim(0, domain.Hz)
+            else:
+                Lx = getattr(domain, "Lx", 1.0)
+                Ly = getattr(domain, "Ly", 1.0)
+                Lz = getattr(domain, "Lz", getattr(domain, "Hz", 1.0))
+                ax.set_xlim(0, Lx); ax.set_ylim(0, Ly); ax.set_zlim(0, Lz)
+            # Normalise box aspect so all domains fill the subplot equally
+            if hasattr(domain, "R"):
+                D = 2 * domain.R; Hz = domain.Hz
+                dims = np.array([D, D, Hz], dtype=float)
+            else:
+                dims = np.array([
+                    getattr(domain, "Lx", 1.0),
+                    getattr(domain, "Ly", 1.0),
+                    getattr(domain, "Lz", getattr(domain, "Hz", 1.0)),
+                ], dtype=float)
+            ax.set_box_aspect(dims / dims.max())
+            if row == 0:
+                ax.set_title(f"t = {t:.0f} s", fontsize=9, fontweight="bold", pad=2)
+            if col == 0:
+                ax.text2D(-0.18, 0.5, label, transform=ax.transAxes,
+                          fontsize=9, fontweight="bold", va="center", rotation=90)
+            if model is not None:
+                try:
+                    g   = eval_grid_3d_mid(model, domain, k, t, n_grid=20)
+                    mae = float(g["mae"]) if np.isfinite(g["mae"]) else float("nan")
+                except Exception:
+                    mae = float("nan")
+                maes.append(mae)
+                lbl = f"MAE={mae:.1f}°C" if np.isfinite(mae) else "MAE=n/a"
+                # text2D stays in front of the 3D geometry (xlabel gets hidden behind it)
+                ax.text2D(0.5, -0.04, lbl, transform=ax.transAxes,
+                          ha="center", va="top", fontsize=7.5, fontweight="bold",
+                          color="#333333")
+        mae_rows.append(maes)
+
+    # Shared colorbar on the right
+    sm = plt.cm.ScalarMappable(cmap=cmap_obj, norm=norm)
+    sm.set_array([])
+    cbar = fig.colorbar(sm, ax=fig.axes, orientation="vertical",
+                        fraction=0.012, pad=0.02, aspect=35)
+    cbar.set_label("T [°C]", fontsize=9)
+    cbar.ax.tick_params(labelsize=8)
+
+    plt.tight_layout(rect=[0, 0, 0.97, 0.92])
+    fig.savefig(out_path, dpi=_FIG_DPI, bbox_inches="tight", facecolor=_WHITE)
+    plt.close(fig)
+    print(f"    → {out_path.name}")
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--dim", type=int, default=0, choices=[0, 2, 3])
@@ -162,23 +273,21 @@ if __name__ == "__main__":
     dims = [2, 3] if args.dim == 0 else [args.dim]
 
     for dim in dims:
-        if dim == 3:
-            print("  3D warm-start heatmaps: skipping (3D renderer requires registry entry)")
-            continue   # 3D renderer needs extra setup; 2D covers the thesis need
-
-        domains = DOMAINS_2D_LIST
+        domains = DOMAINS_2D_LIST if dim == 2 else DOMAINS_3D_LIST
+        make_fn  = make_2d_ws    if dim == 2 else make_3d_ws
         print(f"\n{'='*55}")
         print(f"  {dim}D Warm-Start Heatmaps → results/ws_heatmaps/")
         print(f"{'='*55}")
 
         for arch in ARCHS:
             for domain in domains:
-                k = _best_k(domain, arch, dim)
-                if k is None:
-                    print(f"  SKIP {domain}/{arch} — no metrics")
-                    continue
-                out = OUT_DIR / f"{arch}_{domain}_{dim}d_k{k}_ws.png"
-                print(f"  {domain}/{arch} best k={k}", flush=True)
-                make_2d_ws(domain, arch, k, out)
+                for k in range(1, 6):
+                    cold_ckpt = CKPT_DIR / f"{domain}_{arch}_k{k}_dim{dim}.pt"
+                    warm_ckpt = CKPT_DIR / f"{domain}_{arch}_k{k}_dim{dim}_ws_500ep.pt"
+                    if not cold_ckpt.exists() and not warm_ckpt.exists():
+                        continue
+                    out = OUT_DIR / f"{arch}_{domain}_{dim}d_k{k}_ws.png"
+                    print(f"  {domain}/{arch} k={k}", flush=True)
+                    make_fn(domain, arch, k, out)
 
     print(f"\nDone → {OUT_DIR}/")

@@ -47,9 +47,8 @@ warnings.filterwarnings("ignore")
 
 ROOT       = Path(__file__).resolve().parent.parent   # thermal_pinn/
 CKPT_DIR   = ROOT / "checkpoints"
-RESULT_DIR = ROOT / "results"
+RESULT_DIR = ROOT / "results"                      # thermal_pinn/results/
 RESULT_DIR.mkdir(exist_ok=True)
-(RESULT_DIR / "per_k").mkdir(exist_ok=True)
 
 import sys
 sys.path.insert(0, str(ROOT.parent))
@@ -1209,10 +1208,11 @@ def fig6_per_k_heatmaps(registry: list[dict], t_query: float = 29.0):
                 ax_bar.set_title("L2 Ranking", fontsize=8, color=_TXT_C, fontweight="bold")
                 ax_bar.grid(axis="x", alpha=0.3, color=_SPINE_C)
 
-                out = RESULT_DIR / "per_k" / f"{dname}_dim{dim}_k{kv}_t{t_query:.0f}s.png"
+                out = RESULT_DIR / "01_all_k_fields" / f"{dname}_dim{dim}_k{kv}_t{t_query:.0f}s.png"
+                out.parent.mkdir(parents=True, exist_ok=True)
                 fig.savefig(out, dpi=150, bbox_inches="tight", facecolor=_FIG_BG)
                 plt.close(fig)
-                print(f"    → per_k/{out.name}")
+                print(f"    → {out.parent.name}/{out.name}")
 
 
 # ════════════════════════════════════════════════════════════════════════════

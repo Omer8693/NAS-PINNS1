@@ -38,7 +38,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT.parent))
 from thermal_pinn.plots.plot_results import CKPT_DIR, RESULT_DIR
 
-OUT_DIR = RESULT_DIR / "timeline"
+OUT_DIR = RESULT_DIR / "03_timeline"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # ── Constants ──────────────────────────────────────────────────────────────────

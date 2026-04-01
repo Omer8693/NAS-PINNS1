@@ -857,6 +857,26 @@ def s17_warmstart_tradeoff(prs):
         align=PP_ALIGN.CENTER)
 
 
+def s18_warmstart_heatmaps(prs):
+    """One slide per arch showing cold vs warm heatmap side-by-side (rectangle 2D)."""
+    WS = ROOT / "results" / "ws_heatmaps"
+    cases = [
+        ("Warm-Start Heatmap — Rectangle 2D  (Bayesian)",
+         "Bayesian  |  k=1  |  Row1=Reference  Row2=Cold(800ep)  Row3=Warm(500ep)  Row4/5=Error",
+         WS / "bayesian_rectangle_2d_k1_ws.png"),
+        ("Warm-Start Heatmap — Rectangle 2D  (NSGA-II)",
+         "NSGA-II  |  k=1  |  Row1=Reference  Row2=Cold  Row3=Warm  Row4/5=|Error|",
+         WS / "nsga2_rectangle_2d_k1_ws.png"),
+        ("Warm-Start Heatmap — Rectangle 2D  (NSGA-III)",
+         "NSGA-III  |  k=1  |  Row1=Reference  Row2=Cold  Row3=Warm  Row4/5=|Error|",
+         WS / "nsga3_rectangle_2d_k1_ws.png"),
+    ]
+    footnote = "Cold = 800 ep  |  Warm = 500 ep, lr=1e-3  |  Lower error = better"
+    for title, caption, path in cases:
+        if path.exists():
+            _heatmap_slide(prs, title, caption, path, footnote)
+
+
 def s15_conclusions(prs):
     slide = blank(prs)
     rect(slide, 0, 0, 13.33, 7.5, NAVY)
@@ -927,7 +947,8 @@ def main():
         ("15 Warm-Start Overview", s15_warmstart_overview),
         ("16 Warm-Start Heatmaps", s16_warmstart_plots),
         ("17 Warm-Start Trade-off",s17_warmstart_tradeoff),
-        ("18 Conclusions",        s15_conclusions),
+        ("18 WS Heatmaps",        s18_warmstart_heatmaps),
+        ("19 Conclusions",        s15_conclusions),
     ]
 
     for name, fn in steps:

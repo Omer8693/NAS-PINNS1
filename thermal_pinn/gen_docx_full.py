@@ -845,6 +845,24 @@ def sec_warmstart(doc):
         add_fig(doc, p3_kline,
                 "Figure 9.3b: Mean MAE vs k — 3D domains.", width=6.0)
 
+    h3(doc, "Temperature Field Comparison")
+    body(doc,
+        "Figures 9.4–9.6 show side-by-side temperature heatmaps for the Rectangle 2D "
+        "domain at the best-k, comparing cold-start (800 ep) and warm-start (500 ep) "
+        "predictions against the FEM reference at t = 3, 10, 20, 30 s. "
+        "Row 1 = FEM reference, Row 2 = Cold-start PINN, Row 3 = Warm-start PINN, "
+        "Row 4 = |Error| cold, Row 5 = |Error| warm."
+    )
+    ws_dir = WARMSTART.parent / "ws_heatmaps"
+    for arch, fig_label in [("bayesian", "9.4"), ("nsga2", "9.5"), ("nsga3", "9.6")]:
+        p = ws_dir / f"{arch}_rectangle_2d_k1_ws.png"
+        if p.exists():
+            arch_label = {"bayesian": "Bayesian (TPE)", "nsga2": "NSGA-II", "nsga3": "NSGA-III"}[arch]
+            add_fig(doc, p,
+                    f"Figure {fig_label}: Rectangle 2D / {arch_label} / k=1 — "
+                    "Cold-start vs Warm-start temperature field and error.",
+                    width=6.0)
+
     h2(doc, "9.4 Recommendation")
     body(doc,
         "Warm-start training (ws_500ep) is recommended when:"

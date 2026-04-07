@@ -652,24 +652,56 @@ class LShape3D:
 
     # ── Sampling methods ─────────────────────────────────────────────────────
 
-    def sample_interior(self, n: int, rng=None):
+    def sample_interior(self, n: int, rng=None, corner_frac: float = 0.35):
         """
-        Uniform samples inside the L-shape via rejection in the bounding box
-        [0, Lx] × [0, Ly] × [0, Lz].
+        Stratified samples inside the L-shape.
+
+        (1-corner_frac) of points: uniform over the full bounding box (rejection).
+        corner_frac of points: concentrated near the re-entrant corner (cut_x, cut_y)
+            where the 270-degree angle produces the steepest thermal gradients.
         """
         rng = rng or np.random.default_rng(0)
-        pts = []
-        while len(pts) < n:
-            batch = int((n - len(pts)) * 1.5) + 10
-            x = rng.uniform(0, self.Lx, batch)
-            y = rng.uniform(0, self.Ly, batch)
-            z = rng.uniform(0, self.Lz, batch)
+
+        def _rejection(n_req):
+            pts = []
+            while len(pts) < n_req:
+                batch = int((n_req - len(pts)) * 1.5) + 10
+                x = rng.uniform(0, self.Lx, batch)
+                y = rng.uniform(0, self.Ly, batch)
+                z = rng.uniform(0, self.Lz, batch)
+                inside = self.mask(x, y, z)
+                for xi, yi, zi in zip(x[inside], y[inside], z[inside]):
+                    pts.append((xi, yi, zi))
+                    if len(pts) == n_req:
+                        break
+            return np.array(pts[:n_req], dtype=np.float32)
+
+        n_corner  = int(n * corner_frac)
+        n_uniform = n - n_corner
+
+        uniform_pts = _rejection(n_uniform)
+
+        # Corner region: Gaussian cloud around (cut_x, cut_y) clipped to L-shape
+        cx, cy = self.cut_x, self.cut_y
+        radius = min(self.Lx, self.Ly) * 0.25   # ≈ half-width of focus zone
+        corner_pts = []
+        while len(corner_pts) < n_corner:
+            batch = (n_corner - len(corner_pts)) * 4 + 10
+            x = rng.normal(cx, radius, batch).astype(np.float32)
+            y = rng.normal(cy, radius, batch).astype(np.float32)
+            z = rng.uniform(0, self.Lz, batch).astype(np.float32)
+            x = np.clip(x, 0, self.Lx)
+            y = np.clip(y, 0, self.Ly)
             inside = self.mask(x, y, z)
             for xi, yi, zi in zip(x[inside], y[inside], z[inside]):
-                pts.append((xi, yi, zi))
-                if len(pts) == n:
+                corner_pts.append((xi, yi, zi))
+                if len(corner_pts) == n_corner:
                     break
-        pts = np.array(pts[:n], dtype=np.float32)
+        corner_pts = np.array(corner_pts[:n_corner], dtype=np.float32)
+
+        pts = np.concatenate([uniform_pts, corner_pts], axis=0)
+        # Shuffle so corner/uniform points are interleaved (avoids batch bias)
+        rng.shuffle(pts)
         return pts[:, 0], pts[:, 1], pts[:, 2]
 
     def sample_boundary(self, n: int, rng=None):

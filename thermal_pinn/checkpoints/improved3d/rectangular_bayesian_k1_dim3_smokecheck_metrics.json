@@ -1,0 +1,36 @@
+{
+  "domain": "rectangular",
+  "arch": "bayesian",
+  "k": 1,
+  "dim": 3,
+  "mean_mae": 94.10136017789141,
+  "n_windows": 1,
+  "windows": [
+    {
+      "t_start": 0.0,
+      "t_end": 1.5,
+      "mae_C": 94.10136017789141,
+      "l2_rel": 0.18390642550898542,
+      "runtime_s": 0.7416477203369141
+    }
+  ],
+  "total_s": 1.7807810306549072,
+  "checkpoint": "/home/coder/NAS-PINNS1/thermal_pinn/checkpoints/improved3d/rectangular_bayesian_k1_dim3_smokecheck.pt",
+  "train_config": {
+    "n_domain": 16,
+    "n_bc": 8,
+    "n_epochs": 1,
+    "lr": 0.0008,
+    "lr_min": 1e-05,
+    "lbfgs_iters": 1,
+    "n_eval": 16,
+    "use_end_supervision": true
+  },
+  "weights": {
+    "w_pde": 1.0,
+    "w_ic": 15.0,
+    "w_bc": 5.0,
+    "w_end": 10.0
+  },
+  "run_tag": "smokecheck"
+}

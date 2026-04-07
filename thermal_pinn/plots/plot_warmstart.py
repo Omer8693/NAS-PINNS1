@@ -188,12 +188,12 @@ def _recommend(cold_mae, v2_mae, warm_mae, cold_t, warm_t) -> tuple[str, str]:
         # v2 meaningfully better
         if np.isfinite(dm_warm) and dm_warm < 1.0 and speedup > 1.3:
             return "Warm + v2", "#C8E6C9"   # green
-        return "v2 önerilir", "#C8E6C9"
+        return "v2 preferred", "#C8E6C9"
     if np.isfinite(dm_warm) and dm_warm < 1.0 and speedup > 1.3:
-        return "Warm önerilir", "#C8E6C9"   # green
+        return "Warm preferred", "#C8E6C9"   # green
     if np.isfinite(dm_warm) and dm_warm < 2.0 and speedup > 1.0:
-        return "Warm kabul.", "#FFF9C4"      # yellow
-    return "Cold yeterli", "#FFCDD2"         # red
+        return "Warm marginal", "#FFF9C4"    # yellow
+    return "Cold preferred", "#FFCDD2"       # red
 
 
 def fig_ws_summary_table(dim: int) -> None:
@@ -204,7 +204,7 @@ def fig_ws_summary_table(dim: int) -> None:
         "Domain", "Arch", "Best k",
         "Cold MAE\n(°C)", "v2 MAE\n(°C)", "Warm MAE\n(°C)",
         "Cold time\n(s)", "Warm time\n(s)", "Speedup",
-        "Öneri",
+        "Recommendation",
     ]
     rows = []
     row_colors = []
@@ -263,7 +263,7 @@ def fig_ws_summary_table(dim: int) -> None:
         for j in range(len(col_headers)):
             cell = tbl[i + 1, j]
             cell.set_height(0.09)
-            # Colour only the "Öneri" column
+            # Colour only the "Recommendation" column
             if j == len(col_headers) - 1:
                 cell.set_facecolor(rc)
             else:
@@ -351,8 +351,8 @@ def fig_ws_recommendation(dim: int) -> None:
 
     # Legend for colours
     legend_patches = [
-        mpatches.Patch(color="#C8E6C9", label="Warm/v2 önerilir"),
-        mpatches.Patch(color="#FFF9C4", label="Kabul edilebilir"),
+        mpatches.Patch(color="#C8E6C9", label="Warm/v2 preferred"),
+        mpatches.Patch(color="#FFF9C4", label="Marginal"),
         mpatches.Patch(color="#FFCDD2", label="Cold yeterli"),
     ]
     fig.legend(handles=legend_patches, loc="lower center", ncol=3,

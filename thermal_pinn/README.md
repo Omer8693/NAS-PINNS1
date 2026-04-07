@@ -1,4 +1,4 @@
-# NAS-PINN Thermal Quenching — k-Skip Framework
+# NAS-PINN Thermal Quenching — Fixed-k and Adaptive-k Framework
 
 A Neural Architecture Search (NAS) driven Physics-Informed Neural Network (PINN) framework
 for accelerating transient thermal quenching simulations. The physical problem is the cooling
@@ -8,7 +8,13 @@ convective boundary condition (h = 5000 W/m²K).
 
 The framework couples FEM and PINN via a **multi-step window prediction (MSWP)** strategy.
 Instead of solving every FEM timestep (Δt_FEM = 1.5 s), the PINN covers k consecutive steps
-in a single forward pass (k ∈ {1, 2, 3, 4, 5}), reducing FEM evaluations by a factor of k.
+in a single forward pass. Two usage modes are now included:
+
+1. **Fixed-k sweep:** evaluate k ∈ {1, 2, 3, 4, 5} for every domain / architecture pair.
+2. **Adaptive-k control:** choose k online from the previous window error, so the pipeline
+   stays conservative in the early transient and skips more FEM anchors later when the
+   temperature field becomes smoother.
+
 The network output is IC-consistent by construction: it exactly satisfies the initial condition
 at the start of each window, avoiding additional penalty terms.
 
@@ -17,13 +23,15 @@ for optimal layer depth, width, and activation function over four 2D and four 3D
 geometries (rectangle, circle, L-shape, cylinder, stacked, etc.). The search space follows
 Wang & Zhong (2023) adapted to the quenching problem.
 
-Training progresses through three stages:
+Training and evaluation now span four main tracks:
 1. **Cold-start (v1):** 800 Adam epochs from random initialisation per window.
 2. **v2 (Fourier + SA):** Fourier feature embedding combats spectral bias; self-adaptive loss
    weights are learned jointly with model parameters. NSGA-II/III additionally retrained with
    1500 epochs + 150 L-BFGS iterations.
 3. **Warm-start:** Window 1 trained cold (800 ep); subsequent windows fine-tune from the
    previous window's weights (500 ep, lr = 1e-3), achieving comparable accuracy at 38% fewer epochs.
+4. **Adaptive-k / 3D follow-up:** legacy adaptive-k, conservative adaptive-k v2, improved 3D
+   normalization experiments, and 3D triplet comparison figures for thesis selection.
 
 ---
 
@@ -39,20 +47,29 @@ thermal_pinn/
 │   └── domains_3d.py        # 3D domains: rectangular, cylinder, stacked, lshape
 ├── training/
 │   ├── trainer.py           # Window trainer: Adam + L-BFGS (v1)
-│   ├── train_all.py         # Full sweep launcher (v1)
-│   ├── sa_trainer.py        # Self-adaptive weight trainer (v2)
-│   ├── train_v2.py          # Full sweep launcher (v2)
-│   ├── retrain_nsga.py      # NSGA-II/III extended retrain (1500 ep + L-BFGS)
-│   └── warmstart_trainer.py # Warm-start trainer (500 ep fine-tune per window)
+│   ├── train_all.py         # Full sweep launcher (v1, cold-start)
+│   ├── train_warmstart.py   # Warm-start trainer (500 ep fine-tune per window)
+│   ├── train_adaptive_k.py  # Legacy adaptive-k controller
+│   ├── train_adaptive_k_v2.py
+│   │                       # Conservative adaptive-k controller with burn-in + phase caps
+│   ├── train_3d_improved.py
+│   │                       # Experimental 3D normalization / residual scaling study
+│   └── train_3d_improved_warmstart.py
+│                           # Warm-start variant of the improved 3D study
 ├── plots/
 │   ├── plot_results.py      # Core evaluation utilities (CKPT_DIR, RESULT_DIR, eval_grid_*)
 │   ├── plot_thesis.py       # Publication-quality figures (heatmaps, tables, k-progression)
-│   ├── plot_warmstart.py    # Cold vs v2 vs warm-start comparison plots
+│   ├── plot_warmstart.py    # Cold vs v2 vs warm-start MAE comparison
+│   ├── plot_adaptive_k.py   # Adaptive-k metric summaries and controller comparisons
+│   ├── plot_adaptive_k_fields.py
+│   │                       # Exact vs predicted fields at adaptive k-change events
+│   ├── plot_adaptive_k_triplet_3d.py
+│   │                       # 3D triplet snapshots: fixed k=1 vs adaptive v1 vs adaptive v2
 │   ├── plot_ws_heatmaps.py  # Side-by-side cold/warm temperature field heatmaps
-│   └── plot_timeline.py     # Training timeline and window-step plots
+│   ├── plot_timeline.py     # Training timeline and window-step plots
+│   └── plot_comparison.py   # Architecture comparison plots
 ├── gen_pptx_full.py         # Generate full 19-slide PPTX report
 ├── gen_docx_full.py         # Generate full DOCX report
-├── reports/                 # Generated PPTX and DOCX
 ├── checkpoints/             # Model weights (.pt) and metrics (.json)
 └── results/
     ├── 01_all_k_fields/     # Per-k temperature field plots (all domains, all k)
@@ -61,7 +78,11 @@ thermal_pinn/
     ├── 04_window_steps/     # Window-step progression plots
     ├── 05_summary/          # Summary tables and bar charts
     ├── 06_warmstart_stats/  # Cold vs v2 vs warm MAE comparison, summary table, recommendation
-    └── 07_warmstart_fields/ # Cold vs warm temperature field heatmaps (all k)
+    ├── 07_warmstart_fields/ # Cold vs warm temperature field heatmaps (all k)
+    ├── adaptive_k/          # Adaptive-k aggregate plots and summaries
+    ├── adaptive_k_fields/   # Adaptive-k field comparisons at k-change events
+    └── adaptive_k_triplet_3d/
+                            # Common-time 3D triplet figures for thesis use
 ```
 
 ---
@@ -71,17 +92,24 @@ thermal_pinn/
 ### Training
 
 ```bash
-# v1 — cold-start, all domains/archs/k
+# Cold-start — all domains/archs/k
 python -m thermal_pinn.training.train_all --all --cuda
 
-# v2 — Fourier + self-adaptive weights
-python -m thermal_pinn.training.train_v2 --all --dim 2 --cuda
+# Warm-start (500 ep fine-tune per window)
+python -m thermal_pinn.training.train_warmstart --dim 2 --cuda
 
-# NSGA-II/III extended retrain
-python -m thermal_pinn.training.retrain_nsga --dim 2 --cuda
+# Legacy adaptive-k
+python -m thermal_pinn.training.train_adaptive_k \
+  --domain cylinder --arch bayesian --dim 3 --cuda
 
-# Warm-start (500 ep fine-tune)
-python -m thermal_pinn.training.warmstart_trainer --dim 2 --cuda
+# Conservative adaptive-k v2
+python -m thermal_pinn.training.train_adaptive_k_v2 \
+  --domain cylinder --arch bayesian --dim 3 --cuda \
+  --tag adaptive_v2_all3d_rerun
+
+# Experimental improved 3D study
+python -m thermal_pinn.training.train_3d_improved \
+  --domain cylinder --arch bayesian --k 1 --cuda
 ```
 
 ### Plotting
@@ -95,6 +123,13 @@ python -m thermal_pinn.plots.plot_results
 
 # Warm-start comparison figures (2D + 3D)
 python -m thermal_pinn.plots.plot_warmstart
+
+# Adaptive-k event fields
+python -m thermal_pinn.plots.plot_adaptive_k_fields
+
+# 3D fixed-vs-adaptive triplet snapshots
+python -m thermal_pinn.plots.plot_adaptive_k_triplet_3d \
+  --all --v2-tag adaptive_v2_all3d_rerun
 
 # Cold vs warm temperature field heatmaps
 python -m thermal_pinn.plots.plot_ws_heatmaps
@@ -125,6 +160,18 @@ python -m thermal_pinn.gen_docx_full   # → reports/NAS_PINN_Thermal_Quenching_
 | Cold-start epochs | 800 (Adam) |
 | Warm-start epochs | 500 (Adam, lr=1e-3) |
 | v2 epochs | 1500 (Adam) + 150 (L-BFGS) for NSGA |
+
+---
+
+## Recent Additions
+
+- Added adaptive-k training scripts for both the original controller and the more conservative
+  `adaptive_k_v2` controller.
+- Added experimental 3D scripts to study centered-domain normalization and larger 3D budgets.
+- Added `plot_adaptive_k_fields.py` and `plot_adaptive_k_triplet_3d.py` for qualitative
+  comparison of fixed-k and adaptive-k runs.
+- Generated 3D triplet figures for all domain/architecture combinations under
+  `results/adaptive_k_triplet_3d/`.
 
 ---
 

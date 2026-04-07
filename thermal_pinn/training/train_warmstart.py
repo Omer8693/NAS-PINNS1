@@ -6,7 +6,7 @@ Warm-start variant of the k-skip MSWP training.
 Strategy
 --------
 Window 1  : cold-start — random init, full Adam (N_EPOCHS_COLD=800) + L-BFGS
-Window 2+ : warm-start — carry previous weights, short Adam (N_EPOCHS_WARM=300)
+Window 2+ : warm-start — carry previous weights, short Adam (N_EPOCHS_WARM=500)
             with a lower LR (LR_WARM=3e-4). Because the physics changes only
             gradually between windows, the network is already near the solution;
             fewer gradient steps are enough to adapt to the new IC/window.
@@ -72,7 +72,7 @@ CHECKPOINT_DIR = _ROOT / "checkpoints"
 
 # ── Warm-start hyper-params (defaults; overridden by CLI args) ────────────────
 N_EPOCHS_COLD = 800    # window 1: full training (same as train_all.py)
-N_EPOCHS_WARM = 300    # window 2+: fine-tune only (overridden by --warm_epochs)
+N_EPOCHS_WARM = 500    # window 2+: fine-tune only (overridden by --warm_epochs)
 LR_COLD       = 1e-3
 LR_WARM       = 3e-4   # warm LR start (overridden by --warm_lr)
 LR_MIN        = 1e-5
@@ -121,16 +121,21 @@ def train_window_ws(model: torch.nn.Module,
     lr       = lr_warm       if warm else LR_COLD
 
     # ── Collocation points ────────────────────────────────────────────────────
+    # L-Shape 3D: use more points to resolve re-entrant corner gradients
+    is_lshape3d = (dim == 3 and domain.__class__.__name__ == "LShape3D")
+    n_dom = 3000 if is_lshape3d else N_DOMAIN
+    n_bc  = 500  if is_lshape3d else N_BC
+
     if dim == 2:
-        xi, yi    = domain.sample_interior(N_DOMAIN, rng=rng)
+        xi, yi    = domain.sample_interior(n_dom, rng=rng)
         coords_np = np.stack([xi, yi], axis=1)
-        bx, by, nx_, ny_ = domain.sample_boundary(N_BC, rng=rng)
+        bx, by, nx_, ny_ = domain.sample_boundary(n_bc, rng=rng)
         bc_np     = np.stack([bx, by],   axis=1)
         norms_np  = np.stack([nx_, ny_], axis=1)
     else:
-        xi, yi, zi = domain.sample_interior(N_DOMAIN, rng=rng)
+        xi, yi, zi = domain.sample_interior(n_dom, rng=rng)
         coords_np  = np.stack([xi, yi, zi], axis=1)
-        bx, by, bz, nx_, ny_, nz_ = domain.sample_boundary(N_BC, rng=rng)
+        bx, by, bz, nx_, ny_, nz_ = domain.sample_boundary(n_bc, rng=rng)
         bc_np      = np.stack([bx, by, bz],     axis=1)
         norms_np   = np.stack([nx_, ny_, nz_],  axis=1)
 
@@ -139,8 +144,8 @@ def train_window_ws(model: torch.nn.Module,
     coords_norm = _normalise_coords(coords_np, domain)
     bc_norm     = _normalise_coords(bc_np,     domain)
 
-    tau_np  = rng.uniform(0, 1, (N_DOMAIN, 1)).astype(np.float32)
-    tau_bc  = rng.uniform(0, 1, (N_BC,     1)).astype(np.float32)
+    tau_np  = rng.uniform(0, 1, (n_dom, 1)).astype(np.float32)
+    tau_bc  = rng.uniform(0, 1, (n_bc,  1)).astype(np.float32)
 
     theta_ic_vals = theta_ic_fn(coords_np).reshape(-1, 1).astype(np.float32)
     theta_ic_bc   = theta_ic_fn(bc_np).reshape(-1, 1).astype(np.float32)
@@ -157,7 +162,7 @@ def train_window_ws(model: torch.nn.Module,
     if theta_end_fn is not None:
         theta_end_vals = theta_end_fn(coords_np).reshape(-1, 1).astype(np.float32)
         theta_end_t    = to_t(theta_end_vals)
-        tau_end_t      = torch.ones(N_DOMAIN, 1, device=device)
+        tau_end_t      = torch.ones(n_dom, 1, device=device)
 
     # ── Phase 1: Adam ─────────────────────────────────────────────────────────
     optimizer = optim.Adam(model.parameters(), lr=lr)
@@ -171,7 +176,7 @@ def train_window_ws(model: torch.nn.Module,
         optimizer.zero_grad()
         loss_pde = _pde_residual(model, coords_t, tau_t, theta_ic_t,
                                  dt_window, alpha)
-        tau_zero = torch.zeros(N_DOMAIN, 1, device=device)
+        tau_zero = torch.zeros(n_dom, 1, device=device)
         pred_ic  = model(coords_t, tau_zero, theta_ic_t)
         loss_ic  = ((pred_ic - theta_ic_t) ** 2).mean()
         loss_bc  = _robin_bc_loss(model, bc_t, norms_t, tau_bc_t,
@@ -197,7 +202,7 @@ def train_window_ws(model: torch.nn.Module,
             lbfgs.zero_grad()
             lp = _pde_residual(model, coords_t, tau_t, theta_ic_t,
                                dt_window, alpha)
-            pi_ = model(coords_t, torch.zeros(N_DOMAIN, 1, device=device), theta_ic_t)
+            pi_ = model(coords_t, torch.zeros(n_dom, 1, device=device), theta_ic_t)
             li  = ((pi_ - theta_ic_t) ** 2).mean()
             lb  = _robin_bc_loss(model, bc_t, norms_t, tau_bc_t,
                                  theta_ic_bc_t, h)

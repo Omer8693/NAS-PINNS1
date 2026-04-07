@@ -1,0 +1,52 @@
+[
+  {
+    "domain": "rectangular",
+    "arch": "bayesian",
+    "dim": 3,
+    "best_k": 1,
+    "best_mae": 94.10136017789141,
+    "all_k": {
+      "1": 94.10136017789141
+    },
+    "checkpoint_best": "/home/coder/NAS-PINNS1/thermal_pinn/checkpoints/improved3d/rectangular_bayesian_k1_dim3_smokecheck.pt",
+    "run_tag": "smokecheck"
+  },
+  {
+    "domain": "rectangular",
+    "arch": "bayesian",
+    "dim": 3,
+    "best_k": 1,
+    "best_mae": 73.4204554753758,
+    "all_k": {
+      "1": 73.4204554753758
+    },
+    "checkpoint_best": "/home/coder/NAS-PINNS1/thermal_pinn/checkpoints/improved3d/rectangular_bayesian_k1_dim3_smokecheck_ws.pt",
+    "run_tag": "smokecheck_ws",
+    "warm_start": true
+  },
+  {
+    "domain": "cylinder",
+    "arch": "bayesian",
+    "dim": 3,
+    "best_k": 1,
+    "best_mae": 11.02370762617171,
+    "all_k": {
+      "1": 11.02370762617171
+    },
+    "checkpoint_best": "/home/coder/NAS-PINNS1/thermal_pinn/checkpoints/improved3d/cylinder_bayesian_k1_dim3_improved3d_ws.pt",
+    "run_tag": "improved3d_ws",
+    "warm_start": true
+  },
+  {
+    "domain": "cylinder",
+    "arch": "bayesian",
+    "dim": 3,
+    "best_k": 1,
+    "best_mae": 6.585590247790913,
+    "all_k": {
+      "1": 6.585590247790913
+    },
+    "checkpoint_best": "/home/coder/NAS-PINNS1/thermal_pinn/checkpoints/improved3d/cylinder_bayesian_k1_dim3_improved3d.pt",
+    "run_tag": "improved3d"
+  }
+]

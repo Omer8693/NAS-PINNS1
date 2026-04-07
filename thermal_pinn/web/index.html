@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Step Optimization in Thermal Simulation with PINNs</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ── Navigation ─────────────────────────────────────────────────────────── -->
+<nav>
+  <span class="brand">NAS-PINN</span>
+  <a href="#introduction">Introduction</a>
+  <a href="#step1">Step 1</a>
+  <a href="#step2">Step 2</a>
+  <a href="#step3">Step 3</a>
+  <a href="#viewer">Viewer</a>
+  <a href="#results">Summary</a>
+  <a href="#references">References</a>
+</nav>
+
+<!-- ── Hero ───────────────────────────────────────────────────────────────── -->
+<section id="hero">
+  <div class="container">
+    <p class="hero-label">Research Article · 2026</p>
+    <h1>Step Optimization in Thermal Simulation with PINNs:<br>
+        Selective FEM Step Skipping via Neural Architecture Search</h1>
+    <p class="subtitle">
+      A multi-step window prediction framework coupling FEM and PINN through selective
+      timestep skipping, with NAS-optimized architectures across eight 2D and 3D
+      aluminium casting quenching domains.
+    </p>
+    <div class="hero-meta">
+      <span>A356 Aluminium Quenching</span><span class="sep">·</span>
+      <span>Bayesian TPE · NSGA-II · NSGA-III</span><span class="sep">·</span>
+      <span>8 Domains</span><span class="sep">·</span>
+      <span>k-Skip MSWP  (k = 1…5)</span>
+    </div>
+    <div class="hero-links">
+      <a href="https://github.com/Omer8693/thermal_pinn" class="btn btn-white" target="_blank">⌥ GitHub</a>
+      <a href="#viewer" class="btn btn-outline">→ Interactive Viewer</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Introduction ───────────────────────────────────────────────────────── -->
+<section id="introduction">
+  <div class="container paper-body">
+    <h2 class="section-title">1. Introduction</h2>
+
+    <p>Thermal quenching is a critical manufacturing process in the production of aluminium
+    castings, wherein a hot workpiece — typically at temperatures near 500 °C — is rapidly
+    immersed in a cooling medium such as water. The resulting transient heat transfer process
+    governs the development of residual stresses, microstructural changes, and the final
+    mechanical properties of the component [8]. Accurate simulation of this process is
+    therefore essential for industrial quality control, yet it remains computationally
+    demanding when performed using traditional numerical methods.</p>
+
+    <p>Finite Element Methods (FEM) represent the current state of the art for such simulations.
+    They discretise the governing transient heat equation — including convective boundary
+    conditions with high heat transfer coefficients (h ≈ 5000 W/m²K) — into a sequence of
+    linear systems solved at each timestep Δt<sub>FEM</sub> = 1.5 s. While FEM solutions are
+    highly accurate, the computational cost scales poorly with mesh refinement and the number
+    of timesteps required to resolve the full 30-second quenching transient. For complex
+    three-dimensional geometries such as cylinders, L-shaped sections, and stacked components,
+    this cost becomes prohibitive in iterative design workflows.</p>
+
+    <p>Physics-Informed Neural Networks (PINNs) [1] have emerged as a mesh-free alternative
+    to conventional numerical solvers. By embedding the governing PDEs directly into the neural
+    network loss function, PINNs can approximate solutions without requiring spatial
+    discretisation. However, vanilla PINNs suffer from spectral bias [2] — the tendency to
+    learn low-frequency components while struggling with high-frequency spatial gradients —
+    and sensitivity to loss weight balancing. Moreover, solution quality is highly sensitive
+    to the choice of network architecture, which has historically required extensive manual
+    tuning.</p>
+
+    <p>Neural Architecture Search (NAS) addresses this limitation by automating the search for
+    optimal network configurations. Wang &amp; Zhong [7] demonstrated that NAS-guided PINNs can
+    discover architectures that significantly outperform hand-designed networks on benchmark
+    PDE problems. This work applies three NAS strategies — Bayesian optimisation via
+    Tree-structured Parzen Estimators (TPE) [4], NSGA-II [5], and NSGA-III [6] — to
+    systematically find the best PINN architecture for each quenching domain and geometry.</p>
+
+    <p>A key contribution is the <em>k-Skip Multi-Step Window Prediction</em> (MSWP) strategy.
+    Rather than training a single PINN over the full 30-second transient, the time domain is
+    decomposed into short windows. Within each window, the PINN predicts k consecutive FEM
+    timesteps simultaneously (k ∈ {1…5}), where k represents a trade-off between the number
+    of windows and the difficulty of each local prediction. The network output exactly satisfies
+    the initial condition at each window boundary by construction:</p>
+
+    <div class="eq-block">T̂(x, τ) = T<sub>ic</sub>(x) + τ · N<sub>θ</sub>(x, τ, T<sub>ic</sub>)</div>
+
+    <p>where τ ∈ [0,1] is normalised time within the window and T<sub>ic</sub>(x) is the FEM
+    temperature field at the window start. Training progressed through three successive stages:
+    (1) cold-start — 800 Adam epochs per window from random initialisation; (2) v2 —
+    Fourier feature embedding [2] and self-adaptive loss weights [3] to overcome spectral bias;
+    (3) warm-start — fine-tuning each window from the previous window's weights (500 epochs),
+    reducing total training time by 38% with no significant accuracy loss.</p>
+  </div>
+</section>
+
+<!-- ── Step 1: Cold-Start ──────────────────────────────────────────────────── -->
+<section id="step1" class="section-alt">
+  <div class="container paper-body">
+    <h2 class="section-title">2. Step 1 — Cold-Start Baseline (800 Epochs)</h2>
+
+    <p>The cold-start experiment trains each (domain, architecture, k) combination independently
+    for 800 Adam epochs (lr = 10⁻³) followed by 50 L-BFGS iterations. The NAS search space
+    spans layer depth (2–6), width (32–256 neurons), and activation function (ReLU, Tanh,
+    GELU) over 60 trials per optimizer. Steady-state metrics exclude the first three windows
+    (transient phase, t &lt; 4.5 s).</p>
+
+    <p>All three 2D domains achieved relative L2 &lt; 5%, confirming that the k-Skip MSWP
+    approach is viable for planar geometries. The window training timeline plots below show
+    convergence behaviour across all 20 windows for each domain — note how the error stabilises
+    after the transient phase and how different k values shift the effective window count.</p>
+
+    <!-- Timeline plots -->
+    <h3 class="subsec-title">Training Timeline — Loss per Window</h3>
+    <div class="tab-bar">
+      <button class="tab-btn active" data-group="tl" data-target="tl_2d">2D Domains</button>
+      <button class="tab-btn"        data-group="tl" data-target="tl_3d">3D Domains</button>
+    </div>
+    <div class="tab-panel" data-group="tl" data-panel="tl_2d">
+      <div class="img-row-3">
+        <figure><img src="img/timeline/fig_timeline_rectangle_2d.png" onerror="this.closest('figure').style.display='none'">
+          <figcaption>Rectangle 2D — training loss per window</figcaption></figure>
+        <figure><img src="img/timeline/fig_timeline_circle_2d.png" onerror="this.closest('figure').style.display='none'">
+          <figcaption>Circle 2D</figcaption></figure>
+        <figure><img src="img/timeline/fig_timeline_lshape_2d.png" onerror="this.closest('figure').style.display='none'">
+          <figcaption>L-Shape 2D</figcaption></figure>
+      </div>
+    </div>
+    <div class="tab-panel" data-group="tl" data-panel="tl_3d" style="display:none">
+      <div class="img-row-3">
+        <figure><img src="img/timeline/fig_timeline_rectangular_3d.png" onerror="this.closest('figure').style.display='none'">
+          <figcaption>Rectangular 3D</figcaption></figure>
+        <figure><img src="img/timeline/fig_timeline_cylinder_3d.png" onerror="this.closest('figure').style.display='none'">
+          <figcaption>Cylinder 3D</figcaption></figure>
+        <figure><img src="img/timeline/fig_timeline_stacked_3d.png" onerror="this.closest('figure').style.display='none'">
+          <figcaption>Stacked 3D</figcaption></figure>
+        <figure><img src="img/timeline/fig_timeline_lshape_3d.png" onerror="this.closest('figure').style.display='none'">
+          <figcaption>L-Shape 3D</figcaption></figure>
+      </div>
+    </div>
+
+    <!-- Window step plots -->
+    <h3 class="subsec-title">Window Step Progression</h3>
+    <div class="tab-bar">
+      <button class="tab-btn active" data-group="ws" data-target="ws_2d">2D</button>
+      <button class="tab-btn"        data-group="ws" data-target="ws_3d">3D</button>
+    </div>
+    <div class="tab-panel" data-group="ws" data-panel="ws_2d">
+      <div class="img-row-3">
+        <figure><img src="img/steps/fig_step_rectangle_2d.png" onerror="this.closest('figure').style.display='none'">
+          <figcaption>Rectangle 2D — MAE across windows</figcaption></figure>
+        <figure><img src="img/steps/fig_step_circle_2d.png" onerror="this.closest('figure').style.display='none'">
+          <figcaption>Circle 2D</figcaption></figure>
+        <figure><img src="img/steps/fig_step_lshape_2d.png" onerror="this.closest('figure').style.display='none'">
+          <figcaption>L-Shape 2D</figcaption></figure>
+      </div>
+    </div>
+    <div class="tab-panel" data-group="ws" data-panel="ws_3d" style="display:none">
+      <div class="img-row-3">
+        <figure><img src="img/steps/fig_step_rectangular_3d.png" onerror="this.closest('figure').style.display='none'">
+          <figcaption>Rectangular 3D</figcaption></figure>
+        <figure><img src="img/steps/fig_step_cylinder_3d.png" onerror="this.closest('figure').style.display='none'">
+          <figcaption>Cylinder 3D</figcaption></figure>
+        <figure><img src="img/steps/fig_step_stacked_3d.png" onerror="this.closest('figure').style.display='none'">
+          <figcaption>Stacked 3D</figcaption></figure>
+        <figure><img src="img/steps/fig_step_lshape_3d.png" onerror="this.closest('figure').style.display='none'">
+          <figcaption>L-Shape 3D</figcaption></figure>
+      </div>
+    </div>
+
+    <!-- k-skip summary plots -->
+    <h3 class="subsec-title">MAE vs k — Cold-Start Summary</h3>
+    <div class="result-figures">
+      <figure>
+        <img src="img/summary/fig_kskip_800ep_2d.png" onerror="this.closest('figure').style.display='none'">
+        <figcaption>Figure 1. Mean MAE vs k — 2D domains, cold-start 800 ep. First 3 windows excluded.</figcaption>
+      </figure>
+      <figure>
+        <img src="img/summary/fig_kskip_800ep_3d.png" onerror="this.closest('figure').style.display='none'">
+        <figcaption>Figure 2. Mean MAE vs k — 3D domains.</figcaption>
+      </figure>
+      <figure>
+        <img src="img/summary/fig_table_800ep_2d.png" onerror="this.closest('figure').style.display='none'">
+        <figcaption>Figure 3. Result table — 2D domains, best k per configuration.</figcaption>
+      </figure>
+      <figure>
+        <img src="img/summary/fig_table_800ep_3d.png" onerror="this.closest('figure').style.display='none'">
+        <figcaption>Figure 4. Result table — 3D domains.</figcaption>
+      </figure>
+    </div>
+
+    <!-- Best-k heatmaps gallery -->
+    <h3 class="subsec-title">Best-k Temperature Field Heatmaps</h3>
+    <p>Temperature field predictions at the best-k configuration per (domain, architecture).
+    Columns show t = 3, 10, 20, 30 s. Top row: FEM reference. Middle: PINN prediction. Bottom: |Error|.</p>
+    <div class="tab-bar">
+      <button class="tab-btn active" data-group="bk" data-target="bk_bay">Bayesian</button>
+      <button class="tab-btn"        data-group="bk" data-target="bk_ns2">NSGA-II</button>
+      <button class="tab-btn"        data-group="bk" data-target="bk_ns3">NSGA-III</button>
+    </div>
+    <div class="tab-panel" data-group="bk" data-panel="bk_bay">
+      <div class="img-row-2">
+        <figure><img src="img/best_k/bayesian_rectangle_2d_k1.png" onerror="this.closest('figure').style.display='none'"><figcaption>Rectangle 2D — Bayesian</figcaption></figure>
+        <figure><img src="img/best_k/bayesian_circle_2d_k2.png" onerror="this.closest('figure').style.display='none'"><figcaption>Circle 2D — Bayesian</figcaption></figure>
+        <figure><img src="img/best_k/bayesian_lshape_2d_k1.png" onerror="this.closest('figure').style.display='none'"><figcaption>L-Shape 2D — Bayesian</figcaption></figure>
+        <figure><img src="img/best_k/bayesian_cylinder_3d_k1.png" onerror="this.closest('figure').style.display='none'"><figcaption>Cylinder 3D — Bayesian (volumetric)</figcaption></figure>
+        <figure><img src="img/best_k/bayesian_rectangular_3d_k2.png" onerror="this.closest('figure').style.display='none'"><figcaption>Rectangular 3D — Bayesian</figcaption></figure>
+        <figure><img src="img/best_k/bayesian_stacked_3d_k1.png" onerror="this.closest('figure').style.display='none'"><figcaption>Stacked 3D — Bayesian</figcaption></figure>
+      </div>
+    </div>
+    <div class="tab-panel" data-group="bk" data-panel="bk_ns2" style="display:none">
+      <div class="img-row-2">
+        <figure><img src="img/best_k/nsga2_rectangle_2d_k1.png" onerror="this.closest('figure').style.display='none'"><figcaption>Rectangle 2D — NSGA-II</figcaption></figure>
+        <figure><img src="img/best_k/nsga2_circle_2d_k1.png" onerror="this.closest('figure').style.display='none'"><figcaption>Circle 2D — NSGA-II</figcaption></figure>
+        <figure><img src="img/best_k/nsga2_lshape_2d_k1.png" onerror="this.closest('figure').style.display='none'"><figcaption>L-Shape 2D — NSGA-II</figcaption></figure>
+        <figure><img src="img/best_k/nsga2_cylinder_3d_k1.png" onerror="this.closest('figure').style.display='none'"><figcaption>Cylinder 3D — NSGA-II</figcaption></figure>
+        <figure><img src="img/best_k/nsga2_rectangular_3d_k1.png" onerror="this.closest('figure').style.display='none'"><figcaption>Rectangular 3D — NSGA-II</figcaption></figure>
+        <figure><img src="img/best_k/nsga2_stacked_3d_k1.png" onerror="this.closest('figure').style.display='none'"><figcaption>Stacked 3D — NSGA-II</figcaption></figure>
+      </div>
+    </div>
+    <div class="tab-panel" data-group="bk" data-panel="bk_ns3" style="display:none">
+      <div class="img-row-2">
+        <figure><img src="img/best_k/nsga3_rectangle_2d_k1.png" onerror="this.closest('figure').style.display='none'"><figcaption>Rectangle 2D — NSGA-III</figcaption></figure>
+        <figure><img src="img/best_k/nsga3_circle_2d_k1.png" onerror="this.closest('figure').style.display='none'"><figcaption>Circle 2D — NSGA-III</figcaption></figure>
+        <figure><img src="img/best_k/nsga3_lshape_2d_k1.png" onerror="this.closest('figure').style.display='none'"><figcaption>L-Shape 2D — NSGA-III</figcaption></figure>
+        <figure><img src="img/best_k/nsga3_cylinder_3d_k2.png" onerror="this.closest('figure').style.display='none'"><figcaption>Cylinder 3D — NSGA-III</figcaption></figure>
+        <figure><img src="img/best_k/nsga3_rectangular_3d_k1.png" onerror="this.closest('figure').style.display='none'"><figcaption>Rectangular 3D — NSGA-III</figcaption></figure>
+        <figure><img src="img/best_k/nsga3_stacked_3d_k1.png" onerror="this.closest('figure').style.display='none'"><figcaption>Stacked 3D — NSGA-III</figcaption></figure>
+      </div>
+    </div>
+
+    <h3 class="subsec-title">Table 1. Cold-Start Results — Best k per Configuration</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Dim</th><th>Domain</th><th>Best Optimizer</th><th>Best k</th><th>MAE (°C)</th><th>Rel. L2</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>2D</td><td>Rectangle</td><td>Bayesian</td><td>3</td><td>2.13</td><td>0.021</td><td class="ok">✓</td></tr>
+          <tr><td>2D</td><td>Circle</td><td>NSGA-III</td><td>2</td><td>0.84</td><td>0.010</td><td class="ok">✓</td></tr>
+          <tr><td>2D</td><td>L-Shape</td><td>NSGA-III</td><td>4</td><td>1.16</td><td>0.008</td><td class="ok">✓</td></tr>
+          <tr><td>3D</td><td>Rectangular</td><td>NSGA-II</td><td>2</td><td>4.90</td><td>0.025</td><td class="ok">✓</td></tr>
+          <tr><td>3D</td><td>Cylinder</td><td>Bayesian</td><td>1</td><td>5.85</td><td>0.037</td><td class="warn">⚠</td></tr>
+          <tr><td>3D</td><td>Stacked</td><td>Bayesian</td><td>1</td><td>6.49</td><td>0.053</td><td class="warn">⚠</td></tr>
+          <tr><td>3D</td><td>L-Shape</td><td>NSGA-III</td><td>3</td><td>2.05</td><td>0.009</td><td class="ok">✓</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">✓ = Rel. L2 &lt; 5% · ⚠ = Rel. L2 ≥ 5% · Metrics: windows 4–20.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Step 2: v2 ──────────────────────────────────────────────────────────── -->
+<section id="step2">
+  <div class="container paper-body">
+    <h2 class="section-title">3. Step 2 — Architectural Improvements: Fourier + Self-Adaptive (v2)</h2>
+
+    <p>Analysis of cold-start error patterns revealed degraded prediction quality in regions
+    with steep thermal gradients, consistent with spectral bias [2]. The v2 architecture
+    introduces Fourier feature embedding to map input coordinates to a high-dimensional
+    feature space, allowing the MLP to capture high-frequency temperature variations:</p>
+
+    <div class="eq-block">γ(v) = [sin(2π Bv), cos(2π Bv)],  B ∈ ℝ<sup>d×F</sup>,  F=64,  σ=1.0 (2D) / 1.5 (3D)</div>
+
+    <p>Self-adaptive loss weights [3] replace fixed λ values with learnable parameters
+    optimised jointly with the network (dual learning rate: η<sub>model</sub> = 10⁻³,
+    η<sub>λ</sub> = 10⁻⁴). For NSGA-II and NSGA-III, training was extended to 1500 epochs
+    plus 150 L-BFGS iterations. The jump plots below show the improvement in steady-state
+    MAE when switching from cold-start (800 ep) to v2 (1500 ep for NSGA, same count for
+    Bayesian). Negative jump = improvement.</p>
+
+    <!-- Jump plots -->
+    <h3 class="subsec-title">Improvement Plots — Cold (800 ep) → v2 (1500 ep)</h3>
+    <div class="result-figures">
+      <figure>
+        <img src="img/summary/fig_kskip_jump_2d.png" onerror="this.closest('figure').style.display='none'">
+        <figcaption>Figure 5. MAE jump from 800 ep → 1500 ep — 2D domains.
+          Negative = improvement from extended training.</figcaption>
+      </figure>
+      <figure>
+        <img src="img/summary/fig_kskip_jump_3d.png" onerror="this.closest('figure').style.display='none'">
+        <figcaption>Figure 6. MAE jump — 3D domains.</figcaption>
+      </figure>
+    </div>
+
+    <h3 class="subsec-title">Per-Domain Jump Analysis</h3>
+    <div class="tab-bar">
+      <button class="tab-btn active" data-group="jmp" data-target="jmp_2d">2D Domains</button>
+      <button class="tab-btn"        data-group="jmp" data-target="jmp_3d">3D Domains</button>
+    </div>
+    <div class="tab-panel" data-group="jmp" data-panel="jmp_2d">
+      <div class="img-row-3">
+        <figure><img src="img/summary/fig_jump_rectangle_2d.png" onerror="this.closest('figure').style.display='none'">
+          <figcaption>Rectangle 2D — per-k jump</figcaption></figure>
+        <figure><img src="img/summary/fig_jump_circle_2d.png" onerror="this.closest('figure').style.display='none'">
+          <figcaption>Circle 2D</figcaption></figure>
+        <figure><img src="img/summary/fig_jump_lshape_2d.png" onerror="this.closest('figure').style.display='none'">
+          <figcaption>L-Shape 2D</figcaption></figure>
+      </div>
+    </div>
+    <div class="tab-panel" data-group="jmp" data-panel="jmp_3d" style="display:none">
+      <div class="img-row-3">
+        <figure><img src="img/summary/fig_jump_rectangular_3d.png" onerror="this.closest('figure').style.display='none'">
+          <figcaption>Rectangular 3D</figcaption></figure>
+        <figure><img src="img/summary/fig_jump_cylinder_3d.png" onerror="this.closest('figure').style.display='none'">
+          <figcaption>Cylinder 3D</figcaption></figure>
+        <figure><img src="img/summary/fig_jump_stacked_3d.png" onerror="this.closest('figure').style.display='none'">
+          <figcaption>Stacked 3D</figcaption></figure>
+        <figure><img src="img/summary/fig_jump_lshape_3d.png" onerror="this.closest('figure').style.display='none'">
+          <figcaption>L-Shape 3D</figcaption></figure>
+      </div>
+    </div>
+
+    <h3 class="subsec-title">Full Performance Summary (v2)</h3>
+    <div class="result-figures">
+      <figure>
+        <img src="img/summary/fig_full_summary_2d.png" onerror="this.closest('figure').style.display='none'">
+        <figcaption>Figure 7. Full performance summary — 2D domains, all optimizers and k values.</figcaption>
+      </figure>
+      <figure>
+        <img src="img/summary/fig_full_summary_3d.png" onerror="this.closest('figure').style.display='none'">
+        <figcaption>Figure 8. Full performance summary — 3D domains.</figcaption>
+      </figure>
+    </div>
+
+    <h3 class="subsec-title">Table 2. v2 Improvement over Cold-Start (ΔMAE, best k)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Domain</th><th>Arch</th><th>Cold MAE</th><th>v2 MAE</th><th>ΔMAE</th><th>v2 Time vs Cold</th></tr></thead>
+        <tbody>
+          <tr><td>Rectangle 2D</td><td>Bayesian</td><td>2.13 °C</td><td>1.74 °C</td><td class="good">−0.39 °C</td><td>+25%</td></tr>
+          <tr><td>Circle 2D</td><td>NSGA-III</td><td>0.84 °C</td><td>0.71 °C</td><td class="good">−0.13 °C</td><td>−8%</td></tr>
+          <tr><td>L-Shape 2D</td><td>NSGA-III</td><td>1.16 °C</td><td>0.98 °C</td><td class="good">−0.18 °C</td><td>−8%</td></tr>
+          <tr><td>Rectangular 3D</td><td>NSGA-II</td><td>4.90 °C</td><td>4.51 °C</td><td class="good">−0.39 °C</td><td>−12%</td></tr>
+          <tr><td>L-Shape 3D</td><td>NSGA-III</td><td>2.05 °C</td><td>1.88 °C</td><td class="good">−0.17 °C</td><td>−10%</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">Negative ΔMAE = improvement. Time vs Cold: cold-start per-window time = 100%.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Step 3: Warm-Start ─────────────────────────────────────────────────── -->
+<section id="step3" class="section-alt">
+  <div class="container paper-body">
+    <h2 class="section-title">4. Step 3 — Warm-Start Fine-Tuning (500 Epochs)</h2>
+
+    <p>The cold-start approach retrains each window from random initialisation, discarding
+    structural similarity between consecutive windows. Warm-start initialises each window's
+    training from the previous window's converged weights. Window 1 is trained cold (800 ep);
+    all subsequent windows fine-tune for 500 epochs at lr = 10⁻³. This yields a 38%
+    reduction in total training time across a 20-window simulation (k=1) with comparable accuracy.</p>
+
+    <p>The MAE comparison plots below show all three strategies per domain: cold (dashed),
+    v2 (dotted), and warm-start (solid). For 2D domains, warm-start tracks cold-start
+    closely. For 3D domains with complex geometry, warm-start occasionally increases error
+    when the window-to-window temperature evolution is large — the recommendation matrix
+    identifies these cases explicitly.</p>
+
+    <div class="result-figures">
+      <figure>
+        <img src="img/fig_ws_mae_comparison_2d.png" onerror="this.closest('figure').style.display='none'">
+        <figcaption>Figure 9. MAE vs k — Cold / v2 / Warm-Start — 2D domains.</figcaption>
+      </figure>
+      <figure>
+        <img src="img/fig_ws_mae_comparison_3d.png" onerror="this.closest('figure').style.display='none'">
+        <figcaption>Figure 10. MAE vs k — Cold / v2 / Warm-Start — 3D domains.</figcaption>
+      </figure>
+      <figure>
+        <img src="img/fig_ws_summary_table_2d.png" onerror="this.closest('figure').style.display='none'">
+        <figcaption>Figure 11. Speedup and ΔMAE summary table — 2D.</figcaption>
+      </figure>
+      <figure>
+        <img src="img/fig_ws_recommendation_2d.png" onerror="this.closest('figure').style.display='none'">
+        <figcaption>Figure 12. Recommendation matrix — Green = warm preferred, Yellow = marginal, Red = cold preferred — 2D.</figcaption>
+      </figure>
+    </div>
+
+    <!-- Warm-start temperature field heatmaps -->
+    <h3 class="subsec-title">Cold vs Warm Temperature Field Comparison</h3>
+    <p>Side-by-side heatmaps: Row 1 = FEM reference, Row 2 = Cold-start (800 ep),
+    Row 3 = Warm-start (500 ep), Rows 4–5 = |Error|.</p>
+    <div class="tab-bar">
+      <button class="tab-btn active" data-group="wf" data-target="wf_bay">Bayesian</button>
+      <button class="tab-btn"        data-group="wf" data-target="wf_ns2">NSGA-II</button>
+      <button class="tab-btn"        data-group="wf" data-target="wf_ns3">NSGA-III</button>
+    </div>
+    <div class="tab-panel" data-group="wf" data-panel="wf_bay">
+      <div class="img-row-2">
+        <figure><img src="img/ws_fields/bayesian_rectangle_2d_k1_ws.png" onerror="this.closest('figure').style.display='none'"><figcaption>Rectangle 2D / Bayesian / k=1</figcaption></figure>
+        <figure><img src="img/ws_fields/bayesian_circle_2d_k2_ws.png" onerror="this.closest('figure').style.display='none'"><figcaption>Circle 2D / Bayesian / k=2</figcaption></figure>
+        <figure><img src="img/ws_fields/bayesian_lshape_2d_k1_ws.png" onerror="this.closest('figure').style.display='none'"><figcaption>L-Shape 2D / Bayesian / k=1</figcaption></figure>
+        <figure><img src="img/ws_fields/bayesian_cylinder_3d_k1_ws.png" onerror="this.closest('figure').style.display='none'"><figcaption>Cylinder 3D / Bayesian / k=1 (volumetric)</figcaption></figure>
+      </div>
+    </div>
+    <div class="tab-panel" data-group="wf" data-panel="wf_ns2" style="display:none">
+      <div class="img-row-2">
+        <figure><img src="img/ws_fields/nsga2_rectangle_2d_k1_ws.png" onerror="this.closest('figure').style.display='none'"><figcaption>Rectangle 2D / NSGA-II / k=1</figcaption></figure>
+        <figure><img src="img/ws_fields/nsga2_circle_2d_k1_ws.png" onerror="this.closest('figure').style.display='none'"><figcaption>Circle 2D / NSGA-II / k=1</figcaption></figure>
+        <figure><img src="img/ws_fields/nsga2_rectangular_3d_k1_ws.png" onerror="this.closest('figure').style.display='none'"><figcaption>Rectangular 3D / NSGA-II / k=1</figcaption></figure>
+        <figure><img src="img/ws_fields/nsga2_lshape_3d_k1_ws.png" onerror="this.closest('figure').style.display='none'"><figcaption>L-Shape 3D / NSGA-II / k=1</figcaption></figure>
+      </div>
+    </div>
+    <div class="tab-panel" data-group="wf" data-panel="wf_ns3" style="display:none">
+      <div class="img-row-2">
+        <figure><img src="img/ws_fields/nsga3_rectangle_2d_k1_ws.png" onerror="this.closest('figure').style.display='none'"><figcaption>Rectangle 2D / NSGA-III / k=1</figcaption></figure>
+        <figure><img src="img/ws_fields/nsga3_lshape_2d_k1_ws.png" onerror="this.closest('figure').style.display='none'"><figcaption>L-Shape 2D / NSGA-III / k=1</figcaption></figure>
+        <figure><img src="img/ws_fields/nsga3_lshape_3d_k1_ws.png" onerror="this.closest('figure').style.display='none'"><figcaption>L-Shape 3D / NSGA-III / k=1</figcaption></figure>
+        <figure><img src="img/ws_fields/nsga3_cylinder_3d_k1_ws.png" onerror="this.closest('figure').style.display='none'"><figcaption>Cylinder 3D / NSGA-III / k=1</figcaption></figure>
+      </div>
+    </div>
+
+    <h3 class="subsec-title">Table 3. Warm-Start vs Cold-Start — Key Configurations</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Domain</th><th>Arch</th><th>Cold MAE</th><th>Warm MAE</th><th>ΔMAE</th><th>Speedup</th><th>Verdict</th></tr></thead>
+        <tbody>
+          <tr><td>Rectangle 2D</td><td>Bayesian</td><td>2.13 °C</td><td>2.08 °C</td><td class="good">−0.05</td><td>1.6×</td><td class="verdict-green">Warm preferred</td></tr>
+          <tr><td>Circle 2D</td><td>NSGA-III</td><td>0.84 °C</td><td>0.79 °C</td><td class="good">−0.05</td><td>1.6×</td><td class="verdict-green">Warm preferred</td></tr>
+          <tr><td>L-Shape 2D</td><td>NSGA-III</td><td>1.16 °C</td><td>1.21 °C</td><td class="bad">+0.05</td><td>1.6×</td><td class="verdict-yellow">Marginal</td></tr>
+          <tr><td>Rectangular 3D</td><td>NSGA-II</td><td>4.90 °C</td><td>5.12 °C</td><td class="bad">+0.22</td><td>1.6×</td><td class="verdict-yellow">Marginal</td></tr>
+          <tr><td>Cylinder 3D</td><td>Bayesian</td><td>5.85 °C</td><td>6.44 °C</td><td class="bad">+0.59</td><td>1.6×</td><td class="verdict-red">Cold preferred</td></tr>
+          <tr><td>L-Shape 3D</td><td>NSGA-III</td><td>2.05 °C</td><td>2.01 °C</td><td class="good">−0.04</td><td>1.6×</td><td class="verdict-green">Warm preferred</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ── Interactive Viewer ─────────────────────────────────────────────────── -->
+<section id="viewer">
+  <div class="container">
+    <h2 class="section-title">5. Interactive Temperature Field Viewer</h2>
+    <p class="section-sub">
+      PINN temperature field animated over t = 3…30 s. 2D shows pcolormesh heatmap;
+      3D shows full volumetric scatter plot (same render as thesis figures). Press ▶ to play.
+    </p>
+    <div class="viewer-card">
+      <div class="selector-row">
+        <div class="sel-group">
+          <label>Dimension</label>
+          <select id="sel-dim">
+            <option value="2d">2D — heatmap</option>
+            <option value="3d">3D — volumetric</option>
+          </select>
+        </div>
+        <div class="sel-group"><label>Domain</label><select id="sel-domain"></select></div>
+        <div class="sel-group"><label>Architecture</label><select id="sel-arch"></select></div>
+        <div class="sel-group"><label>k (window)</label><select id="sel-k"></select></div>
+      </div>
+
+      <div style="position:relative;text-align:center">
+        <img id="viewer-img" src="" alt="Temperature field"
+             style="max-width:100%;height:420px;object-fit:contain;display:block;margin:0 auto;border-radius:4px;background:#f5f7fa">
+        <div id="viewer-overlay" class="loading-msg"
+             style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(245,247,250,0.93);z-index:5;border-radius:4px">
+          Loading…
+        </div>
+      </div>
+
+      <div class="time-controls">
+        <button class="play-btn" id="play-btn">▶</button>
+        <div class="slider-wrap">
+          <span class="time-label" id="time-label">t = —</span>
+          <input type="range" id="time-slider" min="0" max="9" value="0" step="1">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Final Summary ──────────────────────────────────────────────────────── -->
+<section id="results" class="section-alt">
+  <div class="container paper-body">
+    <h2 class="section-title">6. Summary and Recommendations</h2>
+
+    <p>This study presents a three-stage framework for accelerating transient thermal quenching
+    simulations using NAS-optimised PINNs. The k-Skip MSWP strategy reduces sequential PINN
+    training runs from 20 windows (k=1) to as few as 4 (k=5), with optimal k varying by
+    geometry and architecture. The progression from cold-start to v2 (Fourier + self-adaptive)
+    to warm-start fine-tuning reveals a consistent improvement in the accuracy–efficiency
+    trade-off at each stage. For 2D domains, all tested configurations satisfy Rel. L2 &lt; 5%.
+    For 3D, 7 of 12 configurations (domain × architecture) meet this target.</p>
+
+    <p>The recommended deployment pipeline: (1) run NAS (60 trials) to find the optimal
+    architecture; (2) apply v2 training (Fourier + self-adaptive) for improved accuracy;
+    (3) use warm-start fine-tuning for production runs to reduce per-simulation training
+    time by 38%.</p>
+
+    <h3 class="subsec-title">Table 4. Comprehensive Results — All Stages, Best Configuration per Domain</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Dim</th><th>Domain</th><th>Best Arch</th><th>Best k</th>
+              <th>Cold MAE</th><th>v2 MAE</th><th>Warm MAE</th>
+              <th>Speedup</th><th>L2</th><th>Recommended</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>2D</td><td>Rectangle</td><td>Bayesian</td><td>3</td><td>2.13 °C</td><td>1.74 °C</td><td>2.08 °C</td><td>1.6×</td><td class="ok">✓</td><td>v2 + Warm</td></tr>
+          <tr><td>2D</td><td>Circle</td><td>NSGA-III</td><td>2</td><td>0.84 °C</td><td>0.71 °C</td><td>0.79 °C</td><td>1.6×</td><td class="ok">✓</td><td>v2 + Warm</td></tr>
+          <tr><td>2D</td><td>L-Shape</td><td>NSGA-III</td><td>4</td><td>1.16 °C</td><td>0.98 °C</td><td>1.21 °C</td><td>1.6×</td><td class="ok">✓</td><td>v2</td></tr>
+          <tr><td>3D</td><td>Rectangular</td><td>NSGA-II</td><td>2</td><td>4.90 °C</td><td>4.51 °C</td><td>5.12 °C</td><td>1.6×</td><td class="ok">✓</td><td>v2</td></tr>
+          <tr><td>3D</td><td>Cylinder</td><td>Bayesian</td><td>1</td><td>5.85 °C</td><td>—</td><td>6.44 °C</td><td>1.6×</td><td class="warn">⚠</td><td>Cold</td></tr>
+          <tr><td>3D</td><td>Stacked</td><td>Bayesian</td><td>1</td><td>6.49 °C</td><td>—</td><td>—</td><td>—</td><td class="warn">⚠</td><td>Cold</td></tr>
+          <tr><td>3D</td><td>L-Shape</td><td>NSGA-III</td><td>3</td><td>2.05 °C</td><td>1.88 °C</td><td>2.01 °C</td><td>1.6×</td><td class="ok">✓</td><td>v2 + Warm</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">MAE averaged over steady-state windows (4–20). ✓ = Rel. L2 &lt; 5%.</p>
+    </div>
+
+    <!-- Best-k 2D heatmaps in results -->
+    <h3 class="subsec-title">2D Temperature Fields — Best Configuration per Domain</h3>
+    <div class="img-row-3">
+      <figure><img src="img/best_k/bayesian_rectangle_2d_k1.png" onerror="this.closest('figure').style.display='none'">
+        <figcaption>Rectangle 2D · Bayesian · best-k</figcaption></figure>
+      <figure><img src="img/best_k/nsga3_circle_2d_k1.png" onerror="this.closest('figure').style.display='none'">
+        <figcaption>Circle 2D · NSGA-III · best-k</figcaption></figure>
+      <figure><img src="img/best_k/nsga3_lshape_2d_k1.png" onerror="this.closest('figure').style.display='none'">
+        <figcaption>L-Shape 2D · NSGA-III · best-k</figcaption></figure>
+    </div>
+
+    <!-- 3D volumetric in results -->
+    <h3 class="subsec-title">3D Volumetric Temperature Fields — Best Configuration per Domain</h3>
+    <div class="img-row-2">
+      <figure><img src="img/best_k/nsga2_rectangular_3d_k1.png" onerror="this.closest('figure').style.display='none'">
+        <figcaption>Rectangular 3D · NSGA-II · best-k (volumetric)</figcaption></figure>
+      <figure><img src="img/best_k/bayesian_cylinder_3d_k1.png" onerror="this.closest('figure').style.display='none'">
+        <figcaption>Cylinder 3D · Bayesian · best-k</figcaption></figure>
+      <figure><img src="img/best_k/bayesian_stacked_3d_k1.png" onerror="this.closest('figure').style.display='none'">
+        <figcaption>Stacked 3D · Bayesian · best-k</figcaption></figure>
+      <figure><img src="img/best_k/nsga3_lshape_3d_k1.png" onerror="this.closest('figure').style.display='none'">
+        <figcaption>L-Shape 3D · NSGA-III · best-k</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ── References ─────────────────────────────────────────────────────────── -->
+<section id="references">
+  <div class="container paper-body">
+    <h2 class="section-title">References</h2>
+    <ol class="ref-list">
+      <li>Lagaris, I. E., Likas, A., &amp; Fotiadis, D. I. (1998). Artificial neural networks for solving ODEs/PDEs. <em>IEEE Trans. Neural Netw.</em>, 9(5), 987–1000.</li>
+      <li>Tancik, M., et al. (2020). Fourier features let networks learn high frequency functions. <em>NeurIPS</em>, 33.</li>
+      <li>McClenny, L., &amp; Braga-Neto, U. (2023). Self-adaptive physics-informed neural networks. <em>J. Comput. Phys.</em>, 474.</li>
+      <li>Bergstra, J., et al. (2011). Algorithms for hyper-parameter optimization. <em>NeurIPS</em>, 24.</li>
+      <li>Deb, K., et al. (2002). NSGA-II. <em>IEEE Trans. Evol. Comput.</em>, 6(2), 182–197.</li>
+      <li>Deb, K., &amp; Jain, H. (2014). NSGA-III. <em>IEEE Trans. Evol. Comput.</em>, 18(4), 577–601.</li>
+      <li>Wang, Y., &amp; Zhong, L. (2023). NAS-PINN. <em>arXiv:2305.10127</em>.</li>
+      <li>Mortensen, B., et al. (2026). FEM simulation of quenching in aluminium casting. <em>Int. J. Adv. Manuf. Technol.</em></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ── Footer ─────────────────────────────────────────────────────────────── -->
+<footer>
+  <p>Step Optimization in Thermal Simulation with PINNs · Omer8693 · 2026</p>
+  <p style="margin-top:6px"><a href="https://github.com/Omer8693/thermal_pinn" target="_blank">github.com/Omer8693/thermal_pinn</a></p>
+</footer>
+
+<!-- ── Lightbox ──────────────────────────────────────────────────────────────── -->
+<div id="lightbox" aria-hidden="true">
+  <button id="lb-close" aria-label="Close">&#x2715;</button>
+  <img id="lb-img" src="" alt="">
+  <p id="lb-caption"></p>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

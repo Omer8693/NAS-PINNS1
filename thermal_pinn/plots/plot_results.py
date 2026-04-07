@@ -1816,10 +1816,17 @@ def fig9_3d_domain_compare(registry: list[dict], t_query: float = 15.0,
 
 def _surf(ax, X, Y, Z, T, cmap, norm, alpha=0.93):
     """Plot one surface face colored by T."""
-    fc = cmap(norm(np.clip(T, T_WATER - 1, T_INIT + 1)))
-    ax.plot_surface(X, Y, Z, facecolors=fc, alpha=alpha,
-                    rstride=1, cstride=1, linewidth=0.25,
-                    edgecolor=(0.55, 0.55, 0.55, 0.25),
+    T_safe = np.where(np.isfinite(T), np.clip(T, T_WATER - 1, T_INIT + 1), T_WATER)
+    fc = cmap(norm(T_safe))
+    # Set NaN cells fully transparent
+    nan_mask = ~np.isfinite(T)
+    if nan_mask.any():
+        fc[nan_mask, 3] = 0.0
+    # Use alpha=1.0 per face (opaque) to prevent seam blending artifacts; mesh lines
+    # are drawn afterwards at reduced opacity to preserve the original style.
+    ax.plot_surface(X, Y, Z, facecolors=fc, alpha=1.0,
+                    rstride=1, cstride=1, linewidth=0.2,
+                    edgecolor=(0.4, 0.4, 0.4, 0.12),
                     antialiased=True, shade=False)
 
 
@@ -1938,6 +1945,18 @@ def _surface_meshes_3d(domain, n=14, n_phi=36, n_z=16):
     return meshes
 
 
+def _surface_mean_T(domain, t_query: float, n: int = 8) -> float:
+    """Mean FEM reference temperature over the domain surface at t_query."""
+    all_T = []
+    for X, Y, Z in _surface_meshes_3d(domain, n=n):
+        T = _clean_T(domain.T(X.ravel(), Y.ravel(), Z.ravel(), t_query),
+                     domain, X.ravel(), Y.ravel(), Z.ravel())
+        T = T[np.isfinite(T)]
+        if len(T) > 0:
+            all_T.append(T)
+    return float(np.mean(np.concatenate(all_T))) if all_T else float("nan")
+
+
 def _surface_mae_3d(model: ThermalPINN, domain, k: int, t_query: float, n=14) -> float:
     """Surface-only MAE consistent with the displayed volumetric panels."""
     errs = []
@@ -1960,24 +1979,21 @@ def _render_box_3d(ax, domain, t, cmap, norm, n=18, field_fn=None):
     # x=0 and x=Lx faces (y-z plane)
     v1 = np.linspace(0, Ly, n); v2 = np.linspace(0, Lz, n)
     V1, V2 = np.meshgrid(v1, v2, indexing='ij')
-    X0 = np.zeros_like(V1)
-    XL = np.full_like(V1, Lx)
+    X0 = np.zeros_like(V1); XL = np.full_like(V1, Lx)
     _surf(ax, X0, V1, V2, _eval_3d_field(domain, t, X0, V1, V2, field_fn), cmap, norm)
     _surf(ax, XL, V1, V2, _eval_3d_field(domain, t, XL, V1, V2, field_fn), cmap, norm)
 
     # y=0 and y=Ly faces (x-z plane)
     v1 = np.linspace(0, Lx, n); v2 = np.linspace(0, Lz, n)
     V1, V2 = np.meshgrid(v1, v2, indexing='ij')
-    Y0 = np.zeros_like(V1)
-    YL = np.full_like(V1, Ly)
+    Y0 = np.zeros_like(V1); YL = np.full_like(V1, Ly)
     _surf(ax, V1, Y0, V2, _eval_3d_field(domain, t, V1, Y0, V2, field_fn), cmap, norm)
     _surf(ax, V1, YL, V2, _eval_3d_field(domain, t, V1, YL, V2, field_fn), cmap, norm)
 
     # z=0 and z=Lz faces (x-y plane)
     v1 = np.linspace(0, Lx, n); v2 = np.linspace(0, Ly, n)
     V1, V2 = np.meshgrid(v1, v2, indexing='ij')
-    Z0 = np.zeros_like(V1)
-    ZL = np.full_like(V1, Lz)
+    Z0 = np.zeros_like(V1); ZL = np.full_like(V1, Lz)
     _surf(ax, V1, V2, Z0, _eval_3d_field(domain, t, V1, V2, Z0, field_fn), cmap, norm)
     _surf(ax, V1, V2, ZL, _eval_3d_field(domain, t, V1, V2, ZL, field_fn), cmap, norm)
 
@@ -2014,18 +2030,6 @@ def _render_lshape_3d(ax, domain, t, cmap, norm, n=18, field_fn=None):
     cx, cy = domain.cut_x, domain.cut_y
     z_lin = np.linspace(0, Lz, n)
 
-    def wall(x_vals, y_vals):
-        XV, ZV = np.meshgrid(x_vals, z_lin, indexing='ij')
-        YV = np.full_like(XV, y_vals) if np.ndim(y_vals) == 0 else \
-             np.column_stack([y_vals]*len(z_lin)).reshape(len(x_vals), len(z_lin))
-        # Fallback: constant y
-        if np.ndim(y_vals) == 0:
-            _surf(ax, XV, YV, ZV, _eval_3d_field(domain, t, XV, YV, ZV, field_fn), cmap, norm)
-        else:
-            V1 = np.tile(np.array(y_vals).reshape(-1,1), (1, len(z_lin)))
-            # already shaped
-            _surf(ax, XV, V1, ZV, _eval_3d_field(domain, t, XV, V1, ZV, field_fn), cmap, norm)
-
     def wall_xz(x_vals, y_const):
         XV, ZV = np.meshgrid(x_vals, z_lin, indexing='ij')
         YV = np.full_like(XV, y_const)
@@ -2037,16 +2041,14 @@ def _render_lshape_3d(ax, domain, t, cmap, norm, n=18, field_fn=None):
         _surf(ax, XV, YV, ZV, _eval_3d_field(domain, t, XV, YV, ZV, field_fn), cmap, norm)
 
     # 6 wall segments of the L cross-section
-    wall_xz(np.linspace(0, Lx, n), 0.0)          # bottom edge: y=0
-    wall_yz(Lx,  np.linspace(0, cy, n))           # right short: x=Lx, y=0..cut_y
-    wall_xz(np.linspace(cx, Lx, n), cy)           # inner step horiz: y=cut_y, x=cut_x..Lx
-    wall_yz(cx,  np.linspace(cy, Ly, n))           # inner step vert: x=cut_x, y=cut_y..Ly
-    wall_xz(np.linspace(0, cx, n), Ly)            # top edge: y=Ly, x=0..cut_x
-    wall_yz(0.0, np.linspace(0, Ly, n))            # left edge: x=0
+    wall_xz(np.linspace(0, Lx, n), 0.0)          # y=0, x=0..Lx
+    wall_yz(Lx,  np.linspace(0, cy, n))           # x=Lx, y=0..cut_y
+    wall_xz(np.linspace(cx, Lx, n), cy)           # y=cut_y, x=cut_x..Lx
+    wall_yz(cx,  np.linspace(cy, Ly, n))           # x=cut_x, y=cut_y..Ly
+    wall_xz(np.linspace(0, cx, n), Ly)            # y=Ly, x=0..cut_x
+    wall_yz(0.0, np.linspace(0, Ly, n))            # x=0, y=0..Ly
 
     # Top and bottom L-shaped faces — decomposed into 2 rectangles
-    # Rect A: x in [0, Lx], y in [0, cy]
-    # Rect B: x in [0, cx], y in [cy, Ly]
     for z_face in [0.0, Lz]:
         xa = np.linspace(0, Lx, n); ya = np.linspace(0, cy, n)
         VA, VC = np.meshgrid(xa, ya, indexing='ij')

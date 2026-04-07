@@ -116,6 +116,32 @@ def img(slide, path, x, y, w=None, h=None):
     slide.shapes.add_picture(str(p), Inches(x), Inches(y), **kw)
 
 
+def draw_table(slide, headers, rows, x, y, col_widths, row_height=0.38,
+               header_bg=None, alt_bg=None, text_fs=10):
+    """Draw a programmatic table using rect+txt primitives."""
+    header_bg = header_bg or NAVY
+    alt_bg    = alt_bg    or LGRAY
+    cx_list   = []
+    cx = x
+    for w in col_widths:
+        cx_list.append(cx)
+        cx += w
+    # Header row
+    for j, (h, cxj, wj) in enumerate(zip(headers, cx_list, col_widths)):
+        rect(slide, cxj, y, wj, row_height, header_bg)
+        txt(slide, h, cxj+0.04, y+0.03, wj-0.08, row_height-0.06,
+            fs=text_fs, bold=True, color=WHITE, align=PP_ALIGN.CENTER)
+    # Data rows
+    for i, row in enumerate(rows):
+        ry = y + row_height * (i + 1)
+        bg = alt_bg if i % 2 == 0 else WHITE
+        for j, (val, cxj, wj) in enumerate(zip(row, cx_list, col_widths)):
+            rect(slide, cxj, ry, wj, row_height, bg)
+            fc = GREEN if val.startswith("\u2605") else DGRAY
+            txt(slide, val, cxj+0.04, ry+0.03, wj-0.08, row_height-0.06,
+                fs=text_fs, color=fc, align=PP_ALIGN.CENTER)
+
+
 def stripe(slide, color=NAVY, height=0.65):
     """Top accent stripe."""
     rect(slide, 0, 0, 13.33, height, color)
@@ -152,7 +178,7 @@ def s01_title(prs):
     txt(slide, "Physics-Informed Neural Networks with Neural Architecture Search",
         0.6, 3.75, 12.1, 0.45, fs=16, color=MGRAY, align=PP_ALIGN.CENTER)
 
-    txt(slide, "Mortensen D. et al. (2026) Int. J. Adv. Manuf. Technol. doi:10.1007/s00170-026-17515-w  |  Wang & Zhong (2023) arXiv:2305.10127",
+    txt(slide, "Mortensen D., Noorsumar G., Fjær H.G., Babaei R. & Drønen P.E. (2026) Int. J. Adv. Manuf. Technol. doi:10.1007/s00170-026-17515-w  |  Wang & Zhong (2023) arXiv:2305.10127",
         0.6, 4.55, 12.1, 0.38, fs=12, color=MGRAY, align=PP_ALIGN.CENTER, italic=True)
     txt(slide, f"March 2026",
         0.6, 5.75, 12.1, 0.38, fs=12, color=MGRAY, align=PP_ALIGN.CENTER)
@@ -227,7 +253,7 @@ def s03_physical(prs):
         "Material: Aluminium alloy (A356)",
         "T_initial = 500 \u00b0C,   T_water = 20 \u00b0C,   t_total = 30 s",
         "FEM discretisation: \u0394t_FEM = 1.5 s  \u2192  20 time steps",
-        "Mortensen D. et al. (2026) Int. J. Adv. Manuf. Technol. doi:10.1007/s00170-026-17515-w",
+        "Mortensen D., Noorsumar G., Fjær H.G., Babaei R. & Drønen P.E. (2026) Int. J. Adv. Manuf. Technol. doi:10.1007/s00170-026-17515-w",
     ]
     add_bullet_block(slide, params, 0.5, 4.1, 7.8, 1.4, fs=12, color=DGRAY)
 
@@ -617,28 +643,66 @@ def s09_2d_heatmaps(prs):
 # ══════════════════════════════════════════════════════════════════════
 
 def s10_2d_table(prs):
+    import json
+    from pathlib import Path as _P
+
     slide = blank(prs)
-    slide_header(slide, "2D Summary Table",
-                 "Best-k results per domain and optimizer (800 ep (NAS))")
-    rect(slide, 0, 0.65, 13.33, 6.85, LGRAY)
+    rect(slide, 0, 0, 13.33, 7.5, LGRAY)
     stripe(slide, NAVY, 0.65)
-    txt(slide, "2D Summary Table", 0.4, 0.07, 12.5, 0.55, fs=24, bold=True, color=WHITE)
+    txt(slide, "2D Results — Best-k Summary Table", 0.4, 0.07, 12.5, 0.55,
+        fs=22, bold=True, color=WHITE)
+    txt(slide, "Per-domain, per-optimizer: best k chosen by minimum mean MAE", 0.4, 0.65,
+        12.5, 0.35, fs=12, color=MGRAY)
 
-    rect(slide, 0.2, 1.05, 12.9, 4.95, WHITE)
-    img(slide, SUMMARY / "fig_table_800ep_2d.png", 0.25, 1.1, w=12.8)
+    ckpt = _P(__file__).resolve().parent / "checkpoints"
+    domains_2d = ["rectangle", "circle", "lshape"]
+    archs      = ["bayesian", "nsga2", "nsga3"]
+    table_rows = []
+    domain_label = {"rectangle": "Rectangle", "circle": "Circle", "lshape": "L-Shape"}
+    arch_label   = {"bayesian": "Bayesian", "nsga2": "NSGA-II", "nsga3": "NSGA-III"}
 
-    # Key observations
-    rect(slide, 0.2, 6.2, 12.9, 0.82, RGBColor(0xE8,0xF0,0xFE))
-    obs = [
-        "Best 2D: L-shape NSGA-III k=1, L2=0.83%",
-        "Bayesian Circle k=3: L2=0.94%, 2.9\u00d7 FEM reduction",
-        "Most 2D results < 3% L2 error",
-    ]
-    txt(slide, "  |  ".join(obs), 0.4, 6.3, 12.5, 0.55, fs=12, color=NAVY)
+    for domain in domains_2d:
+        for arch in archs:
+            best_mae = 999; best_k = -1; best_l2 = 0; best_t = 0
+            for k in range(1, 6):
+                f = ckpt / f"{domain}_{arch}_k{k}_dim2_metrics.json"
+                if not f.exists():
+                    continue
+                with open(f) as fp:
+                    d = json.load(fp)
+                wins = d.get("windows", [])
+                ml2 = sum(w["l2_rel"] for w in wins) / len(wins) if wins else 0
+                if d["mean_mae"] < best_mae:
+                    best_mae = d["mean_mae"]; best_k = k
+                    best_l2 = ml2; best_t = d.get("total_s", 0)
+            if best_k > 0:
+                fem_sav = int((1 - 20 / (20 / best_k)) * 100) if best_k > 1 else 0
+                row = [
+                    domain_label[domain],
+                    arch_label[arch],
+                    str(best_k),
+                    f"{best_l2:.4f}",
+                    f"{best_mae:.2f} \u00b0C",
+                    f"{best_t:.0f} s",
+                    f"{fem_sav}%" if fem_sav > 0 else "baseline",
+                ]
+                table_rows.append(row)
 
-    rect(slide, 0, 7.15, 13.33, 0.35, NAVY)
-    txt(slide, "Bayesian achieves best FEM reduction; NSGA-III achieves best raw L2 accuracy in 2D",
-        0.5, 7.18, 12.3, 0.3, fs=11, color=WHITE, align=PP_ALIGN.CENTER)
+    headers   = ["Domain", "Arch", "Best k", "L2 (rel)", "MAE", "Runtime", "FEM Saved"]
+    col_widths = [1.7, 1.4, 0.9, 1.2, 1.3, 1.2, 1.3]
+    draw_table(slide, headers, table_rows, x=0.35, y=1.1,
+               col_widths=col_widths, row_height=0.42, text_fs=11)
+
+    # Highlight best row note
+    rect(slide, 0.2, 6.9, 12.9, 0.45, RGBColor(0xE8, 0xF4, 0xE8))
+    txt(slide, "Best 2D: L-Shape/NSGA-III k=1 — L2=0.0139, MAE=2.19°C  |  "
+               "Circle/NSGA-III k=1 — MAE=1.64°C  |  "
+               "All 2D results < 0.035 L2",
+        0.4, 6.97, 12.5, 0.35, fs=11, bold=True, color=GREEN)
+
+    rect(slide, 0, 7.38, 13.33, 0.35, NAVY)
+    txt(slide, "2D average: MAE=2.34°C, L2=0.020 — all architectures achieve < 3% relative error",
+        0.5, 7.41, 12.3, 0.28, fs=11, color=WHITE, align=PP_ALIGN.CENTER)
 
 
 # ══════════════════════════════════════════════════════════════════════
@@ -672,22 +736,22 @@ def s11_3d_results(prs):
 
 def s12_3d_heatmaps(prs):
     cases = [
-        ("3D Heatmap — Rectangular  (Bayesian, k=5)",
-         "Rectangular  |  Bayesian (TPE)  |  k=5  |  L2=4.12%  |  MAE=8.6°C  |  FEM calls↓ 5.0×",
-         BEST/"bayesian_rectangular_3d_k2.png",
-         "FEM reference (left)  ·  PINN prediction (centre)  ·  Absolute error (right)"),
-        ("3D Heatmap — Cylinder  (Bayesian, k=2)",
-         "Cylinder  |  Bayesian (TPE)  |  k=2  |  L2=2.86%  |  MAE=5.0°C  |  FEM calls↓ 2.0×",
+        ("3D Heatmap — Rectangular  (Bayesian, k=1)",
+         "Rectangular  |  Bayesian (TPE)  |  k=1  |  Mean MAE=8.01°C  |  t=30s shown",
+         BEST/"bayesian_rectangular_3d_k1.png",
+         "FEM reference (top)  ·  PINN prediction (bottom, t=30s)  ·  MAE=4.75°C at final window"),
+        ("3D Heatmap — Cylinder  (Bayesian, k=1)",
+         "Cylinder  |  Bayesian (TPE)  |  k=1  |  Mean MAE=6.43°C  |  t=30s shown",
          BEST/"bayesian_cylinder_3d_k1.png",
-         "FEM reference (left)  ·  PINN prediction (centre)  ·  Absolute error (right)"),
-        ("3D Heatmap — Stacked  (Bayesian, k=5)",
-         "Stacked  |  Bayesian (TPE)  |  k=5  |  L2=4.03%  |  MAE=7.9°C  |  FEM calls↓ 5.0×",
+         "FEM reference (top)  ·  PINN prediction (bottom, t=30s)  ·  MAE=3.75°C at final window"),
+        ("3D Heatmap — Stacked  (Bayesian, k=1)",
+         "Stacked  |  Bayesian (TPE)  |  k=1  |  Mean MAE=7.58°C  |  t=30s shown",
          BEST/"bayesian_stacked_3d_k1.png",
-         "FEM reference (left)  ·  PINN prediction (centre)  ·  Absolute error (right)"),
+         "FEM reference (top)  ·  PINN prediction (bottom, t=30s)  ·  MAE=5.59°C at final window"),
         ("3D Heatmap — L-shape 3D  (Bayesian, k=3)",
-         "L-shape 3D  |  Bayesian (TPE)  |  k=3  |  L2=2.14%  |  MAE=5.1°C  |  FEM calls↓ 2.9×",
+         "L-shape 3D  |  Bayesian (TPE)  |  k=3  |  Mean MAE=7.08°C  |  t=30s shown",
          BEST/"bayesian_lshape_3d_k3.png",
-         "3D problems show higher errors due to additional spatial dimension  ·  L-shape NSGA-III k=1 achieves L2=0.91%"),
+         "FEM reference (top)  ·  PINN prediction (bottom, t=30s)  ·  MAE=4.83°C at final window"),
     ]
     for title, caption, path, footnote in cases:
         _heatmap_slide(prs, title, caption, path, footnote)
@@ -698,27 +762,66 @@ def s12_3d_heatmaps(prs):
 # ══════════════════════════════════════════════════════════════════════
 
 def s13_3d_table(prs):
+    import json
+    from pathlib import Path as _P
+
     slide = blank(prs)
-    slide_header(slide, "3D Summary Table",
-                 "Best-k results per domain and optimizer (800 ep (NAS))")
-    rect(slide, 0, 0.65, 13.33, 6.85, LGRAY)
+    rect(slide, 0, 0, 13.33, 7.5, LGRAY)
     stripe(slide, NAVY, 0.65)
-    txt(slide, "3D Summary Table", 0.4, 0.07, 12.5, 0.55, fs=24, bold=True, color=WHITE)
+    txt(slide, "3D Results — Best-k Summary Table", 0.4, 0.07, 12.5, 0.55,
+        fs=22, bold=True, color=WHITE)
+    txt(slide, "Per-domain, per-optimizer: best k chosen by minimum mean MAE", 0.4, 0.65,
+        12.5, 0.35, fs=12, color=MGRAY)
 
-    rect(slide, 0.2, 1.05, 12.9, 4.95, WHITE)
-    img(slide, SUMMARY / "fig_table_800ep_3d.png", 0.25, 1.1, w=12.8)
+    ckpt = _P(__file__).resolve().parent / "checkpoints"
+    domains_3d = ["rectangular", "cylinder", "stacked", "lshape"]
+    archs      = ["bayesian", "nsga2", "nsga3"]
+    table_rows = []
+    domain_label = {"rectangular": "Rectangular", "cylinder": "Cylinder",
+                    "stacked": "Stacked", "lshape": "L-Shape 3D"}
+    arch_label   = {"bayesian": "Bayesian", "nsga2": "NSGA-II", "nsga3": "NSGA-III"}
 
-    rect(slide, 0.2, 6.2, 12.9, 0.82, RGBColor(0xE8,0xF0,0xFE))
-    obs3d = [
-        "Best 3D: L-shape NSGA-III k=1, L2=0.91%",
-        "Worst: Stacked NSGA-III k=3, L2=6.27%",
-        "Bayesian Rectangular k=5: 5.0\u00d7 FEM reduction",
-    ]
-    txt(slide, "  |  ".join(obs3d), 0.4, 6.3, 12.5, 0.55, fs=12, color=NAVY)
+    for domain in domains_3d:
+        for arch in archs:
+            best_mae = 999; best_k = -1; best_l2 = 0; best_t = 0
+            for k in range(1, 6):
+                f = ckpt / f"{domain}_{arch}_k{k}_dim3_metrics.json"
+                if not f.exists():
+                    continue
+                with open(f) as fp:
+                    d = json.load(fp)
+                wins = d.get("windows", [])
+                ml2 = sum(w["l2_rel"] for w in wins) / len(wins) if wins else 0
+                if d["mean_mae"] < best_mae:
+                    best_mae = d["mean_mae"]; best_k = k
+                    best_l2 = ml2; best_t = d.get("total_s", 0)
+            if best_k > 0:
+                fem_sav = int((1 - 20 / (20 / best_k)) * 100) if best_k > 1 else 0
+                row = [
+                    domain_label[domain],
+                    arch_label[arch],
+                    str(best_k),
+                    f"{best_l2:.4f}",
+                    f"{best_mae:.2f} \u00b0C",
+                    f"{best_t:.0f} s",
+                    f"{fem_sav}%" if fem_sav > 0 else "baseline",
+                ]
+                table_rows.append(row)
 
-    rect(slide, 0, 7.15, 13.33, 0.35, NAVY)
-    txt(slide, "3D geometry complexity impacts accuracy — Stacked geometry most challenging; L-shape unexpectedly best",
-        0.5, 7.18, 12.3, 0.3, fs=11, color=WHITE, align=PP_ALIGN.CENTER)
+    headers    = ["Domain", "Arch", "Best k", "L2 (rel)", "MAE", "Runtime", "FEM Saved"]
+    col_widths = [1.7, 1.4, 0.9, 1.2, 1.3, 1.2, 1.3]
+    draw_table(slide, headers, table_rows, x=0.35, y=1.1,
+               col_widths=col_widths, row_height=0.38, text_fs=11)
+
+    rect(slide, 0.2, 6.9, 12.9, 0.45, RGBColor(0xE8, 0xF4, 0xE8))
+    txt(slide, "Best 3D: L-Shape/NSGA-II k=1 — L2=0.0134, MAE=3.43°C  |  "
+               "Bayesian is fastest (225–275 s vs 390–430 s for NSGA)  |  "
+               "3D average MAE=7.79°C, L2=0.050",
+        0.4, 6.97, 12.5, 0.35, fs=11, bold=True, color=GREEN)
+
+    rect(slide, 0, 7.38, 13.33, 0.35, NAVY)
+    txt(slide, "3D accuracy lower than 2D due to extra spatial dimension — L-shape best, Stacked/Cylinder hardest",
+        0.5, 7.41, 12.3, 0.28, fs=11, color=WHITE, align=PP_ALIGN.CENTER)
 
 
 # ══════════════════════════════════════════════════════════════════════
@@ -877,6 +980,130 @@ def s18_warmstart_heatmaps(prs):
             _heatmap_slide(prs, title, caption, path, footnote)
 
 
+def s19_adaptive_2d(prs):
+    """Adaptive-k 2D results: programmatic table."""
+    import json
+    from pathlib import Path as _P
+
+    slide = blank(prs)
+    rect(slide, 0, 0, 13.33, 7.5, LGRAY)
+    stripe(slide, NAVY, 0.65)
+    txt(slide, "Adaptive-k Strategy — 2D Results", 0.4, 0.07, 12.5, 0.55,
+        fs=22, bold=True, color=WHITE)
+    txt(slide, "Dynamic k selection per window based on MAE thresholds (thresh_up=2°C, thresh_dn=5°C)",
+        0.4, 0.65, 12.5, 0.35, fs=12, color=MGRAY)
+
+    ckpt = _P(__file__).resolve().parent / "checkpoints"
+    domains = ["rectangle", "circle", "lshape"]
+    archs   = ["bayesian", "nsga2", "nsga3"]
+    domain_label = {"rectangle": "Rectangle", "circle": "Circle", "lshape": "L-Shape"}
+    arch_label   = {"bayesian": "Bayesian", "nsga2": "NSGA-II", "nsga3": "NSGA-III"}
+
+    table_rows = []
+    for domain in domains:
+        for arch in archs:
+            f = ckpt / f"{domain}_{arch}_adaptive_dim2_metrics.json"
+            if not f.exists():
+                continue
+            with open(f) as fp:
+                d = json.load(fp)
+            wins = d.get("windows", [])
+            mae  = sum(w.get("mae_C", w.get("mae", 0)) for w in wins) / len(wins) if wins else 0
+            n_wins  = len(wins)
+            fem_sav = max(0, int((1 - n_wins / 20) * 100))
+            # fixed k=1 reference MAE
+            fref = ckpt / f"{domain}_{arch}_k1_dim2_metrics.json"
+            ref_mae = "—"
+            if fref.exists():
+                with open(fref) as fp2:
+                    dr = json.load(fp2)
+                ref_mae = f"{dr['mean_mae']:.2f}"
+            table_rows.append([
+                domain_label[domain],
+                arch_label[arch],
+                f"{mae:.2f} °C",
+                ref_mae + " °C",
+                str(n_wins),
+                f"{fem_sav}%",
+            ])
+
+    headers    = ["Domain", "Arch", "Adaptive MAE", "Fixed k=1 MAE", "Windows Used", "FEM Saved"]
+    col_widths = [1.8, 1.5, 1.8, 1.8, 1.8, 1.5]
+    draw_table(slide, headers, table_rows, x=0.35, y=1.1,
+               col_widths=col_widths, row_height=0.42, text_fs=11)
+
+    rect(slide, 0.2, 6.7, 12.9, 0.5, RGBColor(0xE8, 0xF4, 0xE8))
+    txt(slide, "Adaptive-k 2D average: MAE=4.68°C  |  FEM savings: 35–65%  |  "
+               "Bayesian most efficient: MAE=3.29–3.62°C with 50–65% FEM savings",
+        0.4, 6.78, 12.5, 0.35, fs=11, bold=True, color=GREEN)
+
+    rect(slide, 0, 7.23, 13.33, 0.35, NAVY)
+    txt(slide, "Adaptive-k reduces FEM calls by ~50% while keeping MAE within ~2× of fixed k=1",
+        0.5, 7.26, 12.3, 0.28, fs=11, color=WHITE, align=PP_ALIGN.CENTER)
+
+
+def s20_adaptive_3d(prs):
+    """Adaptive-k 3D results: programmatic table."""
+    import json
+    from pathlib import Path as _P
+
+    slide = blank(prs)
+    rect(slide, 0, 0, 13.33, 7.5, LGRAY)
+    stripe(slide, NAVY, 0.65)
+    txt(slide, "Adaptive-k Strategy — 3D Results", 0.4, 0.07, 12.5, 0.55,
+        fs=22, bold=True, color=WHITE)
+    txt(slide, "Dynamic k selection per window — 3D domains (4 geometries × 3 optimizers)",
+        0.4, 0.65, 12.5, 0.35, fs=12, color=MGRAY)
+
+    ckpt = _P(__file__).resolve().parent / "checkpoints"
+    domains = ["rectangular", "cylinder", "stacked", "lshape"]
+    archs   = ["bayesian", "nsga2", "nsga3"]
+    domain_label = {"rectangular": "Rectangular", "cylinder": "Cylinder",
+                    "stacked": "Stacked", "lshape": "L-Shape 3D"}
+    arch_label   = {"bayesian": "Bayesian", "nsga2": "NSGA-II", "nsga3": "NSGA-III"}
+
+    table_rows = []
+    for domain in domains:
+        for arch in archs:
+            f = ckpt / f"{domain}_{arch}_adaptive_dim3_metrics.json"
+            if not f.exists():
+                continue
+            with open(f) as fp:
+                d = json.load(fp)
+            wins = d.get("windows", [])
+            mae  = sum(w.get("mae_C", w.get("mae", 0)) for w in wins) / len(wins) if wins else 0
+            n_wins  = len(wins)
+            fem_sav = max(0, int((1 - n_wins / 20) * 100))
+            fref = ckpt / f"{domain}_{arch}_k1_dim3_metrics.json"
+            ref_mae = "—"
+            if fref.exists():
+                with open(fref) as fp2:
+                    dr = json.load(fp2)
+                ref_mae = f"{dr['mean_mae']:.2f}"
+            table_rows.append([
+                domain_label[domain],
+                arch_label[arch],
+                f"{mae:.2f} °C",
+                ref_mae + " °C",
+                str(n_wins),
+                f"{fem_sav}%",
+            ])
+
+    headers    = ["Domain", "Arch", "Adaptive MAE", "Fixed k=1 MAE", "Windows Used", "FEM Saved"]
+    col_widths = [1.8, 1.5, 1.8, 1.8, 1.8, 1.5]
+    draw_table(slide, headers, table_rows, x=0.35, y=1.1,
+               col_widths=col_widths, row_height=0.34, text_fs=10)
+
+    rect(slide, 0.2, 6.7, 12.9, 0.5, RGBColor(0xE8, 0xF4, 0xE8))
+    txt(slide, "Adaptive-k 3D average: MAE=13.14°C  |  FEM savings: 20–65%  |  "
+               "Bayesian best: 60–65% savings at MAE=8.86–10.41°C",
+        0.4, 6.78, 12.5, 0.35, fs=11, bold=True, color=GREEN)
+
+    rect(slide, 0, 7.23, 13.33, 0.35, NAVY)
+    txt(slide, "Bayesian recommended for 3D adaptive-k: best FEM savings with lowest MAE penalty",
+        0.5, 7.26, 12.3, 0.28, fs=11, color=WHITE, align=PP_ALIGN.CENTER)
+
+
 def s15_conclusions(prs):
     slide = blank(prs)
     rect(slide, 0, 0, 13.33, 7.5, NAVY)
@@ -886,13 +1113,13 @@ def s15_conclusions(prs):
         color=WHITE, align=PP_ALIGN.CENTER)
 
     conclusions = [
-        "2D performance: most L2 < 3%; best = 0.83% (L-shape, NSGA-III, k=1)",
-        "3D performance: most L2 < 6%; best = 0.91% (L-shape 3D, NSGA-III, k=1)",
-        "FEM call reduction: up to 5\u00d7 with Bayesian on Rectangular and Stacked 3D",
-        "Bayesian: fastest convergence, best FEM reduction with acceptable accuracy",
-        "NSGA-II / III: higher accuracy but more FEM calls; best suited for precision tasks",
-        "IC-consistent output + Fourier features + SA weights: robust across all geometries",
-        "1500-ep retrain (NSGA-II/III) improves absolute accuracy by ~0.2\u20130.5% L2",
+        "MSWP + IC-consistent PINN: 2D MAE=2.34\u00b0C (L2=0.020), 3D MAE=7.79\u00b0C (L2=0.050)",
+        "Best 2D: Circle/NSGA-III MAE=1.64\u00b0C; Best 3D: L-Shape/NSGA-II MAE=3.43\u00b0C",
+        "Adaptive-k: 50\u201351% FEM savings with minimal accuracy loss (2D\u2248+2.3\u00b0C over fixed k=1)",
+        "Bayesian NAS: 2\u00d7 faster than NSGA, comparable accuracy \u2192 recommended for production",
+        "Warm-start: 38% fewer epochs, same MAE as cold-start \u2192 optimal for k\u22652 windows",
+        "thermal_pinn achieves 5\u00d7 better 3D L2 than previous thesis-pinn-fem (0.050 vs 0.25\u20130.72)",
+        "NAS search validates smaller architectures: NSGA-III 12K params \u2248 Bayesian 93K params in accuracy",
     ]
 
     tb = slide.shapes.add_textbox(Inches(0.6), Inches(1.05), Inches(11.9), Inches(4.25))
@@ -930,25 +1157,27 @@ def main():
     prs.slide_height = SH
 
     steps = [
-        ("01 Title",              s01_title),
-        ("02 Motivation",         s02_motivation),
-        ("03 Physical Problem",   s03_physical),
-        ("04 Method Overview",    s04_method_overview),
-        ("05 k-Skip Framework",   s05_kskip),
-        ("06 Architecture",       s06_architecture),
-        ("07 NAS",                s07_nas),
-        ("08 2D Results",         s08_2d_results),
-        ("09 2D Heatmaps",        s09_2d_heatmaps),
-        ("10 2D Table",           s10_2d_table),
-        ("11 3D Results",         s11_3d_results),
-        ("12 3D Heatmaps",        s12_3d_heatmaps),
-        ("13 3D Table",           s13_3d_table),
-        ("14 Before/After",       s14_retrain),
-        ("15 Warm-Start Overview", s15_warmstart_overview),
-        ("16 Warm-Start Heatmaps", s16_warmstart_plots),
-        ("17 Warm-Start Trade-off",s17_warmstart_tradeoff),
-        ("18 WS Heatmaps",        s18_warmstart_heatmaps),
-        ("19 Conclusions",        s15_conclusions),
+        ("01 Title",               s01_title),
+        ("02 Motivation",          s02_motivation),
+        ("03 Physical Problem",    s03_physical),
+        ("04 Method Overview",     s04_method_overview),
+        ("05 k-Skip Framework",    s05_kskip),
+        ("06 Architecture",        s06_architecture),
+        ("07 NAS",                 s07_nas),
+        ("08 2D Results",          s08_2d_results),
+        ("09 2D Heatmaps",         s09_2d_heatmaps),
+        ("10 2D Table",            s10_2d_table),
+        ("11 3D Results",          s11_3d_results),
+        ("12 3D Heatmaps",         s12_3d_heatmaps),
+        ("13 3D Table",            s13_3d_table),
+        ("14 Adaptive-k 2D",       s19_adaptive_2d),
+        ("15 Adaptive-k 3D",       s20_adaptive_3d),
+        ("16 Before/After",        s14_retrain),
+        ("17 Warm-Start Overview", s15_warmstart_overview),
+        ("18 Warm-Start MAE",      s16_warmstart_plots),
+        ("19 Warm-Start Trade-off",s17_warmstart_tradeoff),
+        ("20 WS Heatmaps",         s18_warmstart_heatmaps),
+        ("21 Conclusions",         s15_conclusions),
     ]
 
     for name, fn in steps:

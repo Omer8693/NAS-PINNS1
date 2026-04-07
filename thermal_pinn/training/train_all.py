@@ -115,6 +115,12 @@ def run_one(domain_name: str, arch: str, k: int, dim: int,
 
     model = make_pinn(dim=dim, arch=arch, device=device)
 
+    # L-Shape 3D has a re-entrant corner with steep gradients — use more points
+    train_kwargs = dict(TRAIN_KWARGS)
+    if dim == 3 and domain_name == "lshape":
+        train_kwargs["n_domain"] = 3000   # 2× default; corner bias is in sample_interior
+        train_kwargs["n_bc"]     = 500
+
     dt_window = k * DT_FEM
     anchors   = np.arange(0.0, T_TOTAL - dt_window / 2, dt_window)
 
@@ -140,7 +146,7 @@ def run_one(domain_name: str, arch: str, k: int, dim: int,
             theta_end_fn=theta_end_fn,
             device=device,
             rng_seed=i,
-            **TRAIN_KWARGS,
+            **train_kwargs,
         )
 
         eval_info = evaluate_window(

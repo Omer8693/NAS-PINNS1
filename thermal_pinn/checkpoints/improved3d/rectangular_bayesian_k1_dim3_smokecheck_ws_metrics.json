@@ -1,0 +1,57 @@
+{
+  "domain": "rectangular",
+  "arch": "bayesian",
+  "k": 1,
+  "dim": 3,
+  "mean_mae": 73.4204554753758,
+  "n_windows": 2,
+  "windows": [
+    {
+      "t_start": 0.0,
+      "t_end": 1.5,
+      "mae_C": 81.51731667508379,
+      "l2_rel": 0.16027573916415808,
+      "runtime_s": 0.7156994342803955,
+      "warm": false,
+      "n_epochs": 1,
+      "lr": 0.0008,
+      "lbfgs_iters": 1
+    },
+    {
+      "t_start": 1.5,
+      "t_end": 3.0,
+      "mae_C": 65.32359427566783,
+      "l2_rel": 0.1306475921789071,
+      "runtime_s": 0.6046466827392578,
+      "warm": true,
+      "n_epochs": 1,
+      "lr": 0.0003,
+      "lbfgs_iters": 1
+    }
+  ],
+  "total_s": 2.5053813457489014,
+  "checkpoint": "/home/coder/NAS-PINNS1/thermal_pinn/checkpoints/improved3d/rectangular_bayesian_k1_dim3_smokecheck_ws.pt",
+  "train_config": {
+    "n_domain": 16,
+    "n_bc": 8,
+    "n_epochs": 1600,
+    "lr": 0.0008,
+    "lr_min": 1e-05,
+    "lbfgs_iters": 1,
+    "n_eval": 16,
+    "use_end_supervision": true,
+    "n_epochs_cold": 1,
+    "n_epochs_warm": 1,
+    "lr_cold": 0.0008,
+    "lr_warm": 0.0003,
+    "lbfgs_iters_warm": 1
+  },
+  "warm_start": true,
+  "weights": {
+    "w_pde": 1.0,
+    "w_ic": 15.0,
+    "w_bc": 5.0,
+    "w_end": 10.0
+  },
+  "run_tag": "smokecheck_ws"
+}

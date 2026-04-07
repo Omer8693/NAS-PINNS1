@@ -48,7 +48,7 @@ from thermal_pinn.plots.plot_results import (
     eval_grid_2d, eval_grid_3d_mid, _make_2d_grid, _make_3d_midgrid,
     _clean_T, _adaptive_norm, _pinn_forward_full,
     _render_box_3d, _render_cylinder_3d, _render_lshape_3d,
-    _style_3d_ax, _make_pinn_field_fn, _surface_mae_3d,
+    _style_3d_ax, _make_pinn_field_fn, _surface_mae_3d, _surface_mean_T,
     CKPT_DIR, RESULT_DIR,
     T_WATER, T_INIT, DELTA_T, DEVICE,
     _ARCH_ORDER, _ARCH_LABELS, _ARCH_COLORS,
@@ -93,6 +93,12 @@ DOMAINS_3D_LIST = ["rectangular", "cylinder", "stacked", "lshape"]
 
 # Query times (seconds) used for heatmap panels
 _HEATMAP_TIMES = [3.0, 9.0, 18.0, 27.0]
+
+# 3D volumetric render uses the same 4 time snapshots as 2D.
+# MAE annotations come from the checkpoint JSON (per-window, evaluated right after training)
+# — NOT from live _surface_mae_3d() which was wrong (model final-state out-of-distribution
+# at early times → impossible values like 499.5°C).
+_HEATMAP_TIMES_3D = [3.0, 9.0, 18.0, 27.0]
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -242,23 +248,26 @@ def fig_th1_heatmaps(registry: list[dict], k: int, arch: str,
     row_labels = ["Reference (FEM)", f"PINN ({arch_label})", "|Error|  (°C)"]
 
     for col, (t_q, g, n_T) in enumerate(zip(times, grids, col_norm_T)):
-        l2_val = g["l2"]
+        l2_val  = g["l2"]
+        fin_err = g["err"][np.isfinite(g["err"])]
+        mae_val = float(np.mean(fin_err)) if fin_err.size else float("nan")
 
         # Row 0 — Reference
         im_ref = _draw_heatmap(axes[0, col], XX, YY, g["T_ref"],
                                 n_T, CMAP_T, title=f"t = {t_q:.0f} s")
 
-        # Row 1 — PINN prediction
-        l2_str = f"L2={l2_val:.4f}" if np.isfinite(l2_val) else "L2=n/a"
+        # Row 1 — PINN prediction  (show mean predicted temperature, NOT error metrics)
+        T_pred_mean = float(np.nanmean(g["T_pred"]))
         im_pred = _draw_heatmap(axes[1, col], XX, YY, g["T_pred"],
                                  n_T, CMAP_T,
-                                 title=f"t = {t_q:.0f} s  [{l2_str}]")
+                                 title=f"t = {t_q:.0f} s  [T̄={T_pred_mean:.0f}°C]")
 
-        # Row 2 — |Error|
-        fin_err = g["err"][np.isfinite(g["err"])]
-        mae_str = f"MAE={np.mean(fin_err):.2f}°C" if fin_err.size else ""
+        # Row 2 — |Error|  (show BOTH MAE and L2 — both are error metrics)
+        mae_str = f"MAE={mae_val:.2f}°C" if np.isfinite(mae_val) else ""
+        l2_str  = f"L2={l2_val:.4f}"    if np.isfinite(l2_val)  else ""
+        err_lbl = "  ".join(s for s in [mae_str, l2_str] if s)
         im_err = _draw_error_map(axes[2, col], XX, YY, g["err"],
-                                  norm_E, title=f"t = {t_q:.0f} s  [{mae_str}]")
+                                  norm_E, title=f"t = {t_q:.0f} s  [{err_lbl}]")
 
         # Colorbars
         _add_colorbar(fig, axes[0, col], im_ref,  "T [°C]")
@@ -600,20 +609,22 @@ def fig_th2b_table_bestk(registry: list[dict], out_dir: Path, suffix: str = "",
 # ════════════════════════════════════════════════════════════════════════════
 
 def fig_th1_3d_heatmaps(registry: list[dict], k: int, arch: str,
-                         domain_name: str, out_dir: Path, suffix: str = ""):
+                         domain_name: str, out_dir: Path, suffix: str = "",
+                         out_path_override: Path | None = None):
     """
     True 3D volumetric render per (arch, domain, k).
-    2 rows × 4 cols layout:
+    2 rows × n_t cols layout (n_t = len(_HEATMAP_TIMES_3D), default 1 at t=30s):
       Row 0 — FEM reference volumetric solid
       Row 1 — PINN prediction volumetric solid (rainbow colormap)
 
-    MAE annotation below each PINN panel.
+    MAE annotation uses per-window MAE from the checkpoint JSON (not live evaluation).
     Saves to: out_dir/{arch}/{domain_name}_3d/fig_th1_3d_{domain_name}_{arch}_k{k}.png
+    Pass out_path_override to write to a custom path instead.
     """
     save_dir = out_dir / arch / f"{domain_name}_3d"
     save_dir.mkdir(parents=True, exist_ok=True)
 
-    out_path = save_dir / f"fig_th1_3d_{domain_name}_{arch}_k{k}{suffix}.png"
+    out_path = out_path_override or (save_dir / f"fig_th1_3d_{domain_name}_{arch}_k{k}{suffix}.png")
     if out_path.exists():
         print(f"  [Fig TH1-3D] {domain_name}/{arch}/k={k} — already exists, skipping")
         return
@@ -629,7 +640,20 @@ def fig_th1_3d_heatmaps(registry: list[dict], k: int, arch: str,
     model     = _load_model_auto(domain_name, arch, k, dim=3, suffix=suffix)
     field_fn  = _make_pinn_field_fn(model, domain, k)
 
-    times      = _HEATMAP_TIMES
+    # Load per-window MAE from JSON (correct values — evaluated right after each window's training).
+    # _surface_mae_3d re-evaluates the final model at arbitrary t → out-of-distribution for early t.
+    met       = load_metrics(domain_name, arch, k, dim=3)
+
+    def _json_mae_for_t(t_q: float) -> float:
+        """Return per-window MAE from JSON for the window containing t_q."""
+        if met is None:
+            return float("nan")
+        for w in met.get("windows", []):
+            if w["t_start"] <= t_q <= w["t_end"] + 1e-6:
+                return float(w["mae_C"])
+        return float(met.get("mean_mae", float("nan")))
+
+    times      = _HEATMAP_TIMES_3D
     n_t        = len(times)
     cmap_vol   = plt.cm.rainbow
     norm_vol   = Normalize(vmin=T_WATER, vmax=T_INIT)
@@ -669,8 +693,11 @@ def fig_th1_3d_heatmaps(registry: list[dict], k: int, arch: str,
         _style_3d_ax(ax_pinn, domain)
         ax_pinn.view_init(elev=25, azim=-60)
 
-        mae_v  = _surface_mae_3d(model, domain, k, t_q, n=10)
-        mae_str = f"MAE={mae_v:.1f}°C" if np.isfinite(mae_v) else "MAE=n/a"
+        mae_v  = _json_mae_for_t(t_q)
+        t_mean = _surface_mean_T(domain, t_q)
+        mae_part  = f"MAE={mae_v:.2f}°C" if np.isfinite(mae_v) else "MAE=n/a"
+        t_part    = f"  T̄={t_mean:.0f}°C" if np.isfinite(t_mean) else ""
+        mae_str   = mae_part + t_part
         ax_pinn.text2D(0.5, -0.04, mae_str,
                        transform=ax_pinn.transAxes, ha="center", va="top",
                        fontsize=7.5, color=_ARCH_COLORS.get(arch, "#333"),
@@ -689,10 +716,12 @@ def fig_th1_3d_heatmaps(registry: list[dict], k: int, arch: str,
     cb.set_label("T [°C]", fontsize=8)
     cb.ax.tick_params(labelsize=7)
 
-    dt_val = k * 1.5
+    dt_val   = k * 1.5
+    mean_mae = float(met["mean_mae"]) if met else float("nan")
     fig.suptitle(
         f"3D Volumetric Temperature — {domain_name.capitalize()}\n"
-        f"Optimizer: {arch_label}  |  k={k} (Δt={dt_val:.1f}s/window)",
+        f"Optimizer: {arch_label}  |  k={k} (Δt={dt_val:.1f}s/window)  |  "
+        f"Global mean MAE = {mean_mae:.2f}°C",
         fontsize=10, fontweight="bold", y=1.01,
     )
 
